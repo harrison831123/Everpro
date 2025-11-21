@@ -1,0 +1,102 @@
+﻿@*@model EP.SD.SalesSupport.CUSCRM.NotifyViewModel*@
+@{
+    var thisGroupType = AccountGroupType.MessageFun;
+}
+
+@*@using (Html.BeginForm("CreateMessage", "CUSCRMTX002", null, FormMethod.Post, new { id = "CreateJobSubmit" }))
+{*@
+    <div class="form-horizontal">
+        <div class="nobox">
+
+        </div>
+
+        @*設定成員(接收者)*@
+        <div class="detail-col  form-inline" id="recipient-area">
+            <label class="detail-msg">新增通知對象</label>
+            <div class="detail-cell">
+                <ul>
+                    <div id="H2OGP">
+                        @{Html.RenderPartial("~/Views/Shared/AccountGroupSelector.cshtml",
+                                                            new AccountGroupSelector("AccountGroupSelector", EP.PlatformResources.選擇人員, thisGroupType) { OnSelected = "onDialogSelected" });}
+                        <button type="button" class="btn btn-danger" id="addusers" tabindex="4">成員</button>
+                        <div class="detail-cell" id="RecipientToShow">
+                        </div>
+                        @*@Html.TextBoxFor(m => m.RecipientToJson, new { style = "display:none;width:100%" })*@
+                        <input type="text" id="RecipientToJson" name="RecipientToJson" style="display:none;width:100%" />
+
+                    </div>
+                </ul>
+            </div>
+        </div>
+        <div class="">
+            <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.儲存" />
+        </div>
+    </div>
+@*}*@
+
+
+<script>
+    $(document).ready(function () {
+        //隱藏選擇視窗的原本按鍵
+        $("#AccountGroupSelectorPopButton").hide();
+        $("#addusers").click(addUsersClick);
+        if ($("#RecipientToJson").val() != '') {
+            recipientSelectShow($("#RecipientToJson").val());
+        }
+    })
+    $("#btnSave").click(function (e) {
+
+        if (saveValidator()) {
+            @*e.preventDefault();
+            $("#CreateJobSubmit").attr('action', '@Url.Action("CreateMessage", "CUSCRMTX002")');
+            $("#CreateJobSubmit").submit();*@
+            var No = $(".no").val();
+            var RecipientToJson = $("#RecipientToJson").val();
+            $.ajax({
+                method: "POST",
+                cache: false,
+                url: '@Url.Action("CreateMessage", "CUSCRMTX002", new { area = "CUSCRM" })',
+                data: { No: No, RecipientToJson: RecipientToJson},
+                success: function (data) {
+                    location.href = '@Url.Action("index", "CUSCRMTX002", new { area = "CUSCRM" })';
+                    appendMessage("新增成功");
+                },
+                error: function (ex) {
+                    appendMessage("系統發生錯誤");
+                }
+            });
+        }
+    });
+    //@*人員視窗選擇結果處理*@
+    function onDialogSelected() {
+        //取得它的選擇資訊(JSON格式)
+        var hiddenValue = $("#AccountGroupSelector").getHiddens()[0];
+        recipientSelectShow(hiddenValue);
+
+    }
+    function addUsersClick() {
+        //手動呼叫Dialog視窗
+        $("#AccountGroupSelector").openDialog();
+    }
+    function recipientSelectShow(jsonValue) {
+        var $select = $('#RecipientToShow');
+        $select.attr('style', "height:200px;overflow:auto;").html('');
+        if (jsonValue == undefined) return;
+        var jsonItems = JSON.parse(jsonValue);
+        $("#RecipientToJson").val(jsonValue);
+
+        $.each(jsonItems, function (idx, obj) {
+            var unit = '';
+            //$select.append($('<option>').text(obj.Unit+" "+obj.Text).attr('value', obj.Key).prop("selected", true));
+
+            $select.append('<ul>' + obj.Unit + " " + obj.Text + '</ul>');
+        });
+    }
+    function saveValidator() {
+        if ($("#RecipientToJson").val() == "") {
+            appendMessage("對象必選");
+            return false;
+        }
+        return true;
+    }
+</script>

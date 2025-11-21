@@ -1,0 +1,444 @@
+﻿
+@{
+    ViewBag.Title = (ViewBag.Title) ?? "大批人工調帳";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+
+    WebChannel<EB.SL.PayRoll.Service.IPayRollService> Service = new WebChannel<EB.SL.PayRoll.Service.IPayRollService>();
+    //var productionYM = "";
+    EB.VLifeModels.agym agym = new EB.VLifeModels.agym();
+    Service.Use(s => agym = s.GetYMData("", true).FirstOrDefault());
+
+    //取日期&判斷日期比較
+    EB.EBrokerModels.OpCalendar calendar = new EB.EBrokerModels.OpCalendar();
+    calendar.ProductionYM = agym.ProductionYM;
+    calendar.Sequence = agym.sequence.ToString();
+    Service.Use(s => calendar = s.QueryOpCalendar(calendar));
+
+    bool adjFlag = false;
+    DateTime sTime = DateTime.Now;
+    DateTime eTime = DateTime.Now;
+    var c = 1;
+    var c1 = 0;
+    var agbcind = agym.AgbcInd;
+    var agymind = agym.AgymInd;
+    if (calendar != null)
+    {
+        if (calendar.AdjDateTimeStr != null || calendar.AdjDateTimeEnd != null)
+        {
+            adjFlag = true;
+            sTime = Convert.ToDateTime(calendar.AdjDateTimeStr);
+            eTime = Convert.ToDateTime(calendar.AdjDateTimeEnd);
+            c = DateTime.Compare(sTime, DateTime.Now);
+            c1 = DateTime.Compare(eTime, DateTime.Now);
+        }
+    }
+}
+
+<style>
+    .custom-file-upload {
+        border: 1px solid #ccc;
+        display: inline-block;
+        padding: 6px 12px;
+        cursor: pointer;
+        padding: 0.5rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.25;
+        color: #fff;
+        background-color: #F39C12;
+    }
+
+        .custom-file-upload:hover {
+            background-color: #cf850f;
+            cursor: default;
+        }
+
+    .filestyle {
+        /*line-height: 28px;*/
+        border: 1px solid #00000026;
+        width: 100%;
+    }
+
+    .warningtalk {
+        color: red;
+        padding: 0px 10px 10px 0px;
+    }
+</style>
+
+@*@if ((adjFlag == false) || ((c > 0 || c1 < 0) && User.RoleList.Where(x => x.ID.Contains("CNEP5210")).Any() == false))
+    {
+        <text>
+            非调整时间
+        </text>
+    }
+    else
+    {*@
+@*大批人工調帳*@
+<div id="divQueryBlock">
+    <div class="ibox ibox-primary">
+        <div class="ibox-head">
+            <div class="ibox-title">大批人工調帳</div>
+            <div class="ibox-tools">
+                <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
+                <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
+            </div>
+        </div>
+        @using (Html.BeginForm("Index", "PRTX003", new { area = "PayRoll" }, FormMethod.Post, new { id = "UploadForm" }))
+        {
+            <div class="ibox-body">
+                <p class="warningtalk">提示訊息:大批調帳工作月僅更新第一次資料</p>
+                <div class="form-group row">
+                    <label class="col-md-1 col-form-label" for="productionYM">工作月</label>
+                    <div class="col-md-3">
+                        <select class="form-select" id="productionYM" name="productionYM" readonly="readonly">
+                            <option value="@agym.ProductionYM">@agym.ProductionYM</option>
+                        </select>
+                    </div>
+                    <label class="col-md-1 col-form-label" for="sequence">序號</label>
+                    <div class="col-md-1">
+                        <input type="text" class="form-control required-field" id="sequence" value="@agym.sequence" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label" for="termination" style="width:140px">
+                        <input type="checkbox" id="termination" name="termination">
+                        當月終止不調帳
+                    </label>
+                </div>
+
+                <div class="form-group row">
+                    @if (User.HasPermission("EB.SL.PayRoll.PRTX002.Admin"))
+                    {
+                        if ((adjFlag == false) || (c > 0 || agbcind == "1" || agymind == "0"))
+                        {
+                            <div class="col-md-9">
+                                <div class="form-group">
+                                    <input type="file" id="file" class="filestyle" data-icon="false" disabled="disabled" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-primary" id="btnUpload" data-bind="click: UploadClick" disabled="disabled">上傳</button>
+                                <button class="btn btn-warning" id="btnDelete" data-bind="click: DeleteClick" disabled="disabled">刪除</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-9">
+                                <div class="form-group">
+                                    <input type="file" id="file" class="filestyle" data-icon="false" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-primary" id="btnUpload" data-bind="click: UploadClick">上傳</button>
+                                <button class="btn btn-warning" id="btnDelete" data-bind="click: DeleteClick">刪除</button>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        if ((adjFlag == false) || (c > 0 || c1 < 0) || agymind == "0")
+                        {
+                            <div class="col-md-9">
+                                <div class="form-group">
+                                    <input type="file" id="file" class="filestyle" data-icon="false" disabled="disabled" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-primary" id="btnUpload" data-bind="click: UploadClick" disabled="disabled">上傳</button>
+                                <button class="btn btn-warning" id="btnDelete" data-bind="click: DeleteClick" disabled="disabled">刪除</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-9">
+                                <div class="form-group">
+                                    <input type="file" id="file" class="filestyle" data-icon="false" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-primary" id="btnUpload" data-bind="click: UploadClick">上傳</button>
+                                <button class="btn btn-warning" id="btnDelete" data-bind="click: DeleteClick">刪除</button>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="form-group quarydata" style="display:none;color:red;">
+                    <span class="quarydatashow"></span>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <button class="btn btn-primary" id="btnAdjustTMPLDL">大批調帳格式及範例說明</button>
+                        <button class="btn btn-primary" id="btnReasonTMPLDL">原因碼一覽表</button>
+                        @if (User.UnitInfo != null && (User.HasPermission("EB.SL.PayRoll.PRTX002.Admin")))
+                        {
+                            <text>
+                                <label for="reasonUpload" id="lbUpload" class="custom-file-upload">
+                                    原因碼一覽表上傳
+                                </label>
+                            </text>
+                        }
+                    </div>
+                </div>
+
+                @if (User.UnitInfo != null && (User.HasPermission("EB.SL.PayRoll.PRTX002.Admin")))
+                {
+                    <text>
+                        <div id="reasonUPDiv" class="form-group row" style="display:none;">
+                            <div class="col-md-9">
+                                <input id="reasonUpload" name="reasonUpload" class="filestyle" type="file" accept=".pdf" />
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-primary" id="reasonUpBtn" data-bind="click: ReasonClick">確定上傳原因碼</button>
+                            </div>
+                        </div>
+                    </text>
+                }
+
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <span class="col-md-4 col-form-label" style="color: red">
+                            <br />
+                            注意事項：<br />
+                            1.以excel檔案上傳<br />
+                            2.檔案格式順序不可任意更動<br />
+                            3.所有欄位皆不可空白<br />
+                            4.所有不符合轉檔條件的筆數皆不會轉入<br />
+                        </span>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @*上傳資料錯誤明細*@
+    <div id="errorDIV" class="ibox ibox-primary" style="display: none;">
+        <div class="ibox-head">
+            <div class="ibox-title">上傳資料錯誤明細</div>
+            <button class="btn btn-default" id="btn3" onclick="DownloadErrorMsg();">產出錯誤報表</button>
+        </div>
+        <div class="ibox-body">
+            <div class="form-group row">
+                <table id="errorTbl" class="table table-striped error-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">錯誤描述</th>
+                        </tr>
+                    </thead>
+                    <tbody class="error-tbody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    @*上傳資料警示明細*@
+    <div id="warningDIV" class="ibox ibox-primary" style="display: none;">
+        <div class="ibox-head">
+            <div class="ibox-title">上傳資料警示明細</div>
+            @*<button class="btn btn-default" id="btn3" onclick="DownloadErrorMsg();">產出錯誤報表</button>*@
+        </div>
+        <div class="ibox-body">
+            <div class="form-group row">
+                <table id="warningTbl" class="table table-striped warning-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">警示描述</th>
+                        </tr>
+                    </thead>
+                    <tbody class="warning-tbody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@*}*@
+
+
+
+@section Scripts{
+    <script>
+        var ViewModel = {
+            UploadClick: function () {
+                clearMessage();
+                $(".error-tbody").html('');
+                $(".warning-tbody").html('');
+                var result = confirm('確認是否執行?');
+                if (result) {
+                    if ($("#file").val() == '') {
+                        appendMessage("請勿上傳空檔");
+                        return false;
+                    }
+                    else {
+                        var formData = new FormData();
+                        var fileUpload = $("#file").get(0);
+                        var file = fileUpload.files;
+                        formData.append('file', file[0]);
+                        formData.append('productionYM', $('#productionYM option:selected').val());
+                        formData.append('sequence', $('#sequence').val());
+                        formData.append('termination', $('#termination').is(':checked'));
+
+                        $.ajax({
+                            method: "POST",
+                            cache: false,
+                            url: '@Url.Action("Upload", "PRTX003", new { area = "PayRoll" })',
+                            processData: false,
+                            contentType: false,
+                            data: formData,
+                            success: function (data) {
+                                var pattern = /^[0-9]*$/;
+                                if (data != null && pattern.test(data) == true) {
+                                    $(".quarydata").show();
+                                    $(".quarydatashow").remove();
+                                    $(".quarydata").append('<span class="quarydatashow">總共' + data + '筆資料</span>');
+                                    $("#errorDIV").hide();
+                                    $("#warningDIV").hide();
+                                }
+                                else if (data.Item1 != undefined && data.Item2 != undefined) {
+                                    var c = 1;
+                                    $(".quarydata").show();
+                                    $(".quarydatashow").remove();
+                                    $(".quarydata").append('<span class="quarydatashow">總共' + data.Item2 + '筆資料</span>');
+                                    if (confirm('是否查詢警示訊息?')) {
+                                        $.each(data.Item1, function () {
+                                            var d = this.split(',');
+                                            $(".warning-tbody").append("<tr><th scope='row'>" + c + "</th><td>" + d[0] + "</td></tr>");
+                                            c++;
+                                        });
+                                        $("#warningDIV").show();
+                                        $("#errorDIV").hide();
+                                    } else {
+                                        $("#warningDIV").hide();
+                                    }
+                                }
+                                else {
+                                    var c = 1;
+                                    $(".quarydata").hide();
+                                    $(".quarydatashow").remove();
+                                    $.each(data, function () {
+                                        var d = this.split(',');
+                                        $(".error-tbody").append("<tr><th scope='row'>" + c + "</th><td>" + d[0] + "</td></tr>");
+                                        c++;
+                                    });
+                                    $("#errorDIV").show();
+                                    $("#warningDIV").hide();
+                                }
+                            },
+                            complete: function () {
+                                $("#file").val("");
+                            },
+                            error: function (ex) {
+                                appendMessage("系統發生錯誤");
+                            }
+                        });
+                    }
+                }
+            },
+            DeleteClick: function () {
+                clearMessage();
+
+                var res = confirm("確定要刪除你所上傳的大批調帳資料嗎？");
+                if (res == true) {
+
+                    var formData = new FormData();
+                    var fileUpload = $("#file").get(0);
+                    var file = fileUpload.files;
+                    formData.append('file', file[0]);
+                    formData.append('productionYM', $('#productionYM option:selected').val());
+                    formData.append('sequence', $('#sequence').val());
+
+                    $.ajax({
+                        method: "POST",
+                        cache: false,
+                        url: '@Url.Action("Delete", "PRTX003", new { area = "PayRoll" })',
+                        processData: false,
+                        contentType: false,
+                        data: formData,
+                        success: function (data) {
+                            appendMessage("刪除成功");
+                        },
+                        error: function (ex) {
+                            appendMessage("系統發生錯誤");
+                        }
+                    });
+                }
+            },
+            ReasonClick: function () {
+                clearMessage();
+
+                var res = confirm("確定覆蓋原因碼一覽表做更新嗎？");
+                if (res == true) {
+
+                    var formData = new FormData();
+                    var fileUpload = $("#reasonUpload").get(0);
+                    var file = fileUpload.files;
+                    formData.append('reasonUpload', file[0]);
+
+                    if (file[0].type != 'application/pdf') {
+                        appendMessage("僅能上傳pdf檔案");
+                        return false;
+                    }
+
+                    $.ajax({
+                        method: "POST",
+                        cache: false,
+                        url: '@Url.Action("UploadReasonPDF", "PRTX003", new { area = "PayRoll" })',
+                        processData: false,
+                        contentType: false,
+                        data: formData,
+                        complete: function () {
+                            $("#reasonUpload").val("");
+                        },
+                        error: function (ex) {
+                            appendMessage("系統發生錯誤");
+                        }
+                    });
+                }
+            }
+        }
+
+        $(function() {
+            ko.applyBindings(ViewModel);
+            const adjDLBtn = document.getElementById('btnAdjustTMPLDL')
+            adjDLBtn.addEventListener('click', () => {
+                window.open('@Url.Content("~/Areas/PayRoll/Template/大批匯入說明.xlsx")');
+            });
+            const reasonDLBtn = document.getElementById('btnReasonTMPLDL')
+            reasonDLBtn.addEventListener('click', () => {
+                window.open('@Url.Content("~/Areas/PayRoll/Template/適用原因碼.pdf")');
+            });
+
+            $("#lbUpload").click(function () {
+                $("#reasonUPDiv").show('slow');
+            });
+        });
+
+
+        function DownloadErrorMsg() {
+            var separator = ',';
+            var rows = document.querySelectorAll('table#errorTbl tr');
+            var csv = [];
+            for (var i = 0; i < rows.length; i++) {
+                var row = [], cols = rows[i].querySelectorAll('td, th');
+                for (var j = 0; j < cols.length; j++) {
+                    var data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ')
+                    data = data.replace(/"/g, '""');
+                    row.push('"' + data + '"');
+                }
+                csv.push(row.join(separator));
+            }
+            var csv_string = csv.join('\n');
+            var filename = 'export_errorMsg_' + new Date().toLocaleDateString() + '.csv';
+            var link = document.createElement('a');
+            link.style.display = 'none';
+            link.setAttribute('target', '_blank');
+            link.setAttribute('href', 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv_string));
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+}

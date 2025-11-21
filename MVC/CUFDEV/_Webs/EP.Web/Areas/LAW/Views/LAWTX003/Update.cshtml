@@ -1,0 +1,60 @@
+﻿@model EP.H2OModels.LawDoUnit
+@{
+    ViewBag.Title = LAWResource.修改承辦單位;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+@section LeftActions{
+    <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.更新" data-bind="click: SaveClick" />
+    @Html.ActionLink(EP.PlatformResources.返回, "Index", "LAWTX003", new { Class = "btn btn-default" })
+}
+
+@using (Html.BeginForm("Update", "LAWTX003", null, FormMethod.Post, new { id = "UpdateSubmit" }))
+{
+    @Html.HiddenFor(model => model.LawDoUnitId)
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.UnitName, new { @class = "detail-msg" })
+        <div class="col-md-offset-1">
+            @Html.TextBoxFor(m => m.UnitName, new { @id = "UnitName", style = "width:50%", @maxlength = "250", @class = "form-control detail-cell" })
+        </div>
+    </div>
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.CreateName, new { @class = "detail-msg" })
+        <div class="col-md-offset-1">
+            @Html.DisplayFor(model => model.CreateName, new { @class = "control-label col-md-2" })
+        </div>
+    </div>
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.CreateDate, new { @class = "detail-msg" })
+        <div class="col-md-offset-1">
+            @Html.DisplayFor(model => model.CreateDate, new { @class = "control-label col-md-2" })
+        </div>
+    </div>
+}
+<script>
+    var ViewModel = {
+        SaveClick: function () {
+            if (saveValidator()) {
+                clearMessage();@*清除訊息*@
+                var tabUniqueId = $("#tabUniqueId").val();
+                $("#UpdateSubmit").attr('action', '@Url.Action("Update", "LAWTX003")');
+                $("#UpdateSubmit").submit();
+            }
+        }
+    };
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+    });
+
+    function saveValidator() {
+        if ($("#UnitName").val() == "") {
+            appendMessage("@( LAWResource.承辦單位 + EP.PlatformResources.必填)");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
+
+

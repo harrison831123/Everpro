@@ -1,0 +1,185 @@
+﻿@{
+    string now = DateTime.Now.Year.ToString();
+    int monthnow = DateTime.Now.Month;
+}
+
+<form id="QueryForm" action="/LAWQU003/QueryMonthReport" method="post">
+
+    <div class="col-md-12 form-group detail-col SearchShow">
+        <div class="col-md-8">
+            <label class="control-label">@LAWResource.工作月</label>
+            <div style="display:flex">
+                <input id="selyear" class="form-control" type="text" name="selyear" value="@now" /><p>@LAWResource.年</p>
+                <select class="form-control" id="selmonth" name="selmonth">
+                    @for (var i = 1; i <= 12; i++)
+                    {
+                        if (i < 10)
+                        {
+                            var ii = "0" + i;
+                            if (i == monthnow)
+                            {
+                                <text>
+                                    <option value="@ii" selected>@ii</option>
+                                </text>
+                            }
+                            else
+                            {
+                                <text>
+                                    <option value="@ii">@ii</option>
+                                </text>
+                            }
+                        }
+                        else
+                        {
+                            if (i == monthnow)
+                            {
+                                <text>
+                                    <option value="@i" selected>@i</option>
+                                </text>
+                            }
+                            else
+                            {
+                                <text>
+                                    <option value="@i">@i</option>
+                                </text>
+                            }
+
+                        }
+                    }
+                </select>
+                <p>@LAWResource.月</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label class="control-label">@LAWResource.是否含當月建檔件</label>
+            <br />
+            <input type="radio" name="chkm" value="0" checked>@LAWResource.否<input type="radio" style="margin-left:15px" name="chkm" value="1">@LAWResource.是
+        </div>
+    </div>
+
+    <input type="button" id="btnQuery" class="btn btn-default" value="@EP.PlatformResources.查詢" onclick="GetLawMonth()" />
+    <button class="btn btn-warning" id="btn" onclick="GetMonthReport()">@LAWResource.匯出報表</button>
+
+</form>
+<div class="row col-md-12">
+    <table id="datatable" class="table">
+        <thead>
+            <tr>
+                <td>@LAWResource.序號</td>
+                <td>@LAWResource.團隊</td>
+                <td>@LAWResource.協理系</td>
+                <td>@LAWResource.業務員</td>
+                <td>@LAWResource.追回金額</td>
+                <td>@LAWResource.總計</td>
+            </tr>
+        </thead>
+        <tbody id="datatbody">
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    //var ViewModel = {
+    //    QueryClick: function () {
+    //        clearMessage();
+    //        GetLawMonth();
+    //    },
+    //    ReportClick: function () {
+            
+    //    }
+    //}
+    $(document).ready(function () {
+        //ko.applyBindings(ViewModel);
+        GetLawMonth();
+    });
+    function GetLawMonth() {
+        var selyear = $("#selyear").val();
+        var selmonth = $("#selmonth").val();
+        var chkm = $("input:radio[name=chkm]:checked").val()
+
+         $.ajax({
+             method: "POST",
+             cache: false,
+             data: { selyear:selyear ,selmonth: selmonth, chkm: chkm},
+             url: '@Url.Action("Query", "LAWQU003", new { area = "LAW" })',
+             complete: function (data) {
+                 $(".remtr").remove();
+                 if (data.responseJSON === undefined || data.responseJSON.length == 0) {
+                     $("#btn").hide();
+                 } else {
+                    $("#btn").show();
+                    
+                    var i = 1;
+                    $.each(data.responseJSON, function () {
+                        let str;
+                        if (i == 1) {
+                            str = "<tr class='remtr'><td>" + i + "</td><td>"
+                                + this.vmname + "</td><td>"
+                                + this.smname + "</td><td>"
+                                + this.name + "</td><td>"
+                                + this.LawRepaymentMoney + "</td><td style='text-align: center; vertical-align: middle;' rowspan=" + data.responseJSON.length + ">"
+                                + this.LawSumRepaymentMoney + "</td>"
+                                + '</tr>';
+                        } else {
+                            str = "<tr class='remtr'><td>" + i + "</td><td>"
+                                + this.vmname + "</td><td>"
+                                + this.smname + "</td><td>"
+                                + this.name + "</td><td>"
+                                + this.LawRepaymentMoney + "</td>"
+                                + '</tr>';
+                        }
+
+                        $("#datatbody").append(str);
+                        i++;
+                    });
+                }
+             },
+             error: function (ex) {
+             if (ex.statusText == "OK") {
+             } else {
+                 appendMessage("@EP.PlatformResources.系統發生錯誤");
+                 }
+             }
+         });
+    }
+
+    function GetMonthReport() {
+        var selyear = $("#selyear").val();
+        var selmonth = $("#selmonth").val();
+        var chkm = $("input:radio[name=chkm]:checked").val()
+        var url = $("form#QueryForm").attr('action');
+
+        var dataJson = $("form#QueryForm").serializeArray();
+        $.extend(
+            {
+                redirectPost: function (location, args) {
+                    var form = '';
+                    $.each(args, function (key, value) {
+                        form += '<input type="hidden" name="' + value.name + '" value="' + value.value + '">';
+                    });
+                    $('<form action="' + location + '" method="POST">' + form + '</form>').appendTo('body').submit();
+                }
+            });
+
+        $.redirectPost(url, dataJson);
+
+
+        @* $.ajax({
+            method: "POST",
+            cache: false,
+            data: { selyear: selyear, selmonth: selmonth, chkm: chkm },
+            url: '@Url.Action("QueryMonthReport", "LAWQU003", new { area = "LAW" })',
+            complete: function (data) {
+                console.log(data);
+                window.location = data
+            },
+            error: function (ex) {
+                if (ex.statusText == "OK") {
+                } else {
+                    appendMessage("@EP.PlatformResources.系統發生錯誤");
+                }
+            }
+        });*@
+    }
+</script>

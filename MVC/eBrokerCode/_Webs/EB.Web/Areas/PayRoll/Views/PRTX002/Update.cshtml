@@ -1,0 +1,679 @@
+﻿@model EB.SL.PayRoll.Models.AgentBonusAdjustViewModel
+
+@{
+    ViewBag.Title = "單筆人工調帳";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+
+    WebChannel<EB.SL.PayRoll.Service.IPayRollService> Service = new WebChannel<EB.SL.PayRoll.Service.IPayRollService>();
+    var agym = new EB.VLifeModels.agym();
+    Service.Use(s => agym = s.GetYMData("", true).FirstOrDefault());
+
+    EB.EBrokerModels.OpCalendar calendar = new EB.EBrokerModels.OpCalendar();
+    calendar.ProductionYM = agym.ProductionYM;
+    calendar.Sequence = agym.sequence.ToString();
+    Service.Use(s => calendar = s.QueryOpCalendar(calendar));
+    DateTime sTime = DateTime.Now;
+    DateTime eTime = DateTime.Now;
+    var c = 1;
+    var c1 = 0;
+    var agbcind = agym.AgbcInd;
+    var agymind = agym.AgymInd;
+    if (calendar != null)
+    {
+        sTime = Convert.ToDateTime(calendar.AdjDateTimeStr);
+        eTime = Convert.ToDateTime(calendar.AdjDateTimeEnd);
+        c = DateTime.Compare(sTime, DateTime.Now);
+        c1 = DateTime.Compare(eTime, DateTime.Now);
+    }
+}
+<style>
+    .AD2 {
+        display: none;
+    }
+
+    .AG2 {
+        display: none;
+    }
+</style>
+@*@if ((c > 0 || c1 < 0) && User.RoleList.Where(x => x.ID.Contains("CNEP5210")).Any() == false)
+    {
+        <text>
+            非调整时间
+        </text>
+    }
+    else
+    {*@
+@*人工調整起迄設定*@
+<div id="divQueryBlock">
+    <div class="ibox ibox-primary">
+        <div class="ibox-head">
+            <div class="ibox-title">單筆人工調帳 更新</div>
+            <div class="ibox-tools">
+                <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
+                <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
+            </div>
+        </div>
+        @using (Html.BeginForm("Update", "PRTX002", new { area = "PayRoll" }, FormMethod.Post, new { id = "UpdateForm" }))
+        {
+            @Html.HiddenFor(m => m.AgentBonusDescGuid, new { @class = "user-input-field", @readonly = true })
+            <div class="ibox-body">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        @Html.LabelFor(m => m.ProductionYM, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.ProductionYM, new { @class = "form-control", @Value = agym.ProductionYM, @readonly = true })
+                    </div>
+                    <div class="col-md-1">
+                        @Html.LabelFor(m => m.Sequence, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.Sequence, new { @class = "form-control", @Value = agym.sequence, @readonly = true })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.AdjType, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.AdjType, new { @class = "form-control user-input-field AD1", @readonly = true })
+                        <div class="AD2">
+                            <select class="form-select" id="AdjType6" name="AdjType6">
+                                <option value="4">4</option>
+                                <option value="6" selected="selected">6</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.ReasonCode, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.ReasonCode, new { @class = "form-control user-input-field"})
+                    </div>
+                    <div class="col-md-2 Adjgroup">
+                        @Html.LabelFor(m => m.CompanyCode, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.CompanyCode, new { @class = "form-control user-input-field required-field" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-2 Adjgroup">
+                        @Html.LabelFor(m => m.PolicyNo2, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.PolicyNo2, new { @class = "form-control user-input-field required-field" })
+                    </div>
+                    <div class="col-md-2 Adjgroup">
+                        @Html.LabelFor(m => m.FYC, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.FYC, new { @class = "form-control user-input-field required-field" })
+                    </div>
+                    <div class="col-md-2 Adjgroup">
+                        @Html.LabelFor(m => m.FYP, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.FYP, new { @class = "form-control user-input-field required-field" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.AgentCode, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.AgentCode, new { @class = "form-control user-input-field AG1" })
+                        <div class="AG2">
+                            <select class="form-select" id="AgentCode6" name="AgentCode6">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.AgentName, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.AgentName, new { @class = "form-control user-input-field", @readonly = true })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.Amount, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.Amount, new { @class = "form-control user-input-field" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-11">
+                        @Html.LabelFor(m => m.DescContent, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.DescContent, new { @class = "form-control user-input-field" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3 Adjgroup">
+                        @Html.LabelFor(m => m.PlanCode, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.PlanCode, new { @class = "form-control user-input-field required-field" })
+                    </div>
+                    <div class="col-md-2 Adjgroup">
+                        @Html.LabelFor(m => m.CollectYear, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.CollectYear, new { @class = "form-control user-input-field required-field" })
+                    </div>
+                    <div class="col-md-2 Adjgroup">
+                        @Html.LabelFor(m => m.ModxSequence, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.ModxSequence, new { @class = "form-control user-input-field required-field" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @if (User.HasPermission("EB.SL.PayRoll.PRTX002.Admin"))
+                    {
+                        if ((c > 0 || agbcind == "1" || agymind == "0"))
+                        {
+                            <div class="col-md-3">
+                                <button class="btn btn-primary group1" id="btnUpdate" data-bind="click: UpdateClick" disabled="disabled">更新</button>
+                                <button class="btn btn-primary group1" id="btnCancel" data-bind="click: CancelClick" disabled="disabled">關閉</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-3">
+                                <button class="btn btn-primary group1" id="btnUpdate" data-bind="click: UpdateClick">更新</button>
+                                <button class="btn btn-primary group1" id="btnCancel" data-bind="click: CancelClick">關閉</button>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        if (c > 0 || c1 < 0 || agymind == "0")
+                        {
+                            <div class="col-md-3">
+                                <button class="btn btn-primary group1" id="btnUpdate" data-bind="click: UpdateClick" disabled="disabled">更新</button>
+                                <button class="btn btn-primary group1" id="btnCancel" data-bind="click: CancelClick" disabled="disabled">關閉</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-3">
+                                <button class="btn btn-primary group1" id="btnUpdate" data-bind="click: UpdateClick">更新</button>
+                                <button class="btn btn-primary group1" id="btnCancel" data-bind="click: CancelClick">關閉</button>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@*}*@
+
+@section Scripts
+{
+    <script>
+
+        var reasonCodeCheck = "";
+        var AdjTypeCheck = true;
+        var ViewModel = {
+            UpdateClick: function () {
+                clearMessage();
+                if ($("#ReasonCode").val() == "01" || $("#ReasonCode").val() == "05") {
+                    let AdjType6 = $("#AdjType6 option:selected").val();
+                    AdjType = AdjType6;
+                    $('#AdjType').val(AdjType6)
+                    if (AdjType6 == "6") {
+                        AgentCode = $('#AgentCode6 option:selected').text();
+                        $('#AgentCode').val(AgentCode)
+                    } else {
+                        AgentCode = $('#AgentCode').val();
+                    }
+                } else {
+                    AdjType = $('#AdjType').val();
+                    AgentCode = $('#AgentCode').val();
+                }
+                var model = $('#UpdateForm').serialize();
+                if (CheckFieldValue()) {
+                    $.ajax({
+                        method: "POST",
+                        cache: false,
+                        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                        url: '@Url.Action("Update", "PRTX002", new { area = "PayRoll" })',
+                        data: model,
+                        complete: function (check) {
+                            if (check.responseJSON === undefined) {
+
+                            }
+                            else if (check.responseJSON.Item2.length != 0 && check.responseJSON.Item2 != "ERROR") {
+                                let ContorErrorlist = "警示訊息:" + "\n";
+                                for (let i = 0; i < check.responseJSON.Item2.length; i++) {
+                                    ContorErrorlist += check.responseJSON.Item2[i] + "\n";
+                                }
+                                alert(ContorErrorlist);
+                            }
+                            $(window.opener.document.getElementById('btnQuery')).trigger('click');
+                            //window.parent.opener.location = '/PayRoll/PRTX002/'
+                        },
+                        error: function (ex) {
+                            if (ex.statusText == "OK") {
+                            } else {
+                                appendMessage("系統發生錯誤");
+                            }
+                        }
+                    });
+                }
+            },
+            CancelClick: function () {
+                window.close();
+            }
+        }
+
+        $(function () {
+            ko.applyBindings(ViewModel);
+            var AdjType = "@Model.AdjType";
+            var AgentName = "@Model.AgentName";
+            if (AdjType == "8") {
+                $(".Adjgroup").hide();
+            }
+            let AdjType6 = $("#AdjType6 option:selected").val();
+            //01&05 進入頁面更改畫面
+            if ($("#ReasonCode").val() == "01" || $("#ReasonCode").val() == "05") {
+                ChangeADHide();
+                $(".Adjgroup").show();
+                if (AdjType == "6") {
+                    $("#AdjType").val("");
+                    $("#AgentCode").val("");
+                    //$("#AgentName").val("");
+                    CheckADAGHide(AdjType6);
+                    $("#AgentName").val(AgentName);
+                    $(`#AgentCode6 option[value='${AgentName}']`).prop('selected', true);
+                } else {
+                    $(`#AdjType6 option[value='${AdjType}']`).prop('selected', true);
+                }
+            }
+
+            $("#AgentCode").focusout(function () {
+                if ($("#AgentCode").val() != "") {
+                    clearMessage();
+                    CheckAgentCode();
+                } else {
+                    $("#AgentName").val("");
+                }
+            })
+
+            $("#ReasonCode").change(function () {
+                this.value = this.value.toUpperCase();
+                if ($("#ReasonCode").val() != "") {
+                    clearMessage();
+                    let ReasonCode = $("#ReasonCode").val();
+                    let AdjType6 = $("#AdjType6 option:selected").val();
+                    $("#AgentName").val('');
+                    $("#AgentCode").val('');
+                     if ($("#ReasonCode").val() == "01" || $("#ReasonCode").val() == "05") {
+                        ChangeADHide();
+                        $(".Adjgroup").show();
+                        CheckADAGHide(AdjType6);
+                    }
+                    else {
+                        $.ajax({
+                            method: "POST",
+                            cache: false,
+                            url: '@Url.Action("GetTypeByReasonCode", "PRTX002", new { area = "PayRoll" })',
+                            data: { reasonCode: $("#ReasonCode").val() },
+                            complete: function (check) {
+                                if (check.responseText != "") {
+                                    @if (!User.HasPermission("EB.SL.PayRoll.PRTX002.Admin"))
+                                    {
+                                        <text>
+                                        if (check.responseText == "4") {
+                                            appendMessage("錯誤訊息:無權限執行型態4及型態6");
+                                        }
+                                        </text>
+                                    }
+                                    $("#AdjType").val(check.responseText);
+                                    AdjTypeCheck = true;
+                                    if (check.responseText == "8") {
+                                        $(".Adjgroup").hide();
+                                    }
+                                    else {
+                                        $(".Adjgroup").show();
+                                    }
+                                } else {
+                                    $("#AdjType").val('');
+                                    AdjTypeCheck = false;
+                                    $(".Adjgroup").show();
+                                    appendMessage("錯誤訊息:原因碼不存在");
+                                }
+                            },
+                            error: function (ex) {
+                                if (ex.statusText == "OK") {
+                                } else {
+                                    appendMessage("系統發生錯誤");
+                                }
+                            }
+                        });
+                        //CheckGroupMappingTOZeroFour();
+                        ChangeADHide()
+                        ChangeAGHide();
+                    }
+
+                    //if ($("#AgentCode").val() != "" && ($("#AdjType").val() == "4" || $("#AdjType6 option:selected").val() == "4" || $("#AdjType6 option:selected").val() == "6")) {
+                    //    CheckBonusReserveSetting();
+                    //}
+                    GetAgentNameByPoag();
+                    @if (!User.HasPermission("EB.SL.PayRoll.PRTX002.Admin"))
+                    {
+                        <text>
+                        if ($("#ReasonCode").val() == "01" || $("#ReasonCode").val() == "05") {
+                            appendMessage("錯誤訊息:無權限執行型態4及型態6");
+                        }
+                        </text>
+                    }
+                }
+            })
+        });
+        $("#CompanyCode").focusout(function () {
+            if ($("#CompanyCode").val() != "") {
+                clearMessage();
+                CheckCompanyCode();
+            }
+        })
+        $("#PolicyNo2").focusout(function () {
+            GetAgentNameByPoag();
+        })
+        $("#FYC").change(function () {
+            if (this.value != "") {
+                let e = parseFloat($("#FYC").val().replace(/,/g, ''));
+                $("#FYC").val(e);
+            }
+        })
+        $("#FYP").change(function () {
+            if (this.value != "") {
+                let e = parseFloat($("#FYP").val().replace(/,/g, ''))
+                $("#FYP").val(e);
+            }
+        })
+        $("#Amount").change(function () {
+            if (this.value != "") {
+                let e = parseFloat($("#Amount").val().replace(/,/g, ''))
+                $("#Amount").val(e);
+            }
+        })
+        $("#AgentCode6").change(function () {
+            $("#AgentName").val(this.value);
+            //let AdjType6 = $("#AdjType6").val();
+            //CheckADAGHide(AdjType6);
+        })
+        $("#AdjType6").change(function () {
+            let AdjType6 = $("#AdjType6 option:selected").val();
+            if (AdjType6 == 4) {
+                $("#AgentCode6").val("");
+                $("#AgentName").val("");
+            } else {
+                $("#AgentCode").val("");
+                $("#AgentName").val("");
+            }
+            CheckADAGHide(AdjType6);
+        })
+        function CheckADAGHide(AdjType6) {
+            if (AdjType6 == "6" && ($("#ReasonCode").val() == "01" || $("#ReasonCode").val() == "05")) {
+                $(".AG1").hide();
+                $(".AG2").show();
+                GetAgentNameByPoag();
+            } else {
+                ChangeAGHide();
+            }
+        }
+        function ChangeADHide() {
+            if ($("#ReasonCode").val() == "01" || $("#ReasonCode").val() == "05") {
+                $(".AD1").hide();
+                $(".AD2").show();
+            } else {
+                $(".AD1").show();
+                $(".AD2").hide();
+            }
+        }
+        function ChangeAGHide() {
+            $(".AG1").show();
+            $(".AG2").hide();
+        }
+        function CheckAgentCode() {
+            $.ajax({
+                method: "POST",
+                cache: false,
+                async: false,
+                url: '@Url.Action("CheckAginb", "PRTX002", new { area = "PayRoll" })',
+                data: { productionYM: $("#ProductionYM").val(), agentCode: $("#AgentCode").val() },
+                complete: function (check) {
+                    if (check.responseText != "") {
+                        $("#AgentName").val(check.responseText);
+                    } else {
+                        $("#AgentName").val('');
+                        appendMessage("錯誤訊息:業務員不存在月備份組織");
+                    }
+                },
+                error: function (ex) {
+                    if (ex.statusText == "OK") {
+                    } else {
+                        appendMessage("系統發生錯誤");
+                    }
+                }
+            });
+        }
+
+        function CheckCompanyCode() {
+           $.ajax({
+                method: "POST",
+                cache: false,
+                url: '@Url.Action("CheckCompanyCode", "PRTX002", new { area = "PayRoll" })',
+                data: { CompanyCode: $("#CompanyCode").val() },
+                complete: function (check) {
+                    if (check.responseText != "") {
+                        $("#CompanyCode").val(check.responseText);
+                    } else {
+                        $("#CompanyCode").val('');
+                        appendMessage("錯誤訊息:保險公司代碼不存在");
+                    }
+                },
+                error: function (ex) {
+                    if (ex.statusText == "OK") {
+                    } else {
+                        appendMessage("系統發生錯誤");
+                    }
+                }
+            });
+        }
+
+        function GetAgentNameByPoag() {
+            if (($("#ReasonCode").val() == "01" || $("#ReasonCode").val() == "05") && $("#PolicyNo2").val() != "" && $("#AdjType6 option:selected").val() == 6) {
+                $("#AgentName").val('');
+                $("#AgentCode6 option").each(function () {
+                    $(this).remove();
+                });
+                $.ajax({
+                    method: "POST",
+                    cache: false,
+                    async: false,
+                    url: '@Url.Action("GetAgentNameByPoag", "PRTX002", new { area = "PayRoll" })',
+                    data: { PolicyNo2: $("#PolicyNo2").val() },
+                    complete: function (data) {
+                        if (data.responseJSON == "Error") {
+                            appendMessage("錯誤訊息:查無此保單號碼");
+                            $("#PolicyNo2").val('');
+                        } else {
+                            for (var i = 0; i < data.responseJSON.length; i++) {
+                                let split = data.responseJSON[i].split('|')
+                                let o = '<option value=' + split[1] + '>' + split[0] + '</option>'
+                                $('#AgentCode6').append(o);
+                            }
+                            let sp = data.responseJSON[0].split('|')
+                            $("#AgentName").val(sp[1]);
+                        }
+                    },
+                    error: function (ex) {
+                        if (ex.statusText == "OK") {
+                        } else {
+                            appendMessage("系統發生錯誤");
+                        }
+                    }
+                });
+            } else if (($("#ReasonCode").val() == "01" || $("#ReasonCode").val() == "05") && $("#PolicyNo2").val() == "" && $("#AdjType6 option:selected").val() == 6) {
+                $("#AgentName").val('');
+                $("#AgentCode6 option").each(function () {
+                    $(this).remove();
+                });
+            }
+            ChangeAgentCode6();
+        }
+        function ChangeAgentCode6() {
+            let AdjType6 = $("#AdjType6 option:selected").val();
+            if (AdjType6 == 6) {
+                if ($("#PolicyNo2").val() == "") {
+                    $('#AgentCode6').prop('disabled', true);
+                } else {
+                    $('#AgentCode6').prop('disabled', false);
+                }
+            }
+        }
+
+        function CheckFieldValue() {
+            var flag = true;
+            clearMessage();
+            let ReasonCode = $("#ReasonCode").val();
+
+            if (ReasonCode == "") {
+                appendMessage("錯誤訊息:原因碼；不可空白");
+                flag = false;
+                return false;
+            }
+            if (!AdjTypeCheck) {
+                appendMessage("原因碼錯誤");
+                flag = false;
+                return false;
+            }
+        @*@if (!User.HasPermission("EB.SL.PayRoll.PRTX002.Admin"))
+        {
+            <text>
+            if ($("#AdjType").val() == 4 || $("#AdjType6 option:selected").val() == 6 || $("#AdjType6 option:selected").val() == 4) {
+                appendMessage("錯誤訊息:無權限執行型態4及型態6");
+                flag = false;
+                return false;
+            }
+            </text>
+        }*@
+            if (ReasonCode == "01" || ReasonCode == "02" || ReasonCode == "03"  || ReasonCode == "05" || ReasonCode == "06"
+                || ReasonCode == "0A" || ReasonCode == "0B" || ReasonCode == "0G") {
+                if ($("#CollectYear").val() == "") {
+                    appendMessage("錯誤訊息:繳費年期；不可空白");
+                    flag = false;
+                    return false;
+                }
+            }
+            if (ReasonCode == "01" || ReasonCode == "02" || ReasonCode == "03" || ReasonCode == "04") {
+                if ($("#FYC").val() == "") {
+                    appendMessage("錯誤訊息:FYC；不可空白");
+                    flag = false;
+                    return false;
+                }
+            }
+            if (ReasonCode == "01" || ReasonCode == "02" || ReasonCode == "03" || ReasonCode == "04" || ReasonCode == "05" || ReasonCode == "06" || ReasonCode == "07"
+                || ReasonCode == "0A" || ReasonCode == "0B" || ReasonCode == "0C" || ReasonCode == "0D" || ReasonCode == "0G") {
+                if ($("#FYP").val() == "") {
+                    appendMessage("錯誤訊息:保費；不可空白");
+                    flag = false;
+                    return false;
+                }
+            }
+            if (ReasonCode == "01" || ReasonCode == "02" || ReasonCode == "03" || ReasonCode == "05" || ReasonCode == "06" || ReasonCode == "0A" || ReasonCode == "0B" || ReasonCode == "0G") {
+                if ($("#PlanCode").val() == "") {
+                    appendMessage("錯誤訊息:險種代碼；不可空白");
+                    flag = false;
+                    return false;
+                }
+            }
+            ///原因碼01&05
+            if ($("#ReasonCode").val() == "01" || $("#ReasonCode").val() == "05") {
+                var AdjType6 = document.getElementById("AdjType6");
+                var AdjType6Value = AdjType6.value;
+
+                if (AdjType6Value === "") {
+                    appendMessage("錯誤訊息:型態；不可空白");
+                    flag = false;
+                    return false;
+                }
+
+                if ($("#AdjType6 option:selected").val() == 4 || $("#AdjType6 option:selected").val() == 6) {
+                    if ($("#CompanyCode").val() == "") {
+                        appendMessage("錯誤訊息:保險公司代碼；不可空白");
+                        flag = false;
+                        return false;
+                    }
+                    if ($("#PolicyNo2").val() == "" && $("#AdjType6 option:selected").val() == 6) {
+                        appendMessage("錯誤訊息:保單號碼；不可空白");
+                        flag = false;
+                        return false;
+                    }
+                }
+                var AgentCode6 = document.getElementById("AgentCode6");
+                var AgentCode6Value = AgentCode6.value;
+
+                if (AgentCode6Value === "") {
+                    appendMessage("錯誤訊息:業務員代碼；不可空白");
+                    flag = false;
+                    return false;
+                }
+                if ($("#AgentName").val() == "") {
+                    appendMessage("錯誤訊息:業務員姓名；不可空白");
+                    flag = false;
+                    return false;
+                }
+                if ($("#Amount").val() == "") {
+                    appendMessage("錯誤訊息:金額；不可空白");
+                    flag = false;
+                    return false;
+                }
+                if ($("#AdjType6 option:selected").val() == 4 || $("#AdjType6 option:selected").val() == 6) {
+                    if ($("#ModxSequence").val() != "") {
+                        let pattern = /\d{4}[M|Q|S|Y|D]/;
+                        let ModxSequence = $("#ModxSequence").val();
+                        //繳別繳次前4碼為數字，第5碼為M|Q|S|Y|D
+                        if (pattern.test(ModxSequence) == false) {
+                            appendMessage("錯誤訊息:繳別繳次；格式錯誤");
+                            flag = false;
+                            return false;
+                        }
+                    }
+                }
+            } else {///型態4&8
+
+                if ($("#AdjType").val() == "") {
+                    appendMessage("錯誤訊息:型態；不可空白");
+                    flag = false;
+                    return false;
+                }
+                if ($("#AgentCode").val() == "") {
+                    appendMessage("錯誤訊息:業務員代碼；不可空白");
+                    flag = false;
+                    return false;
+                }
+                if ($("#AgentName").val() == "") {
+                    appendMessage("錯誤訊息:業務員姓名；不可空白");
+                    flag = false;
+                    return false;
+                }
+                if ($("#Amount").val() == "") {
+                    appendMessage("錯誤訊息:金額；不可空白");
+                    flag = false;
+                    return false;
+                }
+                if ($("#AdjType").val() == 4) {
+                    if ($("#CompanyCode").val() == "") {
+                        appendMessage("錯誤訊息:保險公司代碼；不可空白");
+                        flag = false;
+                        return false;
+                    }
+                }
+
+                if ($("#AdjType").val() == 4) {
+                    if ($("#ModxSequence").val() != "") {
+                        let pattern = /\d{4}[M|Q|S|Y|D]/;
+                        let ModxSequence = $("#ModxSequence").val();
+                        //繳別繳次前4碼為數字，第5碼為M|Q|S|Y|D
+                        if (pattern.test(ModxSequence) == false) {
+                            appendMessage("錯誤訊息:繳別繳次；格式錯誤");
+                            flag = false;
+                            return false;
+                        }
+                    }
+                }
+            }
+            //if ($("#DescContent").val() == "") {
+            //    appendMessage("錯誤訊息:說明內容；不可空白");
+            //    flag = false;
+            //    return false;
+            //}
+            if (flag == false) {
+                return false;
+            }
+            return true;
+        }
+    </script>
+}

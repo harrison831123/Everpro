@@ -1,0 +1,99 @@
+﻿@model GridViewInit
+@*SS結案*@
+<div id="@(Model.ID)MarkPreview">
+    <div class="jqGrid">
+        <table id="@(Model.ID)"></table>
+    </div>
+</div>
+
+<div id="@(Model.ID)pagger"></div>
+
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <div><span id="SpanCloseView" class="close">&times;</span></div>
+
+        <div id="urlView">
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+        $(document).ready(
+
+
+        )
+
+
+        function @(Model.ID)bindGrid() {
+            $("#@(Model.ID)").jqGrid({
+                url: '@Model.BindUrl',
+	            shrinkToFit:false,
+                datatype: "json",
+                 mtype: "POST",
+                colNames: ["序號", '處理單號', '來<br>源',"承<br>辦<br>人",'是<br>否<br>到<br>保<br>險<br>局<br>申<br>訴', '是<br>否<br>到<br>立<br>法<br>院<br>申<br>訴', '是<br>否<br>到<br>北<br>市<br>府<br>申<br>訴', '是<br>否<br>到<br>北<br>縣<br>府<br>申<br>訴', '受<br>理<br>月', '受<br>理<br>日',
+                    '保<br>險<br>公<br>司', '要<br>保<br>人', '被<br>保<br>人', '生<br>效<br>年<br>度', '生效日', '保單號碼', '類<br>別', '服務摘要',
+                    '副<br>總<br>體<br>系', '協<br>理<br>體<br>系', '單<br>位', '處<br>別', '原<br>經<br>手<br>人', '現<br>經<br>手<br>人', '接<br>續<br>經<br>手<br>人', '實<br>際<br>結<br>案<br>日',
+                    '結<br>案<br>天<br>數',
+                    '服<br>務<br>案<br>結<br>案<br>情<br>形', '備<br>註', '維護<br>紀錄', '稽催<br>紀錄',
+                    '匯出處理單'
+                ],
+                colModel: [
+                { name: "sNo", hidden: true },
+                { name: "crm_no", index: "crm_no", width: 69 },
+                { name: "crm_source_str", index: "crm_source_str", width: 57 },
+                    { name: "crm_douser", index: "crm_douser", width: 50 },
+                    { name: "crm_source15", width: 20 },
+                    { name: "crm_source30", width: 20 },
+                    { name: "crm_source26", width: 20 },
+                    { name: "crm_source27", width: 20 },
+                { name: "crm_no_createdate_month", index: "crm_no_createdate_month", width: 35 },
+                { name: "crm_no_createdate_date", index: "crm_no_createdate_date", width: 35 },
+                { name: "company_name", index: "company_name", width: 35 },
+                { name: "owner", index: "owner", width: 50 },
+                { name: "insured", index: "insured", width: 50 },
+                { name: "issdate_year", index: "issdate_year", width: 35 },
+                    { name: "issdate", index: "issdate", width: 74 },
+                    { name: "policy_no2", index: "policy_no2", width: 82 },
+                { name: "crm_dotype_str", index: "crm_dotype_str", width: 65 },
+                { name: "crm_content", index: "crm_content" },
+                    { name: "now_vmname", index: "now_vmname", width: 41 },
+                    { name: "now_smname", index: "now_smname", width: 34 },
+                    { name: "now_wc_centername_unit", index: "now_wc_centername_unit", width: 41 },
+                    { name: "now_wc_centername_div", index: "now_wc_centername_div", width: 35 },
+                    { name: "orgid_agname", index: "orgid_agname", width: 40 },
+                    { name: "now_agname", index: "now_agname", width: 40 },
+                    { name: "sub_agname ", index: "sub_agname ", width: 40 },
+                    { name: "crm_closedate", index: "crm_closedate", width: 87 },
+                //結案天數
+                { name: "crm_closedate_day", index: "crm_closedate_day", width: 41 },
+                { name: "crm_close_str", index: "crm_close_str", width: 35 },
+                { name: "crm_closedesc", index: "crm_closedesc", width: 65 },
+                    { name: "MaintainBox", width: 70 },
+                    { name: "UrgeBox", width: 70 },
+                    { name: "ExportBox", width: 70},
+            ],
+            jsonReader: {   //讀JSON格式資料
+                    repeatitems: false,
+                id: "mg_id"
+            },
+              @if (Model.Pagging)
+            { <text> pager: "@(Model.ID)pagger", </text>}
+            onSelectRow: function (id) {
+                if (id) {
+
+                }
+                else {
+                }
+            },
+
+            });
+            $("#@(Model.ID)").jqGrid("navGrid", "#@(Model.ID)pagger", { add: false, edit: false, del: false, search: false, refresh: false });
+            $("#@(Model.ID)").jqGrid("navButtonAdd", "#@(Model.ID)pagger", { id: 'export', caption:'@EP.PlatformResources.匯出報表', title: '@EP.PlatformResources.匯出', onClickButton: Microsoft.UI.Grid.gridExport });
+            $("#@(Model.ID)").trigger("reloadGrid");
+        }
+
+</script>

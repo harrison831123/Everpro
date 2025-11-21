@@ -1,0 +1,183 @@
+﻿@model EP.SD.SalesSupport.CUSCRM.NotifyReportModel
+@{
+    ViewBag.Title = "照會單";
+}
+
+<STYLE>
+    DIV.crystalstyle DIV {
+        POSITION: absolute;
+        Z-INDEX: 25
+    }
+
+    DIV.crystalstyle A {
+        TEXT-DECORATION: none
+    }
+
+        DIV.crystalstyle A IMG {
+            BORDER-TOP: 0px;
+            BORDER-RIGHT: 0px;
+            BORDER-BOTTOM: 0px;
+            BORDER-LEFT: 0px
+        }
+
+    .Note {
+        FONT-SIZE: 12pt;
+        FONT-FAMILY: "新細明體";
+        FONT-WEIGHT: normal;
+        COLOR: #000000
+    }
+
+    .CreateTime {
+        FONT-SIZE: 12pt;
+        FONT-FAMILY: "標楷體";
+        FONT-WEIGHT: normal;
+        COLOR: #000000
+    }
+
+    .NoteTitle {
+        FONT-SIZE: 20pt;
+        FONT-FAMILY: "標楷體";
+        FONT-WEIGHT: normal;
+        COLOR: #000000
+    }
+
+    .NoteTitle2 {
+        FONT-SIZE: 18pt;
+        FONT-FAMILY: "標楷體";
+        FONT-WEIGHT: normal;
+        COLOR: #000000
+    }
+
+    .Word {
+        FONT-SIZE: 13pt;
+        FONT-FAMILY: "標楷體";
+        FONT-WEIGHT: normal;
+        COLOR: #000000
+    }
+
+    .ToUser {
+        FONT-SIZE: 13pt;
+        TEXT-DECORATION: underline !important;
+        FONT-FAMILY: "標楷體";
+        FONT-WEIGHT: normal;
+        COLOR: #000000
+    }
+
+    .NoteFooter {
+        FONT-SIZE: 12pt;
+        FONT-FAMILY: "標楷體";
+        FONT-WEIGHT: bold;
+        COLOR: #000000
+    }
+
+    .DoUser {
+        FONT-SIZE: 12pt;
+        FONT-FAMILY: "Times New Roman";
+        FONT-WEIGHT: bold;
+        COLOR: #000000
+    }
+
+    .NoteTitle3 {
+        BORDER-LEFT-WIDTH: 0px;
+        BORDER-RIGHT-WIDTH: 0px;
+        BORDER-TOP-COLOR: #000000;
+        BORDER-BOTTOM-WIDTH: 0px;
+        BORDER-LEFT-COLOR: #000000;
+        BORDER-BOTTOM-COLOR: #000000;
+        BORDER-RIGHT-COLOR: #000000;
+        BORDER-TOP-WIDTH: 0px
+    }
+</STYLE>
+
+<DIV id=CrystalReportViewer1_ctl01 class=crystalstyle style="OVERFLOW: hidden; HEIGHT: 100%; WIDTH: 100%" name="CrystalReportViewer1$ctl01">
+    <DIV class=crystalstyle style="OVERFLOW: hidden; HEIGHT: 1075px; WIDTH: 746px; LEFT: 0px; MARGIN: 24px; TOP: 0px">
+        <DIV id=Section1 style="HEIGHT: 39px; WIDTH: 746px; LEFT: 0px; Z-INDEX: 3; TOP: 0px"></DIV>
+        <DIV id=Section2 style="HEIGHT: 40px; WIDTH: 746px; LEFT: 0px; Z-INDEX: 3; TOP: 39px"></DIV>
+        <DIV id=Text2 class="tbg NoteTitle3" style="CLIP: rect(0px 290px 23px 0px); HEIGHT: 22px; WIDTH: 304px; LEFT: 456px; TOP: 47px">
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 19px"><SPAN class=Note>照會日期：</SPAN><SPAN class=CreateTime>@Model.CreateTime</SPAN></SPAN></P>
+        </DIV>
+        <DIV id=Section3 style="HEIGHT: 756px; WIDTH: 746px; LEFT: 0px; Z-INDEX: 3; TOP: 79px"></DIV>
+        <DIV id=Text1 class="tbg NoteTitle3" style="HEIGHT: 746px; WIDTH: 726px; LEFT: 15px; TOP: 79px">
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px" align=center><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 32px"><SPAN class=NoteTitle>永達總公司客服部申訴照會單</SPAN></SPAN></P>
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 24px"><SPAN>&nbsp;</SPAN></SPAN></P>
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px" align=center><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 29px"><SPAN class=NoteTitle2>【保戶 @Model.Complainant 申訴案】</SPAN></SPAN></P>
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 24px"><SPAN>&nbsp;</SPAN></SPAN></P>
+            <P style="POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px; word-wrap: break-word; ">
+                <SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 30px">
+                    <SPAN class="Word">
+                        @{
+                            string To = string.Empty;
+                            for (int i = 0; i < Model.To.Count; i++)
+                            {
+                                if (i == 0)
+                                {
+                                    To = @Model.To[i];
+                                }
+                                else
+                                {
+                                    To = To + "、" + @Model.To[i];
+                                }
+
+                            }
+                            <text>
+                                受文者：@To
+                            </text>
+                        }
+                    </SPAN>
+                </SPAN>
+            </P>
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 30px"><SPAN class=Word>主&nbsp;&nbsp;旨：保戶</SPAN><SPAN class=ToUser>@Model.Complainant</SPAN><SPAN class=Word>申訴照會</SPAN></SPAN></P>
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; PADDING-LEFT: 1px; DISPLAY: block; LINE-HEIGHT: 30px"><SPAN class=Word>內&nbsp;&nbsp;容：茲收到</SPAN><SPAN class=ToUser>@Model.SourceDesc</SPAN><SPAN class=Word>，敬請協助處理並儘速保全，務請</SPAN><SPAN class=ToUser>@Model.CreateFiveTime</SPAN></SPAN></P>
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; PADDING-LEFT: 1px; DISPLAY: block; LINE-HEIGHT: 30px"><SPAN class=Word>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;前提供下列資料，若逾結案期限未答覆或未針對申訴內容答覆者，將逕行查證</SPAN></SPAN></P>
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; PADDING-LEFT: 2px; DISPLAY: block; LINE-HEIGHT: 30px"><SPAN class=Word>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;並核定結案方式，以免延誤處理時機，謝謝配合！</SPAN></SPAN></P>
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 30px"><SPAN>&nbsp;</SPAN></SPAN></P>
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px">
+                <SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 30px">
+                    <SPAN class=Word>
+                        @if (!String.IsNullOrEmpty(Model.BizContract))
+                        {
+                            <text>
+                                ■針對保戶申訴事項以附件業務連繫函逐一答覆
+                            </text>
+                        }
+                        else
+                        {
+                            <text>
+                                □針對保戶申訴事項以附件業務連繫函逐一答覆
+                            </text>
+                        }
+                    </SPAN>
+                </SPAN>
+            </P>
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px">
+                <SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 30px">
+                    <SPAN class=Word>
+                        @if (!String.IsNullOrEmpty(Model.SolicitingRpt))
+                        {
+                            <text>
+                                ■請回覆附件「報告書」
+                            </text>
+                        }
+                        else
+                        {
+                            <text>
+                                □請回覆附件「報告書」
+                            </text>
+                        }
+                    </SPAN>
+                    <SPAN class=ToUser>※為爭取案件時效，請完成後先傳真至客服部傳真專線</SPAN>
+                </SPAN>
+            </P>
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 30px; PADDING-LEFT: 20px;"><SPAN class=ToUser>部FAX(02)2531-9969，再將正本寄至本單位。</SPAN></SPAN></P>
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 30px"><SPAN class=Word>□如該申訴案已澄清或解決，需請申訴人簽署聲明書(請洽承辦人)</SPAN></SPAN></P>
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; PADDING-LEFT: 2px; DISPLAY: block; LINE-HEIGHT: 30px"><SPAN class=Word>備註一：貴單位之回覆內容，將提供保險公司及相關機構參考。</SPAN></SPAN></P>
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; PADDING-LEFT: 2px; DISPLAY: block; LINE-HEIGHT: 30px"><SPAN class=Word>※備註二：招攬人與申訴人連繫時請注意！</SPAN></SPAN></P>
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 30px"><SPAN class=Word>備註三：依</SPAN><SPAN class=ToUser>金融消費者保護法</SPAN><SPAN class=Word>第13條第2項規定:公司應於收受申訴之日起三十日內為適</SPAN></SPAN><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 24px"><SPAN class=Word style="POSITION: relative; PADDING-LEFT: 69px;">當之處理，並將處理結果回覆保戶;保戶不接受處理結果者或金融服務業逾三十</SPAN></SPAN><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 24px"><SPAN class=Word style="POSITION: relative; PADDING-LEFT: 69px;">日不為處理者，保戶得於六十日內向財團法人金融消費者評議中心申請評議。</SPAN></SPAN></P>
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 30px"><SPAN>&nbsp;</SPAN></SPAN></P>
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 30px"><SPAN>&nbsp;</SPAN></SPAN></P>
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; PADDING-LEFT: 160px; DISPLAY: block; LINE-HEIGHT: 21px"><SPAN class=NoteFooter>永達總公司客服部</SPAN><SPAN class=DoUser>&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN class=NoteFooter>經辦：@Model.DoUserName</SPAN><SPAN class=DoUser>&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN class=NoteFooter>分機：@Model.DoUserTelExt</SPAN></SPAN></P>
+        </DIV>
+        <DIV id=Section4 style="HEIGHT: 19px; WIDTH: 746px; LEFT: 0px; Z-INDEX: 3; TOP: 835px"></DIV>
+        <DIV id=Section5 style="HEIGHT: 40px; WIDTH: 746px; LEFT: 0px; Z-INDEX: 3; TOP: 1035px"></DIV>
+    </DIV>
+</DIV>

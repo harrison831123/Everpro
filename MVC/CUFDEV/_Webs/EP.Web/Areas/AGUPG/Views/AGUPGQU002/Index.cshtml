@@ -1,0 +1,139 @@
+﻿@model FamilyDto
+@{
+    ViewBag.Title = AGUPGResource.晉級;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+<style>
+    .card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 12px;
+        margin-bottom: 12px;
+        /*box-shadow: 0 2px 6px rgba(0,0,0,0.05);*/
+        /*box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);*/
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-clickable {
+        cursor: pointer;
+        transition: box-shadow 0.2s ease, transform 0.15s ease;
+    }
+
+        .card-clickable:active {
+            transform: scale(0.99); /*按鈕效果*/
+            box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+        }
+
+    .boss {
+        background: #fff7e6;
+        border-left: 5px solid #ffb84d;
+        padding: 12px;
+    }
+
+    .boss-header {
+        padding: 8px 0;
+    }
+
+    .boss-name {
+        font-size: 18px;
+        font-weight: bold;
+        margin-right: 5px;
+    }
+
+    .tree-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: #eee 1px solid;
+        padding: 8px 0;
+    }
+
+        .tree-item:last-child {
+            border-bottom: 0;
+        }
+
+    .rank {
+        font-weight: bold;
+        color: #ff7a00;
+        margin-right: 5px;
+    }
+
+    .AgentName {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .level {
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        background: #EBFFEB;
+        color: #067800;
+        font-size: 14px;
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+
+    .badge {
+        padding: 3px 0px 3px 0px;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .achieved {
+        background-color: #ffeded;
+        color: #c40000;
+    }
+
+    .not-achieved {
+        background-color: #e7ffef;
+        color: #0a7b00;
+    }
+
+    #NoData1 {
+        font-size: 36px;
+    }
+</style>
+
+@if (Model.FamilyBoss != null && Model.FamilyBoss.Any())
+{
+    var boss = Model.FamilyBoss.First();
+    <div class="card boss">
+        <div class="boss-header">
+            <span class="boss-name">@boss.AgentName</span>
+            <span class="level">@boss.AgLevelName</span>
+        </div>
+        <div style="color:red;">@Model.AgData</div>
+    </div>
+}
+
+@if (Model.FamilyTree != null && Model.FamilyTree.Any())
+{
+    foreach (var item in Model.FamilyTree)
+    {
+        <div class="card card-clickable" onclick="getAGUPGQU001('@item.AgentCode')">
+            <div class="tree-item">
+                <div>
+                    <span class="rank">@item.MgNo</span>
+                    <span class="AgentName">@item.AgentName</span>
+                    <span class="level">@item.AgLevelName</span>
+                </div>
+
+                @if (!String.IsNullOrEmpty(item.RstUpgrade))
+                {
+                    <span class="badge achieved">@item.RstUpgrade</span>
+                }
+            </div>
+        </div>
+    }
+}
+
+@if (Model.FamilyTree == null && Model.FamilyBoss == null)
+{
+    <div><label id="NoData1">查無資料</label></div>
+}
+
+<script>
+    function getAGUPGQU001(code) {
+        window.location.href = '@Url.Action("Index", "AGUPGQU001")' + '?code=' + code;
+    }
+</script>

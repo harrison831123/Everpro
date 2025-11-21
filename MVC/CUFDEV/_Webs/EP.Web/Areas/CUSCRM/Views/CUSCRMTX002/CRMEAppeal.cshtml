@@ -1,0 +1,171 @@
+﻿@model EP.SD.SalesSupport.CUSCRM.CRMEAppealBy
+@{
+    ViewBag.Title = "立案申訴(客戶申訴件)通知";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    //var thisGroupType = AccountGroupType.System;
+    WebChannel<EP.SD.SalesSupport.CUSCRM.Service.INotifyService> Service = new WebChannel<EP.SD.SalesSupport.CUSCRM.Service.INotifyService>();
+    var cus = new List<sc_member>();
+    Service.Use(s => cus = s.GetCustomerUnit());
+}
+
+<h4>受理編號：@ViewBag.No </h4>
+
+
+@using (Html.BeginForm("CRMEAppeal", "CUSCRMTX002", null, FormMethod.Post, new { id = "CreateSubmit" }))
+{
+
+    <div class="form-group row">
+        <div class="detail-col">
+            @*@Html.LabelFor(m => m.No, new { @class = "detail-msg col-md-2" })*@
+            @Html.TextBoxFor(m => m.No, new { @id = "No", style = "width:30%", @maxlength = "250", @class = "detail-cell",type="Hidden", @Value = @ViewBag.No })
+        </div>
+
+        <div class="detail-col">
+            @Html.LabelFor(m => m.AppealName, new { @class = "detail-msg col-md-2" })
+            @Html.TextBoxFor(m => m.AppealName, new { @id = "AppealName", style = "width:30%", @maxlength = "250", @class = "detail-cell", @readonly="readonly", @Value = ViewBag.AppealName })
+        </div>
+
+        <div class="detail-col">
+            @Html.LabelFor(m => m.AppealMobile, new { @class = "detail-msg col-md-2" })
+            @Html.TextBoxFor(m => m.AppealMobile, new { @id = "AppealMobile", style = "width:30%", @maxlength = "250", @class = "detail-cell" })
+        </div>
+
+        <div class="detail-col">
+            @Html.LabelFor(m => m.AppealEmail, new { @class = "detail-msg col-md-2" })
+            @Html.TextBoxFor(m => m.AppealEmail, new { @id = "AppealEmail", style = "width:30%", @maxlength = "250", @class = "detail-cell" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col">
+            @Html.LabelFor(m => m.EntrustdName, new { @class = "detail-msg col-md-2" })
+            @Html.TextBoxFor(m => m.EntrustdName, new { @id = "EntrustdName", style = "width:30%", @maxlength = "250", @class = "detail-cell" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col">
+            @Html.LabelFor(m => m.EntrustdMobile, new { @class = "detail-msg col-md-2" })
+            @Html.TextBoxFor(m => m.EntrustdMobile, new { @id = "EntrustdMobile", style = "width:30%", @maxlength = "250", @class = "detail-cell" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col">
+            @Html.LabelFor(m => m.EntrustdEmail, new { @class = "detail-msg col-md-2" })
+            @Html.TextBoxFor(m => m.EntrustdEmail, new { @id = "EntrustdEmail", style = "width:30%", @maxlength = "250", @class = "detail-cell" })
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="detail-col" id="recipient-area">
+            <div class="col-md-3">
+                <label class="detail-msg">經辦</label>
+                <br />
+                <select id="DoUser" class="form-control" name="DoUser">
+                    @for (var i = 0; i < cus.Count; i++)
+                    {
+                        if (cus[i].MemberID == User.MemberInfo.ID)
+                        {
+                            <text>
+                                <option value="@cus[i].MemberID" selected="selected">@cus[i].MemberName</option>
+                            </text>
+                        }
+                        else
+                        {
+                            <text>
+                                <option value="@cus[i].MemberID">@cus[i].MemberName</option>
+                            </text>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col">
+            @Html.LabelFor(m => m.DoUserFirstName, new { @class = "detail-msg col-md-2" })
+            @Html.TextBoxFor(m => m.DoUserFirstName, new { @id = "DoUserFirstName", style = "width:30%", @maxlength = "250", @class = "detail-cell" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col ">
+            <div class="col-md-3">
+                <label class="detail-msg">稱謂</label>
+                <div class="form-check form-check-inline">
+                    @Html.RadioButtonFor(m => m.Title, "先生")先生
+                    @Html.RadioButtonFor(m => m.Title, "小姐")小姐
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col">
+            @Html.LabelFor(m => m.DoUserTelExt, new { @class = "detail-msg col-md-2" })
+            @Html.TextBoxFor(m => m.DoUserTelExt, new { @id = "DoUserTelExt", style = "width:30%", @maxlength = "250", @class = "detail-cell" })
+        </div>
+    </div>
+    @*<div id="BtnArea">
+            <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.更新" data-bind="click: SaveClick" />
+            <input id="btnCancel" type="button" class="btn btn-default" value="@EP.PlatformResources.取消" data-bind="click: CancelClick" />
+        </div>*@
+    <div>
+        @*@Html.Action("CUSCRMTX001","Index")*@
+    </div>
+    <div id="BtnArea">
+        <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.確定 " data-bind="click: SaveClick" />
+        @*<input id="btnCancel" type="button" class="btn btn-default" value="@EP.PlatformResources.取消" data-bind="click: CancelClick" />*@
+    </div>
+
+}
+<script>
+    var ViewModel = {
+        SaveClick: function () {
+            if (saveValidator()) {
+                clearMessage();@*清除訊息*@
+                var tabNo = $("#No").val();
+                $("#CreateSubmit").attr('action', '@Url.Action("CRMEAppeal", "CUSCRMTX002")');
+                $("#CreateSubmit").submit();
+            }
+        },
+        CancelClick: function () {
+            clearMessage(); @* 清除訊息 *@
+            window.close();
+        }
+    };
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+        $('input[id="DoUserFirstName"]').val($('#DoUser option:selected').text().substring(0, 1));        
+    });
+
+    $('#DoUser').on("change", function () {
+        $('input[id="DoUserFirstName"]').val($('#DoUser option:selected').text().substring(0, 1));
+    });
+
+    function saveValidator() {
+        if ($("#AppealMobile").val() == "") {
+            appendMessage("@( "申訴人行動電話必填")");
+            return false;
+        }
+        @*if ($("#AppealEmail").val() == "") {
+            appendMessage("@( "申訴人email必填")");
+            return false;
+        }*@
+        if ($("#AppealMobile").val().trim() != "") {
+            @*var regex = /^09\d{8}$/; *@
+            var regex = /^0\/(\d{8})|(\d{9})$/;
+            if ($("#AppealMobile").val().trim().match(regex) == null) {
+                appendMessage("@( "申訴人行動電話含有不是數字的字元")");
+                $("#AppealMobile").focus();
+                return false;
+            }
+        }
+        if ($("#EntrustdMobile").val().trim() != "") {
+            @*var regex = /^09\d{8}$/; *@
+            var regex = /^0\/(\d{8})|(\d{9})$/;
+            if ($("#EntrustdMobile").val().trim().match(regex) == null) {
+                appendMessage("@( "受任人行動電話含有不是數字的字元")");
+                $("#EntrustdMobile").focus();
+                return false;
+            }
+        }
+        return true;
+    }
+</script>

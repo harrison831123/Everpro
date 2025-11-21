@@ -1,0 +1,257 @@
+﻿@model EB.SL.MerSal.Models.MerSalCutViewModel
+@{
+    ViewBag.Title = "原始檔系統保留暨人工調帳查詢";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    WebChannel<EB.SL.MerSal.Service.IMerSalService> MerSalService = new WebChannel<EB.SL.MerSal.Service.IMerSalService>();
+    EB.SL.MerSal.Service.IMerSalService MerSalServiceS = Microsoft.CUF.Framework.Service.ServiceHelper.Create<EB.SL.MerSal.Service.IMerSalService>();
+    //保公
+    var companylist = new List<TermVal>();
+    MerSalService.Use(s => companylist = s.GetCompanyCode());
+    //目前工作月
+    string ProductionYM = string.Empty;
+    MerSalService.Use(s => ProductionYM = s.GetProductionYm());
+    ProductionYM = !String.IsNullOrEmpty(ProductionYM) ? EB.SL.MerSal.Web.Areas.MerSal.Utilities.MerSalHelper.RocToWY(ProductionYM) : ProductionYM;
+    //目前次薪
+    string Sequence = string.Empty;
+    MerSalService.Use(s => Sequence = s.GetSequence());
+}
+<style>
+    /*表頭自動換行*/
+    th.ui-th-column div {
+        white-space: normal !important;
+        height: auto !important;
+        padding: 0px;
+    }
+
+    /*單元格內的文本自動換行*/
+    .ui-jqgrid tr.jqgrow td {
+        white-space: normal !important;
+        height: auto;
+        vertical-align: text-top;
+        padding-top: 2px;
+        word-break: break-all; /*（IE瀏覽器）連續的英文字符和阿拉伯數字,需使用word-wrap : break-word ;或者word-break:break-all;實現強制斷行*/
+    }
+
+    /*    .ui-jqgrid tr.jqgrow td {
+        white-space: normal;
+    }*/
+
+</style>
+<div id="divQueryBlock">
+    <div class="ibox ibox-primary">
+        <div class="ibox-head">
+            <div class="ibox-title">原始檔系統保留暨人工調帳查詢</div>
+            <div class="ibox-tools">
+                <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
+                <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
+            </div>
+        </div>
+        @using (Ajax.BeginForm("Query", "MerSalQU002", new { area = "MerSal" }, new AjaxOptions { OnSuccess = "BindGrid" }, new { id = "QueryForm" }))
+        {
+    <div class="ibox-body">
+        <div class="form-group row">
+            <div class="col-md-1" style="padding-right: 0px">
+                @Html.LabelFor(m => m.ProductionYM, new { @class = "col-form-label" })
+            </div>
+            <div class="col-md-2">
+                @Html.TextBoxFor(m => m.ProductionYM, new { @class = "form-control datepickerToM", @Value = ProductionYM })
+
+                @*@Html.TextBoxFor(m => m.ProductionYM, new { @class = "form-control datepickerToM", @Value = ProductionYM = !String.IsNullOrEmpty(MerSalServiceS.GetProductionYm()) ? EB.SL.MerSal.Web.Areas.MerSal.Utilities.MerSalHelper.RocToWY(MerSalServiceS.GetProductionYm()) : ProductionYM })*@
+            </div>
+            <div class="col-md-1">
+                @Html.LabelFor(m => m.Sequence, new { @class = "col-form-label" })
+            </div>
+            <div class="col-md-2">
+                @*@Html.TextBoxFor(m => m.Sequence, new { @class = "form-control", placeholder = "1" })*@
+                <input type="text" class="form-control" name="Sequence" id="Sequence" value="@Sequence" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-1 col-form-label" style="padding-right: 0px" for="CompanyCode">保險公司</label>
+            <div class="col-md-2">
+                <select class="form-select" id="CompanyCode" name="CompanyCode">
+                    <option value="">請選擇</option>
+                    @foreach (var item in companylist)
+                            {
+                    <option value="@item.TermCode">@item.TermMeaning</option>
+                            }
+                </select>
+            </div>
+            <label class="col-md-1 col-form-label" style="padding-right: 0px" for="CheckInd">類型</label>
+            <div class="col-md-2">
+                <select class="form-select" id="CheckInd" name="CheckInd">
+                    <option value="">請選擇</option>
+                    <option value="Cut00">保留</option>
+                    <option value="Cut01">人工調整</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-12">
+                <button class="btn btn-primary" id="btnQuery" data-bind="click: QueryClick">查詢</button>
+                <button class="btn btn-warning" id="btnReport" data-bind="click: ReportClick">查詢結果下載</button>
+                <button class="btn btn-warning" id="btnRptPayRoll" data-bind="click: ReportClick">大批人工調帳格式下載</button>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-12">
+                <span class="col-md-4 col-form-label" style="color: red">
+                    <br />
+                    注意事項：<br />
+                    大批調整工作月僅更新第一次資料<br />
+                </span>
+
+            </div>
+        </div>
+    </div>
+        }
+    </div>
+    @section GridActions {
+        <div class="ibox-body">
+            <div class="jqGrid">
+                <table id="Result"></table>
+            </div>
+            <div id="ResultPagger"></div>
+        </div>
+    }
+</div>
+@section Scripts{
+    <script>
+        var BtnType = "";
+
+        //執行順序1
+        $("button").click(function () {
+            //alert("Value: " + $("button").id);
+            BtnType = $(this).attr('id');
+            //alert(BtnType);
+        });
+
+        //執行順序2
+        var ViewModel = {
+            QueryClick: function () {
+                if (ChkQuery()) {
+                    $("form#QueryForm").trigger("submit");
+                }
+            },
+            ReportClick: function () {
+                ReportBinding();
+            },
+        };
+
+        //執行順序3==>這個沒用
+        $(document).on('click', '#btnReport', function () {
+            console.log('123');
+        });
+
+        function ReportBinding() {
+            clearMessage();
+
+            //傳送資料設定==>ajax的data
+            var formData = new FormData();
+            formData.append('CompanyCode', $('#CompanyCode option:selected').val());
+            formData.append('CheckInd', $('#CheckInd option:selected').val());
+            formData.append('ProductionYM', $('#ProductionYM').val());
+            formData.append('Sequence', $('#Sequence').val());
+            formData.append('BtnType', BtnType);//判斷是按哪個按鈕
+
+            if (ChkQuery()) {
+                //向遠端(Controller)要求資料
+                $.ajax({
+                    method: "POST",
+                    cache: false,
+                    url: '@Url.Action("GetMerSalCutReport", "MerSalQU002", new { area = "MerSal" })',
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function (data) {
+                        if (data != "Error") {
+                            window.location = '/MerSal/MerSalQU002/Download?fileGuid=' + data.FileGuid
+                                + '&filename=' + data.FileName;
+                        } else {
+
+                        }
+                    },
+                    error: function () {
+                        appendMessage("系統發生錯誤");
+                    }
+                });
+            }
+        }
+
+
+        $(function () {
+            ko.applyBindings(ViewModel);
+            $(".datepickerToM").datepicker({
+                format: "yyyy/mm",
+                viewMode: "months",
+                minViewMode: "months"
+            }).on("changeDate", function (e) {
+                $(this).datepicker('hide');
+            });
+        });
+
+        //GridView顯示
+        function BindGrid() {
+            $("#Result").GridUnload();
+            $("#Result").jqGrid({
+                url: '@Url.Action("BindGrid", "MerSalQU002", new { area = "MerSal" })',
+                datatype: "json",
+                mtype: "POST",
+                colNames: ["資料序號", "轉入<br/>工作月", "轉入<br/>序號", "保險<br/>公司"
+                    , "業務員(一)<br/>代碼", "業務員(一)<br/>姓名", "業務員(二)<br/>代碼", "業務員(二)<br/>姓名"
+                    , "調整原因碼"
+                    , "保單號碼", "險種代碼", "繳費<br/>年期", "繳別<br/>繳次"
+                    , "被保險人", "年齡", "生效日"
+                    , "保公保費", "保公佣金"
+                    , "大批調整<br/>年月", "大批調整<br/>序號","類型", ],
+                colModel: [
+                    { name: "IDD", index: "IDD" },
+                    { name: "ProductionYM", index: "ProductionYM", width: 115, align: "center" },
+                    { name: "Sequence", index: "Sequence", width: 50, align: "center" },
+                    { name: "CompanyCode", index: "CompanyCode", width: 70, align: "center" },
+
+                    { name: "AgentCode1", index: "AgentCode1", width: 170 },
+                    { name: "Names1", index: "Names1", width: 110, align: "center" },
+                    { name: "AgentCode2", index: "AgentCode2", width: 170 },
+                    { name: "Names2", index: "Names2", width: 110, align: "center" },
+
+                    { name: "ReasonCode", index: "ReasonCode" },
+
+                    { name: "PolicyNo2", index: "PolicyNo2" },
+                    { name: "PlanCode", index: "PlanCode" },
+                    { name: "CollectYear", index: "CollectYear", width: 80, align: "center" },
+                    { name: "ModxSequence", index: "ModxSequence", width: 90, align: "center" },
+
+                    { name: "InsuredName", index: "InsuredName", width: 110, align: "center" },
+                    { name: "Age", index: "Age", width: 80, align: "center" },
+                    { name: "PoIssueDate", index: "PoIssueDate", width: 150 },
+
+                    { name: "ModePrem", index: "ModePrem", align: "right" },
+                    { name: "CommPremC", index: "CommPremC", align: "right" },
+
+                    { name: "PayMonth", index: "PayMonth", width: 115, align: "center" },
+                    { name: "PaySeq", index: "PaySeq", width: 90, align: "center" },
+                    { name: "CheckIndName", index: "CheckIndName" }
+                ],
+                jsonReader: {
+                    repeatitems: false,
+                    id: "0"
+                },
+                loadComplete: function () {
+                    $('#Result').jqGrid("setGridWidth", $('#resultDIV').width());
+                },
+                pager: "ResultPagger"
+            });
+            $("#Result").trigger("reloadGrid");
+        }
+
+        function ChkQuery() {
+            clearMessage();
+            if ($('#CompanyCode option:selected').val() == "" && $('#ProductionYM').val() == "" && $('#Sequence').val() == "") {
+                appendMessage("保險公司、業績年月、序號不可皆為空白");
+                return false;
+            }
+            return true;
+        }
+    </script>
+}

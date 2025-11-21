@@ -1,0 +1,776 @@
+﻿@*
+    程式名稱：佣酬相關日期設定
+    建立人員：Harrison
+    建立日期：202207
+    修改記錄：（[需求單號]、[修改內容]、日期、人員）
+    需求單號:20240122004-因現有VLIFE系統(核心系統)使用已長達20多年，架構老舊，已不敷使用，且為提升資訊安全等級，故計劃執行VLIFE系統改版(新核心系統:eBroker系統)。; 修改內容:上線; 修改日期:20240613; 修改人員:Harrison;
+    需求單號:20240722004-修改「ebroker佣酬相關日期設定」輸入時的比對條件 修改內容:檢核條件和文字敘述; 修改日期:20240807; 修改人員:Harrison;
+    需求單號:20240122004-針對角色綁定權限，非管理者只能「查詢」、「報表匯出」功能; 修改日期:20240909; 修改人員:Vita;
+*@
+@model  OpCalendar
+@{
+    ViewBag.Title = "佣酬相關日期設定";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+@if (TempData["message"] != null)
+{
+    <script type="text/javascript">
+        var message = @Html.Raw(Json.Encode(TempData["message"]));
+        alert(message);
+    </script>
+}
+@*人工調整起迄設定*@
+<div id="divQueryBlock">
+    <div class="ibox ibox-primary">
+        <div class="ibox-head">
+            <div class="ibox-title">"佣酬相關日期設定"</div>
+            <div class="ibox-tools">
+                <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
+                <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
+            </div>
+        </div>
+        <div class="ibox-body queryDiv">
+            <div class="form-group row">
+                <input type="hidden" id="iden" value="@Model.Iden" />
+                <label class="col-md-1 col-form-label" for="productionYM">業績年月</label>
+                <div class="col-md-3">
+                    <input type="text" class="form-control datepickerToM required-field" id="productionYM" value="@Model.ProductionYM" />
+                    @*<input type="month" class="form-control  required-field" id="productionYM" value="@Model.ProductionYM" />*@
+                </div>
+                <label class="col-md-1 col-form-label" for="sequence">次佣</label>
+                <div class="col-md-1">
+                    <input type="text" class="form-control required-field" id="sequence" value="1" />
+                </div>
+                <label class="col-md-1 col-form-label" for="salReceiptDate">簽收回條截止日</label>
+                <div class="col-md-3">
+                    <input type="text" class="form-control datepicker required-field cleartext" id="salReceiptDate" placeholder="" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-1 col-form-label" for="hrCloseDate">預計人事關檔日期</label>
+                <div class="col-md-3">
+                    <input type="text" class="form-control datepicker cleartext" id="hrCloseDate" placeholder="" />
+                </div>
+                <label class="col-md-1 col-form-label" for="salRunDate">RUN佣日期</label>
+                <div class="col-md-3">
+                    <input type="text" class="form-control datepicker required-field cleartext" id="salRunDate" placeholder="" />
+                </div>
+                <label class="col-md-1 col-form-label" for="salPayDate">發佣日期</label>
+                <div class="col-md-3">
+                    <input type="text" class="form-control datepicker required-field cleartext" id="salPayDate" placeholder="" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-1 col-form-label" for="adjDateTimeStr">調整起日</label>
+                <div class="col-md-3">
+                    <input type="text" class="form-control datepicker cleartext" id="adjDateTimeStr" placeholder="" />
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" id="ddlsHours" name="ddlsHours">
+                        @for (int i = 0; i <= 23; i++)
+                        {
+                            string n = i.ToString();
+                            if (i < 10)
+                            {
+                                n = "0" + i.ToString();
+                            }
+                            <text>
+                                <option value="@n">@n</option>
+                            </text>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" id="ddlsMinute" name="ddlsMinute">
+                        @for (int i = 0; i <= 59; i++)
+                        {
+                            string n = i.ToString();
+                            if (i < 10)
+                            {
+                                n = "0" + i.ToString();
+                            }
+                            <text>
+                                <option value="@n">@n</option>
+                            </text>
+                        }
+                    </select>
+                </div>
+                <label class="col-md-1 col-form-label" for="salPayDate">佣酬明細開放查詢日期</label>
+                <div class="col-md-3">
+                    <input type="text" class="form-control datepicker cleartext " id="OpenQueryDate" placeholder="" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-1 col-form-label" for="adjDateTimeEnd">調整迄日</label>
+                <div class="col-md-3">
+                    <input type="text" class="form-control datepicker cleartext" id="adjDateTimeEnd" placeholder="" />
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" id="ddleHours" name="ddleHours">
+                        @for (int i = 0; i <= 23; i++)
+                        {
+                            string n = i.ToString();
+                            if (i < 10)
+                            {
+                                n = "0" + i.ToString();
+                            }
+                            <text>
+                                <option value="@n">@n</option>
+                            </text>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" id="ddleMinute" name="ddleMinute">
+                        @for (int i = 0; i <= 59; i++)
+                        {
+                            string n = i.ToString();
+                            if (i < 10)
+                            {
+                                n = "0" + i.ToString();
+                            }
+                            <text>
+                                <option value="@n">@n</option>
+                            </text>
+                        }
+                    </select>
+                </div>
+                <label class="col-md-1 col-form-label" for="OpenQueryDateAnn">年度績效報酬開放查詢日期</label>
+                <div class="col-md-3">
+                    <input type="text" class="form-control datepicker cleartext" id="OpenQueryDateAnn" placeholder="" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-1 col-form-label" for="remark">備註</label>
+                <div class="col-md-3">
+                    <textarea class="form-control cleartext" id="remark" rows="5"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <button class="btn btn-primary" id="btnQuery" data-bind="click: QueryClick">查詢</button>
+                    @*需求單號：20240122004-針對角色綁定權限，非管理者只能「查詢」、「報表匯出」功能; 修改日期:20240909; 修改人員:Vita;*@
+                    @if (User.HasPermission("EB.SL.PlanSet.PSTX001.Admin"))
+                    {
+                        <button class="btn btn-primary" id="btnInsert" data-bind="click: InsertClick">確定新增</button>
+                        <button class="btn btn-warning" id="btnUpdate" data-bind="click: UpdateClick" style="display:none;">確定修改</button>
+                        <button class="btn btn-warning" id="btnCancel" data-bind="click: CancelClick" style="display:none;">取消</button>
+                    }
+                    <button class="btn btn-warning" id="btn" data-bind="click: ReportClick">匯出報表</button>
+                </div>
+            </div>
+
+            <div id="editDiv" class="form-group row" style="display:none;">
+                <div class="quarydata" style="color:red;">
+                    <span class="quarydatashow"></span>
+                </div>
+                @*需求單號：20240122004-針對角色綁定權限，非管理者只能「查詢」、「報表匯出」功能; 修改日期:20240909; 修改人員:Vita;*@
+                @if (User.HasPermission("EB.SL.PlanSet.PSTX001.Admin"))
+                {
+                    <table id="editTbl" class="table table-striped eidt-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">業績年月</th>
+                                <th scope="col">次佣</th>
+                                <th scope="col">預計人事關檔日期</th>
+                                <th scope="col">RUN佣日期</th>
+                                <th scope="col">發佣日期</th>
+                                <th scope="col">簽收回條截止日</th>
+                                <th scope="col">調整起日</th>
+                                <th scope="col">調整迄日</th>
+                                <th scope="col">佣酬明細開放查詢日期</th>
+                                <th scope="col">年度績效報酬開放查詢日期</th>
+                                <th scope="col">建立者</th>
+                                <th scope="col">建立時間</th>
+                                <th scope="col">修改者</th>
+                                <th scope="col">修改時間</th>
+                                <th scope="col">備註</th>
+                                <th scope="col">編輯</th>
+                                <th scope="col">刪除</th>
+                                <th scope="col" style="display: none;">序次</th>
+                                <th scope="col" style="display: none;">自動識別碼</th>
+                            </tr>
+                        </thead>
+                        <tbody class="edit-tbody">
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <table id="editTbl" class="table table-striped eidt-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">業績年月</th>
+                                <th scope="col">次佣</th>
+                                <th scope="col">人事關檔日期</th>
+                                <th scope="col">RUN佣日期</th>
+                                <th scope="col">發佣日期</th>
+                                <th scope="col">簽收回條截止日</th>
+                                <th scope="col">調整起日</th>
+                                <th scope="col">調整迄日</th>
+                                <th scope="col">佣酬明細開放查詢日期</th>
+                                <th scope="col">年度績效報酬開放查詢日期</th>
+                                <th scope="col">建立者</th>
+                                <th scope="col">建立時間</th>
+                                <th scope="col">修改者</th>
+                                <th scope="col">修改時間</th>
+                                <th scope="col">備註</th>
+                                <th scope="col" style="display: none;">序次</th>
+                                <th scope="col" style="display: none;">自動識別碼</th>
+                            </tr>
+                        </thead>
+                        <tbody class="edit-tbody">
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+
+    @*查詢執行結果*@
+    @*需求單號：20240122004-針對角色綁定權限，非管理者只能「查詢」、「報表匯出」功能; 修改日期:20240909; 修改人員:Vita;*@
+    @using (Ajax.BeginForm("QueryLog", "PSTX001", new { area = "PlanSet" }, new AjaxOptions { OnSuccess = "BindLogGrid" }, new { id = "LogQueryForm" }))
+    {
+        if (User.HasPermission("EB.SL.PlanSet.PSTX001.Admin"))
+        {
+            <div id="resultDIV" class="ibox ibox-primary">
+                <div class="ibox-head">
+                    <div class="ibox-title">Log資料查詢</div>
+                </div>
+                <div class="ibox-body">
+                    <div class="form-group row">
+                        <label class="col-md-1 col-form-label" for="logProductionYM">業績年月</label>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control datepickerToM" id="logProductionYM" name="productionYM" value="@Model.ProductionYM" />
+                            @*<input type="month" class="form-control " id="logProductionYM" name="productionYM" placeholder="@Model.ProductionYM" />*@
+                        </div>
+                        <label class="col-md-1 col-form-label" for="logSequence">序號</label>
+                        <div class="col-md-1">
+                            <input type="text" class="form-control" id="logSequence" name="sequence" value="1" />
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary" id="btnLog" data-bind="click: LogQueryClick">查詢</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
+    @section GridActions {
+        <div class="jqGrid">
+            <table id="LogResult"></table>
+        </div>
+        <div id="LogResultPagger"></div>
+    }
+</div>
+
+
+@section Scripts{
+    <script>
+        var ViewModel = {
+          @* 需求單號：20240122004 - 針對角色綁定權限，非管理者只能「查詢」、「報表匯出」功能; 修改日期: 20240909; 修改人員: Vita;*@
+          QueryClick: function () {
+                clearMessage();
+                $.ajax({
+                    method: "POST",
+                    cache: false,
+                    url: '@Url.Action("QueryOpCalendar", "PSTX001", new { area = "PlanSet" })',
+                    data: { productionYM: $("#productionYM").val(), sequence: $("#sequence").val()},
+                    complete: function (data) {
+                        $(".edit-tbody").text('');
+                        if (data.responseJSON === undefined) {
+
+                        } else {
+                            var adjS = data.responseJSON.AdjDateTimeStr == null ? "" : data.responseJSON.AdjDateTimeStrView
+                            var adjE = data.responseJSON.AdjDateTimeEnd == null ? "" : data.responseJSON.AdjDateTimeEndView
+                            var OQD = data.responseJSON.OpenQueryDate == null ? "" : data.responseJSON.OpenQueryDate
+                            var OQDA = data.responseJSON.OpenQueryDateAnn == null ? "" : data.responseJSON.OpenQueryDateAnn
+                            //var adjS = data.responseJSON.AdjDateTimeStr == null ? "" : DateFMT(new Date(data.responseJSON.AdjDateTimeStr), "yyyy/MM/dd hh:mm");
+                            //var adjE = data.responseJSON.AdjDateTimeEnd == null ? "" : DateFMT(new Date(data.responseJSON.AdjDateTimeEnd), "yyyy/MM/dd hh:mm");
+                            var createTime = data.responseJSON.CreateDateTime == null ? "" : data.responseJSON.CreateDateTime;
+                            var updateTime = data.responseJSON.UpdateDateTime == null ? "" : data.responseJSON.UpdateDateTime;
+                            var createName = data.responseJSON.CreateUserName == null ? "" : data.responseJSON.CreateUserName;
+                            var updateName = data.responseJSON.UpdateUserName == null ? "" : data.responseJSON.UpdateUserName;
+                            $(".edit-tbody").append("<tr class = 'trcount'><th scope='row'>" + data.responseJSON.ProductionYM + "</th><td>" +
+                            data.responseJSON.Sequence + "</td><td>" +
+                            data.responseJSON.HrCloseDate + "</td><td>" + data.responseJSON.SalRunDate + "</td><td>" +
+                            data.responseJSON.SalPayDate + "</td><td>" +
+                            data.responseJSON.SalReceiptDate + "</td><td>" +
+                            adjS + "</td><td>" +
+                                adjE + "</td><td>" +
+                                OQD + "</td><td>" +
+                                OQDA + "</td><td>" +
+                            createName + "</td><td>" + createTime + "</td><td>" +
+                            updateName + "</td><td>" + updateTime + "</td><td>" +
+                            data.responseJSON.Remark + "</td>@if (User.HasPermission("EB.SL.PlanSet.PSTX001.Admin")){<td>" +
+                            "<button id='editBtn' class='btn btn-warning' onclick='SetUpdateData()'>編輯</button></td><td>" +
+                            "<button id='delBtn' class='btn btn-danger' onclick='ConfirmDelete(" + data.responseJSON.Iden + ")'>刪除</button></td><td style='display: none;'>" +
+                            data.responseJSON.Sequence + "</td><td style='display: none;'>" + data.responseJSON.Iden + "</td >}</tr > ");
+                        }
+                        var i = document.querySelectorAll('.trcount').length;
+                        $("#editDiv").show();
+                        $(".quarydatashow").remove();
+                        $(".quarydata").append('<span class="quarydatashow">總共' + i + '筆資料</span>');
+                    }
+                });
+            },
+            InsertClick: function () {
+                clearMessage();
+                if (CheckFieldValue()) {
+                    var formData = new FormData();
+                    var productionYM = $("#productionYM").val();
+                    var adjDateTimeStr = $('#adjDateTimeStr').val();
+                    var adjDateTimeEnd = $('#adjDateTimeEnd').val();
+                    //var arr = productionYM.split('-');
+                    //var monthControls = arr[0] + '/' + arr[1];
+                    formData.append('productionYM', productionYM);
+                    formData.append('hrCloseDate', $('#hrCloseDate').val());
+                    formData.append('salRunDate', $('#salRunDate').val());
+                    formData.append('salPayDate', $('#salPayDate').val());
+                    formData.append('salReceiptDate', $('#salReceiptDate').val());
+                    formData.append('OpenQueryDate', $('#OpenQueryDate').val());
+                    formData.append('OpenQueryDateAnn', $('#OpenQueryDateAnn').val());
+                    if (adjDateTimeStr != "") {
+                        adjDateTimeStr = $('#adjDateTimeStr').val() + " " + $('#ddlsHours option:selected').val() + ":" + $('#ddlsMinute option:selected').val();
+                    }
+                    if (adjDateTimeEnd != "") {
+                        adjDateTimeEnd = $('#adjDateTimeEnd').val() + " " + $('#ddleHours option:selected').val() + ":" + $('#ddleMinute option:selected').val();
+                    }
+                    formData.append('adjDateTimeStr', adjDateTimeStr);
+                    formData.append('adjDateTimeEnd', adjDateTimeEnd);
+                    formData.append('sequence', $('#sequence').val());
+                    formData.append('remark', $("#remark").val());
+                    $.ajax({
+                        method: "POST",
+                        cache: false,
+                        url: '@Url.Action("Insert", "PSTX001", new { area = "PlanSet" })',
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        complete: function (data) {
+                            if (data.statusText == "OK") {
+                                $(".edit-tbody").text('');
+                                $("#editDiv").hide();
+                                $("#btnInsert").show();
+                                $("#btnQuery").show();
+                                $("#btnUpdate").hide();
+                                $("#btnCancel").hide();
+                                $('#btnQuery').click();
+                                CleartextValue()
+                            }
+                        },
+                        error: function (ex) {
+                            if (ex.statusText == "OK") {
+                            } else {
+                                appendMessage("系統發生錯誤");
+                            }
+                        }
+                    });
+
+                }
+            },
+            UpdateClick: function () {
+                clearMessage();
+
+                if (CheckFieldValue()) {
+                    var formData = new FormData();
+                    var productionYM = $("#productionYM").val();
+                    var adjDateTimeStr = $('#adjDateTimeStr').val();
+                    var adjDateTimeEnd = $('#adjDateTimeEnd').val();
+                    //var arr = productionYM.split('-');
+                    //var monthControls = arr[0] + '/' + arr[1];
+                    formData.append('iden', $('#iden').val());
+                    formData.append('productionYM', productionYM);
+                    formData.append('hrCloseDate', $('#hrCloseDate').val());
+                    formData.append('salRunDate', $('#salRunDate').val());
+                    formData.append('salPayDate', $('#salPayDate').val());
+                    formData.append('OpenQueryDate', $('#OpenQueryDate').val());
+                    formData.append('OpenQueryDateAnn', $('#OpenQueryDateAnn').val());
+                    formData.append('salReceiptDate', $('#salReceiptDate').val());
+                    if (adjDateTimeStr != "") {
+                        adjDateTimeStr = $('#adjDateTimeStr').val() + " " + $('#ddlsHours option:selected').val() + ":" + $('#ddlsMinute option:selected').val();
+                    }
+                    if (adjDateTimeEnd != "") {
+                        adjDateTimeEnd = $('#adjDateTimeEnd').val() + " " + $('#ddleHours option:selected').val() + ":" + $('#ddleMinute option:selected').val();
+                    }
+                    formData.append('adjDateTimeStr', adjDateTimeStr);
+                    formData.append('adjDateTimeEnd', adjDateTimeEnd);
+                    formData.append('sequence', $('#sequence').val());
+                    formData.append('remark', $("#remark").val());
+
+                    $.ajax({
+                        method: "POST",
+                        cache: false,
+                        url: '@Url.Action("Update", "PSTX001", new { area = "PlanSet" })',
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        complete: function (data) {
+                            if (data.statusText = "TURE") {
+                                $(".edit-tbody").text('');
+                                $("#editDiv").hide();
+                                $("#btnInsert").show();
+                                $("#btnQuery").show();
+                                $("#btnUpdate").hide();
+                                $("#btnCancel").hide();
+                                CleartextValue()
+                            }
+                        },
+                        error: function (ex) {
+                            if (ex.statusText == "OK") {
+                            } else {
+                                appendMessage("系統發生錯誤");
+                            }
+                        }
+                    });
+
+                }
+            },
+            LogQueryClick: function () {
+                clearMessage();
+                $("form#LogQueryForm").trigger("submit");
+            },
+            CancelClick: function () {
+                clearMessage();
+                $(".edit-tbody").text('');
+                let productionYM = $("#productionYM").val();
+                let sequence = $("#sequence").val();
+                $("#editDiv").hide();
+                $(".queryDiv").find("input:text").val("");
+                $(".queryDiv").find("select").val("00");
+                $(".queryDiv").find("textarea").val("");
+                $("#productionYM").val(productionYM);
+                $("#sequence").val(sequence);
+                $("#btnInsert").show();
+                $("#btnQuery").show();
+                $("#btnUpdate").hide();
+                $("#btnCancel").hide();
+                $("#editBtn").hide();
+                $("#delBtn").hide();
+            },
+            ReportClick: function () {
+                clearMessage();
+                GetReport();
+            }
+        }
+
+        $(function () {
+            ko.applyBindings(ViewModel);
+            $(".datepicker").datepicker({ dateFormat: 'yy/mm/dd' });
+            $(".datepickerToM").datepicker({
+                format: "yyyy/mm",
+                viewMode: "months",
+                minViewMode: "months"
+            }).on("changeDate", function (e) {
+                $(this).datepicker('hide');
+            });
+            $('#salPayDate').change(function () {
+                if ($('#salPayDate').val() != "") {
+                    let salPayDate = $('#salPayDate').val()
+                    let myDate = new Date(salPayDate);
+                    // 將日期加一天
+                    myDate.setDate(myDate.getDate() - 1);
+                    const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+                    // 取得加一天後的結果
+                    const nextDay = myDate.toLocaleDateString('zh-TW', options); // 使用您想要的日期格式
+
+                    $('#OpenQueryDate').val(nextDay)
+                }
+            });
+        });
+
+        function DateFMT(d,fmt) {
+            var o = {
+                "M+": d.getMonth() + 1, //月份
+                "d+": d.getDate(), //日
+                "h+": d.getHours(), //小時
+                "m+": d.getMinutes(), //分
+                "s+": d.getSeconds(), //秒
+                "q+": Math.floor((d.getMonth() + 3) / 3), //季度
+                "S": d.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (d.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        }
+
+        function BindLogGrid() {
+            $("#LogResult").GridUnload();
+            $("#LogResult").jqGrid({
+                url: '@Url.Action("BindLogGrid", "PSTX001", new { area = "PlanSet" })',
+                datatype: "json",
+                mtype: "POST",
+                autowidth: true,
+                shrinkToFit: false,
+                colNames: ["", "業績年月", "調整起日", "調整迄日", "佣酬明細開放查詢日期","年終明細開放查詢日期", "建立者", "建立時間", "修改者", "修改時間", "備註"],
+                colModel: [
+                    { name: "", index: "LogIden", hidden: true },
+                    { name: "ProductionYM", index: "ProductionYM" },
+                    { name: "AdjDateTimeStr", index: "AdjDateTimeStr", width: 195 },
+                    { name: "AdjDateTimeEnd", index: "AdjDateTimeEnd", width: 195 },
+                    { name: "OpenQueryDate", index: "OpenQueryDate", width: 195 },
+                    { name: "OpenQueryDateAnn", index: "OpenQueryDateAnn", width: 195 },
+                    { name: "CreateUserName", index: "CreateUserName"},
+                    { name: "CreateDateTime", index: "CreateDateTime", width: 195 },
+                    { name: "UpdateUserName", index: "UpdateUserName" },
+                    { name: "UpdateDateTime", index: "UpdateDateTime", width: 195 },
+                    { name: "Remark", index: "Remark" }
+                ],
+                jsonReader: {
+                    repeatitems: false,
+                    id: "0"
+                },
+                loadComplete: function () {
+                    $('#LogResult').jqGrid("setGridWidth", $('#resultDIV').width());
+                },
+                pager: "LogResultPagger"
+            });
+            $("#LogResult").trigger("reloadGrid");
+        }
+
+
+        function DeleteData(iden) {
+            $.ajax({
+                method: "POST",
+                cache: false,
+                url: '@Url.Action("Delete", "PSTX001", new { area = "PlanSet" })',
+                data: { iden: iden },
+                complete: function (data) {
+                    $(".edit-tbody").text('');
+                    $("#editDiv").hide();
+                    $("#btnInsert").show();
+                    $("#btnQuery").show();
+                    $("#btnUpdate").hide();
+                    $("#btnCancel").hide();
+                },
+                error: function (ex) {
+                    if (ex.statusText == "OK") {
+                    } else {
+                        appendMessage("系統發生錯誤");
+                    }
+                }
+            });
+        }
+
+        function SetUpdateData() {
+            clearMessage();
+            $("#productionYM").val($(".edit-tbody tr th")[0].innerText);
+            $("#sequence").val($(".edit-tbody tr td")[0].innerText);
+            $("#hrCloseDate").val($(".edit-tbody tr td")[1].innerText);
+            $("#salRunDate").val($(".edit-tbody tr td")[2].innerText);
+            $("#salPayDate").val($(".edit-tbody tr td")[3].innerText);
+            $("#salReceiptDate").val($(".edit-tbody tr td")[4].innerText);
+            var fullStarTime = $(".edit-tbody tr td")[5].innerText;
+            var starObj = DisassembleDateTime(fullStarTime);
+            $("#adjDateTimeStr").val(starObj.Date);
+            $("#ddlsHours").val(starObj.Hour);
+            $("#ddlsMinute").val(starObj.Minute);
+            var fullEndTime = $(".edit-tbody tr td")[6].innerText;
+            var endObj = DisassembleDateTime(fullEndTime);
+            $("#adjDateTimeEnd").val(endObj.Date);
+            $("#ddleHours").val(endObj.Hour);
+            $("#ddleMinute").val(endObj.Minute);
+            $("#OpenQueryDate").val($(".edit-tbody tr td")[7].innerText);
+            $("#OpenQueryDateAnn").val($(".edit-tbody tr td")[8].innerText);
+            $("#iden").val($(".edit-tbody tr td")[17].innerText);
+            $("#remark").val($(".edit-tbody tr td")[13].innerText);
+            $("#btnUpdate").show();
+            $("#btnCancel").show();
+            $("#delBtn").hide();
+            $("#btnInsert").hide();
+            $("#btnQuery").hide();
+        }
+
+        function DisassembleDateTime(fullTime) {
+            var disassObj = new Object();
+            disassObj.Date = fullTime.substr(0, fullTime.indexOf(' '));
+            disassObj.Hour = fullTime.substr(fullTime.indexOf(':') - 2, 2);
+            disassObj.Hour = fullTime.indexOf('PM') >=0 ? (parseInt(disassObj.Hour) + 12).toString() : disassObj.Hour;
+            disassObj.Minute = fullTime.substr(fullTime.indexOf(':') + 1, 2);
+            disassObj.Hour = disassObj.Hour == "" ? "00" : disassObj.Hour;
+            disassObj.Minute = disassObj.Minute == "" ? "00" : disassObj.Minute;
+            return disassObj;
+        }
+
+        function ConfirmDelete(iden) {
+            var result = confirm('確定刪除?');
+            if (result) {
+                DeleteData(iden);
+            }
+        }
+
+        function CleartextValue() {
+            let productionYM = $("#productionYM").val();
+            let sequence = $("#sequence").val();
+            $(".queryDiv").find("input:text").val("");
+            $(".queryDiv").find("select").val("00");
+            $(".queryDiv").find("textarea").val("");
+            $("#productionYM").val(productionYM);
+            $("#sequence").val(sequence);
+        }
+
+        function CheckFieldValue() {
+            var flag = true;
+            $(".required-field").each(function () {
+                if ($(this).val() == "") {
+                    appendMessage("業績年月、序號、RUN佣日期、發佣日期、簽收回條截止日；皆不可空白");
+                    flag = false;
+                    return false;
+                }
+            });
+            if (flag == false) {
+                return false;
+            }
+
+            //check productionYM style
+            var patternYYMM = "^[0-9]{4}/[0-1]{1}[0-9]{1}$";
+            var productionYM = $("#productionYM").val();
+
+            if (productionYM.match(patternYYMM) == null) {
+                appendMessage("業績年月 格式錯誤");
+                return false;
+            } else {
+                if (isNaN(Date.parse($("#productionYM").val()))) {
+                    appendMessage("業績年月 格式錯誤");
+                    return false;
+                }
+            }
+            //check sequence style
+            if ($("#sequence").val() != "1" && $("#sequence").val() != "2") {
+                appendMessage("序號 格式錯誤");
+                return false;
+            }
+            //日期格式化
+            var hrCloseDate = $("#hrCloseDate").val(); //預計人事關檔日期
+            var adjDateTimeStr = $("#adjDateTimeStr").val();//調整起日
+            var salReceiptDate = $("#salReceiptDate").val();//簽收回條截止日
+            var adjDateTimeEnd = $("#adjDateTimeEnd").val();//調整迄日
+            var salRunDate = $("#salRunDate").val();//RUN佣日期
+            var OpenQueryDate = $("#OpenQueryDate").val(); //佣酬明細開放查詢日期
+            var salPayDate = $("#salPayDate").val(); //發佣日期
+
+            var CaseadjDateTimeStr = "";
+            if (adjDateTimeStr != "") {
+                //調整起日
+                CaseadjDateTimeStr = $('#adjDateTimeStr').val() + " " + $('#ddlsHours option:selected').val() + ":" + $('#ddlsMinute option:selected').val();
+            }
+            var CaseadjDateTimeEnd = "";
+            if (adjDateTimeEnd != "") {
+                //調整迄日
+                CaseadjDateTimeEnd = $('#adjDateTimeEnd').val() + " " + $('#ddleHours option:selected').val() + ":" + $('#ddleMinute option:selected').val();
+            }
+
+            //var CasesalReceiptDate = $('#salReceiptDate').val() + " " + "00:00";//簽收回條截止日
+
+            //RUN佣日期、發佣日期、簽收回條截止日；皆不可空白
+            //人事關檔 調整起日 調整迄日 佣酬明細開放查詢日期；可空白
+            //人事關檔 ≦ 調整起日 ≦ 簽收回條截止日 ≦ 調整迄日 < RUN佣日 < 佣酬明細開放查詢日期 < 發佣日期
+
+            //簽收回條截止日 < RUN佣日 < 發佣日期
+            if (salReceiptDate >= salRunDate || salRunDate >= salPayDate) {
+                appendMessage("預計人事關檔日期 ≦ 調整起日 ≦ 簽收回條截止日 ≦ 調整迄日 < RUN佣日 < 佣酬明細開放查詢日期 < 發佣日期");
+                //console.log(1)
+                return false;
+            }
+            if (OpenQueryDate != "") {
+                //簽收回條截止日 < RUN佣日 < 佣酬明細開放查詢日期 < 發佣日期
+                if (salReceiptDate >= salRunDate || salRunDate >= OpenQueryDate || OpenQueryDate >= salPayDate) {
+                    appendMessage("預計人事關檔日期 ≦ 調整起日 ≦ 簽收回條截止日 ≦ 調整迄日 < RUN佣日 < 佣酬明細開放查詢日期 < 發佣日期");
+                    //console.log(2)
+                    return false;
+                }
+            }
+            if (OpenQueryDate != "" && adjDateTimeEnd != "") {
+                //簽收回條截止日 ≦ 調整迄日 < RUN佣日 < 佣酬明細開放查詢日期 < 發佣日期
+                if (salReceiptDate > adjDateTimeEnd || adjDateTimeEnd >= salRunDate || salRunDate >= OpenQueryDate || OpenQueryDate >= salPayDate) {
+                    appendMessage("預計人事關檔日期 ≦ 調整起日 ≦ 簽收回條截止日 ≦ 調整迄日 < RUN佣日 < 佣酬明細開放查詢日期 < 發佣日期");
+                    //console.log(3)
+                    return false;
+                }
+            }
+            if (OpenQueryDate != "" && adjDateTimeEnd != "" && adjDateTimeStr != "") {
+                //調整起日 ≦ 簽收回條截止日 ≦ 調整迄日 < RUN佣日 < 佣酬明細開放查詢日期 < 發佣日期
+                if (adjDateTimeStr > salReceiptDate || salReceiptDate > adjDateTimeEnd || adjDateTimeEnd >= salRunDate
+                    || salRunDate >= OpenQueryDate || OpenQueryDate >= salPayDate) {
+                    appendMessage("預計人事關檔日期 ≦ 調整起日 ≦ 簽收回條截止日 ≦ 調整迄日 < RUN佣日 < 佣酬明細開放查詢日期 < 發佣日期");
+                    //console.log(4)
+                    return false;
+                }
+            }
+            if (OpenQueryDate != "" && adjDateTimeEnd != "" && adjDateTimeStr != "" && hrCloseDate != "") {
+                //人事關檔 ≦ 調整起日 ≦ 簽收回條截止日 ≦ 調整迄日 < RUN佣日 < 佣酬明細開放查詢日期 < 發佣日期
+                if (hrCloseDate > adjDateTimeStr || adjDateTimeStr > salReceiptDate || salReceiptDate > adjDateTimeEnd
+                    || adjDateTimeEnd >= salRunDate || salRunDate >= OpenQueryDate || OpenQueryDate >= salPayDate) {
+                    appendMessage("預計人事關檔日期 ≦ 調整起日 ≦ 簽收回條截止日 ≦ 調整迄日 < RUN佣日 < 佣酬明細開放查詢日期 < 發佣日期");
+                    //console.log(5)
+                    return false;
+                }
+            }
+            if (adjDateTimeStr != "" && hrCloseDate != "") {
+                //人事關檔 ≦ 調整起日 ≦ 簽收回條截止日
+                if (hrCloseDate > adjDateTimeStr || adjDateTimeStr > salReceiptDate || hrCloseDate > salReceiptDate) {
+                    appendMessage("預計人事關檔日期 ≦ 調整起日 ≦ 簽收回條截止日 ≦ 調整迄日 < RUN佣日 < 佣酬明細開放查詢日期 < 發佣日期");
+                    //console.log(6)
+                    return false;
+                }
+            }
+            if (adjDateTimeEnd != "") {
+                //簽收回條截止日 ≦ 調整迄日 < RUN佣日
+                if (salReceiptDate > adjDateTimeEnd || adjDateTimeEnd >= salRunDate) {
+                    appendMessage("預計人事關檔日期 ≦ 調整起日 ≦ 簽收回條截止日 ≦ 調整迄日 < RUN佣日 < 佣酬明細開放查詢日期 < 發佣日期");
+                    //console.log(7)
+                    return false;
+                }
+            }
+            if (adjDateTimeStr != "") {
+                //調整起日 ≦ 簽收回條截止日
+                if (adjDateTimeStr > salReceiptDate) {
+                    appendMessage("預計人事關檔日期 ≦ 調整起日 ≦ 簽收回條截止日 ≦ 調整迄日 < RUN佣日 < 佣酬明細開放查詢日期 < 發佣日期");
+                    //console.log(8)
+                    return false;
+                }
+            }
+            if (hrCloseDate != "") {
+                //人事關檔 ≦ 簽收回條截止日
+                if (hrCloseDate > salReceiptDate) {
+                    appendMessage("預計人事關檔日期 ≦ 調整起日 ≦ 簽收回條截止日 ≦ 調整迄日 < RUN佣日 < 佣酬明細開放查詢日期 < 發佣日期");
+                    //console.log(9)
+                    return false;
+                }
+            }
+            if (CaseadjDateTimeEnd < CaseadjDateTimeStr) {
+                appendMessage("預計人事關檔日期 ≦ 調整起日 ≦ 簽收回條截止日 ≦ 調整迄日 < RUN佣日 < 佣酬明細開放查詢日期 < 發佣日期");
+                //console.log(10)
+                return false;
+            }
+            return true;
+        }
+
+        function GetReport() {
+            var url = "@Url.Action("GetOpCalendarReport", "PSTX001", new { area = "PlanSet" })";
+            var dataJson = $("form#QueryForm").serializeArray();
+            let productionYM = $("#productionYM").val();
+            $.extend(
+                {
+                    redirectPost: function (location, args) {
+                        var form = '';
+                        $.each(args, function (key, value) {
+                            form += '<input type="hidden" name="' + value.name + '" value="' + value.value + '">';
+                        });
+                        form += '<input type="hidden" name="ProductionYM" value="' + productionYM + '">';
+                        $('<form action="' + location + '" method="POST">' + form + '</form>').appendTo('body').submit();
+                    }
+                });
+
+            $.redirectPost(url, dataJson);
+
+        }
+    </script>
+}

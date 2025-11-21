@@ -1,0 +1,84 @@
+﻿@model EP.PSL.WorkResources.MeetingMng.Web.Areas.MeetingMng.Model.MeetingDetailModel
+@{
+    var thisGroupType = AccountGroupType.MessageFun;
+    Model.nunit = User.UnitInfo.Name + "-";
+    Model.nmember = User.MemberInfo.Name;
+}
+
+@using (Html.BeginForm("CreateFile", "MMTX002", null, FormMethod.Post, new { id = "CreateSubmit" }))
+{
+    <div class="DetailData line">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group hidden">
+            @Html.LabelFor(model => model.MTID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="text" name="MTID" value="@Model.MTID" />
+                <input id="tab" type="text" name="tabUniqueId" />
+            </div>
+        </div>
+        <div class="detail-col">
+            <div class="detail-msg">
+                <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.DisplayNameFor(model => model.MFCreater)
+            </div>
+            <div class="col-md-offset-1">
+                @Model.nunit@Model.nmember
+            </div>
+        </div>
+
+        <div class="detail-col">
+            <div class="detail-msg">
+                <img class="index-title-icon" src="~/Content/img/folder_g.png" />@Html.LabelFor(m => m.MFFileName)
+            </div>
+            <div class="detail-cell">
+                @{
+                    <text>
+                        @Html.Partial("~/Views/JFileUpload/_Files.cshtml")
+                        @Html.HiddenFor(m => m.UploadFilesName)
+                    </text>
+                }
+            </div>
+        </div>
+
+        <div class="detail-col">
+            <img class="index-title-icon" src="~/Content/img/book_g.png" />@Html.LabelFor(m => m.MFDesc, new { @class = "detail-msg" })
+            <div class="detail-cell">
+                <textarea id="MFDesc" name="MFDesc" style="width:100%;" rows="10" placeholder="@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.請輸入檔案說明" cols="60" class="" tabindex="3"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <input id="submitfile" type="button" value="@EP.PlatformResources.儲存" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+<script>
+    $("#submitfile").click(function (e) {
+        $("#UploadFilesName").getFileUploadItemsString();
+        if (saveValidatorFile()) {
+            e.preventDefault();
+            var tabUniqueId = $("#tabUniqueId").val();
+            $("#tab").val(tabUniqueId);          
+            $("#CreateSubmit").attr('action', '@Url.Action("CreateFile", "MMTX002")');
+            console.log("success");
+            $("#CreateSubmit").submit();
+        }
+    });
+    $(document).ready(function () {
+        //CKEDITOR.replace('MFDesc', {
+        //    enterMode: CKEDITOR.ENTER_BR,
+        //    allowedContent: true,
+        //    htmlEncodeOutput: true,
+        //    extraAllowedContent: '*(*)'
+        //});
+    });
+    function saveValidatorFile() {
+        if ($("#UploadFilesName").val() == "") {
+            alert("@( @EP.PlatformResources.選擇檔案)");
+            return false;
+        }       
+        return true;
+    }
+</script>
+

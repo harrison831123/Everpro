@@ -1,0 +1,794 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+EPBKS.Common.EPPlus
+</name>
+</assembly>
+<members>
+<member name="M:EPBKS.Common.EPPlus.EPPlusHelper.RenderBlockArrayFromExcel(System.String,System.Int32,System.Int32,System.Int32)">
+	<summary>
+ Excel sheet 資料轉成矩陣
+ </summary>
+	<param name="Path">檔案路徑</param>
+	<param name="SheetIndex">sheet 索引</param>
+	<param name="DataStartRowIndex">開始列</param>
+	<returns>矩陣資料</returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.ListToExcelByWeb``1(System.Collections.Generic.List{``0},System.String,EPBKS.Common.EPPlus.EPPlusHelper.enOrientation,EPBKS.Common.EPPlus.EPPlusHelper.enPaperSize)">
+	<summary>
+ 將定義集合列表轉成Eexcel 輸出
+ </summary>
+	<typeparam name="T">定義集合</typeparam>
+	<param name="Query">集合列表</param>
+	<param name="Filename">輸出檔名</param>
+	<param name="PaperOrientation">列印紙張方向</param>
+	<param name="PaperSize">列印紙張大小</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.ListToExcelByWeb``1(System.Collections.Generic.List{``0},System.String,System.String,EPBKS.Common.EPPlus.EPPlusHelper.enOrientation,EPBKS.Common.EPPlus.EPPlusHelper.enPaperSize)">
+	<summary>
+ 將定義集合列表轉成Eexcel 輸出
+ </summary>
+	<typeparam name="T">定義集合</typeparam>
+	<param name="Query">集合列表</param>
+	<param name="Filename">輸出檔名</param>
+	<param name="SheetName">Sheet 名稱</param>
+	<param name="PaperOrientation">列印紙張方向</param>
+	<param name="PaperSize">列印紙張大小</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.DataTableToExcelFile(System.Data.DataTable,System.String,System.String,System.String[],System.String[],System.String)">
+	<summary>
+ 將Datatable 轉成Excel 
+ </summary>
+	<param name="Dt">Datatable</param>
+	<param name="FilePath">檔案,new FileInfo(filepath)</param>
+	<param name="StrHeadText">抬頭,沒有抬頭可不輸入</param>
+	<param name="AliasColName">不使用DataTable Columns Name,改用替代欄位名稱</param>
+	<param name="CellFormat">Cell顯示格式</param>
+	<param name="HeadPicPath">抬頭加圖形logo路徑</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.MultiDataTableToExcelFile(System.Data.DataTable[],System.String,System.String[],System.Collections.Generic.List{System.String[]},System.Collections.Generic.List{System.String[]},System.String,EPBKS.Common.EPPlus.EPPlusHelper.enOrientation,EPBKS.Common.EPPlus.EPPlusHelper.enPaperSize,System.Int32[])">
+	<summary>
+ 多個DataTable 輸出多個Sheet
+ </summary>
+	<param name="Dt">DataTable陣列,每個Datatble的TableName為SheetName(TableName當不為空,預設為空請自行指定)</param>
+	<param name="FilePath">Excel檔名</param>
+	<param name="StrHeadText">抬頭陣列,沒有可不輸入</param>
+	<param name="AliasColNameLst">不使用DataTable Columns Name,改用替代欄位名稱</param>
+	<param name="CellFormatLst">Cell顯示格式</param>
+	<param name="HeadPicPath">抬頭加圖形logo路徑</param>
+	<param name="PaperOrientation">列印紙張方向</param>
+	<param name="PaperSize">列印紙張大小</param>
+	<param name="StartIndex">資料放置起始位置列</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.RenderExcelByWeb(System.Data.DataTable[],System.String,System.String[],System.Collections.Generic.List{System.String[]},System.Collections.Generic.List{System.String[]},System.String,EPBKS.Common.EPPlus.EPPlusHelper.enOrientation,EPBKS.Common.EPPlus.EPPlusHelper.enPaperSize,System.Int32[])">
+	<summary>
+ Web輸出Excel File 下載
+ </summary>
+	<param name="DtMul">DataTable 陣列</param>
+	<param name="ExcelName">Excel檔名</param>
+	<param name="StrHeadText">抬頭陣列,沒有抬頭可不輸入</param>
+	<param name="AliasColNameLst">不使用DataTable Columns Name,改用替代欄位名稱</param>
+	<param name="CellFormatLst">Cell顯示格式</param>
+	<param name="HeadPicPath">抬頭加圖形logo路徑</param>
+	<param name="PaperOrientation">列印紙張方向</param>
+	<param name="PaperSize">列印紙張大小</param>
+	<param name="StartIndex">開始位置列</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.RenderExcelByWeb(System.Data.DataSet,System.String,System.String[],System.Collections.Generic.List{System.String[]},System.Collections.Generic.List{System.String[]},System.String,EPBKS.Common.EPPlus.EPPlusHelper.enOrientation,EPBKS.Common.EPPlus.EPPlusHelper.enPaperSize,System.Int32[])">
+	<summary>
+ Web輸出Excel File 下載
+ </summary>
+	<param name="Ds">Dataset</param>
+	<param name="ExcelName">Excel檔名</param>
+	<param name="StrHeadText">抬頭陣列,沒有抬頭可不輸入</param>
+	<param name="AliasColNameLst">不使用DataTable Columns Name,改用替代欄位名稱</param>
+	<param name="CellFormatLst">Cell顯示格式</param>
+	<param name="HeadPicPath">抬頭加圖形logo路徑</param>
+	<param name="PaperOrientation">列印紙張方向</param>
+	<param name="PaperSize">列印紙張大小</param>
+	<param name="StartIndex">開始位置列</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.RenderExcelByWeb(System.Data.DataTable,System.String,System.String,System.String[],System.String[],System.String,EPBKS.Common.EPPlus.EPPlusHelper.enOrientation,EPBKS.Common.EPPlus.EPPlusHelper.enPaperSize,System.Int32)">
+	<summary>
+ Web輸出Excel File 下載
+ </summary>
+	<param name="Dt">DataTable 陣列</param>
+	<param name="ExcelName">Excel檔名</param>
+	<param name="StrHeadText">抬頭陣列,沒有抬頭可不輸入</param>
+	<param name="AliasColName">不使用DataTable Columns Name,改用替代欄位名稱</param>
+	<param name="CellFormat">Cell顯示格式</param>
+	<param name="HeadPicPath">抬頭加圖形logo路徑</param>
+	<param name="PaperOrientation">列印紙張方向</param>
+	<param name="PaperSize">列印紙張大小</param>
+	<param name="StartIndex">開始位置列</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.DataTableToExcelStream(System.Data.DataTable,System.String,System.String[])">
+	<summary>
+ DataTable 輸出成Stream
+ </summary>
+	<param name="Dt">DataTable</param>
+	<param name="StrHeadText">抬頭,沒有抬頭可不輸入</param>
+	<param name="AliasColName">欄位說明至換</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.DataSetToExcelStream(System.Data.DataSet,System.String[],System.Collections.Generic.List{System.String[]},System.Collections.Generic.List{System.String[]},System.String,EPBKS.Common.EPPlus.EPPlusHelper.enOrientation,EPBKS.Common.EPPlus.EPPlusHelper.enPaperSize,System.Int32[])">
+	<summary>
+ DataSet 輸出成Stream
+ </summary>
+	<param name="Ds">DataSet ,每個Datatble的TableName為SheetName(TableName當不為空,預設為空請自行指定)</param>
+	<param name="StrHeadText">抬頭陣列,沒有抬頭可不輸入</param>
+	<param name="AliasColNameLst">欄位說明至換陣列 </param>
+	<param name="CellFormatLst">Cell格式</param>
+	<param name="HeadPicPath">抬頭加圖形logo路徑</param>
+	<param name="PaperOrientation">列印紙張方向</param>
+	<param name="PaperSize">列印紙張大小</param>
+	<param name="StartIndex">資料放置起始位置列</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.MultiDataTableToExcelStream(System.Data.DataTable[],System.String[],System.Collections.Generic.List{System.String[]},System.Collections.Generic.List{System.String[]},System.String,EPBKS.Common.EPPlus.EPPlusHelper.enOrientation,EPBKS.Common.EPPlus.EPPlusHelper.enPaperSize,System.Int32[])">
+	<summary>
+ DataTable 陣列輸出成Stream
+ </summary>
+	<param name="Dt">DataTable 陣列,每個Datatble的TableName為SheetName(TableName當不為空,預設為空請自行指定)</param>
+	<param name="StrHeadText">抬頭陣列,沒有抬頭可不輸入</param>
+	<param name="AliasColNameLst">欄位說明至換陣列 </param>
+	<param name="CellFormatLst">Cell格式</param>
+	<param name="HeadPicPath">抬頭加圖形logo路徑</param>
+	<param name="PaperOrientation">列印紙張方向</param>
+	<param name="PaperSize">列印紙張大小</param>
+	<param name="StartIndex">資料放置起始位置列</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.GetMultiDataTableFromExcelStream(System.IO.Stream,System.Boolean)">
+	<summary>
+ 從Excel Stream各sheet抓取成DataTable 陣列 
+ </summary>
+	<param name="ExcelStream">Excel stream</param>
+	<param name="HasHeader">是否有抬頭,預設有</param>
+	<returns>DataTable 陣列 </returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.GetMultiDataTableFromExcelStream(System.IO.Stream,System.Int32[])">
+	<summary>
+  從Excel Stream各sheet抓取成DataTable 陣列 
+ </summary>
+	<param name="ExcelStream">Excel stream</param>
+	<param name="HeadRowIndex">抬頭開始位置</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.GetDataSetFromExcelStream(System.IO.Stream,System.Boolean)">
+	<summary>
+ 從Excel Stream抓取成DataSet
+ </summary>
+	<param name="ExcelStream">Excel stream</param>
+	<param name="HasHeader">是否有抬頭,預設有</param>
+	<returns>DataSet </returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.GetDataSetFromExcelStream(System.IO.Stream,System.Int32[])">
+	<summary>
+ 從Excel Stream各sheet抓取成DataSet
+ </summary>
+	<param name="ExcelStream">Excel stream</param>
+	<param name="HeadRowIndex">抬頭開始位置</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.GetDataTableFromExcelStream(System.IO.Stream,System.Boolean)">
+	<summary>
+ 從Excel Stream第一sheet抓取成DataTable 
+ </summary>
+	<param name="ExcelStream">Excel FileStream</param>
+	<param name="HasHeader">是否有抬頭,預設有</param>
+	<returns>DataTable </returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.GetMultiDataTableFromExcel(System.String,System.Int32[])">
+	<summary>
+ 從Excel 各sheet抓取成DataTable 陣列 
+ </summary>
+	<param name="FileName">Excel 檔名</param>
+	<param name="HeaderRowIndex">抬頭開始位置</param>
+	<returns>DataTable 陣列 </returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.GetDataSetFromExcel(System.String,System.Int32[])">
+	<summary>
+ 從Excel 各sheet抓取成DataSet 
+ </summary>
+	<param name="FileName"></param>
+	<param name="HeaderRowIndex"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.GetDataTableFromExcel(System.String,System.String,System.Int32,System.Boolean)">
+	<summary>
+ 從Excel 指定sheet抓取成DataTable 
+ </summary>
+	<param name="Path">Excel 檔名</param>
+	<param name="SheetName"> sheet 名稱</param>
+	<param name="HeaderRowIndex">抬頭開始位置 </param>
+	<param name="HasHeader">是否有抬頭,預設有</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.GetDataTableFromExcel(System.String,System.Int32,System.Int32,System.Boolean)">
+	<summary>
+ 從Excel 指定sheet抓取成DataTable 
+ </summary>
+	<param name="Path">Excel 檔名</param>
+	<param name="SheetIndex">sheet索引</param>
+	<param name="HeaderRowIndex">抬頭開始位置 </param>
+	<param name="HasHeader">是否有抬頭,預設有</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.GetDataTableFromExcel(System.String,System.Boolean)">
+	<summary>
+ 從Excel 第一sheet抓取成DataTable 
+ </summary>
+	<param name="Path">Excel 檔名</param>
+	<param name="HasHeader">是否有抬頭,預設有</param>
+	<returns>DataTable </returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.MatchExcelField(System.String,System.Int32,System.Int32,System.String[])">
+	<summary>
+ 比對自定欄位陣列與Excel 指定欄位定義的欄位名稱是否一致
+ </summary>
+	<param name="Path">要比對Excel 檔名</param>
+	<param name="SheetIndex"> sheet 索引</param>
+	<param name="HeaderRowIndex">抬頭開始位置</param>
+	<param name="CustomFields">要比對欄位定義</param>
+	<returns>完全正確回傳空白 錯誤回傳 "第x欄欄位名"：如 第1欄 ID </returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.MatchExcelField(System.String,System.String,System.Int32,System.String[])">
+	<summary>
+ 比對自定欄位陣列與Excel 指定欄位定義的欄位名稱是否一致
+ </summary>
+	<param name="Path">要比對Excel 檔名</param>
+	<param name="SheetName"> sheet 名稱</param>
+	<param name="HeaderRowIndex">抬頭開始位置</param>
+	<param name="CustomFields">要比對欄位定義</param>
+	<returns>完全正確回傳空白 錯誤回傳 "第x欄欄位名"：如 第1欄 ID </returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.SetRowStyle(System.String,System.Int32,System.Int32,System.Drawing.Color,System.Drawing.Color,System.String@,System.Int32)">
+	<summary>
+ 設定列風格
+ </summary>
+	<param name="FilePath">excel 檔名</param>
+	<param name="SheetIndex">sheet 索引</param>
+	<param name="RowIndex">列索引</param>
+	<param name="FontColor">字型顏色,Color.White</param>
+	<param name="BackgroundColor">背景顏色,Color.Blue</param>
+	<param name="RetMsg">回傳訊息</param>
+	<param name="FontSize">字型大小,預設=9</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.SetRowStyle(System.String,System.String,System.Int32,System.Drawing.Color,System.Drawing.Color,System.String@,System.Int32)">
+	<summary>
+ 設定列風格
+ </summary>
+	<param name="FilePath">excel 檔名</param>
+	<param name="SheetName">sheet 名稱</param>
+	<param name="RowIndex">列索引</param>
+	<param name="FontColor">字型顏色,Color.White</param>
+	<param name="BackgroundColor">背景顏色,Color.Blue</param>
+	<param name="RetMsg">回傳訊息</param>
+	<param name="FontSize">字型大小,預設=9</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.SetCellStyle(System.String,System.Int32,System.Int32,System.Int32,System.Drawing.Color,System.Drawing.Color,System.String@,System.Int32)">
+	<summary>
+  設定格風格
+ </summary>
+	<param name="FilePath">excel 檔名</param>
+	<param name="SheetIndex">sheet 索引</param>
+	<param name="RowIndex">列索引</param>
+	<param name="ColIndex">行索引</param>
+	<param name="FontColor">字型顏色,Color.White</param>
+	<param name="BackgroundColor">背景顏色,Color.Blue</param>
+	<param name="RetMsg">回傳訊息</param>
+	<param name="FontSize">字型大小,預設=9</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.SetCellStyle(System.String,System.String,System.Int32,System.Int32,System.Drawing.Color,System.Drawing.Color,System.String@,System.Int32)">
+	<summary>
+  設定格風格
+ </summary>
+	<param name="FilePath">excel 檔名</param>
+	<param name="SheetName">sheet 名稱</param>
+	<param name="RowIndex">列索引</param>
+	<param name="ColIndex">行索引</param>
+	<param name="FontColor">字型顏色,Color.White</param>
+	<param name="BackgroundColor">背景顏色,Color.Blue</param>
+	<param name="RetMsg">回傳訊息</param>
+	<param name="FontSize">字型大小,預設=9</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPGetHeaderColumns(System.Int32)">
+	<summary>
+ 抓取抬頭欄位
+ </summary>
+	<param name="SheetIndex">Sheet索引</param>
+	<returns>string()</returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPGetHeaderColumns(System.String)">
+	<summary>
+ 抓取抬頭欄位
+ </summary>
+	<param name="SheetName">Sheet名稱</param>
+	<returns>string()</returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetSheetColor(System.Drawing.Color,System.String)">
+	<summary>
+ 設定Sheet Tab 顏色
+ </summary>
+	<param name="TabColor">設定顏色</param>
+	<param name="SheetName">Sheet名稱</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetSheetColor(System.Drawing.Color,System.Int32)">
+	<summary>
+ 設定Sheet Tab 顏色
+ </summary>
+	<param name="TabColor">設定顏色</param>
+	<param name="SheetIndex">Sheet索引</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetWrapText(System.Int32,System.Int32,System.Boolean,System.Int32)">
+	<summary>
+ 設定cell的文字自動換行
+ </summary>
+	<param name="RowIndex">列</param>
+	<param name="ColIndex">行</param>
+	<param name="IsWrapText">是否換行</param>
+	<param name="SheetIndex">索引</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetWrapText(System.Int32,System.Int32,System.Boolean,System.String)">
+	<summary>
+ 設定cell的文字自動換行
+ </summary>
+	<param name="RowIndex">列</param>
+	<param name="ColIndex">行</param>
+	<param name="IsWrapText">是否換行</param>
+	<param name="SheetName">sheet名稱</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetRangeWrapText(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean,System.Int32)">
+	<summary>
+ 設定cell range 的文字自動換行
+ </summary>
+	<param name="StartRowIndex">開始列</param>
+	<param name="StartColIndex">開始行</param>
+	<param name="EndRowIndex">結束列</param>
+	<param name="EndColIndex">結束行</param>
+	<param name="IsWrapText">是否換行</param>
+	<param name="SheetIndex">sheet 索引 </param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetRangeWrapText(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean,System.String)">
+	<summary>
+ 設定cell range 的文字自動換行
+ </summary>
+	<param name="StartRowIndex">開始列</param>
+	<param name="StartColIndex">開始行</param>
+	<param name="EndRowIndex">結束列</param>
+	<param name="EndColIndex">結束行</param>
+	<param name="IsWrapText">是否換行</param>
+	<param name="SheetName">sheet名稱</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetCellStyle(System.String,System.Int32,System.Int32,System.Drawing.Color,System.Drawing.Color,System.Int32)">
+	<summary>
+ 將Excel Package內Worksheet 的格進行風格設定
+ </summary>
+	<param name="SheetName">Worksheet 名稱</param>
+	<param name="RowIndex">列索引</param>
+	<param name="ColIndex">行索引</param>
+	<param name="FontColor">字型顏色</param>
+	<param name="BackgroundColor">背景顏色</param>
+	<param name="FontSize">字型大小,預設=9</param>
+	<returns>boolean</returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetCellStyle(System.Int32,System.Int32,System.Int32,System.Drawing.Color,System.Drawing.Color,System.Int32)">
+	<summary>
+ 將Excel Package內Worksheet 的格進行風格設定
+ </summary>
+	<param name="SheetIndex">Worksheet 索引</param>
+	<param name="RowIndex">列索引</param>
+	<param name="ColIndex">行索引</param>
+	<param name="FontColor">字型顏色</param>
+	<param name="BackgroundColor">背景顏色</param>
+	<param name="FontSize">字型大小,預設=9</param>
+	<returns>boolean</returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetCellStyle(System.Int32,System.Int32,System.Int32,System.Boolean,System.Drawing.Color,System.Drawing.Color,System.Int32)">
+	<summary>
+ 將Excel Package內Worksheet 的格進行風格設定
+ </summary>
+	<param name="SheetIndex">Worksheet 索引</param>
+	<param name="RowIndex">列索引</param>
+	<param name="ColIndex">行索引</param>
+	<param name="FontColor">字型顏色</param>
+	<param name="bAutoFit">欄寬自動設定</param>
+	<param name="BackgroundColor">背景顏色</param>
+	<param name="FontSize">字型大小,預設=9</param>
+	<returns>boolean</returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPInsertCol(System.Int32,System.Int32,System.Int32)">
+	<summary>
+ 進行Excel Package的Worksheet 新增行
+ </summary>
+	<param name="ColForm">開始新增行的位置</param>
+	<param name="ColNumber">新增行數</param>
+	<param name="SheetIndex">sheet 索引號</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPDelCol(System.Int32,System.Int32,System.Int32)">
+	<summary>
+ 進行Excel Package的Worksheet 刪除列
+ </summary>
+	<param name="ColForm">開始刪除行的位置</param>
+	<param name="ColNumber">刪除行數</param>
+	<param name="SheetIndex">sheet 索引號</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPInsertCol(System.Int32,System.Int32,System.String)">
+	<summary>
+ 進行Excel Package的Worksheet 新增行
+ </summary>
+	<param name="ColForm">開始新增行的位置</param>
+	<param name="ColNumber">新增行數</param>
+	<param name="SheetName">sheet 名稱</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPDelCol(System.Int32,System.Int32,System.String)">
+	<summary>
+ 進行Excel Package的Worksheet 刪除行
+ </summary>
+	<param name="ColForm">開始刪除行的位置</param>
+	<param name="ColNumber">刪除行數</param>
+	<param name="SheetName">sheet 名稱</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPInsertRow(System.Int32,System.Int32,System.Int32)">
+	<summary>
+ 進行Excel Package的Worksheet 新增列
+ </summary>
+	<param name="RowForm">開始新增列的位置</param>
+	<param name="RowsNumber">新增列數</param>
+	<param name="SheetIndex">sheet 索引號</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPDelRow(System.Int32,System.Int32,System.Int32,System.Boolean)">
+	<summary>
+ 進行Excel Package的Worksheet 刪除列
+ </summary>
+	<param name="RowForm">開始刪除列的位置</param>
+	<param name="RowsNumber">刪除列數</param>
+	<param name="SheetIndex">sheet 索引號</param>
+	<param name="ShiftRollUp">是否往上移</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPInsertRow(System.Int32,System.Int32,System.String)">
+	<summary>
+ 進行Excel Package的Worksheet 新增列
+ </summary>
+	<param name="RowForm">開始新增列的位置</param>
+	<param name="RowsNumber">新增列數</param>
+	<param name="SheetName">sheet 名稱</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPDelRow(System.Int32,System.Int32,System.String,System.Boolean)">
+	<summary>
+ 進行Excel Package的Worksheet 刪除列
+ </summary>
+	<param name="RowForm">開始刪除列的位置</param>
+	<param name="RowsNumber">刪除列數</param>
+	<param name="SheetName">sheet 名稱</param>
+	<param name="ShiftRollup">是否往上移 </param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetRowData(System.Int32,System.Collections.Generic.List{System.String},System.Int32)">
+	<summary>
+ ExccePackage 內Worksheet的某列進行值設定
+ </summary>
+	<param name="RowIndex">列</param>
+	<param name="RowDataList">列表值</param>
+	<param name="SheetIndex">sheet 名稱</param>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetRowData(System.Int32,System.Collections.Generic.List{System.String},System.String)">
+	<summary>
+ ExccePackage 內Worksheet的某列進行值設定
+ </summary>
+	<param name="RowIndex">列</param>
+	<param name="RowDataList">列表值</param>
+	<param name="SheetName">sheet 名稱</param>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetRowFontSize(System.Int32,System.Int32,System.Int32)">
+	<summary>
+ 將Excel Package內Worksheet 的列進行字型設定
+ </summary>
+	<param name="RowIndex">列索引</param>
+	<param name="FontSize">字型大小</param>
+	<param name="SheetIndex">Worksheet 索引</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetRowFontSize(System.Int32,System.Int32,System.String)">
+	<summary>
+ 將Excel Package內Worksheet 的列進行字型設定
+ </summary>
+	<param name="RowIndex">列索引</param>
+	<param name="FontSize">字型大小</param>
+	<param name="SheetName">Worksheet 名稱</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetCellNumberformat(System.String,System.Int32,System.String)">
+	<summary>
+	</summary>
+	<param name="SheetName"></param>
+	<param name="CellIndex"></param>
+	<param name="CellFormat"></param>
+	<remarks>參考Eexcel 顯示格式</remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPFreezePanes(System.Int32,System.Int32,System.String)">
+	<summary>
+ 凍結窗格
+ </summary>
+	<param name="RowIndex">列數</param>
+	<param name="ColIndex">行數</param>
+	<param name="SheetName">Sheet名稱</param>
+	<remarks>ex:(3,1) Freeze Row 2 and no column and (1,3) Freeze no row and 2 column</remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPFreezePanes(System.Int32,System.Int32,System.Int32)">
+	<summary>
+ 凍結窗格
+ </summary>
+	<param name="RowIndex">列數</param>
+	<param name="ColIndex">行數</param>
+	<param name="SheetIndex">Sheet索引</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPLoadFromArray(System.String,System.Int32,System.Int32,System.Collections.Generic.IEnumerable{System.Object[]})">
+	<summary>
+ 從陣列載入資料
+ </summary>
+	<param name="SheetName">Sheet 名稱</param>
+	<param name="RowIndex">列</param>
+	<param name="ColIndex">行</param>
+	<param name="ImpData">匯入資料集合</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetCellFormula(System.String,System.Int32,System.Int32,System.String)">
+	<summary>
+ 設定Cell公式
+ </summary>
+	<param name="SheetName">Sheet 名稱</param>
+	<param name="RowIndex">列</param>
+	<param name="ColIndex">行</param>
+	<param name="Formula">公式</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetAutoFilter(System.String,System.Int32,System.Int32,System.String)">
+	<summary>
+ 設定篩選(過濾))
+ </summary>
+	<param name="SheetName">Sheet 名稱</param>
+	<param name="RowIndex">列</param>
+	<param name="ColIndex">行</param>
+	<param name="Title">篩選抬頭</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetCellFontSize(System.Int32,System.Int32,System.Int32,System.Int32)">
+	<summary>
+ 將Excel Package內Worksheet 的格進行字型設定
+ </summary>
+	<param name="RowIndex">列索引</param>
+	<param name="ColIndex">行索引</param>
+	<param name="FontSize">字型大小</param>
+	<param name="SheetIndex">Worksheet 索引</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetCellFontSize(System.Int32,System.Int32,System.Int32,System.String)">
+	<summary>
+ 將Excel Package內Worksheet 的格進行字型設定
+ </summary>
+	<param name="RowIndex">列索引</param>
+	<param name="ColIndex">行索引</param>
+	<param name="FontSize">字型大小</param>
+	<param name="SheetName">Worksheet 名稱</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPGetRangeCopyto(System.String,System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.String,System.Int32,System.Int32)">
+	<summary>
+ Template 檔案匯入複製至Excel Package
+ </summary>
+	<param name="SourceFile">Template 檔案路徑</param>
+	<param name="SourceSheetName">Template Excel檔案sheet 名稱</param>
+	<param name="SourceStartRowIndex">匯入開始列</param>
+	<param name="SourceStartColIndex">匯入開始行</param>
+	<param name="SourceEndRowIndex">匯入結束列</param>
+	<param name="SourceEndColIndex">匯入結束行</param>
+	<param name="TargetSheetName">匯入到Excel Package sheet 名稱</param>
+	<param name="TargetRowIndex">匯入到Excel Package sheet 開始列 </param>
+	<param name="TargetColIndex">匯入到Excel Package sheet 開始行</param>
+	<remarks>匯入Template表頭</remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSettingPaper(System.Int32,EPBKS.Common.EPPlus.EPPlusHelper.enOrientation,EPBKS.Common.EPPlus.EPPlusHelper.enPaperSize)">
+	<summary>
+ sheet 紙張設定
+ </summary>
+	<param name="SheetIndex">sheet 索引號</param>
+	<param name="PaperOrientation">設定紙張方向</param>
+	<param name="PaperSize">設定紙張大小</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSettingPaper(System.String,EPBKS.Common.EPPlus.EPPlusHelper.enOrientation,EPBKS.Common.EPPlus.EPPlusHelper.enPaperSize)">
+	<summary>
+ sheet 紙張設定
+ </summary>
+	<param name="SheetName">sheet 名稱</param>
+	<param name="PaperOrientation">設定紙張方向</param>
+	<param name="PaperSize">設定紙張大小</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPFromMultiDataTable(System.Data.DataTable[],System.String[],System.Collections.Generic.List{System.String[]},System.Collections.Generic.List{System.String[]},System.String,EPBKS.Common.EPPlus.EPPlusHelper.enOrientation,EPBKS.Common.EPPlus.EPPlusHelper.enPaperSize,System.Int32[])">
+	<summary>
+ 將MultiDattable轉成 內建的Excel Package 
+ </summary>
+	<param name="Dt">Dattable矩陣,每個Datatble的TableName為SheetName(TableName當不為空,預設為空請自行指定)</param>
+	<param name="StrHeadText">抬頭</param>
+	<param name="AliasColNameLst">欄位說明</param>
+	<param name="CellFormatLst">顯示格式</param>
+	<param name="HeadPicPath">抬頭加圖形Logo路徑</param>
+	<param name="PaperOrientation">列印紙張方向</param>
+	<param name="PaperSize">列印紙張大小</param>
+	<param name="StartIndex">資料放置起始位置列</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPFromDataTable(System.Data.DataTable,System.String,System.String[],System.String[],System.String,EPBKS.Common.EPPlus.EPPlusHelper.enOrientation,EPBKS.Common.EPPlus.EPPlusHelper.enPaperSize,System.Int32)">
+	<summary>
+ 將Dattable轉成 內建的Excel Package 
+ </summary>
+	<param name="Dt">Dattable,Datatble的TableName為SheetName(TableName當不為空,預設為空請自行指定)</param>
+	<param name="StrHeadText">抬頭</param>
+	<param name="AliasColName">欄位說明</param>
+	<param name="CellFormat">顯示格式</param>
+	<param name="HeadPicPath">抬頭加圖形Logo路徑</param>
+	<param name="PaperOrientation">列印紙張方向</param>
+	<param name="PaperSize">列印紙張大小</param>
+	<param name="StartIndex">資料放置起始位置列</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetCellValue(System.Int32,System.Int32,System.Object,System.Int32)">
+	<summary>
+ ExccePack 內Worksheet的某格進行設定
+ </summary>
+	<param name="RowIndex">列索引,從1起跳</param>
+	<param name="ColIndex">行索引,從1起跳</param>
+	<param name="ObjVal">值</param>
+	<param name="SheetIndex">sheet 索引,從1起跳</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetCellValue(System.Int32,System.Int32,System.Object,System.String)">
+	<summary>
+ 格設定
+ </summary>
+	<param name="RowIndex">列索引,從1起跳</param>
+	<param name="ColIndex">行索引,從1起跳</param>
+	<param name="ObjVal">值</param>
+	<param name="SheetName">sheet 名稱,從1起跳</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetCellsMerge(System.Int32,System.Int32,System.Int32,System.Int32,System.String)">
+	<summary>
+  設定合併欄位
+ </summary>
+	<param name="RowIndexFrom">開始列</param>
+	<param name="ColIndexFrom">開始行</param>
+	<param name="RowIndexEnd">結束列</param>
+	<param name="ColIndexEnd">結束行</param>
+	<param name="SheetName">sheet 名稱</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetCellsMerge(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+	<summary>
+ 設定合併欄位
+ </summary>
+	<param name="RowIndexFrom">開始列</param>
+	<param name="ColIndexFrom">開始行</param>
+	<param name="RowIndexEnd">結束列</param>
+	<param name="ColIndexEnd">結束行</param>
+	<param name="SheetIndex">sheet索引</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPSetRangeBorderStyle(System.Int32,System.Int32,System.Int32,System.Int32,EPBKS.Common.EPPlus.EPPlusHelper.enBorderStyle,System.Int32)">
+	<summary>
+ 範圍設定格線風格
+ </summary>
+	<param name="RowIndexFrom">開始列</param>
+	<param name="ColIndexFrom">開始行</param>
+	<param name="RowIndexEnd">結束列</param>
+	<param name="ColIndexEnd">結束行</param>
+	<param name="BorderStyle">格線風格</param>
+	<param name="SheetIndex">sheet 索引</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPReSetRowRangeStyle(System.Boolean,System.Int32,System.Int32,System.Int32)">
+	<summary>
+ 重設範圍格線風格
+ </summary>
+	<param name="HaveHead">是否有抬頭</param>
+	<param name="ColumnIndexEnd">結束行</param>
+	<param name="RowIndexEnd">結束列</param>
+	<param name="SheetIndex">sheet 索引</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPWriteFile(System.String)">
+	<summary>
+ 將Excel Package 寫入檔案
+ </summary>
+	<param name="FilePath">檔案路徑</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.EPWritetoWeb(System.String)">
+	<summary>
+ 將Excel Package 輸出到Web
+ </summary>
+	<param name="FileName">檔名</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.RenderToWeb(System.Byte[],System.String,System.String)">
+	<summary>
+ 輸出到Web
+ </summary>
+	<param name="DataBytes">位元資料</param>
+	<param name="FileName">檔名</param>
+	<param name="ContentType">輸出內容格式</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.LoadFromDataTableToExcelFile(System.Data.DataTable,System.IO.FileInfo,System.String)">
+	<summary>
+	</summary>
+	<param name="dt">DataTable</param>
+	<param name="filePath">file path</param>
+	<param name="startAddress">like :"B2"</param>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.GetCellTopLeftCoordinates(OfficeOpenXml.ExcelWorksheet,OfficeOpenXml.ExcelRangeBase)">
+	<summary>Get top, left, width and height of a given cell.</summary>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.WorksheetToDataTable(OfficeOpenXml.ExcelWorksheet,System.Boolean)">
+	<summary>
+ worksheet to datatable
+ </summary>
+	<param name="ws"></param>
+	<param name="hasHeader"></param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.WriteRecordToFile(System.Collections.Generic.List{System.String},System.IO.StreamWriter,System.Int32,System.Int32)">
+	<summary>
+ 寫資料到檔案
+ </summary>
+	<param name="record">List of cell values</param>
+	<param name="sw">Open Writer to file</param>
+	<param name="rowNumber">Current row num</param>
+	<param name="totalRowCount"></param>
+	<remarks>Avoiding writing final empty line so bulk import processes can work.</remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.GetRow(OfficeOpenXml.ExcelWorksheet,System.Int32,System.Int32,System.Collections.Generic.List{System.String})">
+	<summary>
+ 取列
+ </summary>
+	<param name="worksheet"></param>
+	<param name="currentRow"></param>
+	<param name="currentRowNum"></param>
+	<param name="maxColumnNumber"></param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusHelper.GetCellText(OfficeOpenXml.ExcelRangeBase)">
+	<summary>
+ Can't use .Text: 
+ </summary>
+	<param name="cell"></param>
+	<returns></returns>
+</member><member name="P:EPBKS.Common.EPPlus.My.Resources.Resources.ResourceManager">
+	<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member><member name="P:EPBKS.Common.EPPlus.My.Resources.Resources.Culture">
+	<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="T:EPBKS.Common.EPPlus.My.Resources.Resources">
+	<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusExtensions.ToDelimitedString(System.Collections.Generic.List{System.String},System.String,System.Boolean,System.String,System.Boolean)">
+	<summary>
+ 將自訂集合列表轉成格式字串集
+ </summary>
+	<param name="list">The input List collection of string objects</param>
+	<param name="qualifier">
+ The default delimiter. Using a colon in case the List of string are file names,
+ since it is an illegal file name character on Windows machines and therefore should not be in the file name anywhere.
+ </param>
+	<param name="insertSpaces">Whether to insert a space after each separator</param>
+	<returns>A delimited string</returns>
+	<remarks>This was implemented pre-linq</remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusExtensions.ExportEPExcelDocument``1(System.Collections.Generic.IEnumerable{``0})">
+	<summary>
+ 將列表物件轉成Excel 文件字元陣列輸出
+ </summary>
+	<typeparam name="T"> 任何物件 </typeparam>
+	<param name="objects">列表物件</param>
+	<returns>轉成位元組矩陣</returns>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusExtensions.ExportEPExcelFile``1(System.Collections.Generic.IEnumerable{``0},System.String)">
+	<summary>
+ 將列表物件轉成Excel 檔案到指定路徑
+ </summary>
+	<typeparam name="T">任何物件</typeparam>
+	<param name="objects">列表物件</param>
+	<param name="filePath">檔案路徑</param>
+	<remarks></remarks>
+</member><member name="M:EPBKS.Common.EPPlus.EPPlusExtensions.ExportEPExcelByWeb``1(System.Collections.Generic.IEnumerable{``0},System.String)">
+	<summary>
+ 將列表物件轉成Excel 檔案直接供下載
+ </summary>
+	<typeparam name="T">任何物件</typeparam>
+	<param name="objects">列表物件</param>
+	<param name="fileName">檔名 xxx.xlsx</param>
+	<remarks></remarks>
+</member>
+</members>
+</doc>

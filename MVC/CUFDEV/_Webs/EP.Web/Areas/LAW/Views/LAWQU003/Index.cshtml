@@ -1,0 +1,66 @@
+﻿
+@{
+    ViewBag.Title = "報表作業";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    //var year = "95-" + (DateTime.Now.Year - 1911 - 1) + "年度案件統計";
+    //var year = LAWResource.九五九八年度案件統計表;
+    //var yearnow = (DateTime.Now.Year - 1911) + LAWResource.年度案件統計;
+
+}
+<style>
+    table {
+        text-align: center;
+    }
+</style>
+<div class="col-md-12 form-group detail-col">
+    <div class="col-md-12">
+        <label class="control-label">@LAWResource.選擇類別</label>
+        <br />
+        <select id="LawType" class="form-control" name="LawType" style="width:30%">
+            <option value="1">@LAWResource.法追統計報表</option>
+            <option value="2">@LAWResource.當月還款明細</option>
+            <option value="3">@LAWResource.團隊明細</option>
+            @*<option value="4">@year</option>
+            <option value="5">@yearnow</option>*@
+        </select>
+    </div>
+</div>
+
+<div id="viewContent">
+    @*@{Html.RenderPartial("~/Areas/LAW/Views/LAWQU003/Statistics.cshtml");}*@
+</div>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $.get('/LAW/LAWQU003/_Statistics', {}, function (data) { $("#viewContent").html(data) })
+    });
+    $("#LawType").on('change', function (e) {
+       
+        switch (this.value) {
+            case "1":
+                $("#viewContent").empty();      
+                $.get('/LAW/LAWQU003/_Statistics', {}, function (data) { $("#viewContent").html(data) });
+                break;
+            case "2":
+                $("#viewContent").empty();
+                $.get('/LAW/LAWQU003/_MonthRepaymentReport', {}, function (data) { $("#viewContent").html(data) });
+                break;
+            case "3":
+                $("#viewContent").empty();
+                $.get('/LAW/LAWQU003/_TeamListReport', {}, function (data) { $("#viewContent").html(data) });
+                break; 
+            case "4":
+                $("#viewContent").empty();
+                $.get('/LAW/LAWQU003/_YearReport', {}, function (data) { $("#viewContent").html(data) });
+                break;
+            case "5":
+                $("#viewContent").empty();
+                $.get('/LAW/LAWQU003/_NowYearReport', {}, function (data) { $("#viewContent").html(data) });
+                break;
+        }      
+    })
+
+</script>

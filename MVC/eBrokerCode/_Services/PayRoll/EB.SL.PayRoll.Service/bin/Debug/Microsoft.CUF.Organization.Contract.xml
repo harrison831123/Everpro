@@ -1,0 +1,1107 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.CUF.Organization.Contract</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.CUF.UnitComparer">
+            <summary>
+            單位相等的邏輯實作
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.UnitComparer.Equals(Microsoft.CUF.Unit,Microsoft.CUF.Unit)">
+            <summary>
+            單位相等的邏輯；GUID
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.UnitComparer.GetHashCode(Microsoft.CUF.Unit)">
+            <summary>
+            取得HashCode
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.MemberComparer">
+            <summary>
+            人員相等的邏輯實作
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.MemberComparer.Equals(Microsoft.CUF.Member,Microsoft.CUF.Member)">
+            <summary>
+            人員相等的邏輯；ID相等
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.MemberComparer.GetHashCode(Microsoft.CUF.Member)">
+            <summary>
+            取得HashCode
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.Organization.CodeName">
+            <summary>
+            此為平台網站Level之提供基層名稱資訊的Cache資料(由Cache資料取得) (TMNewa.Mis)
+            供Web/AP使用
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.Organization.CodeName._CodeProvider">
+            <summary>
+            資料提供者 (IoC) (當Cache沒資料時)
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.Organization.CodeName.prefixCacheKey">
+            <summary>
+            各個存Cache資料的Key值Prefix字串
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Organization.CodeName.#cctor">
+            <summary>
+            靜態建構子
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.Organization.CodeName.lockScUnit">
+            <summary>
+            代碼鎖定物件-for Unit使用
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.Organization.CodeName.lockScMember">
+            <summary>
+            代碼鎖定物件-for Member使用
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Organization.CodeName.sc_unit">
+            <summary>單位清單Cache</summary>
+            <param name="rootuunit">根節點的單位</param>
+            <returns></returns>
+            <remarks>全部儲存</remarks>
+        </member>
+        <member name="M:Microsoft.CUF.Organization.CodeName.sc_unit_CacheClear">
+            <summary>清除單位的Cache</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Organization.CodeName.GetUnitName(System.String)">
+            <summary>
+            取得單位名稱
+            </summary>
+            <param name="iunit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Organization.CodeName.GetAllUnits">
+            <summary>取得所有單位</summary>
+            <returns></returns>
+            <remarks>不供外部dll呼叫CodeName.GetAllUnits，若要取得全部則由Unit.GetAll取得</remarks>
+        </member>
+        <member name="T:Microsoft.CUF.MemberAccount">
+            <summary>人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.MemberID">
+            <summary>人員編號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.MemberName">
+            <summary>人員名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.UnitGUID">
+            <summary>所屬單位Guid</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.UnitID">
+            <summary>實際單位代號。null表示此為虛擬單位。</summary>
+            <remarks>非null的話必須為唯一值。</remarks>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.UnitName">
+            <summary>單位名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.Type">
+            <summary>身份別</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.imember_type_name">
+            <summary>身份別</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.Email">
+            <summary>Email</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.TakeOfficeDate">
+            <summary>到職日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.LeaveOfficeDate">
+            <summary>離職日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.CreatorID">
+            <summary>建立人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.CreateDate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.UpdaterID">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.UpdateDate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.CreatorName">
+            <summary>建立人員名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.UpdaterName">
+            <summary>更新人員名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.AccountID">
+            <summary>帳號ID</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.fauthenticate_type">
+            <summary>驗證方式</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.LoginCount">
+            <summary>登入次數</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.LastPasswordChangeDate">
+            <summary>最後密碼變更時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.dlast_password_change">
+            <summary>最後密碼變更時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.EnabledDate">
+            <summary>啟用時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.denabled">
+            <summary>啟用時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.DisabledDate">
+            <summary>停用時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberAccount.dexpire">
+            <summary>停用時間</summary>
+        </member>
+        <member name="T:Microsoft.CUF.v_unit">
+            <summary>單位</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.GUID">
+            <summary>單位GUID</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.ParentGUID">
+            <summary>上層單位。null表示此為最高單位。</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.ID">
+            <summary>實際單位代號。null表示此為虛擬單位。</summary>
+            <remarks>非null的話必須為唯一值。</remarks>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.Name">
+            <summary>單位名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.ManagerMemberId">
+            <summary>主管編號。null表示此主管同上層單位主管。</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.DisabledDate">
+            <summary>單位停用時間。</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.dexpire">
+            <summary>
+            停用時間
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.MicrosoftCUFLevel">
+            <summary>公司組織層級。</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.CreatorID">
+            <summary>建立人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.CreateDate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.UpdaterID">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.UpdateDate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.CreatorName">
+            <summary>建立人員名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.UpdaterName">
+            <summary>更新人員名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.IsMicrosoftCUF">
+            <summary>是否為公司組織</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.IsRoot">
+            <summary>
+            是否為根單位
+            ex : 
+            [true]MicrosoftCUF(董事長)
+            [false]110100(公司本部)
+            [false]230000(稽核室)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.IsManagedRoot">
+            <summary>
+            是否為使用者管理的根單位
+            ex : 
+            [false]MicrosoftCUF(董事長)
+            [false]110100(公司本部)
+            [true]230000(稽核室)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.IsMemberUnit">
+            <summary>是否為人員的所屬單位</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.CanNotModify">
+            <summary>是否不可以異動</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.json_selDataViewMembers">
+            <summary>
+            資料檢視人員的 JSON 格式
+            for (uc)SelDataViewMembers.cshtml
+            格式 :
+            [{fexternal_property:"A", imember:"9000AA"},{fexternal_property:"A", imember:"9000AA"},...]
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.json_officerRoute">
+            <summary>
+            經辦通路的 JSON 格式
+            for (uc)OfficerRouteEditor.cshtml
+            格式 :
+            {"root":{"fcondition":[{"Category":"M","CategoryItems":[{"dataOfficerType":"L","dataOfficer":"W","dataRoute":"E"},{"dataOfficerType":"O","dataOfficer":"H","dataRoute":"J"}]},{"Category":"B","CategoryItems":[{"dataOfficerType":"O","dataOfficer":"T","dataRoute":"Y"}]}]}}
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.nmanager">
+            <summary>主管人員名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.unit_external_imembers">
+            <summary>公司管理人員 imembers</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_unit.unit_external_display">
+            <summary>公司管理人員 display</summary>
+        </member>
+        <member name="T:Microsoft.CUF.MicrosoftCUFLevel">
+            <summary>公司組織層級</summary>
+        </member>
+        <member name="F:Microsoft.CUF.MicrosoftCUFLevel.None">
+            <summary>未定義</summary>
+        </member>
+        <member name="F:Microsoft.CUF.MicrosoftCUFLevel.Corp">
+            <summary>公司</summary>
+        </member>
+        <member name="F:Microsoft.CUF.MicrosoftCUFLevel.GeneralManager">
+            <summary>總經理</summary>
+        </member>
+        <member name="F:Microsoft.CUF.MicrosoftCUFLevel.System">
+            <summary>體系</summary>
+        </member>
+        <member name="F:Microsoft.CUF.MicrosoftCUFLevel.Group">
+            <summary>群</summary>
+        </member>
+        <member name="F:Microsoft.CUF.MicrosoftCUFLevel.Department">
+            <summary>部門</summary>
+        </member>
+        <member name="F:Microsoft.CUF.MicrosoftCUFLevel.Team">
+            <summary>科</summary>
+        </member>
+        <member name="T:Microsoft.CUF.MemberType">
+            <summary>人員身份別</summary>
+        </member>
+        <member name="F:Microsoft.CUF.MemberType.Member">
+            <summary>員工</summary>
+        </member>
+        <member name="F:Microsoft.CUF.MemberType.PartTimeMember">
+            <summary>工讀生</summary>
+        </member>
+        <member name="F:Microsoft.CUF.MemberType.Other">
+            <summary>其他</summary>
+        </member>
+        <member name="T:Microsoft.CUF.UnitExternalMemberType">
+            <summary>單位外部人員類型</summary>
+        </member>
+        <member name="F:Microsoft.CUF.UnitExternalMemberType.Manager">
+            <summary>管理人。</summary>
+            <remarks>只能維護單位以及人員。無資料檢視權限。</remarks>
+        </member>
+        <member name="F:Microsoft.CUF.UnitExternalMemberType.Viewer">
+            <summary>檢視人。</summary>
+            <remarks>只有資料檢視權限。不能維護單位以及人員。</remarks>
+        </member>
+        <member name="T:Microsoft.CUF.ActionType">
+            <summary>
+            動作類型
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.ActionType.Null">
+            <summary>未定義</summary>
+        </member>
+        <member name="F:Microsoft.CUF.ActionType.Login">
+            <summary>登入</summary>
+        </member>
+        <member name="F:Microsoft.CUF.ActionType.Insert">
+            <summary>新增</summary>
+        </member>
+        <member name="F:Microsoft.CUF.ActionType.Delete">
+            <summary>刪除</summary>
+        </member>
+        <member name="F:Microsoft.CUF.ActionType.Update">
+            <summary>更新</summary>
+        </member>
+        <member name="F:Microsoft.CUF.ActionType.Query">
+            <summary>查詢</summary>
+        </member>
+        <member name="F:Microsoft.CUF.ActionType.Print">
+            <summary>列印</summary>
+        </member>
+        <member name="F:Microsoft.CUF.ActionType.Import">
+            <summary>匯入/存檔</summary>
+        </member>
+        <member name="F:Microsoft.CUF.ActionType.Export">
+            <summary>匯出/下載檔案</summary>
+        </member>
+        <member name="T:Microsoft.CUF.UnitSelectType">
+            <summary>
+            選擇單位的類型
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.UnitSelectType.All">
+            <summary>全部組織</summary>
+        </member>
+        <member name="F:Microsoft.CUF.UnitSelectType.AllNotMicrosoftCUF">
+            <summary>所有外部單位(非公司組織)</summary>
+        </member>
+        <member name="F:Microsoft.CUF.UnitSelectType.RootNodesTrees">
+            <summary>特定節點為樹根的組織</summary>
+        </member>
+        <member name="T:Microsoft.CUF.IOrganizationModifier">
+            <summary>
+            提供組織的Service Interface
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationModifier.InsertUnits(System.Collections.Generic.IEnumerable{Microsoft.CUF.Unit})">
+            <summary>新增單位資料</summary>
+            <param name="units">單位</param>
+            <return></return>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationModifier.DeleteUnits(System.Collections.Generic.IEnumerable{Microsoft.CUF.Unit})">
+            <summary>刪除單位資料</summary>
+            <param name="units">單位</param>
+            <return></return>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationModifier.UpdateUnit(Microsoft.CUF.Unit,System.Guid)">
+            <summary>異動單位資料</summary>
+            <param name="unit">單位</param>
+            <param name="unitGUID">單位GUID</param>
+            <return></return>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationModifier.CheckUnitGuidUniqueForFlow(System.String)">
+            <summary>單位Unit資料表是否存在相同前8碼的guid是否相同</summary>
+            <param name="preGuid">Guid前幾碼</param>
+            <returns>是否Unique;[true/false]=[unique/not unique]</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationModifier.InsertMembers(System.Collections.Generic.IEnumerable{Microsoft.CUF.Member})">
+            <summary>新增人員資料</summary>
+            <param name="members">人員</param>
+            <return></return>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationModifier.DeleteMembers(System.Collections.Generic.IEnumerable{Microsoft.CUF.Member})">
+            <summary>刪除人員資料</summary>
+            <param name="members">人員</param>
+            <return></return>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationModifier.UpdateMember(Microsoft.CUF.Member,System.String)">
+            <summary>異動人員資料</summary>
+            <param name="member">人員</param>
+            <param name="memberID">人員ID</param>
+            <return></return>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationModifier.InsertSecurityLog(Microsoft.CUF.sc_log)">
+            <summary>新增安控LOG記錄</summary>
+            <param name="log">LOG物件</param>
+            <return></return>
+        </member>
+        <member name="T:Microsoft.CUF.IOrganizationProvider">
+            <summary>
+            提供組織的Service Interface
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetAllUnits">
+            <summary>取得所有單位</summary>
+            <returns>所有單位</returns>
+            <remarks>此Function僅供CodeProvider使用，其它使用則改由Unit.GetAll(…)取得</remarks>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetManageUnits(System.String)">
+            <summary>取得所管理的單位</summary>
+            <param name="memberID">人員ID</param>
+            <returns>多個單位資料</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetBelowUnitMembers(System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>依傳入的單位GUID，取得單位下的所屬人員資訊(包括子節點資訊)</summary>
+            <param name="unitGUIDs">指定單位</param>
+            <returns>回傳其下的人員</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.QueryMembers(Microsoft.CUF.MemberCondition)">
+            <summary>
+            查詢人員資訊
+            </summary>
+            <param name="condition">查詢條件</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetMembers(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>取得多個人員資料</summary>
+            <param name="memberIDs">多個人員代號</param>
+            <returns>多個人員資料</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetAllMembers">
+            <summary>
+            取得所有人員
+            </summary>
+            <returns>多筆人員</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetUnitMembers(System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>取得單位的人員</summary>
+            <param name="unitGUIDs">多個單位Guid</param>
+            <returns>單位Guid以及對應的人員資料</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetUnits(System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>取得多個單位資料</summary>
+            <param name="unitGUIDs">多個單位Guid</param>
+            <returns>多個單位資料</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetUnits(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>取得多個單位資料</summary>
+            <param name="unitIDs">多個單位代號</param>
+            <returns>多個單位資料</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetSubUnits(System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>取得子單位資料</summary>
+            <param name="unitGUIDs">多個單位Guid</param>
+            <returns>單位Guid以及對應的子單位資料</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetAllManageUnits(System.Guid,System.Collections.Generic.IEnumerable{System.Guid},System.String,System.Boolean,System.Boolean,System.Boolean,Microsoft.CUF.UnitSelectType,System.Collections.Generic.IEnumerable{System.Guid},System.Boolean,System.Boolean)">
+            <summary>
+            取得使用者所有可以管理的單位
+            傳回內含 {IsMicrosoftCUF,IsRoot,IsManagedRoot,IsMemberUnit} 的額外資訊
+            </summary>
+            <param name="memberUnitGUID">人員所屬[單位ID]</param>
+            <param name="manageUnitGUID">單位主管所在[單位的GUID]</param>
+            <param name="externalMemberID">外部管理人員ID</param>
+            <param name="isOrganizationCreator">是否可建立新的組織以及維護所有組織單位</param>
+            <param name="isUnitMaintain">可維護組織樹(含公司及外部單位)</param>
+            <param name="isExternalManager">組織外部管理員</param>
+            <param name="selectType">選擇單位的類型</param>
+            <param name="selectRootUnitGUID">
+            當selectType = {RootNodesTrees} 時所選擇的根節點單位(可以為公司樹及外部單位)
+            若為 null or !Any() 則return new List&lt;Unit&gt;()
+            </param>
+            <param name="filterUserSecurity">是否過濾使用者可以管理的單位</param>
+            <param name="forMembersQuery">是否為查詢人員, [true]是, [false]否(組織管理)</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetBelowUnit(System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>取得指定單位Guid下的所有子節點的單位Unit資訊(包括它自已)</summary>
+            <param name="unitGUIDs">指定單位Guid</param>
+            <returns>所有子節點的單位Unit資訊</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetBelowUnitGuids(System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>取得指定單位Guid下的所有子節點的單位Guid(包括它自已)</summary>
+            <param name="unitGUIDs">指定單位Guid</param>
+            <returns>所有子節點的單位Guid</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetParentUnit(System.String,Microsoft.CUF.MicrosoftCUFLevel)">
+            <summary>依照指定的層級, 取得所屬單位的父單位</summary>
+            <param name="memberID">要取得所屬單位的人員ID</param>
+            <param name="level">指定要傳回父單位的層級</param>
+            <returns>單位</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetParentUnit2(System.String,Microsoft.CUF.MicrosoftCUFLevel)">
+            <summary>依照指定的層級, 取得所屬單位的父單位</summary>
+            <param name="unitID">所屬單位的ID</param>
+            <param name="level">指定要傳回父單位的層級</param>
+            <returns>單位</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.Get_v_unit(System.String)">
+            <summary>
+            Get v_unit
+            </summary>
+            <param name="uunit">sc_unit.uunit</param>
+            <returns>單位</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.IsMicrosoftCUF(System.String)">
+            <summary>
+            是否為公司單位
+            </summary>
+            <param name="uunit">sc_unit.uunit</param>
+            <returns>bool</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetAllTops">
+            <summary>
+            取得組織所有根節點單位
+            </summary>
+            <returns>多筆組織</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetTop(Microsoft.CUF.Unit)">
+            <summary>
+            取得最頂層單位
+            </summary>
+            <param name="unit">unit</param>
+            <returns>單筆組織</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetParentGenealogy(System.Guid,System.Boolean)">
+            <summary>
+            取得所有父代節點
+            </summary>
+            <param name="unitGUID"></param>
+            <param name="containSelf">是否含本身節點, default = true</param>
+            <returns>多筆組織</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetSameRootTree(System.String)">
+            <summary>
+            取得 unit 所在組織樹的所有單位
+            </summary>
+            <param name="uunit">unit.GUID</param>
+            <returns>多筆單位</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetManager(System.String)">
+            <summary>取得其所屬單位的主管(若為自已則往上層找)</summary>
+            <param name="memberID">人員ID</param>
+            <returns>單筆人員</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetManager(System.String,Microsoft.CUF.MicrosoftCUFLevel)">
+            <summary>取得其所屬單位之指定層級的主管(若為自已則往上層找) </summary>
+            <remarks>若指定層級比自已所屬層級低時，取得自已的主管；</remarks>
+            <param name="memberID">人員ID</param>
+            <param name="level">公司組織層級</param>
+            <returns>單筆人員</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetManager(Microsoft.CUF.Unit)">
+            <summary>取得指定單位之上層的主管(若主管為空值則往上層找)</summary>
+            <param name="unit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetExternalManagerID(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>取得單位的外部管理人</summary>
+            <param name="unitIDs">多個單位代號</param>
+            <returns>單位Guid以及對應的外部管理人資料</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetExternalManagerID(System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>取得單位的外部管理人</summary>
+            <param name="unitGUIDs">多個單位Guid</param>
+            <returns>單位Guid以及對應的外部管理人資料</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetExternalViewerID(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>取得單位的外部檢視人</summary>
+            <param name="unitIDs">多個單位代號</param>
+            <returns>取得單位的外部檢視人資料</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetExternalViewerID(System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>取得單位的外部檢視人</summary>
+            <param name="unitGUIDs">多個單位Guid</param>
+            <returns>取得單位的外部檢視人資料</returns>
+        </member>
+        <member name="M:Microsoft.CUF.IOrganizationProvider.GetMembersWithAccounts(Microsoft.CUF.MemberCondition)">
+            <summary>
+            取得查詢人員及其帳號
+            </summary>
+            <param name="memberCondition">查詢修件</param>
+            <returns>多筆查詢人員及其帳號</returns>
+        </member>
+        <member name="T:Microsoft.CUF.Member">
+            <summary>人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Member.ID">
+            <summary>人員編號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Member.Name">
+            <summary>人員名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Member.UnitGUID">
+            <summary>所屬單位Guid</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Member.MemberUnit">
+            <summary>
+            人員所屬單位
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Member.Type">
+            <summary>身份別</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Member.Email">
+            <summary>EMail</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Member.TakeOfficeDate">
+            <summary>到職日</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Member.dtake_office">
+            <summary>到職日</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Member.LeaveOfficeDate">
+            <summary>離職日</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Member.dleave_office">
+            <summary>離職日</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Member.CreatorID">
+            <summary>建立人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Member.CreateDate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Member.dcreate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Member.UpdaterID">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Member.UpdateDate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Member.dupdate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Member.CanNotModify">
+            <summary>是否不可以異動</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Member.Get(System.String)">
+            <summary>取得人員</summary>
+            <param name="memberID">人員ID</param>
+            <returns>單筆人員</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Member.Get(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>取得人員(多筆)</summary>
+            <param name="memberIDs">人員ID(多筆)</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.MemberCondition">
+            <summary>
+            人員的查詢條件
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberCondition.root_uunits">
+            <summary>
+            根節點單位, 以 "," join, ex : "72500837-16a7-4654-a41b-b491a5339464,736558aa-f46c-44e7-8397-320a6905075b"
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberCondition.RootUnitGuids">
+            <summary>
+            根節點單位的List資料
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberCondition.UnitGUID">
+            <summary>所屬單位Guid</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberCondition.uunit">
+            <summary>所屬單位Guid字串</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberCondition.UnitID">
+            <summary>單位代號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberCondition.MemberID">
+            <summary>
+            人員編號
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberCondition.MemberName">
+            <summary>
+            人員名稱
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.MemberCondition.ControlID">
+            <summary>網頁元件ID</summary>
+        </member>
+        <member name="T:Microsoft.CUF.OrganizationMemberExtensions">
+            <summary>組織人員延伸應用</summary>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationMemberExtensions.GetManager(Microsoft.CUF.Member,System.Nullable{Microsoft.CUF.MicrosoftCUFLevel})">
+            <summary>取得其所屬單位的主管(若為自已則往上層找)</summary>
+            <param name="member"></param>
+            <returns>單筆人員</returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationMemberExtensions.GetUnit(Microsoft.CUF.Member)">
+            <summary>取得所在單位</summary>
+            <param name="member">人員</param>
+            <returns>單筆單位</returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationMemberExtensions.GetManageUnits(Microsoft.CUF.Member)">
+            <summary>取得人員所直接管理的單位</summary>
+            <param name="member">人員</param>
+            <returns>多筆單位</returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationMemberExtensions.GetMamanger(Microsoft.CUF.Member)">
+            <summary>取得其所屬單位的主管(若為自已則往上層找)</summary>
+            <param name="member"></param>
+            <returns>單筆人員</returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationMemberExtensions.GetMamanger(System.String)">
+            <summary>取得其所屬單位的主管(若為自已則往上層找)</summary>
+            <param name="memberId"></param>
+            <returns>單筆人員</returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationMemberExtensions.GetMamanger(Microsoft.CUF.Member,Microsoft.CUF.MicrosoftCUFLevel)">
+            <summary>取得其所屬單位之指定層級的主管(若為自已則往上層找) </summary>
+            <remarks>若指定層級比自已所屬層級低時，取得自已的主管；</remarks>
+            <returns>單筆人員</returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationMemberExtensions.GetMamanger(System.String,Microsoft.CUF.MicrosoftCUFLevel)">
+            <summary>取得其所屬單位之指定層級的主管(若為自已則往上層找) </summary>
+            <remarks>若指定層級比自已所屬層級低時，取得自已的主管；</remarks>
+            <returns>單筆人員</returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationMemberExtensions.GetParentUnit(System.String,Microsoft.CUF.MicrosoftCUFLevel)">
+            <summary>取得指人員所屬父單位(指定層級)</summary>
+            <param name="memberId">人員</param>
+            <param name="level">指定的層級</param>
+            <returns>單筆單位</returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationMemberExtensions.GetParentUnit(Microsoft.CUF.Member,Microsoft.CUF.MicrosoftCUFLevel)">
+            <summary>取得指人員所屬父單位(指定層級)</summary>
+            <param name="member">人員</param>
+            <param name="level">指定的層級</param>
+            <returns>單筆單位</returns>
+        </member>
+        <member name="T:Microsoft.CUF.sc_log">
+            <summary>
+            安控記錄檔
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.sc_log.#ctor(System.String,System.Object,System.Object,System.String,System.String,System.String,System.String)">
+            <summary>安控記錄檔</summary>
+            <param name="iupdate">iupdate</param>
+            <param name="beforeModel">beforeModel</param>
+            <param name="afterModel">afterModel</param>
+            <param name="tableName">tableName</param>
+            <param name="key1">key1</param>
+            <param name="key2">key2</param>
+            <param name="key3">key3</param>
+            <returns></returns>
+        </member>
+        <member name="P:Microsoft.CUF.sc_log.iupdate">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_log.dupdate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_log.ntable">
+            <summary>資料表</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_log.ikey1">
+            <summary>KEY1</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_log.ikey2">
+            <summary>KEY2</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_log.ikey3">
+            <summary>KEY3</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_log.action">
+            <summary>執行動作</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_log.flog">
+            <summary>資料LOG</summary>
+        </member>
+        <member name="M:Microsoft.CUF.sc_log.ToLog(System.Object,System.Object)">
+            <summary>序列化成LOG函式</summary>
+            <param name="preModel"></param>
+            <param name="afterModel"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.Unit">
+            <summary>單位</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.GUID">
+            <summary>單位Guid</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.ParentGUID">
+            <summary>上層權限的Guid。null表示此為權限為權限的最上層權限。</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.ID">
+            <summary>實際單位代號。null表示此為虛擬單位。</summary>
+            <remarks>非null的話必須為唯一值。</remarks>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.Name">
+            <summary>單位名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.ManagerMemberId">
+            <summary>主管編號。null表示此主管同上層單位主管。</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.Manager">
+            <summary>
+            主管人員物件
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.DisabledDate">
+            <summary>單位停用時間。</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.MicrosoftCUFLevel">
+            <summary>公司組織層級。</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.internalLevel">
+            <summary>公司組織層級</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.Sort">
+            <summary>
+            選單順序
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.CreatorID">
+            <summary>建立人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.CreateDate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.dcreateDisplay">
+            <summary>
+            建立日期呈現
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.UpdaterID">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.UpdateDate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.dupdateDisplay">
+            <summary>
+            更新日期呈現
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.CreatorName">
+            <summary>建立人員名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.UpdaterName">
+            <summary>更新人員名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.NodeKey">
+            <summary>該樹狀節點的Key值</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.ParentNodeKey">
+            <summary>該樹狀父節點的Key值，null表示無父節點</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.NodeName">
+            <summary>該樹狀節點的名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.OrderByValue">
+            <summary>節點的排序</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.Childs">
+            <summary>放子節點的資訊</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Unit.AddChild(Microsoft.CUF.ITreeNode)">
+            <summary>新增子節點</summary>
+            <param name="node">子節點</param>
+        </member>
+        <member name="M:Microsoft.CUF.Unit.AddChilds(Microsoft.CUF.ITreeNode[])">
+            <summary>新增子節點(多筆)</summary>
+            <param name="nodes">子節點</param>
+            <returns>此節點</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Unit.AddChilds(System.Collections.Generic.IEnumerable{Microsoft.CUF.ITreeNode})">
+            <summary>新增子節點(多筆)</summary>
+            <param name="nodes">子節點</param>
+            <returns>此節點</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Unit.Get(System.Guid)">
+            <summary>從單位GUID取得單位</summary>
+            <param name="unitGUID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Unit.Get(System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>從單位GUID取得單位</summary>
+            <param name="unitGUIDs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Unit.Get(System.String)">
+            <summary>從單位ID取得單位</summary>
+            <param name="unitID">單位代號</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Unit.Get(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>從單位ID取得單位</summary>
+            <param name="unitIDs">單位代號</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Unit.GetAll(Microsoft.CUF.Unit)">
+            <summary>取得全部單位</summary>
+            <param name="topUnit">可指定僅取得特定單位下的節點</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Unit.GetAllTop">
+            <summary>取得全部頂點單位</summary>
+            <returns></returns>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.IsMicrosoftCUF">
+            <summary>是否為公司組織</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.IsRoot">
+            <summary>
+            是否為根單位
+            ex : 
+            [true]MicrosoftCUF(董事長)
+            [false]110100(公司本部)
+            [false]230000(稽核室)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.IsManagedRoot">
+            <summary>
+            是否為使用者管理的根單位
+            ex : 
+            [false]MicrosoftCUF(董事長)
+            [false]110100(公司本部)
+            [true]230000(稽核室)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.IsMemberUnit">
+            <summary>是否為人員的所屬單位</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.CanNotModify">
+            <summary>是否不可以異動</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.CanModifyMember">
+            <summary>
+            是否可以異動單位的人員
+            default = true
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.IsExport">
+            <summary>是否匯出</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.json_selDataViewMembers">
+            <summary>
+            資料檢視人員的 JSON 格式
+            for (uc)SelDataViewMembers.cshtml
+            格式 :
+            [{fexternal_property:"A", imember:"9000AA"},{fexternal_property:"A", imember:"9000AA"},...]
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.json_officerRoute">
+            <summary>
+            經辦通路的 JSON 格式
+            for (uc)OfficerRouteEditor.cshtml
+            格式 :
+            {"root":{"fcondition":[{"Category":"M","CategoryItems":[{"dataOfficerType":"L","dataOfficer":"W","dataRoute":"E"},{"dataOfficerType":"O","dataOfficer":"H","dataRoute":"J"}]},{"Category":"B","CategoryItems":[{"dataOfficerType":"O","dataOfficer":"T","dataRoute":"Y"}]}]}}
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.nmanager">
+            <summary>主管人員名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.unit_external_imembers">
+            <summary>公司管理人員 imembers</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Unit.unit_external_display">
+            <summary>公司管理人員 display</summary>
+        </member>
+        <member name="T:Microsoft.CUF.OrganizationUnitExtensions">
+            <summary>組織單位延伸應用</summary>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationUnitExtensions.GetTop(Microsoft.CUF.Unit)">
+            <summary>取得最頂層單位</summary>
+            <param name="unit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationUnitExtensions.GetParent(Microsoft.CUF.Unit)">
+            <summary>取得上層單位</summary>
+            <param name="unit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationUnitExtensions.GetParent(Microsoft.CUF.Unit,Microsoft.CUF.MicrosoftCUFLevel)">
+            <summary>取得指定層級的上層單位</summary>
+            <param name="unit"></param>
+            <param name="level">指定層級</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationUnitExtensions.GetParents(Microsoft.CUF.Unit,System.Boolean)">
+            <summary>取得所有上層單位</summary>
+            <param name="unit"></param>
+            <param name="containSelf">是否包括自已</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationUnitExtensions.GetParents(System.Collections.Generic.IEnumerable{Microsoft.CUF.Unit},System.Boolean)">
+            <summary>取得所有上層單位</summary>
+            <param name="units">多筆單位傳入</param>
+            <param name="containSelf">是否包括自已</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationUnitExtensions.GetChilds(Microsoft.CUF.Unit,System.Boolean,System.Boolean)">
+            <summary>取得第一層子層單位</summary>
+            <param name="unit"></param>
+            <param name="containSelf">是否包括自已</param>
+            <param name="onlyOneLevel">是否僅取一層，預設為false</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationUnitExtensions.GetChilds(System.Collections.Generic.IEnumerable{Microsoft.CUF.Unit},System.Boolean,System.Boolean)">
+            <summary>取得第一層子層單位</summary>
+            <param name="units">多筆單位傳入</param>
+            <param name="containSelf">是否包括自已</param>
+            <param name="onlyOneLevel">是否僅取一層，預設為false</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationUnitExtensions.GetBrothers(Microsoft.CUF.Unit,System.Boolean)">
+            <summary>取得同層級單位</summary>
+            <param name="unit"></param>
+            <param name="containSelf">是否包括自已</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationUnitExtensions.GetBrothers(System.Collections.Generic.IEnumerable{Microsoft.CUF.Unit},System.Boolean)">
+            <summary>取得同層級單位</summary>
+            <param name="units">多筆單位傳入</param>
+            <param name="containSelf">是否包括自已</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationUnitExtensions.GetMembers(Microsoft.CUF.Unit)">
+            <summary>取得單位人員</summary>
+            <param name="unit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationUnitExtensions.GetMembers(System.Collections.Generic.IEnumerable{Microsoft.CUF.Unit})">
+            <summary>取得多單位的人員</summary>
+            <param name="units"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationUnitExtensions.GetManager(Microsoft.CUF.Unit)">
+            <summary>取得單位主管人員</summary>
+            <param name="unit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationUnitExtensions.GetManager(Microsoft.CUF.Unit,System.Nullable{Microsoft.CUF.MicrosoftCUFLevel})">
+            <summary>取得單位主管人員(若沒有則往上層找)</summary>
+            <param name="unit"></param>
+            <param name="level">指定層級</param>
+            <returns>單筆人員</returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationUnitExtensions.GetParentGenealogy(Microsoft.CUF.Unit)">
+            <summary>
+            取得所有父代節點(含本身節點)
+            </summary>
+            <param name="unitGUID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationUnitExtensions.GetSub(Microsoft.CUF.Unit)">
+            <summary>取得子單位</summary>
+            <param name="unit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationUnitExtensions.GetDescendant(Microsoft.CUF.Unit,System.Boolean)">
+            <summary>取得後代單位, 並指定是否包含自己</summary>
+            <param name="unit"></param>
+            <param name="containSelf">是否包含自己</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationUnitExtensions.GetDescendant(System.Collections.Generic.IEnumerable{Microsoft.CUF.Unit},System.Boolean)">
+            <summary>取得後代單位, 並指定是否包含自己</summary>
+            <param name="unit"></param>
+            <param name="containSelf">是否包含自己</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationUnitExtensions.GetExternalManagers(Microsoft.CUF.Unit)">
+            <summary>取得外部管理人員</summary>
+            <param name="unit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationUnitExtensions.GetExternalViewers(Microsoft.CUF.Unit)">
+            <summary>取得外部檢視人員</summary>
+            <param name="unit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.OrganizationUnitExtensions.GetParentUnit2(System.String,Microsoft.CUF.MicrosoftCUFLevel)">
+            <summary>依照指定的層級, 取得所屬單位的父單位</summary>
+            <param name="unitGuid">所屬單位的ID</param>
+            <param name="level">指定要傳回父單位的層級</param>
+            <returns>單位</returns>
+        </member>
+    </members>
+</doc>

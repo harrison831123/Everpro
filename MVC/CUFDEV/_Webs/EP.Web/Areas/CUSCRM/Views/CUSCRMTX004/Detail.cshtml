@@ -1,0 +1,169 @@
+﻿
+@{
+    ViewBag.Title = ViewBag.Title ?? "CUSCRMTX004-資料設定";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+@model CRMEDiscipType
+
+@section LeftActions{
+    @if (MyPageStatus == PageStatus.View)
+    {
+        <input id="btnEdit" type="button" class="btn btn-default" value="編輯" data-bind="click: EditClick" />
+        <input id="btnDelete" type="button" class="btn btn-default" value="刪除" data-bind="click: DeleteClick" />
+    }
+    else
+    {
+        <input id="btnSave" type="button" class="btn btn-default" value="儲存" data-bind="click: SaveClick" />
+        <input id="btnCancel" type="button" class="btn btn-default" value="取消" data-bind="click: CancelClick" />
+    }
+    <input id="btnExit" type="button" class="btn btn-default" value="結束" data-bind="click: CloseClick" />
+}
+<div id="DetailTabOne">
+    <div id="liMainModify">
+        @using (Html.BeginForm("Detail", "CUSCRMTX004", FormMethod.Post, new { id = "DetailSubmit" }))
+        {
+            @Html.HiddenFor(m => m.ID)
+            @Html.HiddenFor(m => m.Creator)
+            @Html.HiddenFor(m => m.Updator)
+            @Html.HiddenFor(m => m.CreateTime)
+            @Html.HiddenFor(m => m.UpdateTime)
+            <div class="DetailContent" id="divModify1">
+                <div class="DetailData line">
+                    <div class="row">
+                        <div class="col-md-1 col-sm-3 col-xs-10">@Html.LabelFor(m => m.Code):</div>
+                        <div class="col-md-2 col-sm-3 col-xs-10">@Html.DropDownListFor(m => m.Code, (MyPageStatus != PageStatus.Create), CUSCRMHelper.GetSelectListItem<DiscipTypeCode>())</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-1 col-sm-3 col-xs-10">@Html.LabelFor(m => m.Kind):</div>
+                        <div class="col-md-2 col-sm-3 col-xs-10">@Html.DropDownListFor(m => m.Kind, (MyPageStatus != PageStatus.Create), CUSCRMHelper.GetSelectListItem<DiscipTypeKind>())</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-1 col-sm-3 col-xs-10">@Html.LabelFor(m => m.Name):</div>
+                        <div class="col-md-8 col-sm-9 col-xs-10">@Html.EditDisplayFor(m => m.Name, (MyPageStatus == PageStatus.View), new { style = "width:80%" })</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-1 col-sm-3 col-xs-10">@Html.LabelFor(m => m.Status):</div>
+                        <div class="col-md-2 col-sm-9 col-xs-10">@Html.RadioButtonListFor(m => m.Status, CUSCRMHelper.GetSelectListItem<EnableStatus>(), m => m.Value, m=> m.Text, (MyPageStatus == PageStatus.View))</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-1 col-sm-3 col-xs-10">@Html.LabelFor(m => m.Sort):</div>
+                        <div class="col-md-1 col-sm-9 col-xs-10">@Html.EditDisplayFor(m => m.Sort, (MyPageStatus == PageStatus.View))</div>
+                    </div>
+                    @if (MyPageStatus != PageStatus.Create)
+                    {
+                        <div class="row">
+                            <div class="col-md-1 col-sm-3 col-xs-10">@Html.LabelFor(m => m.Creator):</div>
+                            <div class="col-md-2 col-sm-9 col-xs-10">@Html.EditDisplayFor(m => m.Creator, true, null, m => Member.Get(m).Name)</div>
+                            <div class="col-md-1 col-sm-3 col-xs-10">@Html.LabelFor(m => m.CreateTime):</div>
+                            <div class="col-md-3 col-sm-9 col-xs-10">@Html.Raw(Model.CreateTime.ToString("yyyy/MM/dd HH:mm:ss"))</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1 col-sm-3 col-xs-10">@Html.LabelFor(m => m.Updator):</div>
+                            <div class="col-md-2 col-sm-9 col-xs-10">@Html.EditDisplayFor(m => m.Updator, true, null, m => Member.Get(m).Name)</div>
+                            <div class="col-md-1 col-sm-3 col-xs-10">@Html.LabelFor(m => m.UpdateTime):</div>
+                            <div class="col-md-3 col-sm-9 col-xs-10">@Html.Raw(Model.UpdateTime.HasValue ? Model.UpdateTime.Value.ToString("yyyy/MM/dd HH:mm:ss") : "")</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts {
+    <script>
+    @*定義此頁面所用的KO*@
+    var ViewModel = {
+        @if (MyPageStatus == Microsoft.CUF.Web.PageStatus.View)
+        {
+    <text>
+        EditClick: function () {
+            clearMessage();@*清除訊息*@
+            var id = $("#ID").val();
+            var tabUniqueId = $("#tabUniqueId").val();
+            location.href = '@Url.Action("Edit")' + "?tabUniqueId=" + tabUniqueId + "&id=" + id;
+
+        },
+        DeleteClick: function () {
+            if (confirm("確定刪除此筆資料?")) {
+                clearMessage();@*清除訊息*@
+                $("#DetailSubmit").attr('action', '@Url.Action("Delete")');
+                $("#DetailSubmit").submit();
+                $(window.opener.document.getElementById('btnQuery')).trigger('click');
+            }
+        },
+        </text>
+        }
+        else if (MyPageStatus == Microsoft.CUF.Web.PageStatus.Create)
+        {
+    <text>
+        SaveClick: function () {
+            clearMessage();@*清除訊息*@
+            if (SubmitCheck()) {
+                $("#DetailSubmit").attr('action', '@Url.Action("Create")');
+                $("#DetailSubmit").submit();
+                $(window.opener.document.getElementById('btnQuery')).trigger('click');
+            }
+        },
+        CancelClick: function () {
+            window.close();
+        },
+
+        </text>
+        }
+        else if (MyPageStatus == Microsoft.CUF.Web.PageStatus.Edit)
+        {
+    <text>
+        SaveClick: function () {
+            clearMessage();@*清除訊息*@
+            if (SubmitCheck()) {
+                $("#DetailSubmit").attr('action', '@Url.Action("Edit")');
+                $("#DetailSubmit").submit();
+                $(window.opener.document.getElementById('btnQuery')).trigger('click');
+            }
+        },
+        CancelClick: function () {
+            var id = $("#ID").val();
+            var tabUniqueId = $("#tabUniqueId").val();
+            location.href = '@Html.Raw(Url.Action("Cancel"))' + "?tabUniqueId=" + tabUniqueId + "&id=" + id ;
+        },
+        </text>
+        }
+        CloseClick: function () {
+            window.close();
+        }
+    }
+
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+    });
+    @if (MyPageStatus != PageStatus.View)
+    {
+    <text>
+        function SubmitCheck() {
+
+            if ($("#Name").val() == "") {
+                appendMessage("名稱不能為空白");
+                return false;
+            }
+
+            if ($("#Sort").val() == "") {
+                appendMessage("排序不能為空白");
+                return false;
+            }
+            else {
+                if (isNaN($("#Sort").val())) {
+                    appendMessage("排序必需為數字");
+                    return false;
+                }
+
+            }
+            return true;
+        }
+    </text>
+    }
+
+    </script>
+}
+
+

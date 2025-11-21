@@ -1,0 +1,332 @@
+﻿@model EB.SL.MerSal.Models.MerSalCheckSPruleViewModel
+@{
+    ViewBag.Title = "檢核特殊資料";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    WebChannel<EB.SL.MerSal.Service.IMerSalService> MerSalService = new WebChannel<EB.SL.MerSal.Service.IMerSalService>();
+    //保公
+    var companylist = new List<TermVal>();
+    MerSalService.Use(s => companylist = s.GetALLCompanyCode());
+    //目前工作月
+    string ProductionYM = string.Empty;
+    MerSalService.Use(s => ProductionYM = s.GetNotYetAgbcInd());
+    ProductionYM = !String.IsNullOrEmpty(ProductionYM) ? ProductionYM : string.Empty;
+    // 佣酬類別
+    List<EB.SL.MerSal.Models.Trmval> AmountTypeList = new List<EB.SL.MerSal.Models.Trmval>();
+    MerSalService.Use(s => AmountTypeList = s.GetAmountType());
+    // 檢核特殊資料類別
+    List<EB.SL.MerSal.Models.Trmval> ChkCodeActTypeList = new List<EB.SL.MerSal.Models.Trmval>();
+    MerSalService.Use(s => ChkCodeActTypeList = s.GetChkCodeActType());
+}
+<style>
+    .prompt p {
+        padding: 10px 10px 10px 0px;
+        color: red;
+    }
+</style>
+<div id="divQueryBlock">
+    <div class="ibox ibox-primary">
+        <div class="ibox-head">
+            <div class="ibox-title">新增</div>
+            <div class="ibox-tools">
+                <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
+                <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
+            </div>
+        </div>
+        @using (Html.BeginForm("Query", "MerSalTX003", new { area = "MerSal" }, FormMethod.Post, new { id = "CreateSubmit" }))
+        {
+            <div class="ibox-body">
+                <div class="prompt">
+                    <p>目前業績未關檔年月: @ProductionYM</p>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-1" style="padding-right: 0px">
+                        @Html.LabelFor(m => m.ProductionYmS, new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.TextBoxFor(m => m.ProductionYmS, new { @class = "form-control", @Value = ProductionYM, @readonly = true })
+                    </div>
+                    <div class="col-md-1">
+                        @Html.LabelFor(m => m.ProductionYmE, new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.TextBoxFor(m => m.ProductionYmE, new { @class = "form-control", @Value = "9999/12-2" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-1 col-form-label" style="padding-right: 0px" for="CompanyCode">保險公司</label>
+                    <div class="col-md-3">
+                        <select class="form-select" id="CompanyCode" name="CompanyCode">
+                            <option value="">請選擇</option>
+                            @foreach (var item in companylist)
+                            {
+                                <option value="@item.TermCode">@item.TermMeaning</option>
+                            }
+                        </select>
+                    </div>
+                    <label class="col-md-1 col-form-label" style="padding-right: 0px" for="FileSeq">保公序號</label>
+                    <div class="col-md-3">
+                        <select class="form-select" id="FileSeq" name="FileSeq">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-1 col-form-label" style="padding-right: 0px" for="AmountType">佣酬類別</label>
+                    <div class="col-md-3">
+                        <select class="form-select" id="AmountType" name="AmountType">
+                            <option value="">請選擇</option>
+                            @foreach (var item in AmountTypeList)
+                            {
+                                <option value="@item.TermCode">@item.TermMeaning</option>
+                            }
+                        </select>
+                    </div>
+                    <label class="col-md-1 col-form-label" style="padding-right: 0px" for="ChkCodeActType">檢核類型</label>
+                    <div class="col-md-3">
+                        <select class="form-select" id="ChkCodeActType" name="ChkCodeActType" onchange="ChangeChkCodeActType()">
+                            <option value="">請選擇</option>
+                            @foreach (var item in ChkCodeActTypeList)
+                            {
+                                <option value="@item.TermCode">@item.TermMeaning</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-1" style="padding-right: 0px">
+                        @Html.LabelFor(m => m.Rule01, new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.TextBoxFor(m => m.Rule01, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-1">
+                        @Html.LabelFor(m => m.Rule02, new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.TextBoxFor(m => m.Rule02, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-1" style="padding-right: 0px">
+                        @Html.LabelFor(m => m.Rule03, new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.TextBoxFor(m => m.Rule03, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-1">
+                        @Html.LabelFor(m => m.Rule04, new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.TextBoxFor(m => m.Rule04, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-1" style="padding-right: 0px">
+                        @Html.LabelFor(m => m.ActName, new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ActName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-1" style="padding-right: 0px">
+                        @Html.LabelFor(m => m.Remark, new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.Remark, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <button class="btn btn-primary" id="btnSave" data-bind="click: SaveClick">存檔</button>
+                        <button class="btn btn-primary" id="btnQuery" data-bind="click: CancelClick">返回查詢</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @section GridActions {
+        <div id="batchDIVQuery" class="ibox ibox-primary" style="display:none;">
+            <div class="ibox-body">
+                <div class="jqGrid">
+                    <table id="Result"></table>
+                </div>
+                <div id="ResultPagger"></div>
+            </div>
+        </div>
+    }
+</div>
+@section Scripts{
+    <script>
+        var ViewModel = {
+            CancelClick: function () {
+                location.href ='@Url.Action("Index", "MerSalTX003", new { area = "MerSal" })';
+            },
+            SaveClick: function () {
+                if (saveValidator()) {
+                    clearMessage();@*清除訊息*@
+                    $("#CreateSubmit").attr('action', '@Url.Action("Create", "MerSalTX003")');
+                    $("#CreateSubmit").submit();
+                }
+            }
+        };
+        $(function () {
+            ko.applyBindings(ViewModel);
+            //$('#btnQuery').click();
+        });
+        function ChangeChkCodeActType() {
+            let ChkCodeActType = $('#ChkCodeActType option:selected').val()
+            $('#Rule01').val("")
+            $('#Rule02').val("")
+            $('#Rule03').val("")
+            $('#Rule04').val("")
+            switch (ChkCodeActType) {
+                case "CutA002|Cut00-01": //(保留)保號+險種+繳費年期+繳別繳次
+                case "CutA004|Cut01-01": //(人工調整)保號+險種+繳費年期+繳別繳次
+                case "WPoA007|NotPay-01"://(不發)保號+險種+繳費年期+繳別繳次
+                    $('#Rule01').attr('disabled', false);
+                    $("#Rule01").attr("placeholder", "保單號碼");
+                    $('#Rule02').attr('disabled', false);
+                    $("#Rule02").attr("placeholder", "險種代碼");
+                    $('#Rule03').attr('disabled', false);
+                    $("#Rule03").attr("placeholder", "繳費年期 ex：010");
+                    $('#Rule04').attr('disabled', false);
+                    $("#Rule04").attr("placeholder", "繳別繳次 ex：0101Y");
+                    break;
+                case "CutA003|Cut00-02": //(保留)原因碼
+                    $('#Rule01').attr('disabled', false);
+                    $("#Rule01").attr("placeholder", "原因碼");
+                    $('#Rule02').attr('disabled', true);
+                    $("#Rule02").attr("placeholder", "");
+                    $('#Rule03').attr('disabled', true);
+                    $("#Rule03").attr("placeholder", "");
+                    $('#Rule04').attr('disabled', true);
+                    $("#Rule04").attr("placeholder", "");
+                    break;
+                case "CutA005|Cut01-02": //(人工調整)原因碼
+                    $('#Rule01').attr('disabled', false);
+                    $("#Rule01").attr("placeholder", "原因碼");
+                    $('#Rule02').attr('disabled', true);
+                    $("#Rule02").attr("placeholder", "");
+                    $('#Rule03').attr('disabled', true);
+                    $("#Rule03").attr("placeholder", "");
+                    $('#Rule04').attr('disabled', true);
+                    $("#Rule04").attr("placeholder", "");
+                    break;
+                case "CutA006|Cut01-03": //(人工調整)替換件
+                    $('#Rule01').attr('disabled', true);
+                    $("#Rule01").attr("placeholder", ""); //替換件
+                    $('#Rule02').attr('disabled', true);
+                    $("#Rule02").attr("placeholder", "");
+                    $('#Rule03').attr('disabled', true);
+                    $("#Rule03").attr("placeholder", "");
+                    $('#Rule04').attr('disabled', true);
+                    $("#Rule04").attr("placeholder", "");
+                    break;
+                case "CutA007|Cut01-04": //(人工調整)保單號碼+保費=0
+                    $('#Rule01').attr('disabled', false);
+                    $("#Rule01").attr("placeholder", "保單號碼");
+                    $('#Rule02').attr('disabled', true);
+                    $("#Rule02").attr("placeholder", "");
+                    $('#Rule03').attr('disabled', true);
+                    $("#Rule03").attr("placeholder", "");
+                    $('#Rule04').attr('disabled', true);
+                    $("#Rule04").attr("placeholder", "");
+                    break;
+                default:
+                    $('#Rule01').attr('disabled', false);
+                    $('#Rule02').attr('disabled', false);
+                    $('#Rule03').attr('disabled', false);
+                    $('#Rule04').attr('disabled', false);
+                    $("#Rule01").attr("placeholder", "");
+                    $("#Rule02").attr("placeholder", "");
+                    $("#Rule03").attr("placeholder", "");
+                    $("#Rule04").attr("placeholder", "");
+            }
+            if (ChkCodeActType == "CutA006|Cut01-03") {
+                $('#Rule01').val("Y")
+            } 
+        }
+        function saveValidator() {
+            let ChkCodeActType = $('#ChkCodeActType option:selected').val()
+            var flag = true;
+
+            //1.必選
+            if (ChkCodeActType == "") {                
+                flag = false;
+                appendMessage("檢核類型 必選");
+            }
+            if ($('#AmountType').val() == "") {
+                flag = false;
+                appendMessage("佣酬類別 必選");
+            }
+            if ($('#CompanyCode').val() == "") {
+                flag = false;
+                appendMessage("保險公司 必選");
+            }
+
+            //2.檢核類型檢核
+            // CutA002|Cut00-01 --(保留)    保號+險種+繳費年期+繳別繳次
+            // CutA004|Cut01-01 --(人工調整)保號+險種+繳費年期+繳別繳次
+            // WPoA007|NotPay-01--(不發)    保號+險種+繳費年期+繳別繳次
+            if (ChkCodeActType == "CutA002|Cut00-01" || ChkCodeActType == "CutA004|Cut01-01" || ChkCodeActType == "WPoA007|NotPay-01") {
+                if ($("#Rule02").val() != "" & $("#Rule02").val().length >20) {
+                    flag = false;
+                    appendMessage("檢核規則2:險種代碼 長度不可大於20");
+                }
+                if ($("#Rule03").val() != "" & $("#Rule03").val().length != 3) {
+                    flag = false;
+                    appendMessage("檢核規則3:繳費年期 長度需為3碼");
+                }
+                if ($("#Rule04").val() != "") {
+                    let pattern = /\d{4}[M|Q|S|Y|D]/;
+                    let ModxSequence = $("#Rule04").val();
+                    //繳別繳次前4碼為數字，第5碼為M|Q|S|Y|D
+                    if (pattern.test(ModxSequence) == false) {
+                        flag = false;
+                        appendMessage("檢核規則4:繳別繳次 格式錯誤");
+                    }
+                } 
+            }
+
+            //CutA003|Cut00-02--(保留)原因碼
+            //CutA005|Cut01-02--(人工調整)原因碼
+            if (ChkCodeActType == "CutA003|Cut00-02" || ChkCodeActType == "CutA005|Cut01-02") {
+                if ($("#Rule01").val() == "") {
+                    flag = false;
+                    appendMessage("檢核規則1:原因碼 不可空白");
+                } else if ($("#Rule01").val().length > 2) {
+                    flag = false;
+                    appendMessage("檢核規則1:原因碼 長度不可大於2");
+                }
+            }
+
+            //CutA007|Cut01-04--(人工調整)保單號碼+保費=0
+            if (ChkCodeActType == "CutA007|Cut01-04") {
+                if ($("#Rule01").val() == "") {
+                    flag = false;
+                    appendMessage("檢核規則1:保單號碼 不可空白");
+                }
+            }
+
+            ////WPoA007|NotPay-01--(不發)保單號碼
+            //if (ChkCodeActType == "WPoA007|NotPay-01") {
+            //    if ($("#Rule01").val() == "") {
+            //        flag = false;
+            //        appendMessage("檢核規則1:保單號碼 不可空白");
+            //    }
+            //}
+
+            if (flag) {
+                return true;
+            } else {
+                return false;
+            }            
+        }
+
+    </script>
+}
+

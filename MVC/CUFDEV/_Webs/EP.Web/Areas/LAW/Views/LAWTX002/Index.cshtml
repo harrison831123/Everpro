@@ -1,0 +1,94 @@
+﻿
+
+@{
+    ViewBag.Title = LAWResource.經辦人員設定;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+<div class="form-group row">
+    <div class="col-md-3">
+        <button class="btn btn-default group1" id="btnInsert" data-bind="click: InsertClick">@EP.PlatformResources.新增</button>
+    </div>
+</div>
+<div class="row col-md-12">
+    <table id="datatable" class="table">
+        <thead>
+            <tr>
+                <th>@LAWResource.名稱</th>
+                <th>@LAWResource.分機號碼</th>
+                <th>@LAWResource.預設經辦順位</th>
+                <th>@EP.PlatformResources.刪除</th>
+            </tr>
+        </thead>
+        <tbody id="datatbody">
+        </tbody>
+    </table>
+</div>
+
+<script>
+    var ViewModel = {
+        InsertClick: function () {
+            location.href = '@Url.Action("Create", "LAWTX002", new { area = "LAW" })';
+        },
+    }
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+        GetLawsys();
+    });
+    function GetLawsys() {
+
+         $.ajax({
+             method: "POST",
+             cache: false,
+             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+             url: '@Url.Action("Query", "LAWTX002", new { area = "LAW" })',
+             complete: function (data) {
+                        console.log(data.responseJSON);
+                        if (data.responseJSON === undefined) {
+                        } else {
+                            $(".remtr").remove();
+                            $.each(data.responseJSON, function () {
+                                let updateurl = '@Html.Raw(Url.Action("Update", "LAWTX002"))' + "?id=" + this.LawDouserId;
+                                let str = "<tr class='remtr'><td>" + "<a href='" + updateurl + "' >" + this.DouserName + "</a>"+"</td><td>"
+                                    + this.DouserPhoneExt + "</td><td>"
+                                    + this.DouserSort + "</td><td>"
+                                + '<button id="delBtn" class="btn btn-danger" onclick="ConfirmDelete(\'' + this.LawDouserId + '\')">@EP.PlatformResources.刪除</button></td></tr>';
+                                $("#datatbody").append(str);
+                            });
+                        }
+             },
+             error: function (ex) {
+             if (ex.statusText == "OK") {
+             } else {
+                 appendMessage("@EP.PlatformResources.系統發生錯誤");
+                 }
+             }
+         });
+    }
+
+    function ConfirmDelete(ID) {
+            var result = confirm('@EP.PlatformResources.確定刪除?');
+            if (result) {
+                DeleteData(ID);
+            }
+    }
+    function DeleteData(ID) {
+            $.ajax({
+                method: "POST",
+                cache: false,
+                url: '@Url.Action("Delete", "LAWTX002", new { area = "LAW" })',
+                data: { ID: ID },
+                complete: function (data) {
+                    GetLawsys();
+                },
+                error: function (ex) {
+                    if (ex.statusText == "OK") {
+                    } else {
+                        appendMessage("@EP.PlatformResources.系統發生錯誤");
+                    }
+                }
+            });
+    }
+</script>
+
+

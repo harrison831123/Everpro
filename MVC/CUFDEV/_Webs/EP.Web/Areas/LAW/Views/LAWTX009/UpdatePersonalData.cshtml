@@ -1,0 +1,148 @@
+﻿@model EP.SD.SalesSupport.LAW.Models.LawAgentDetail
+@{
+    ViewBag.Title = LAWResource.個人資料;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+@section LeftActions{
+    <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.儲存" data-bind="click: SaveClick" />
+    @*@Html.ActionLink("返回", "Index", "LAWTX009", new { Class = "btn btn-default" })*@
+    <input type="button" name="back" value="@EP.PlatformResources.返回" Class="btn btn-default" onClick="window.history.back()">
+}
+
+@using (Html.BeginForm("Update", "LAWTX009", null, FormMethod.Post, new { id = "UpdateSubmit" }))
+{
+    <div class="form-group row">
+        @Html.HiddenFor(m => m.AgentID)
+        @Html.HiddenFor(m => m.LawAgentDataId)
+        <div class="detail-col form-group form-inline col-md-6">
+            @Html.LabelFor(m => m.VmName, new { @class = "detail-msg col-md-5" })
+            @Html.DisplayFor(model => model.VmName, new { @class = "col-md-1" })
+        </div>
+        <div class="detail-col form-group form-inline col-md-6">
+            @Html.LabelFor(m => m.SmName, new { @class = "detail-msg col-md-5" })
+            @Html.DisplayFor(model => model.SmName, new { @class = "col-md-1" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-6">
+            @Html.LabelFor(m => m.AdminName, new { @class = "detail-msg col-md-5" })
+            @Html.DisplayFor(model => model.AdminName, new { @class = "col-md-1" })
+        </div>
+        <div class="detail-col form-group form-inline col-md-6">
+            @Html.LabelFor(m => m.WcCenterName, new { @class = "detail-msg col-md-5" })
+            @Html.DisplayFor(model => model.WcCenterName, new { @class = "col-md-1" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-6">
+            @Html.LabelFor(m => m.Name, new { @class = "detail-msg col-md-5" })
+            @Html.TextBoxFor(m => m.Name, new { @id = "Name", style = "width:50%", @maxlength = "250", @class = "form-control" })
+            <input type="hidden" name="oldname" value='@Model.Name' readonly>
+        </div>
+        <div class="detail-col form-group form-inline col-md-6">
+            @Html.LabelFor(m => m.AgentCode, new { @class = "detail-msg col-md-5" })
+            @Html.DisplayFor(model => model.AgentCode, new { @class = "col-md-1" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-6">
+            @Html.LabelFor(m => m.Birth, new { @class = "detail-msg col-md-5" })
+            @Html.DisplayFor(model => model.Birth, new { @class = "col-md-1" })
+        </div>
+        <div class="detail-col form-group form-inline col-md-6">
+            @Html.LabelFor(m => m.AgLevelName, new { @class = "detail-msg col-md-5" })
+            @Html.DisplayFor(model => model.AgLevelName, new { @class = "col-md-1" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-6">
+            @Html.LabelFor(m => m.Cell01, new { @class = "detail-msg col-md-5" })
+            @Html.TextBoxFor(m => m.Cell01, new { @id = "Cell01", style = "width:50%", @maxlength = "250", @class = "form-control" })
+        </div>
+        <div class="detail-col form-group form-inline col-md-6">
+            @Html.LabelFor(m => m.Cell02, new { @class = "detail-msg col-md-5" })
+            @Html.TextBoxFor(m => m.Cell02, new { @id = "Cell02", style = "width:50%", @maxlength = "250", @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-6">
+            @Html.LabelFor(m => m.Phone01, new { @class = "detail-msg col-md-5" })
+            @Html.TextBoxFor(m => m.Phone01, new { @id = "Phone01", style = "width:50%", @maxlength = "250", @class = "form-control" })
+        </div>
+        <div class="detail-col form-group form-inline col-md-6">
+            @Html.LabelFor(m => m.Phone02, new { @class = "detail-msg col-md-5" })
+            @Html.TextBoxFor(m => m.Phone02, new { @id = "Phone02", style = "width:50%", @maxlength = "250", @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            @Html.LabelFor(m => m.Address, new { @class = "detail-msg col-md-2" })
+            @Html.TextBoxFor(m => m.Address, new { @id = "Address", style = "width:70%", @maxlength = "250", @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            @Html.LabelFor(m => m.Address01, new { @class = "detail-msg col-md-2" })
+            @Html.TextBoxFor(m => m.Address01, new { @id = "Address01", style = "width:70%", @maxlength = "250", @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            @Html.LabelFor(m => m.Address02, new { @class = "detail-msg col-md-2" })
+            @Html.TextBoxFor(m => m.Address02, new { @id = "Address02", style = "width:70%", @maxlength = "250", @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-6">
+            @Html.LabelFor(m => m.RecordDate, new { @class = "detail-msg col-md-5" })
+            @Html.DisplayFor(model => model.RecordDate, new { @class = "col-md-1" })
+        </div>
+        <div class="detail-col form-group form-inline col-md-6">
+            @Html.LabelFor(m => m.RegisterDate, new { @class = "detail-msg col-md-5" })
+            @Html.DisplayFor(model => model.RegisterDate, new { @class = "col-md-1" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-6">
+            @Html.LabelFor(m => m.AgStatusDate, new { @class = "detail-msg col-md-5" })
+            @Html.DisplayFor(model => model.AgStatusDate, new { @class = "col-md-1" })
+        </div>
+        <div class="detail-col form-group form-inline col-md-6">
+            @Html.LabelFor(m => m.SuperAccount, new { @class = "detail-msg col-md-5" })
+            @Html.DisplayFor(model => model.SuperAccount, new { @class = "col-md-1" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            <p class="detail-msg col-md-1">@LAWResource.前案情形</p>
+            @Html.DisplayFor(model => model.NoteStr, new { @class = "col-md-5" })
+        </div>
+    </div>
+}
+<script>
+    var ViewModel = {
+        SaveClick: function () {
+            if (saveValidator()) {
+                clearMessage();@*清除訊息*@
+                var tabUniqueId = $("#tabUniqueId").val();
+                $("#UpdateSubmit").attr('action', '@Url.Action("UpdatePersonalData", "LAWTX009")');
+                $("#UpdateSubmit").submit();
+            }
+        }
+    };
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+    });
+
+    function saveValidator() {
+        if ($("#UnitName").val() == "") {
+            appendMessage("@( LAWResource.承辦單位 + EP.PlatformResources.必填)");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
+

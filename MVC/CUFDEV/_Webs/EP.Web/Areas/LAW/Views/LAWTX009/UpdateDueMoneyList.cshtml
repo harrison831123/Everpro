@@ -1,0 +1,386 @@
+﻿@model  EP.SD.SalesSupport.LAW.Models.LawContentDetail
+@{
+    ViewBag.Title = LAWResource.結欠金額表;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    WebChannel<EP.SD.SalesSupport.LAW.Service.ILAWService> Service = new WebChannel<EP.SD.SalesSupport.LAW.Service.ILAWService>();
+    List<EP.H2OModels.LawInterestRates> lawInterestRates = new List<EP.H2OModels.LawInterestRates>();
+    Service.Use(s => lawInterestRates = s.GetLawInterestRates().ToList());
+}
+<style type='text/css'>
+    .remtr table {
+        min-width: 100%;
+    }
+
+    .remtr td {
+        min-width: 120px;
+    }
+
+    .table-container {
+        overflow: auto;
+        display: block;
+    }
+
+    .ServiceReward {
+        display: none;
+    }
+</style>
+@Html.HiddenFor(m => m.AgentID)
+@Html.HiddenFor(m => m.LawNoteNo)
+<h2 class="vtile" align="center"></h2>
+<font color=blue>@LAWResource.注意若不須計算利息利率請選擇</font>
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=blue>2.@LAWResource.利息天數與利息為系統計算不須輸入</font>
+<div class="row col-md-12 table-container" style="margin-bottom:10px">
+    <table id="datatable" class="table">
+        <thead>
+            <tr>
+                <th>@LAWResource.筆數</th>
+                <th>@LAWResource.主管照會單編號</th>
+                <th>@LAWResource.會辦工作月</th>
+                <th>@LAWResource.本金金額</th>
+                <th>@LAWResource.利率</th>
+                <th>@LAWResource.利息起日</th>
+                <th>@LAWResource.利息訖日</th>
+                <th>@LAWResource.利息天數</th>
+                <th>@LAWResource.利息</th>
+                <th>@LAWResource.應還款累計金額</th>
+            </tr>
+        </thead>
+        <tbody id="datatbody">
+        </tbody>
+    </table>
+    <div class="col-md-3 updatebox">
+    </div>
+    <div class="hi" style="display:none">
+    </div>
+</div>
+@*查詢執行結果*@
+@using (Ajax.BeginForm("RepayMentQuery", "LAWTX009", null, new AjaxOptions { OnSuccess = "RepayMentBindGrid" }, new { id = "LawQuery", area = "LAWTX009" }))
+{
+    @Html.HiddenFor(m => m.AgentID)
+    @Html.HiddenFor(m => m.LawNoteNo)
+    @Html.HiddenFor(m => m.LawId)
+    <font class="ServiceReward" color="blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@LAWResource.說明服務費報酬計算方式</font>
+    <div class="col-md-12 detail-col">
+        <label class="control-label">@LAWResource.選擇類別</label>
+        <br />
+        <select id="PayMentType" class="form-control" name="PayMentType">
+            <option value="1">@LAWResource.清償明細</option>
+            <option value="2">@LAWResource.律師服務費</option>
+        </select>
+    </div>
+    <div class="lawidbox" style="display:none">
+    </div>
+}
+<input type="button" id="btnQuery" class="btn btn-default" value="@EP.PlatformResources.查詢" data-bind="click: QueryClick" />
+<button class="btn btn-default" id="btnInsert" data-bind="click: InsertClick">@EP.PlatformResources.新增</button>
+@*@Html.ActionLink("返回", "Index", "LAWTX009", new { Class = "btn btn-default" })*@
+<input type="button" name="back" value="@EP.PlatformResources.返回" Class="btn btn-default" onClick="window.history.back()">
+@section GridActions {
+    <div class="jqGrid">
+        <table id="Result"></table>
+    </div>
+    <div id="ResultPagger"></div>
+}
+<script>
+    var ViewModel = {
+        InsertClick: function () {
+            location.href = '@Url.Action("Create", "LAWTX009", new { area = "LAW" })' + '?LawId=' + $("#LawId").val() + "&PayMentType=" + $("#PayMentType").val();
+        },
+        QueryClick: function () {
+            clearMessage();
+            $("form#LawQuery").trigger("submit");
+        }
+    }
+    $("#PayMentType").on('change', function () {
+        if ($("#PayMentType").val() == 1) {
+            $(".ServiceReward").hide();
+        } else {
+            $(".ServiceReward").show();
+        }
+    });
+
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+        GetLawsys();
+        ChkIRInsert();
+    });
+    function GetLawsys() {
+        $.ajax({
+            method: "Get",
+            cache: false,
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            url: '@Url.Action("UpdateBalanceDetail", "LAWTX009", new { area = "LAW" })',
+            data: { AgentID: '@Model.AgentID', NoteNo:'@Model.LawNoteNo'},
+            complete: function (data) {
+                if (data.responseJSON === undefined) {
+                } else {
+                    $(".remtr").remove();
+                    $("#OldLawInterestSdate").remove();
+                    $("#OldLawInterestEdate").remove();
+                    $("#OldLawInterestRatesId").remove();
+                    $("#delBtn").remove();
+                    $("#LawDueName").remove();
+                    $("#LawId").remove();
+                    var i = 1;
+                    $.each(data.responseJSON, function () {
+                        let str = "<tr class='remtr'><td style='min-width: 50px;'>" + i + "</td><td>"
+                            + this.LawNoteNo + "</td><td>"
+                            + this.LawProductionYM + "</td><td>"
+                            + '<input type="text" id="LawDueMoney" class="form-control" name="LawDueMoney" value="' + this.LawDueMoney + '" >' + "</td><td>"
+                            + GetLawInterestRates(this.LawInterestRatesId) + "</td><td>"
+                            + '<input type="text" id="LawInterestSdate" class="jquery_datetimepicker form-control" name="LawInterestSdate" value="' + this.LawInterestSdate + '" >' + "</td><td>"
+                            + '<input type="text" id="LawInterestEdate" class="jquery_datetimepicker form-control" name="LawInterestEdate" value="' + this.LawInterestEdate + '" >' + "</td><td>"
+                            + '<input type="text" id="LawInterestDays" name="LawInterestDays" class="form-control" style="width: 60px;" readonly="readonly" value="' + this.LawInterestDays + '" >' + "</td><td>"
+                            + '<input type="text" id="LawInterestMoney" name="LawInterestMoney" class="form-control" readonly="readonly" value="' + this.LawInterestMoney + '" >' + "</td><td>"
+                            + this.LawTotalMoney + "</td><td>"
+                            + '</td></tr>';
+                        let hi = '<input type="text" id="OldLawInterestSdate" name="OldLawInterestSdate"  value="' + this.LawInterestSdate + '" >'
+                            + '<input type="text" id="OldLawInterestEdate" name="OldLawInterestEdate"  value="' + this.LawInterestEdate + '" >'
+                            + '<input type="text" id="OldLawInterestRatesId" name="OldLawInterestRatesId"  value="' + this.LawInterestRatesId + '" >'
+                            + '<input type="text" id="OldLawDueMoney" name="OldLawDueMoney"  value="' + this.LawDueMoney + '" >';
+                        $("#datatbody").append(str);
+                        $(".hi").append(hi);
+                        i = i + 1;
+                        //let updateurl = '@Html.Raw(Url.Action("UpdateBalanceDetail", "LAWTX009"))' + "?id=" + this.LawDouserId;
+                        let updateurl = '<button id="delBtn" class="btn btn-default" onclick="UpdateBalanceDetail(\'' + this.LawId + '\')">@EP.PlatformResources.更新</button>'
+                        $(".updatebox").append(updateurl);
+                        let vtile = '<u id="LawDueName">' + this.LawDueName + ' @LAWResource.結欠金額表' + '</u>';
+                        $(".vtile").append(vtile);
+                        let lawidbox = '<input type="text" id="LawId" name="LawId"  value="' + this.LawId + '" >';
+                        $(".lawidbox").append(lawidbox);
+                    });
+                }
+                var opt = {
+                    dateFormat: 'yy/mm/dd',
+                    showTimepicker: false,
+                    showSecond: false,
+                    mask: true,
+                    validateOnBlur: false
+                };
+                $(".jquery_datetimepicker").datetimepicker(opt);
+                $("#btnQuery").click();
+             },
+             error: function (ex) {
+             if (ex.statusText == "OK") {
+             } else {
+                 appendMessage("@EP.PlatformResources.系統發生錯誤");
+                 }
+             }
+         });
+    }
+    function GetLawInterestRates(LawInterestRatesId) {
+        var result = '<select class="form-control col-md-3" id="LawInterestRatesId" name="LawInterestRatesId">';
+        if (LawInterestRatesId == 0) {
+            result += '<option selected="selected" >@LAWResource.請選擇</option>';
+        }
+        //else {
+            @for(int i = 0;i< lawInterestRates.Count; i++)
+            {
+                 <text>
+                    var rid = '@lawInterestRates[i].LawInterestRatesId'
+
+                    if (rid == LawInterestRatesId) {
+                        result += '<option selected="selected" value="@lawInterestRates[i].LawInterestRatesId">@lawInterestRates[i].InterestRates</option>'
+                    } else {
+                        result += '<option value="@lawInterestRates[i].LawInterestRatesId">@lawInterestRates[i].InterestRates</option>'
+                    }
+                </text>
+            }
+        //}
+        result += '</select>';
+        return result;
+    }
+    function ChkIRInsert() {
+        let formData = new FormData();
+        let Lawid = '@Model.LawId'
+        let LawDueAgentId = '@Model.AgentID'
+        formData.append('Lawid', Lawid);
+        formData.append('LawDueAgentId', LawDueAgentId);
+         $.ajax({
+            method: "POST",
+            cache: false,
+            url: '@Url.Action("ChkIRInsert", "LAWTX009", new { area = "LAW" })',
+            contentType: false,
+            processData: false,
+            data: formData,
+            complete: function (data) {
+                if (data.responseText <= 0) {
+                    $("#btnInsert").hide();
+                } else {
+                    $("#btnInsert").show();
+                }
+            },
+            error: function (ex) {
+                if (ex.statusText == "OK") {
+                } else {
+                    appendMessage("@LAWResource.系統發生錯誤");
+                }
+            }
+         });
+    }
+    function UpdateBalanceDetail(LawId) {
+        var formData = new FormData();
+        formData.append('LawDueMoney', $("#LawDueMoney").val());
+        formData.append('LawInterestRatesId', $('#LawInterestRatesId').val());
+        var LawInterestSdate = $('#LawInterestSdate').val() == null ? "" : $('#LawInterestSdate').val();
+        var LawInterestEdate = $('#LawInterestEdate').val() == null ? "" : $('#LawInterestEdate').val();
+        formData.append('LawInterestSdate', LawInterestSdate);
+        formData.append('LawInterestEdate', LawInterestEdate);
+        formData.append('AgentID', '@Model.AgentID');
+        formData.append('LawNoteNo', '@Model.LawNoteNo');
+        formData.append('InterestRates',  $("#LawInterestRatesId option:selected").text());
+        formData.append('LawId', LawId);
+        formData.append('LawInterestEdate', $('#LawInterestEdate').val());
+        formData.append('LawInterestSdate', $('#LawInterestSdate').val());
+        formData.append('LawInterestDays', $('#LawInterestDays').val());
+        formData.append('LawInterestMoney', $('#LawInterestMoney').val());
+        var OldLawInterestSdate = $('#OldLawInterestSdate').val() == null ? "" : $('#OldLawInterestSdate').val();
+        var OldLawInterestEdate = $('#OldLawInterestEdate').val() == null ? "" : $('#OldLawInterestEdate').val();
+        formData.append('OldLawInterestSdate', OldLawInterestSdate);
+        formData.append('OldLawInterestEdate', OldLawInterestEdate);
+        formData.append('OldLawInterestRatesId', $('#OldLawInterestRatesId').val());
+        formData.append('OldLawDueMoney', $('#OldLawDueMoney').val());
+        if (saveValidator()) {
+            $.ajax({
+                method: "POST",
+                cache: false,
+                url: '@Url.Action("UpdateBalanceDetail", "LAWTX009", new { area = "LAW" })',
+                contentType: false,
+                processData: false,
+                data: formData,
+                complete: function (data) {
+                    GetLawsys();
+                    ChkIRInsert();
+                    $("#btnQuery").click();
+                },
+                error: function (ex) {
+                    if (ex.statusText == "OK") {
+                    } else {
+                        appendMessage("@LAWResource.系統發生錯誤");
+                    }
+                }
+            });
+            appendMessage("@LAWResource.更新完成");
+        }
+    }
+
+    function saveValidator() {
+        if ($('#LawInterestEdate').val() != "" && $('#LawInterestSdate').val() != "") {
+            @* 判斷時間格式 *@
+            var StartDate = new Date($('#LawInterestSdate').val());
+            var EndDate = new Date($('#LawInterestEdate').val());
+            if (EndDate <= StartDate) {
+                appendMessage("@LAWResource.利息起迄日期有誤");
+                return false;
+            }
+        }
+
+        return true;
+    }
+    function RepayMentBindGrid() {
+        if ($("#PayMentType").val() == 1) {     //清償明細
+            $("#Result").GridUnload();
+            $("#Result").jqGrid({
+                url: '@Url.Action("RepayMentBindGrid", "LAWTX009", new { area = "LAW" })',
+                datatype: "json",
+                mtype: "POST",
+                shrinkToFit: false,
+                rowNum: 99999,
+                rowList: [99999],
+                colNames: ["", "", "@LAWResource.主管照會單編號", "@LAWResource.清償日期", "@LAWResource.清償金額", "@LAWResource.清償本金", "@LAWResource.清償利息", "@LAWResource.法院規費", "@LAWResource.其他規費", "@LAWResource.續佣扣抵", "@LAWResource.已累計清償", "@LAWResource.剩餘結欠金額", "@EP.PlatformResources.刪除"],
+                colModel: [
+                    { name: "LawRepaymentId", index: "LawRepaymentId", hidden: true },
+                    { name: "LawId", index: "LawId", hidden: true },
+                    { name: "LawNoteNo", index: "LawNoteNo", width: "110" },
+                    { name: "LawRepaymentDate", index: "LawRepaymentDate", width: "110", sortable: true, search: true, formatter: "date", formatoptions: { srcformat: "ISO8601Long", newformat: "Y/m/d" }},
+                    { name: "LawRepaymentMoney", index: "LawRepaymentMoney", width: "110" },
+                    { name: "LawRepaymentCapital", index: "LawRepaymentCapital", width: "110" },
+                    { name: "LawRepaymentInterest", index: "LawRepaymentInterest", width: "70" },
+                    { name: "LawRepaymentCourt", index: "LawRepaymentCourt", width: "70" },
+                    { name: "LawRepaymentOther", index: "LawRepaymentOther", width: "70" },
+                    { name: "LawCommDeduction", index: "LawCommDeduction", width: "70" },
+                    { name: "TotalLawRepaymentMoney", index: "TotalLawRepaymentMoney", width: "95"},
+                    { name: "RemainLawRepaymentMoney", index: "RemainLawRepaymentMoney", width: "110" },
+                    { name: "LawRepaymentId", index: "LawRepaymentId", formatter: DeleteButton, width: "60" }
+                ],
+                jsonReader: {
+                    repeatitems: false,
+                    id: "0"
+                },
+                loadComplete: function () {
+                    $('#Result').jqGrid("setGridWidth", $('#resultDIV').width());
+                },
+                pager: "ResultPagger"
+            });
+            $("#Result").trigger("reloadGrid");
+        } else {        //律師服務費
+            $("#Result").GridUnload();
+            $("#Result").jqGrid({
+                url: '@Url.Action("RepayMentBindGrid", "LAWTX009", new { area = "LAW" })',
+                datatype: "json",
+                mtype: "POST",
+                autowidth: true,
+                colNames: ["","","", "@LAWResource.主管照會單編號", "@LAWResource.給付月份", "@LAWResource.計算本金", "@LAWResource.核扣規費", "@LAWResource.計算比例", "@LAWResource.服務費報酬"],
+                colModel: [
+                    { name: "LawId", index: "LawId", hidden: true },
+                    { name: "LawLawyerPayId", index: "LawLawyerPayId", hidden: true },
+                    { name: "LawDueAgentId", index: "LawDueAgentId", hidden: true },
+                    { name: "LawNoteNo", index: "LawNoteNo", width: "110" },
+                    { name: "LawRewardPayYearMonth", index: "LawRewardPayYearMonth", formatter: RewardPayYearMonth, width: "100" },
+                    { name: "LawRepaymentMoneyORG", index: "LawRepaymentMoneyORG", width: "110" },
+                    { name: "LawFees", index: "LawFees", width: "110" },
+                    { name: "LawyerServiceRates", index: "LawyerServiceRates", width: "90" },
+                    { name: "LawServiceReward", index: "LawServiceReward", width: "150" },
+                ],
+                jsonReader: {
+                    repeatitems: false,
+                    id: "0"
+                },
+                loadComplete: function () {
+                    $('#Result').jqGrid("setGridWidth", $('#resultDIV').width());
+                },
+                pager: "ResultPagger"
+            });
+            $("#Result").trigger("reloadGrid");
+        }
+    };
+    function DeleteButton(cellValue, options, rdata, action) {
+        let LawRepaymentId = rdata.LawRepaymentId;
+        return '<button id="delBtn" class="btn btn-danger" onclick="ConfirmDelete(\'' + LawRepaymentId + '\')">@EP.PlatformResources.刪除</button>';
+    }
+    function ConfirmDelete(ID) {
+        console.log(ID)
+        var result = confirm('@EP.PlatformResources.確定刪除?');
+        if (result) {
+            DeleteData(ID);
+        }
+    }
+    function DeleteData(ID) {
+        console.log(ID)
+
+        $.ajax({
+            method: "POST",
+            cache: false,
+            url: '@Url.Action("DeleteRepayment", "LAWTX009", new { area = "LAW" })',
+            data: { ID: ID },
+            complete: function (data) {
+                $("#btnQuery").click();
+            },
+            error: function (ex) {
+                if (ex.statusText == "OK") {
+                } else {
+                    appendMessage("@EP.PlatformResources.系統發生錯誤");
+                }
+            }
+        });
+    }
+    function RewardPayYearMonth(cellValue, options, rdata, action) {
+        let LawRewardPayYearMonth = rdata.LawRewardPayYearMonth;
+        let LawLawyerPayId = rdata.LawLawyerPayId;
+        let LawId = rdata.LawId;
+        let LawDueAgentId = rdata.LawDueAgentId;
+        var url = '@Url.Action("UpdateLawyerReward", "LAWTX009", new { area = "LAW" })' + '?LawLawyerPayId=' + LawLawyerPayId + '&LawId=' + LawId + '&LawDueAgentId=' + LawDueAgentId;
+        return '<a href="' + url +'">' + LawRewardPayYearMonth + '</a>';
+    }
+</script>

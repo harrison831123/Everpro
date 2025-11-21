@@ -1,0 +1,216 @@
+﻿@model EP.SD.SalesSupport.LAW.Models.LawEvidenceDetail
+@{
+    ViewBag.Title = LAWResource.存證信函作業;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    WebChannel<EP.SD.SalesSupport.LAW.Service.ILAWService> Service = new WebChannel<EP.SD.SalesSupport.LAW.Service.ILAWService>();
+    List<EP.H2OModels.LawEvidType> lawEvids = new List<EP.H2OModels.LawEvidType>();
+    Service.Use(s => lawEvids = s.GetLawEvidType().ToList());
+    List<EP.H2OModels.LawDoUser> lawDoUsers = new List<EP.H2OModels.LawDoUser>();
+    Service.Use(s => lawDoUsers = s.GetLawDouser().ToList());
+    int flag = 0, flag1 = 0, flag2 = 0;
+}
+<style type='text/css'>
+    #reason {
+        display: none;
+    }
+</style>
+@section LeftActions{
+    <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.儲存" data-bind="click: SaveClick" />
+    @Html.ActionLink(EP.PlatformResources.返回, "Index", "LAWTX009", new { Class = "btn btn-default" })
+}
+@using (Html.BeginForm("UpdateLawEvidence", "LAWTX009", null, FormMethod.Post, new { id = "UpdateSubmit" }))
+{
+
+    @Html.HiddenFor(m => m.LawAgentDataId);
+    @Html.HiddenFor(m => m.LawId);
+    @Html.HiddenFor(m => m.LawNoteNo);
+    @Html.HiddenFor(m => m.EvidAgentId);
+    @Html.HiddenFor(m => m.MyPageStatus);
+    if (Model.MyPageStatus == "Edit")
+    {
+        @Html.HiddenFor(m => m.EvidId);
+        <a href='~/Areas/LAW/Template/列印存證信函設定步驟說明.doc' target='_parent'><img src=~/Content/img/book_g.png style="" CURSOR: hand;"" border=0><font color=red size=3>【@LAWResource.列印存證信函設定步驟說明】</font></a>
+        <a href='evidence_export.asp?evid=@Model.EvidId' target='_parent'><img src=~/Content/img/book_g.png style="" CURSOR: hand;"" border=0><font color=red size=3>【@LAWResource.存證信函P1】</font></a>
+        <a href='evidence_export2.asp?evid=@Model.EvidId' target='_parent'><img src=~/Content/img/book_g.png style="" CURSOR: hand;"" border=0><font color=red size=3>【@LAWResource.存證信函P2】</font></a>
+    }
+
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            @Html.LabelFor(m => m.EvidNo, new { @class = "detail-msg" })
+            @Html.TextBoxFor(m => m.EvidNo, new { @id = "EvidNo", style = "width:90%", @maxlength = "250", @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            <label class="detail-msg">寄件人</label>
+            <br />
+            <div class="col-md-12" style="display:flex">
+                <label class="detail-msg col-md-1">公司名稱</label>
+                @Html.TextBoxFor(m => m.EvidSender, new { @id = "EvidSender", style = "width:90%", @maxlength = "250", @class = "form-control col-md-11" })
+            </div>
+            <div class="col-md-12" style="display:flex">
+                <label class="detail-msg col-md-1">公司名稱</label>
+                @Html.TextBoxFor(m => m.EvidSenderAdd, new { @id = "EvidSenderAdd", style = "width:90%", @maxlength = "250", @class = "form-control col-md-11" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            <label class="detail-msg">收件人</label>
+            <br />
+            <div class="col-md-12" style="display:flex">
+                <label class="detail-msg col-md-2">業務員姓名</label>
+                @Html.TextBoxFor(m => m.EvidAgentName, new { @id = "EvidAgentId", style = "width:90%", @maxlength = "250", @class = "form-control col-md-10" })
+            </div>
+            <div class="col-md-12" style="display:flex">
+                <label class="detail-msg col-md-2">戶籍地址</label>
+                @Html.TextBoxFor(m => m.EvidAgentAdd, new { @id = "EvidAgentId", style = "width:90%", @maxlength = "250", @class = "form-control col-md-10" })
+            </div>
+            <div class="col-md-12" style="display:flex">
+                <label class="detail-msg col-md-2">通訊地址1</label>
+                <input type="radio" class="" name="chkadd" value="1" checked />
+                @Html.TextBoxFor(m => m.EvidAgentAdd1, new { @id = "EvidAgentId", style = "width:90%", @maxlength = "250", @class = "form-control col-md-8" })
+            </div>
+            <div class="col-md-12" style="display:flex">
+                <label class="detail-msg col-md-2">通訊地址2</label>
+                <input type="radio" class="" name="chkadd" value="2" />
+                @Html.TextBoxFor(m => m.EvidAgentAdd2, new { @id = "EvidAgentId", style = "width:90%", @maxlength = "250", @class = "form-control col-md-8" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            <label class="detail-msg control-label col-md-2">契撤變原因</label>
+            <select class="form-control col-md-3" id="EvidReason" name="EvidReason">
+                @if (!String.IsNullOrEmpty(Model.EvidReason))
+                {
+                    flag = 1;
+                    <text>
+                        <option value="@Model.EvidReason" selected>@Model.EvidReason</option>
+                    </text>
+                }
+                @for (var i = 0; i < lawEvids.Count; i++)
+                {
+                    if (Model.EvidReason == @lawEvids[i].EvidTypeName && flag != 1)
+                    {
+                        <text>
+                            <option value="@lawEvids[i].EvidTypeName" selected>@lawEvids[i].EvidTypeName</option>
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                            <option value="@lawEvids[i].EvidTypeName">@lawEvids[i].EvidTypeName</option>
+                        </text>
+                    }
+                }
+                <option value="0">其他</option>
+            </select>
+            <input type="text" id="reason" class="form-control" name="reason" value=''>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            @Html.LabelFor(m => m.EvidMoneyNum, new { @class = "detail-msg col-md-1" })
+            @Html.TextBoxFor(m => m.EvidMoneyNum, new { @id = "EvidMoneyNum", style = "width:90%", @maxlength = "250", @class = "form-control col-md-11" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            @Html.LabelFor(m => m.EvidAccount, new { @class = "detail-msg col-md-1" })
+            @Html.TextBoxFor(m => m.EvidAccount, new { @id = "EvidAccount", style = "width:90%", @maxlength = "250", @class = "form-control col-md-11" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            <label class="detail-msg control-label col-md-2">承辦人</label>
+            <select class="form-control col-md-3" id="EvidUser" name="EvidUser">
+                @if (!String.IsNullOrEmpty(Model.EvidUser))
+                {
+                    flag1 = 1;
+                    <text>
+                        <option value="@Model.EvidUser" selected>@Model.EvidUser</option>
+                    </text>
+                }
+                @for (var i = 0; i < lawDoUsers.Count; i++)
+                {
+                    if (Model.EvidUser == lawDoUsers[i].DouserName && flag1 != 1)
+                    {
+                        <text>
+                            <option value="@lawDoUsers[i].DouserName" selected>@lawDoUsers[i].DouserName</option>
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                            <option value="@lawDoUsers[i].DouserName">@lawDoUsers[i].DouserName</option>
+                        </text>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            <label class="detail-msg control-label col-md-2">分機</label>
+            <select class="form-control col-md-3" id="EvidPhone" name="EvidPhone">
+                @if (!String.IsNullOrEmpty(Model.EvidPhone))
+                {
+                    flag2 = 1;
+                    <text>
+                        <option value="@Model.EvidPhone" selected>@Model.EvidPhone</option>
+                    </text>
+                }
+                @for (var i = 0; i < lawDoUsers.Count; i++)
+                {
+                    if (Model.EvidPhone == lawDoUsers[i].DouserPhoneExt && flag2 != 1)
+                    {
+                        <text>
+                            <option value="@lawDoUsers[i].DouserPhoneExt" selected>@lawDoUsers[i].DouserPhoneExt</option>
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                            <option value="@lawDoUsers[i].DouserPhoneExt">@lawDoUsers[i].DouserPhoneExt</option>
+                        </text>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+
+}
+<script>
+    var ViewModel = {
+        SaveClick: function () {
+            if (saveValidator()) {
+                clearMessage();@*清除訊息*@
+                var tabUniqueId = $("#tabUniqueId").val();
+                $("#UpdateSubmit").attr('action', '@Url.Action("UpdateLawEvidence", "LAWTX009")');
+                $("#UpdateSubmit").submit();
+            }
+        }
+    };
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+    });
+    $('#EvidReason').on('change', function () {
+        if (this.value == 0) {
+            $('#reason').show();
+        } else {
+            $('#reason').hide();
+        }
+    });
+    function saveValidator() {
+        if ($("#EvidMoneyNum").val() == "" || $("#EvidMoneyNum").val() == 0) {           
+            appendMessage("@( "金額" + EP.PlatformResources.必填)");
+            return false;
+        }
+        if ($("#EvidReason").val() == 0 && $("#reason").val() =="") {
+            appendMessage("契撤契變原因選擇其他，請自行輸入內容，不可空白");
+            return false;
+        }
+        return true;
+    }
+</script>

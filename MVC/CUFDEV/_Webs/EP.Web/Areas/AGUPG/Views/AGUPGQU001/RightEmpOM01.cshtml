@@ -1,0 +1,178 @@
+﻿@model HrUpg25QueryCondition
+@{
+    ViewBag.Title = AGUPGResource.轄下第一代區級;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+<link href="~/Areas/AGUPG/Content/AGUPGQU001.css" rel="stylesheet" />
+<div id="divQueryBlock">
+    @using (Ajax.BeginForm("RightEmpOM01Detail", "AGUPGQU001", new { area = "AGUPG" }, new AjaxOptions { OnSuccess = "bindGrid" }, new { id = "QueryForm" }))
+    {
+        @Html.HiddenFor(m => m.AgentCode)
+        @Html.HiddenFor(m => m.YYYYSeason)
+        @Html.HiddenFor(m => m.DetailType)
+    }
+    @section GridActions {
+        <div class="row">
+            <div name="NoData1"></div>
+            <div name="AreaHeaderTitle" id="AreaTitle1"></div>
+        </div>
+        <div class="jqGrid">
+            <table id="Area1"></table>
+        </div>
+        <div id="ResultPagger"></div>
+    }
+    @section LeftActions{
+        <div class="Remarks">
+            <label>若推介人達個FYC7.2萬始可加計本表各推介人之約定%業績</label><br />
+            <label> 21稱謂*100%     非21稱謂*50%</label>
+        </div>
+        @Html.ActionLink(EP.PlatformResources.返回, "Index", "AGUPGQU001", new { YYYYSeason = Model.YYYYSeason, code = Model.AgentCode }, new { @class = "btn btn-default" })
+    }
+
+</div>
+<div class="to-top" style="display: none;"><i>TOP</i></div>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $("form#QueryForm").trigger("submit");
+            scrollFunction();
+            GoToTop();
+        });
+
+        function bindGrid(data) {
+            //if (data.HrUpgGet25Detail1 == null) {
+            //    appendMessage("查無資料!!");
+            //    return
+            //}
+
+            $("div[name='NoData1']").html('<label id="NoData1">查無資料</label>');
+            $("#Area1").jqGrid('GridUnload');
+
+            if (data.HrUpgGet25Detail1.length == 0) {
+                $("#AreaTitle1").hide();
+                $("#NoData1").show();
+            }
+            else {
+                // 更新欄位名稱
+                const defaultSeason = data.HrUpgGet25Detail1[0].Season;
+                var ColNames = updateSeasonColNames(defaultSeason);
+
+                $("#AreaTitle1").show();
+                $("#NoData1").hide();
+                $("#Area1").jqGrid({
+                    datatype: "local",
+                    mtype: "POST",
+                    colNames: ["", ColNames[2], ColNames[1], ColNames[0], "合計", "符合條件"],
+                    colModel: [
+                        { name: "AgentName", index: "AgentName" },
+                        { name: "PfycLast3", index: "PfycLast3" },
+                        { name: "PfycLast2", index: "PfycLast2" },
+                        { name: "PfycLast1", index: "PfycLast1" },
+                        { name: "PFycS1", index: "PFycS1" },
+                        { name: "RightEmpOM01", index: "RightEmpOM01" }
+                    ],
+                    rowNum: 10,              // 每頁10筆
+                    rowList: [10, 20, 50],   // 可選每頁筆數
+                    pager: "ResultPagger",   // 分頁元件（需有這個div）
+                    viewrecords: true,       // 顯示筆數
+                    jsonReader: {   @*讀JSON格式資料*@
+                        repeatitems: false,
+                        id: "0"
+                    },
+                    gridComplete: function (mythis) {
+                        if (mythis == null) { mythis = this; };
+                        var mygrid = $(mythis);
+                        @* 讓每個row下的cell 都有colname(供RWD使用)
+                        mygrid.find("tr:even").css("background", "#F5EFE7");*@
+                        var cm = mygrid.jqGrid("getGridParam", "colNames");
+                        var trs = mygrid.find('tr');
+                        $.each(trs, function (tri, tritem) {
+                            var tds = $(tritem).find('td');
+                            if ($(tritem).hasClass("jqgfirstrow")) @* 排除grid第一筆訂寬度用的 *@
+                                return;
+                            $.each(tds, function (tdi, tditem) {
+                                var mytitle = cm[tdi].replace("<br/>", "\n");
+                                $(tditem).attr('mycolname', mytitle);
+
+                                @* 讓RWD時的Header可以自動調高度！註：因加html至Data欄裡面！所以要小心 *@
+                                var dirtyContent = "";
+                                var mytitle2 = cm[tdi].replace("<br/>", "");
+                                if (mytitle2.Blength() > mytitle2.length && mytitle2.Blength() > 14 && window.innerWidth <= 430) {
+                                    for (var ii = 1; ii < (mytitle2.Blength() / 14); ii++)
+                                        dirtyContent += "<br/><br/>";//"\n";
+                                    $(tditem).append(dirtyContent);
+                                }
+                                @* 讓RWD時的Header可以自動調高度！*@
+
+                                if (cm[tdi].indexOf("<input") >= 0) {
+                                    $(tditem).attr('mycolname', "");
+                                }
+
+                            });
+                        });
+                        @* 讓它再執行一次Resize(可移除body出現scrollbar的問題) *@
+                        jqGridResize();
+                        @* 若資料是空值則Header出現x - overflow: auto *@
+                        var hdivgrid = mygrid.parent().parent().parent().find(".ui-jqgrid-hdiv"); @* 找到header的Div *@
+                        if (mythis.p.reccount === 0) {
+                            hdivgrid.addClass("ui-jqgrid-hdivScrollX");
+                        }
+                        else {
+                            hdivgrid.removeClass("ui-jqgrid-hdivScrollX");
+                        }
+                    },
+                    error: function (ex) {
+                        appendMessage("系統發生錯誤!!");
+                    }
+
+                });
+                $("#Area1").jqGrid('setGridParam', { data: data.HrUpgGet25Detail1 });
+                $("#Area1").trigger("reloadGrid");
+            }
+        }
+
+        function updateSeasonColNames(season) {
+            //const grid = $("#Area1");
+
+            // 依季別決定顯示的三個欄位名稱
+            const start = (season - 1) * 3 + 1;
+            const col2 = start;
+            const col3 = start + 1;
+            const col4 = start + 2;
+
+            // 取得目前設定
+            //const currentColNames = grid.jqGrid("getGridParam", "colNames");
+            //console.log(currentColNames)
+            let currentColNames = ["", "", ""];
+            const year = new Date().getFullYear();
+
+            currentColNames[0] = year.toString() + "/" + col2.toString() + " 工作月";
+            currentColNames[1] = year.toString() + "/" + col3.toString() + " 工作月";
+            currentColNames[2] = year.toString() + "/" + col4.toString() + " 工作月";
+
+            // 套用更新的欄名
+            //grid.jqGrid("setGridParam", { colNames: currentColNames }).trigger("reloadGrid");
+
+            return currentColNames
+        }
+        window.onscroll = function () { scrollFunction() };
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.querySelector('.to-top').style.display = "block";
+            } else {
+                document.querySelector('.to-top').style.display = "none";
+            }
+        }
+        function GoToTop() {
+            let item = document.querySelector('.to-top');
+            item.addEventListener('click', (e) => {
+                window.scrollTo({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+    </script>
+}

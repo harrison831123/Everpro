@@ -1,0 +1,520 @@
+﻿@*
+    需求單號：20241210003 現售商品佣獎查詢 2024.12 BY VITA
+    需求單號：20250312002 增加險種中文名稱 2025.03 BY VITA
+    需求單號：20250312002 將險種代碼將必填文字更改為擇一 2025.04 BY VITA
+*@
+@model PlanSetQueryCondition
+@{
+    ViewBag.Title = "查詢現售商品佣獎";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    WebChannel<EP.SD.Collections.PlanSet.Service.IPlanSetService> PlanSetService = new WebChannel<EP.SD.Collections.PlanSet.Service.IPlanSetService>();
+}
+
+<style>
+    .ui-jqgrid tr.jqgrow td {
+        white-space: pre-wrap !important;
+        height: auto !important;
+        text-align: center !important;
+    }
+
+    .select_top_button {
+        position: fixed;
+        z-index: 99;
+        right: 0px;
+        bottom: 100px;
+    }
+
+    @@media only screen and (max-width: 532px) {
+        .ui-jqgrid {
+            margin-left: 0px !important;
+        }
+    }
+
+    .to-top {
+        position: fixed;
+        right: 10px;
+        bottom: 10px;
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        color: #FFF;
+        border: 2px solid #689180;
+        -webkit-border-radius: 50%;
+        border-radius: 50%;
+        z-index: 1001;
+        opacity: 1;
+        cursor: pointer;
+        display: none;
+    }
+
+        .to-top i {
+            color: #689180;
+            font-size: 20px;
+            font-style: normal;
+        }
+
+        .to-top:hover {
+            background-color: #689180;
+        }
+
+            .to-top:hover i {
+                display: block;
+                color: #fff;
+            }
+</style>
+<div id="divQueryBlock">
+    @using (Ajax.BeginForm("Query", "PlanSetQU001", new { area = "PlanSet" }, new AjaxOptions { OnSuccess = "bindGrid" }, new { id = "QueryForm" }))
+    {
+        <div class="wall-title">
+            <img class="index-title-icon" src="~/Content/img/search.png" />(搜尋條件)
+        </div>
+        <div class="ibox-body">
+            @*保險公司*@
+            <div class="form-group row">
+                <div class="col-md-2" style="padding-right: 0px">
+                    <label style="color:black">保險公司</label>
+                    <label style="color: red">必選</label>
+                </div>
+                <div class="col-md-2" style="padding-right: 0px" name="CompanyCode">
+                    @Html.DropDownListFor(m => m.CompanyCode, (IEnumerable<SelectListItem>)ViewBag.CompanyCodeList,
+                    new
+                    {
+                        @class = "form-control",
+                        @style = "width: 100%; display: inline;"
+                    })
+                </div>
+            </div>
+            @*險種中文名稱 需求單號：20250312002 增加險種中文名稱與險種代碼查詢 by vita 2025.03*@
+            <div class="form-group row">
+                <div class="col-md-2" style="padding-right: 0px">
+                    <label style="color:black">險種名稱</label>
+                </div>
+                <div class="col-md-2" style="padding-right: 0px">
+                    @Html.TextBox("plan_title", "", new { @class = "form-control", @placeholder = "至少輸入2個中文字", @style = "" })
+                    @*按鈕：查詢險種中文名稱*@
+                    @*<input type="button" id="btnPlanTitle" name="btnPlanTitle" value="查詢" class="btn btn-default" />*@
+                    <button class="btn btn-default" id="btnPlanTitle" data-bind="click: PlanTitleClick">查詢險種</button>
+                </div>
+            </div>
+            @*險種代碼*@
+            <div class="form-group row">
+                <div class="col-md-2" style="padding-right: 0px">
+                    <label style="color:black">險種代碼</label>
+                    <label style="color: red">險種名稱/代碼 擇一</label> @*需求單號20250312002 將必填文字更改為擇一 BY VITA 2025.04*@
+                </div>
+                <div class="col-md-2" style="padding-right: 0px">
+                    @Html.TextBox("plan_code", "", new { @class = "form-control", @placeholder = "至少輸入2個英文字" })
+                    @*按鈕：查詢險種代碼*@
+                    <button class="btn btn-default" id="btnPlanTitle" data-bind="click: PlanCodeClick">查詢險種</button>
+                </div>
+            </div>
+            @*年期*@
+            <div class="form-group row">
+                <div class="col-md-2" style="padding-right: 0px">
+                    <label style="color:black">年期</label>
+                    <label style="color: red">*躉輸入0</label>
+                </div>
+                <div class="col-md-2" style="padding-right: 0px">
+                    @Html.TextBox("collect", "", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-2">
+                    <button class="btn btn-primary" id="btnQuery" data-bind="click: QueryClick">查詢(Q)</button>
+                    <button class="btn btn-default" id="btnClear" data-bind="click: ClearClick">清除(R)</button>
+                </div>
+            </div>
+        </div>
+        <div>
+            @*
+                需求單號：20241210003 修改備註說明 by vita 2025.01
+                需求單號：20241210003 修改備註說明內容 by vita 2025.01
+            *@
+            <label style="color:red">注意事項：</label><br />
+            <label style="color:red">1.現售定義：查詢時未停售之商品。</label><br />
+            <label style="color:red">2.初年度服務報酬(FYC)=初年度保費*初年度業績換算率*40%。</label><br />
+            <label style="color:red">3.資料維護需作業時間，故會有時間差。</label><br />
+            <label style="color:red">4.『投資型』的FYC皆不計入永達競賽業績。</label><br />
+            <label style="color:red">5.資料僅供參考，請依公文公告或商品彙整為主。</label><br />
+            <label style="color:red">6.特殊計算方式請參考商品公文。(例：歲滿期、最高投保年齡-保單投保年齡)。</label>
+        </div>
+    }
+
+    @section GridActions {
+        <div name="Title1" style="padding-right: 0px; background-color: #D9E1F2; display: none; margin-right: 20px; ">初年度業績換算率(業行部)</div>
+        <div class="row">
+            <div name="NoData1"></div>
+            <div name="AreaHeaderTitle" id="AreaTitle1"></div>
+        </div>
+        <div class="jqGrid">
+            <table id="Area1"></table>
+        </div>
+        <div name="Title2" style="padding-right: 0px; background-color: #FF9999; display: none; margin-right: 20px;">保公獎勵內容(業行部)</div>
+        <div class="row">
+            <div name="NoData2"></div>
+            <div name="AreaHeaderTitle" id="AreaTitle2"></div>
+        </div>
+        <div class="jqGrid">
+            <table id="Area2"></table>
+        </div>
+        <div name="Title3" style="padding-right: 0px; background-color: #FFCC66; display: none; margin-right: 20px; ">永達競賽獎勵(業支部)</div>
+        <div class="row">
+            <div name="NoData3"></div>
+            <div name="AreaHeaderTitle" id="AreaTitle3"></div>
+        </div>
+        <div class="jqGrid">
+            <table id="Area3"></table>
+        </div>
+
+        @*需求單號：20250312002 增加險種中文名稱搜尋頁面 by vita 2025.03*@
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" style="font-size:medium">險種商品名稱</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="jqGrid">
+                            <select id="PUPPlanTitle"></select>
+                            <label id="lbPUP">無此險種中文名稱!!</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="btnChoose" data-bind="click: ChooseClick">確認</button>
+                        <button class="btn btn-default" id="btnClose" data-bind="click: CloseClick">關閉視窗</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div class="to-top" style="display: none;"><i>TOP</i></div>
+
+@section Scripts{
+    <script>
+        @*需求單號20241210003增加go top的按鈕 by vita 2025.01*@
+        window.onscroll = function () { scrollFunction() };
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.querySelector('.to-top').style.display = "block";
+            } else {
+                document.querySelector('.to-top').style.display = "none";
+            }
+        }
+        function GoToTop() {
+            let item = document.querySelector('.to-top');
+            item.addEventListener('click', (e) => {
+                window.scrollTo({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+
+        $(document).ready(function () {
+            scrollFunction();
+            GoToTop();
+        });
+
+        var ViewModel = {
+            @*查詢*@
+            QueryClick: function () {
+                clearMessage();
+                var CompanyCode = $('#CompanyCode :selected').val();
+                var plan_code = $('#plan_code').val();
+                var collect = $('#collect').val();
+                var UserID = '@User.MemberInfo.ID';
+                var plan_title = $('#plan_title').val();@*需求單號20250312002 增加險種中文名稱 by vita 2025.03*@
+
+                @*檢核*@
+                if (UserID.length < 1) {
+                    appendMessage("請重新整理頁面!!");
+                    return false;
+                }
+                if (plan_code == '' || CompanyCode == '0' || plan_code == "-") {@*需求單號20250312002 增加請選擇的判斷 by vita 2025.03*@
+                    appendMessage("保險公司與險種代碼為必填!!");
+                    return false;
+                }
+                if (collect != '') {
+                    var regex = /^[0-9]*$/;
+                    if (collect.trim().match(regex) == null) {
+                        appendMessage("年期需為數字格式");
+                        return false;
+                    }
+                }
+
+                $("form#QueryForm").trigger("submit");
+            },
+            ClearClick: function () {
+                @* 清除訊息 *@
+                clearMessage();
+                $('#CompanyCode option[value = "0"]').prop('selected', 'selected');
+                $('#divQueryBlock input[type=text]').val('');
+            },
+            @* 需求單號：20250312002 增加險種中文名稱查詢 by vita 2025.03 *@
+            PlanTitleClick: function () {
+                @* 按鈕：險種中文名稱查詢 需求單號：20250312002 by vita *@
+                clearMessage();
+                var CompanyCode = $('#CompanyCode :selected').val();
+                var plan_title = $('#plan_title').val();@*需求單號20250312002 增加險種中文名稱 by vita 2025.03*@
+                if (CompanyCode == '0') {
+                    appendMessage("保險公司為必填!!");
+                    return false;
+                }
+                if (plan_title.length < 2) {
+                    appendMessage("險種名稱至少輸入2個中文字!!");
+                    return false;
+                }
+                GetPlanTitle(CompanyCode, plan_title, "0");
+                $("#myModal").modal('show');
+            },
+            CloseClick: function () {
+                @* 按鈕：關閉險種中文查詢視窗 需求單號：20250312002 by vita *@
+                $("#myModal").modal('hide');
+            },
+            ChooseClick: function () {
+                @* 按鈕：將查詢後的險種中文代回頁面 需求單號：20250312002 by vita *@
+                $("#myModal").modal('hide');
+                var plantitletext = $('.modal-body #PUPPlanTitle').val().trim();
+                var strplantitle = new Array();
+                var strplantitle = plantitletext.split(" ");
+                $("#plan_code").val(strplantitle[0]);
+                $("#plan_title").val(strplantitle[1]);
+            },
+            PlanCodeClick: function () {
+                @* 按鈕：險種代碼查詢 需求單號：20250312002 by vita *@
+                clearMessage();
+                var CompanyCode = $('#CompanyCode :selected').val();
+                var plan_code = $('#plan_code').val();
+                if (CompanyCode == '0') {
+                    appendMessage("保險公司為必填!!");
+                    return false;
+                }
+                if (plan_code.length < 2) {
+                    appendMessage("險種代碼至少輸入2個字!!");
+                    return false;
+                }
+                GetPlanTitle(CompanyCode, plan_code, "1");
+                $("#myModal").modal('show');
+            }
+        };
+
+        $(function () {
+            ko.applyBindings(ViewModel);
+        });
+        @*需求單號：20241210003 將程式更新為最初版本的程式 BY VITA 2025.01*@
+        function bindGrid(data) {
+            @*處理查詢出來的三個區塊的資料呈現*@
+            if (data.PlanSetArea1 == null) {
+                appendMessage("nodata!!");
+            }
+            $("div[name='Title1']").show();
+            $("div[name='Title2']").show();
+            $("div[name='Title3']").show();
+            $("div[name='NoData1']").html('<label id="NoData1">查無此險種資訊</label>');
+            $("div[name='NoData2']").html('<label id="NoData2">查無此獎勵資訊</label>');
+            $("div[name='NoData3']").html('<label id="NoData3">查無此獎勵資訊</label>');
+            if (data.PlanSetArea1.length > 0) {
+                $("div[name='AreaHeaderTitle']").html('<div class="col-md-12 col-sm-12 col-xs-12" style="padding-left:0px">保險公司：' + data.PlanTitle.company_name + '</div><div class="col-md-12 col-sm-12 col-xs-12" style="padding-left:0px">險種名稱：' + data.PlanTitle.plan_title + '</div><div class="col-md-12 col-sm-12 col-xs-12" style="padding-left:0px">險種代號：' + data.PlanTitle.plan_code + '</div>');
+            }
+
+            $("#Area1").jqGrid('GridUnload');
+            $("#Area2").jqGrid('GridUnload');
+            $("#Area3").jqGrid('GridUnload');
+
+            if (data.PlanSetArea1.length == 0) {
+                $("#AreaTitle1").hide();
+                $("#NoData1").show();
+            }
+            else {
+                $("#AreaTitle1").show();
+                $("#NoData1").hide();
+                $("#Area1").jqGrid({
+                    datatype: "local",
+                    mtype: "POST",
+                    colNames: ["年期", "起賣日", "停賣日", "年齡", "其他條件", "初年度業績換算率"],
+                    colModel: [
+                        { name: "plan_year_cond", index: "plan_year_cond" },
+                        { name: "plan_start_date", index: "plan_start_date" },
+                        { name: "plan_end_date", index: "plan_end_date" },
+                        { name: "age_cond", index: "age_cond" },
+                        { name: "other_cond", index: "other_cond" },
+                        { name: "rate_value_txt", index: "rate_value_txt" }
+                    ],
+                    jsonReader: {   @*讀JSON格式資料*@
+                        repeatitems: false,
+                        id: "0"
+                    },
+                    gridComplete: function (mythis) {
+                        if (mythis == null) { mythis = this; };
+                        var mygrid = $(mythis);
+                        @*讓每個row下的cell 都有colname(供RWD使用)
+                        mygrid.find("tr:even").css("background", "#F5EFE7");*@
+                        var cm = mygrid.jqGrid("getGridParam", "colNames");
+                        var trs = mygrid.find('tr');
+                        $.each(trs, function (tri, tritem) {
+                            var tds = $(tritem).find('td');
+                            if ($(tritem).hasClass("jqgfirstrow"))@*排除grid第一筆訂寬度用的*@
+                                return;
+                            $.each(tds, function (tdi, tditem) {
+                                var mytitle = cm[tdi].replace("<br/>", "\n");
+                                $(tditem).attr('mycolname', mytitle);
+
+                                @*讓RWD時的Header可以自動調高度！ 註：因加html至Data欄裡面！所以要小心*@
+
+
+                                var dirtyContent = "";
+                                var mytitle2 = cm[tdi].replace("<br/>", "");
+                                if (mytitle2.Blength() > mytitle2.length && mytitle2.Blength() > 14 && window.innerWidth < 414) {
+                                    for (var ii = 1; ii < (mytitle2.Blength() / 14); ii++)
+                                        dirtyContent += "<br/><br/>";//"\n";
+                                    $(tditem).append(dirtyContent);
+                                }
+                                @*讓RWD時的Header可以自動調高*@
+
+                                if (cm[tdi].indexOf("<input") >= 0) {
+                                    $(tditem).attr('mycolname', "");
+                                }
+
+                            });
+                        });
+                        @*讓它再執行一次Resize(可移除body出現scrollbar的問題)*@
+                        jqGridResize();
+                        @*若資料是空值則Header出現x-overflow:auto*@
+                        var hdivgrid = mygrid.parent().parent().parent().find(".ui-jqgrid-hdiv");//找到header的Div
+                        if (mythis.p.reccount === 0) {
+                            hdivgrid.addClass("ui-jqgrid-hdivScrollX");
+                        }
+                        else {
+                            hdivgrid.removeClass("ui-jqgrid-hdivScrollX");
+                        }
+                    },
+                });
+                $("#Area1").jqGrid('setGridParam', { data: data.PlanSetArea1 });
+                $("#Area1").trigger("reloadGrid");
+            }
+            if (data.PlanSetArea2.length == 0) {
+                $("#AreaTitle2").hide();
+                $("#NoData2").show();
+            }
+            else {
+                $("#AreaTitle2").show();
+                $("#NoData2").hide();
+                $("#Area2").jqGrid({
+                    datatype: "local",
+                    mtype: "POST",
+                    colNames: ["年期", "獎勵生效起日", "獎勵生效迄日", "年齡", "其他條件", "首年首次FYC*獎金率"],
+                    colModel: [
+                        { name: "plan_year_cond", index: "plan_year_cond" },
+                        { name: "reward_start_date", index: "reward_start_date" },
+                        { name: "reward_end_date", index: "reward_end_date" },
+                        { name: "age_cond", index: "age_cond" },
+                        { name: "other_cond", index: "other_cond" },
+                        { name: "rate_value_txt", index: "rate_value_txt" }
+                    ],
+                    jsonReader: {   @*讀JSON格式資料*@
+                        repeatitems: false,
+                        id: "0"
+                    },
+                    gridComplete: function (mythis) {
+                        if (mythis == null) { mythis = this; };
+                        var mygrid = $(mythis);
+                        @*讓每個row下的cell 都有colname(供RWD使用)
+                        mygrid.find("tr:even").css("background", "#F5EFE7");*@
+                        var cm = mygrid.jqGrid("getGridParam", "colNames");
+                        var trs = mygrid.find('tr');
+                        $.each(trs, function (tri, tritem) {
+                            var tds = $(tritem).find('td');
+                            if ($(tritem).hasClass("jqgfirstrow"))@*排除grid第一筆訂寬度用的*@
+                                return;
+                            $.each(tds, function (tdi, tditem) {
+                                var mytitle = cm[tdi].replace("<br/>", "\n");
+                                $(tditem).attr('mycolname', mytitle);
+
+                                @*讓RWD時的Header可以自動調高度！註：因加html至Data欄裡面！所以要小心*@
+                                var dirtyContent = "";
+                                var mytitle2 = cm[tdi].replace("<br/>", "");
+                                if (mytitle2.Blength() > mytitle2.length && mytitle2.Blength() > 14 && window.innerWidth <= 430) {
+                                    for (var ii = 1; ii < (mytitle2.Blength() / 14); ii++)
+                                        dirtyContent += "<br/><br/>";//"\n";
+                                    $(tditem).append(dirtyContent);
+                                }
+                                @*讓RWD時的Header可以自動調高度！*@
+
+                                if (cm[tdi].indexOf("<input") >= 0) {
+                                    $(tditem).attr('mycolname', "");
+                                }
+
+                            });
+                        });
+                        @*讓它再執行一次Resize(可移除body出現scrollbar的問題)*@
+                        jqGridResize();
+                        @*若資料是空值則Header出現x-overflow:auto*@
+                        var hdivgrid = mygrid.parent().parent().parent().find(".ui-jqgrid-hdiv");@*找到header的Div*@
+                        if (mythis.p.reccount === 0) {
+                            hdivgrid.addClass("ui-jqgrid-hdivScrollX");
+                        }
+                        else {
+                            hdivgrid.removeClass("ui-jqgrid-hdivScrollX");
+                        }
+                    },
+                    error: function (ex) {
+                        appendMessage("系統發生錯誤!!");
+                    }
+                });
+                $("#Area2").jqGrid('setGridParam', { data: data.PlanSetArea2 });
+                $("#Area2").trigger("reloadGrid");
+            }
+            if (data.PlanSetArea3.length == 0) {
+                $("#AreaTitle3").hide();
+                $("#NoData3").show();
+            }
+            else {
+                $("#AreaTitle3").show();
+                $("#NoData3").hide();
+                $("#Area3").jqGrid({
+                    datatype: "local",
+                    mtype: "POST",
+                    colNames: ["年期", "要保申請起日", "要保申請迄日", "競賽FYC"],
+                    colModel: [
+                        { name: "plan_year_cond", index: "plan_year_cond" },
+                        { name: "set_start_date", index: "reward_start_date" },
+                        { name: "set_end_date", index: "plan_end_date" },
+                        { name: "IsCredited_txt", index: "age_cond" }
+                    ],
+                    jsonReader: {   @*讀JSON格式資料*@
+                        repeatitems: false,
+                        id: "0"
+                    }
+                });
+                $("#Area3").jqGrid('setGridParam', { data: data.PlanSetArea3 });
+                $("#Area3").trigger("reloadGrid");
+            }
+        }
+
+        @*需求單號：20250312002 抓取險種中文名稱 by vita 2025.03*@
+        function GetPlanTitle(CompanyCode, plan_title, chktype) {
+            $('#lbPUP').show();
+                $.ajax({
+                    method: "POST",
+                    url: "@Url.Action("GetPlanTitle", "PlanSetQU001")",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ CompanyCode: CompanyCode, plan_title: plan_title, chktype: chktype }),
+                    success: function (result, status) {
+                        $("#PUPPlanTitle").html('');
+                        $.each(result, function (item, item) {
+                            $('#PUPPlanTitle').append(new Option(item, item));
+                            $('#lbPUP').hide();
+                        });
+                    },
+                    error: function () {
+                        appendMessage("查無資料，請再重新查詢一次!!");
+                    }
+                });
+        }
+    </script>
+}

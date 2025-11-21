@@ -1,0 +1,135 @@
+﻿@model GridViewInit
+@{
+    string imember = User.MemberInfo.ID;
+}
+<div id="MarkPreview">
+    <div class="jqGrid">
+        <table id="@(Model.ID)"></table>
+    </div>
+    <div id="@(Model.ID)pagger"></div>
+    <table id="@(Model.ID)"></table>
+</div>
+<script>
+    function @(Model.ID)bindGrid() {
+        $("#@(Model.ID)").jqGrid({
+
+            url: '@Model.BindUrl',
+            datatype: "json",
+            mtype: "POST",
+            page: 1,
+            sortname: "MFCreateDate",
+            sortorder: "desc",
+            rowNum: 10,
+            autowidth: true,
+            colNames: ["", "", "", "", "@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.報告部門", "@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.附加檔案名稱", "@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.檔案上傳者", "@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.建立日期", "@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.說明", "功能"],
+            colModel: [
+                { name: "MFID", index: "MFID", hidden: true },
+                 { name: "MTID", index: "MTID", hidden: true },
+                  { name: "MFMd5Name", index: "MFMd5Name", hidden: true },
+                  { name: "MFCreater", index: "MFCreater", hidden: true },
+                 { name: "nunit", index: "nunit", width: "80", sortable: true },
+            { name: "MFFileName", index: "MFFileName", sortable: true, formatter: File },
+            { name: "nmember", index: "nmember", width: "60", sortable: true },
+            { name: "MFCreateDate", index: "MFCreateDate", sortable: true },
+            { name: "MFDesc", index: "MFDesc", sortable: true },
+            { name: "", index: "MFID", width: "35", formatter: displayButtonsFn }
+            ],
+            jsonReader: {   //讀JSON格式資料
+                repeatitems: false,
+                id: "0"
+            },
+            @if (Model.MultiSelect)
+            {  <text>multiselect: true, </text> }
+            else
+            { <text>multiselect: false, </text> }
+            @if (Model.Pagging)
+            { <text> pager: "@(Model.ID)pagger", </text>}
+            else
+            { <text> </text>}
+
+            onSelectRow: function (id) {
+            },
+            loadComplete: function () {
+                var curHeight = $("#@(Model.ID)").jqGrid('getGridParam', 'height');
+                //alert(curHeight);
+            }
+        });
+        $("#@(Model.ID)").jqGrid("navGrid", "#@(Model.ID)pagger", { add: false, edit: false, del: false, search: false, refresh: false });
+        $("#@(Model.ID)").trigger("reloadGrid");
+    }
+
+    @*刪除按鍵*@
+    function displayButtonsFn(cellValue, options, rdata, action) {
+        var MFID = rdata.MFID;
+        var MTID = rdata.MTID;
+        var MFMd5Name = rdata.MFMd5Name;
+        var MFCreater = rdata.MFCreater;
+        var userBtn = "";
+        //自己上傳的才顯示刪除選項
+        if ('@imember' == MFCreater) {
+            userBtn = "<input type='button' data-value='" + MFID + "' class='btn btn-link btn-xs PopupWindow' onclick='PopupWindow(\"" + MFID + "\",\"" + MTID + "\",\"" + MFMd5Name + "\",\"" + MFCreater + "\")' value='刪除'></input>";
+        }
+        var displayButtons = userBtn;
+        return displayButtons;
+    }
+    function File(cellValue, options, rdata, action) {
+        var MFID = rdata.MFID;
+        var MFFileName = rdata.MFFileName;
+        var userBtn = "";
+        userBtn = "<a href='#' class='MFID' id=" + MFID + " >" + MFFileName + "</a>"
+        var displayButtons = userBtn;
+
+        return displayButtons;
+    }
+    $(document).on('click', '.MFID', function () {
+
+        var MFID = $(this).attr('id');
+
+        AjaxDownFile("/MMTX002/GetMeetingFile", "fid=" + MFID);
+
+    });
+
+
+
+    //Grid處理連結的函式
+    function PopupWindow(MFID, MTID, MFMd5Name, MFCreater) {
+
+        var msg = "確定要刪除嗎！";
+        if (confirm("(@EP.PlatformResources.確定要刪除本筆資料)")) {
+            @*刪除資料庫資料*@
+            $.ajax({
+                url: "/MMTX002/DeleteFile",
+                type: 'POST',
+                data: { MFID: MFID, MTID: MTID },
+                dataType: "text",
+                success: function (result) {
+                    //var a = $("#searchfile");
+                    //$("#searchfile").click();
+                    $("#File").trigger("submit");
+                }
+            })
+            @*刪除檔案*@
+            $.ajax({
+                url: "/JFileUpload/DeleteFile",
+                type: 'Get',
+                data: { file: MFMd5Name },
+                success: function (result) {
+                    console.log(result);
+                }
+            })
+            return true;
+
+        } else {
+            return false;
+        }
+
+        @*var groupType = '@(Model!=null?Model.GroupType:null)';*@
+        //var format = DeleteURL + "?" + "id={0}";
+        //var url = $.validator.format(format, id);
+        //var openName = "IBTX016" + id;
+        //window.open(url, openName);
+    }
+</script>
+
+
+

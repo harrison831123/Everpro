@@ -1,0 +1,149 @@
+﻿@*//需求單號：20250707001 競賽計C商品清單。 2025/07/03 BY Harrison*@
+@model PlanSetWarptSetCondition
+@using EP.SD.Collections.PlanSet
+@{
+    ViewBag.Title = "競賽計C商品清單";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+<style>
+    .form-text {
+        font-size: 18px;
+    }
+
+    .notice-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        color: red;
+        margin-bottom: 1rem;
+        width: 100%;
+        max-width: 600px;
+        padding: 1rem;
+    }
+
+    .notice-text {
+        flex: 1;
+        min-width: 290px;
+    }
+
+    .button-block {
+        margin: 1rem 1rem 1rem 0;
+    }
+</style>
+
+<div id="divQueryBlock">
+    <div class="wall-title">
+        <img class="index-title-icon" src="~/Content/img/search.png" />(搜尋條件)
+    </div>
+    <div class="row wall">
+        <div class="detail-col col-12">
+            <div class="form-group row">
+                <div class="col-12 col-md-4 col-lg-4 col-xl-6" style="color: red; font-weight: bold;">資料日：@ViewBag.WorkDate</div>
+            </div>
+            @*商品親單*@
+            <div class="form-group row">
+                <div class="col-12 col-md-4 col-lg-4 col-xl-2 form-text">
+                    @Html.Label("商品清單", new { @class = "control-label" })
+                </div>
+                <div class="col-12 col-md-8 col-lg-6 col-xl-6 form-text">
+                    @foreach (ProductList item in Enum.GetValues(typeof(ProductList)))
+                    {
+                        var displayName = PlanSetHelper.GetDisplayName(item);
+                        var value = (int)item;
+                        var id = "SelectedProduct" + value;
+
+                        <label>
+                            @*@Html.RadioButtonFor(model => model.SelectedProduct, (int)item)*@
+                            @Html.RadioButton("SelectedProduct", value, value == (int)Model.SelectedProduct, new { id = id })@displayName
+                        </label>
+                    }
+                </div>
+            </div>
+
+            @*保險公司*@
+            <div class="form-group row">
+                <div class="col-12 col-md-4 col-lg-4 col-xl-2 form-text">
+                    @Html.LabelFor(model => model.CompanyCode, new { @class = "control-label", @style = "margin-bottom: 0px;" })
+                </div>
+                <div class="col-12 col-md-5 col-lg-4 col-xl-2 form-text">
+                    @Html.DropDownListFor(model => model.CompanyCode, PlanSetHelper.GetCompanyCode(), new { @class = "form-control,form-text" })
+                </div>
+            </div>
+            @*年期*@
+            @*<div class="form-group row">
+                <div class="col-12 col-md-4 col-lg-4 col-xl-2">
+                    @Html.LabelFor(model => model.PlanYear, new { @class = "form-text" })
+                    <label style="color: red">*躉輸入0</label>
+                </div>
+                <div class="col-12 col-md-5 col-lg-4 col-xl-2 form-text">
+                    @Html.TextBoxFor(model => model.PlanYear, new { @class = "form-control", type = "number", step = "1" })
+                </div>
+            </div>*@
+        </div>
+        <div class="notice-wrapper col-12 col-md-10 col-lg-7 col-xl-6">
+            <div class="notice-text">
+                <label>注意事項：</label><br />
+                <label>1.本清單僅呈現「現售」商品，且為查詢時前一工作日建檔資料。</label><br />
+                <label>2.新商品資料維護需作業時間，會有時間差，故暫呈現「維護中」。</label><br />
+                <label>3.『投資型』的FYC皆不計入競賽業績。</label><br />
+            </div>
+            <div class="button-block">
+                <button class="btn btn-warning" id="btn" data-bind="click: ReportClick">下載Excel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+         var ViewModel = {
+            ReportClick: function () {
+                if (ChkSummit()) {
+                    GetPlanSetWarptSetReport()
+                }
+            }
+        };
+        $(function () {
+            ko.applyBindings(ViewModel);
+        });
+        function ChkSummit() {
+            clearMessage();
+            //if (isNaN($('#PlanYear').val())) {
+            //    appendMessage("年度必須是數字");
+            //    return false;
+            //}
+            //if ($('#PlanYear').val() != "") {
+            //    if (!/^[0-9]\d*$/.test($('#PlanYear').val())) {
+            //        appendMessage("年度必須是正整數");
+            //        return false;
+            //    }
+            //}
+
+            return true;
+        }
+        function GetPlanSetWarptSetReport() {
+            var url = "@Url.Action("GetPlanSetWarptSetReport", "PlanSetQU003", new { area = "PlanSet" })";
+            var formData = new FormData();
+            formData.append('SelectedProduct', $('input[name="SelectedProduct"]:checked').val());
+            formData.append('CompanyCode', $('#CompanyCode').val());
+            /*formData.append('PlanYear', $('#PlanYear').val());*/
+
+            $.ajax({
+                method: "POST",
+                cache: false,
+                url: url,
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: function (data) {
+                    window.location = '/PlanSet/PlanSetQU003/Download?fileGuid=' + data.FileGuid
+                        + '&filename=' + data.FileName;
+                },
+                error: function () {
+                }
+            });
+        }
+    </script>
+}

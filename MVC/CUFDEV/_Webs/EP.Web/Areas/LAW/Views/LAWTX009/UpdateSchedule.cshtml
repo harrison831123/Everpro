@@ -1,0 +1,635 @@
+﻿@model EP.SD.SalesSupport.LAW.Models.LawContentDetail
+@{
+    ViewBag.Title = LAWResource.進度表;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    WebChannel<EP.SD.SalesSupport.LAW.Service.ILAWService> Service = new WebChannel<EP.SD.SalesSupport.LAW.Service.ILAWService>();
+    List<EP.H2OModels.LawDoUnit> lawDoUnits = new List<EP.H2OModels.LawDoUnit>();
+    List<EP.H2OModels.LawEvidenceDesc> lawEvidenceDescs = new List<EP.H2OModels.LawEvidenceDesc>();
+    List<EP.H2OModels.LawLitigationProgress> lawLitigationProgresses = new List<EP.H2OModels.LawLitigationProgress>();
+    List<EP.H2OModels.LawDoProgress> lawDoProgresses = new List<EP.H2OModels.LawDoProgress>();
+    List<EP.SD.SalesSupport.LAW.Models.LawOtherDescDetail> lawOtherDescs = new List<EP.SD.SalesSupport.LAW.Models.LawOtherDescDetail>();
+    List<EP.H2OModels.LawRepaymentList> lawRepaymentLists = new List<EP.H2OModels.LawRepaymentList>();
+    List<EP.H2OModels.LawDescDesc> lawDescDescs = new List<EP.H2OModels.LawDescDesc>();
+    List<EP.H2OModels.LawCloseType> lawCloseTypes = new List<EP.H2OModels.LawCloseType>();
+
+    Service.Use(s => lawDoUnits = s.GetLawDoUnitByEnable().ToList());
+    Service.Use(s => lawEvidenceDescs = s.GetLawEvidenceDesc(Model.LawId.ToString()).ToList());
+    Service.Use(s => lawLitigationProgresses = s.GetLawLitigationProgressByLawIdNotoNo(Model.LawId.ToString(), Model.LawNoteNo).ToList());
+    Service.Use(s => lawDoProgresses = s.GetLawDoProgressByLawIdNotoNo(Model.LawId.ToString(), Model.LawNoteNo).ToList());
+    Service.Use(s => lawOtherDescs = s.GetLawOtherDescByLawIdNotoNo(Model.LawId.ToString(), Model.LawNoteNo).ToList());
+    Service.Use(s => lawRepaymentLists = s.GetLawRepaymentListByLawIdNotoNo(Model.LawDueAgentId, Model.LawId.ToString(), Model.LawNoteNo).ToList());
+    Service.Use(s => lawDescDescs = s.GetLawDescDescByLawIdNotoNo(Model.LawId.ToString(), Model.LawNoteNo).ToList());
+    Service.Use(s => lawCloseTypes = s.GetLawCloseTypeByEnable());
+}
+<style type='text/css'>
+    #CloseTypeNameOther {
+        width: 350px;
+    }
+
+    .CloseDate {
+        display: none;
+    }
+</style>
+@section LeftActions{
+    @if (Model.LawStatusType != 2)
+    {
+        <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.儲存" data-bind="click: SaveClick" />
+    }
+    @*@Html.ActionLink("返回", "Index", "LAWTX009", new { Class = "btn btn-default" })*@
+    <input type="button" name="back" value="@EP.PlatformResources.返回" Class="btn btn-default" onClick="window.history.back()">
+}
+@using (Html.BeginForm("Update", "LAWTX009", null, FormMethod.Post, new { id = "UpdateSubmit" }))
+{
+    @Html.HiddenFor(m => m.LawId)
+    @Html.HiddenFor(m => m.AgentID)
+    @Html.HiddenFor(m => m.LawDounitLogId)
+    @Html.HiddenFor(m => m.LawDueAgentId)
+    @Html.HiddenFor(m => m.LawCloseOtherId)
+    @*@Html.HiddenFor(m => m.LawEvidenceId)*@
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            @Html.LabelFor(m => m.LawDueReason, new { @class = "detail-msg col-md-2" })
+            @Html.TextBoxFor(m => m.LawDueReason, new { @id = "LawDueReason", style = "width:70%", @maxlength = "250", @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-4">
+            @Html.LabelFor(m => m.LawNoteNo, new { @class = "detail-msg col-md-6" })
+            @Html.EditDisplayFor(model => model.LawNoteNo, true, new { @class = "col-md-6 form-control" })
+        </div>
+        <div class="detail-col form-group form-inline col-md-4">
+            @Html.LabelFor(m => m.LawContentCreateDate, new { @class = "detail-msg col-md-6" })
+            @Html.EditDisplayFor(model => model.LawContentCreateDate, true, new { @class = "col-md-6 form-control" })
+        </div>
+        <div class="detail-col form-group form-inline col-md-4">
+            @Html.LabelFor(m => m.LawFileNo, new { @class = "detail-msg col-md-6" })
+            @Html.TextBoxFor(m => m.LawFileNo, new { @id = "LawFileNo", style = "width:50%", @maxlength = "250", @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-8">
+            @Html.HiddenFor(m => m.OldLawPhoneCall1Desc)
+            @Html.LabelFor(m => m.LawPhoneCall1Desc, new { @class = "detail-msg col-md-3" })
+            @Html.TextBoxFor(m => m.LawPhoneCall1Desc, new { @id = "LawPhoneCall1Desc", style = "width:70%", @maxlength = "250", @class = "form-control" })
+        </div>
+        <div class="detail-col form-group form-inline col-md-4">
+            @Html.HiddenFor(m => m.OldLawPhoneCall1Date)
+            @Html.LabelFor(m => m.LawPhoneCall1Date, new { @class = "detail-msg col-md-6" })
+            @Html.TextBoxFor(m => m.LawPhoneCall1Date, new { @id = "LawPhoneCall1Date", style = "width:50%", @maxlength = "250", @class = "form-control jquery_datetimepicker" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-8">
+            @Html.HiddenFor(m => m.OldLawPhoneCall2Desc)
+            @Html.LabelFor(m => m.LawPhoneCall2Desc, new { @class = "detail-msg col-md-3" })
+            @Html.TextBoxFor(m => m.LawPhoneCall2Desc, new { @id = "LawPhoneCall2Desc", style = "width:70%", @maxlength = "250", @class = "form-control" })
+        </div>
+        <div class="detail-col form-group form-inline col-md-4">
+            @Html.HiddenFor(m => m.OldLawPhoneCall2Date)
+            @Html.LabelFor(m => m.LawPhoneCall2Date, new { @class = "detail-msg col-md-6" })
+            @Html.TextBoxFor(m => m.LawPhoneCall2Date, new { @id = "LawPhoneCall2Date", style = "width:50%", @maxlength = "250", @class = "form-control jquery_datetimepicker" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            @Html.LabelFor(m => m.LawEvidencedesc, new { @class = "detail-msg col-md-2" })
+            <div class="col-md-12">
+                @for (var i = 0; i < lawEvidenceDescs.Count; i++)
+                {
+                    var Evdid = "LawEvidenceId" + lawEvidenceDescs[i].LawEvidenceId;
+                    <text>
+                        <input type="text" class="form-control " id="@Evdid" style="width:90%;margin-bottom:5px;" value='@lawEvidenceDescs[i].LawEvidencedesc' readonly="readonly">
+                        <input Class="btn btn-default" onclick="UpdateSharedPage('@lawEvidenceDescs[i].LawEvidenceId', '@Model.LawId', '1',  '@Model.AgentID')" type="button" value="@EP.PlatformResources.編輯">
+                    </text>
+                }
+            </div>
+            <br />
+            <div class="col-md-12">
+                <span>@EP.PlatformResources.新增:</span><input type="text" class="form-control" style="width:95%" id="InsertLawEvidencedesc" name="LawEvidencedesc" >
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            @Html.HiddenFor(m => m.OldCaseDate)
+            @Html.LabelFor(m => m.CaseDate, new { @class = "detail-msg col-md-2" })
+            @Html.TextBoxFor(m => m.CaseDate, new { @id = "LawEvidencedesc", style = "width:30%", @maxlength = "250", @class = "form-control jquery_datetimepicker" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            <label class="detail-msg control-label col-md-2">@LAWResource.承辦單位</label>
+            <select class="form-control col-md-3" id="UnitName" name="UnitName">
+                @for (var i = 0; i < lawDoUnits.Count; i++)
+                {
+                    if (Model.UnitName == lawDoUnits[i].UnitName)
+                    {
+                        <text>
+                            <option selected="selected" value="@lawDoUnits[i].UnitName">@lawDoUnits[i].UnitName</option>
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                            <option value="@lawDoUnits[i].UnitName">@lawDoUnits[i].UnitName</option>
+                        </text>
+                    }
+
+                }
+            </select>
+            @Html.HiddenFor(m => m.OldUnitName)
+            @Html.EditDisplayFor(model => model.dounitlist, true, new { @class = "form-control", style = "margin-left:10px;width:50%" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            @Html.LabelFor(m => m.LawLitigationprogress, new { @class = "detail-msg col-md-2" })
+            <div class="col-md-12">
+                @for (var i = 0; i < lawLitigationProgresses.Count; i++)
+                {
+                    var Lidid = "LawLitigationId" + lawLitigationProgresses[i].LawLitigationId;
+                    <text>
+                        <input type="text" class="form-control " id="@Lidid" style="width:90%;margin-bottom:5px;"  value='@lawLitigationProgresses[i].LawLitigationprogress' readonly="readonly">
+                        <input Class="btn btn-default" onclick="UpdateSharedPage('@lawLitigationProgresses[i].LawLitigationId', '@Model.LawId', '2',  '@Model.AgentID')" type="button" value="@EP.PlatformResources.編輯">
+                    </text>
+                }
+            </div>
+            <br />
+            <div class="col-md-12">
+                <span>@EP.PlatformResources.新增:</span><input type="text" class="form-control" style="width:95%" id="InsertLawLitigationprogress" name="LawLitigationprogress">
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            @Html.LabelFor(m => m.LawDoprogress, new { @class = "detail-msg col-md-2" })
+            <div class="col-md-12">
+                @for (var i = 0; i < lawDoProgresses.Count; i++)
+                {
+                    var Doid = "LawDoId" + lawDoProgresses[i].LawDoId;
+                    <text>
+                        <input type="text" class="form-control " id="@Doid" style="width:90%;margin-bottom:5px;"  value='@lawDoProgresses[i].LawDoprogress' readonly="readonly">
+                        <input Class="btn btn-default" onclick="UpdateSharedPage('@lawDoProgresses[i].LawDoId', '@Model.LawId', '3',  '@Model.AgentID')" type="button" value="@EP.PlatformResources.編輯">
+                    </text>
+                }
+            </div>
+            <br />
+            <div class="col-md-12">
+                <span>@EP.PlatformResources.新增:</span><input type="text" class="form-control" style="width:95%" id="InsertLawDoprogress" name="LawDoprogress">
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            <label class="detail-msg col-md-2">@LAWResource.其他</label>
+            <br />
+            <div class="col-md-12">
+                @for (var i = 0; i < lawOtherDescs.Count; i++)
+                {
+                    var Otherid = "LawOtherId" + lawOtherDescs[i].LawOtherId;
+
+                    if (lawOtherDescs[i].LawRepaymentId == 0)
+                    {
+                        <text>
+                            <span>◆</span>@lawOtherDescs[i].LawOtherdesc
+                            <input Class="btn btn-default" onclick="UpdateSharedPage('@lawOtherDescs[i].LawOtherId', '@Model.LawId', '4', '@Model.AgentID')" type="button" value="@EP.PlatformResources.編輯">
+                            <br />
+                        </text>
+                    }
+                    else
+                    {
+                        var RpmDate = (Convert.ToInt32(lawRepaymentLists[i].LawRepaymentDate.ToString("yyyy")) - 1911) + lawRepaymentLists[i].LawRepaymentDate.ToString("/MM/dd");
+                        if (lawOtherDescs[i].LawRepaymentMoney != 0)
+                        {
+                            <text>
+                                <span>◆@RpmDate @LAWResource.清償金額</span>@lawOtherDescs[i].LawRepaymentMoney<span style="padding-right:10px;">@LAWResource.元</span>@lawOtherDescs[i].LawOtherdesc
+                                @*<input type="text" class="form-control " id="@Otherid" style="width:90%;margin-bottom:5px;" name="LawOtherdesc" value='@lawOtherDescs[i].LawOtherdesc'>*@
+                                <input Class="btn btn-default" onclick="UpdateSharedPage('@lawOtherDescs[i].LawOtherId', '@Model.LawId', '4', '@Model.AgentID')" type="button" value="@EP.PlatformResources.編輯">
+                                <br />
+                            </text>
+                        }
+                        else
+                        {
+                            <text>
+                                <span>◆@RpmDate @LAWResource.續佣扣抵</span>@lawOtherDescs[i].LawCommDeduction<span>@LAWResource.元</span>@lawOtherDescs[i].LawOtherdesc
+                                @*<input type="text" class="form-control " id="@Otherid" style="width:90%;margin-bottom:5px;" name="LawOtherdesc" value='@lawOtherDescs[i].LawOtherdesc'>*@
+                                <input Class="btn btn-default" onclick="UpdateSharedPage('@lawOtherDescs[i].LawOtherId', '@Model.LawId', '4', '@Model.AgentID')" type="button" value="@EP.PlatformResources.編輯">
+                                <br />
+                            </text>
+                        }
+                    }
+                }
+            </div>
+            <br />
+            <div class="col-md-12">
+                @for (var i = 0; i < lawRepaymentLists.Count; i++)
+                {
+                    var Rpmtid = "LawRepaymentId" + lawRepaymentLists[i].LawRepaymentId;
+                    var RpmDate = (Convert.ToInt32(lawRepaymentLists[i].LawRepaymentDate.ToString("yyyy")) - 1911) + lawRepaymentLists[i].LawRepaymentDate.ToString("/MM/dd");
+                    //var POID = lawOtherDescs[i].LawOtherId + "|" + lawRepaymentLists[i].LawRepaymentId;
+                    if (lawRepaymentLists[i].LawRepaymentMoney != 0)
+                    {
+                        <text>
+                            <span>@RpmDate @LAWResource.清償金額</span><input type="text" class="form-control " id="@Rpmtid" style="width:30%;margin-bottom:5px;" name="LawRepaymentMoney" value='@lawRepaymentLists[i].LawRepaymentMoney' readonly="readonly">
+                            <input Class="btn btn-default" onclick="UpdateSharedPage('@lawRepaymentLists[i].LawRepaymentId', '@Model.LawId', '5', '@Model.AgentID')" type="button" value="@EP.PlatformResources.新增/@EP.PlatformResources.編輯">
+                            <br />
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                            <span>@RpmDate @LAWResource.續佣扣抵</span><input type="text" class="form-control " id="@Rpmtid" style="width:30%;margin-bottom:5px;" name="LawCommDeduction" value='@lawRepaymentLists[i].LawCommDeduction' readonly="readonly">
+                            <input Class="btn btn-default" onclick="UpdateSharedPage('@lawRepaymentLists[i].LawRepaymentId', '@Model.LawId', '7', '@Model.AgentID')" type="button" value="@EP.PlatformResources.新增/@EP.PlatformResources.編輯">
+                            <br />
+                        </text>
+                    }
+
+                }
+            </div>
+            <br />
+            <div class="col-md-12">
+                <span>@EP.PlatformResources.新增:</span><input type="text" class="form-control" style="width:95%" id="InsertLawOtherDesc" name="LawOtherDesc">
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            @Html.LabelFor(m => m.LawDescdesc, new { @class = "detail-msg col-md-2" })
+            <div class="col-md-12">
+                @for (var i = 0; i < lawDescDescs.Count; i++)
+                {
+                    var Descid = "LawDescId" + lawDescDescs[i].LawDescId;
+                    <text>
+                        <input type="text" class="form-control " id="@Descid" style="width:90%;margin-bottom:5px;" value='@lawDescDescs[i].LawDescdesc' readonly="readonly">
+                        <input Class="btn btn-default" onclick="UpdateSharedPage('@lawDescDescs[i].LawDescId', '@Model.LawId', '6',  '@Model.AgentID')" type="button" value="@EP.PlatformResources.編輯">
+                    </text>
+                }
+            </div>
+            <br />
+            <div class="col-md-12">
+                <span>@EP.PlatformResources.新增:</span><input type="text" class="form-control" style="width:95%" id="InsertLawDescDesc" name="LawDescdesc">
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="detail-col form-group form-inline col-md-12">
+            <label class="detail-msg col-md-2">@LAWResource.案件狀態</label>
+            <br />
+            @if ((Model.LawStatusType == 0 || Model.LawStatusType == 1) && String.IsNullOrEmpty(Model.LawNotCloseTypeName))
+            {
+                <text>
+                            <div class="col-md-12">
+                                <input type="radio" name="closetype" value="0" onclick="seltype(0);" checked>@LAWResource.未結
+                                <br />
+                                <input type="radio" name="nclose" value="1" checked>@LAWResource.進行中&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="nclose" value="2">@LAWResource.分期&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="nclose" value="3">@LAWResource.執行無實益
+                                <hr />
+                            </div>
+                            <div class="col-md-12">
+                                <input type="radio" name="closetype" value="1" onclick="seltype(1);">@LAWResource.已結
+                                <br />
+                                @for (var i = 0; i < lawCloseTypes.Count; i++)
+                                {
+                                    var CloseTypeId = lawCloseTypes[i].CloseTypeId;
+                                    if (lawCloseTypes[i].CloseTypeName == "@LAWResource.其他")
+                                    {
+                                        <text>
+                                            <br />
+                                            <input type="CheckBox" name="CloseTypeName" value="@CloseTypeId" disabled="disabled">@lawCloseTypes[i].CloseTypeName<input type="text" id="CloseTypeNameOther" name="LawCloseOtherDesc" value="@Model.LawCloseOtherDesc" disabled="disabled">
+                                        </text>
+                                    }
+                                    else
+                                    {
+                                        <text>
+                                            <input type="CheckBox" name="CloseTypeName" value="@CloseTypeId" disabled="disabled">@lawCloseTypes[i].CloseTypeName
+                                        </text>
+                                    }
+                                }
+                            </div>
+                </text>
+            }
+            else
+            {
+                if (Model.LawStatusType == 1)
+                {
+                    <div class="col-md-12">
+                        <input type="radio" name="closetype" value="0" onclick="seltype(0);" checked>@LAWResource.未結
+                        <br />
+                        @switch (Model.LawNotCloseTypeName)
+                        {
+                            case "進行中":
+                                <text>
+                                    <input type="radio" name="nclose" value="1" checked>@LAWResource.進行中&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="nclose" value="2">@LAWResource.分期&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="nclose" value="3">@LAWResource.執行無實益
+                                    <hr />
+                                </text>
+                                break;
+                            case "分期":
+                                <text>
+                                    <input type="radio" name="nclose" value="1">@LAWResource.進行中&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="nclose" value="2" checked>@LAWResource.分期&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="nclose" value="3">@LAWResource.執行無實益
+                                    <hr />
+                                </text>
+                                break;
+                            case "執行無實益":
+                                <text>
+                                    <input type="radio" name="nclose" value="1">@LAWResource.進行中&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="nclose" value="2">@LAWResource.分期&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="nclose" value="3" checked>@LAWResource.執行無實益
+                                    <hr />
+                                </text>
+                                break;
+                        }
+                    </div>
+                    <div class="col-md-12">
+                        <input type="radio" name="closetype" value="1" onclick="seltype(1);">@LAWResource.已結
+                        <br />
+                        @for (var i = 0; i < lawCloseTypes.Count; i++)
+                        {
+                            var CloseTypeId = lawCloseTypes[i].CloseTypeId;
+                            if (lawCloseTypes[i].CloseTypeName == "其他")
+                            {
+                                <text>
+                                    <br />
+                                    <input type="CheckBox" name="CloseTypeName" value="@CloseTypeId" disabled="disabled">@lawCloseTypes[i].CloseTypeName<input type="text" id="CloseTypeNameOther" name="LawCloseOtherDesc" value="@Model.LawCloseOtherDesc" disabled="disabled">
+                                </text>
+                            }
+                            else
+                            {
+                                <text>
+                                    <input type="CheckBox" name="CloseTypeName" value="@CloseTypeId" disabled="disabled">@lawCloseTypes[i].CloseTypeName
+                                </text>
+                            }
+                        }
+                    </div>
+                }
+                else if (Model.LawStatusType == 2)
+                {
+                    <text>
+                        <div class="col-md-12">
+                            <input type="radio" name="closetype" value="0" onclick="seltype(0);" disabled="disabled">@LAWResource.未結
+                            <br />
+                            <input type="radio" name="nclose" value="1" disabled="disabled">@LAWResource.進行中&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="nclose" value="2" disabled="disabled">@LAWResource.分期&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="nclose" value="3" disabled="disabled">@LAWResource.執行無實益
+                            <hr />
+                        </div>
+                        <div class="col-md-12">
+                            <input type="radio" name="closetype" value="1" onclick="seltype(1);" checked>已結
+                            <br />
+                            @for (var i = 0; i < lawCloseTypes.Count; i++)
+                            {
+                                var CloseTypeId = lawCloseTypes[i].CloseTypeId;
+                                var LawCloseType = Model.LawCloseType;
+                                var print_flag = 0;
+                                string[] sArray = LawCloseType.Split(',');
+
+                                for (int j = 0; j < sArray.Length; j++)
+                                {
+                                    if (Convert.ToInt32(sArray[j]) == CloseTypeId && CloseTypeId != 7)
+                                    {
+                                        print_flag = 1;
+                                        <text>
+                                            <input type="CheckBox" name="CloseTypeName" value="@CloseTypeId" checked>@lawCloseTypes[i].CloseTypeName
+                                        </text>
+                                    }
+                                    if (Convert.ToInt32(sArray[j]) == CloseTypeId && CloseTypeId == 7) //其他
+                                    {
+                                        print_flag = 1;
+                                        <text>
+                                            <br />
+                                            <input type="CheckBox" name="CloseTypeName" value="@CloseTypeId" checked>@lawCloseTypes[i].CloseTypeName<input type="text" id="CloseTypeNameOther" name="LawCloseOtherDesc" value="@Model.LawCloseOtherDesc">
+                                        </text>
+                                    }
+                                }
+                                if (print_flag != 1)
+                                {
+                                    <text>
+                                        <input type="CheckBox" name="CloseTypeName" value="@CloseTypeId">@lawCloseTypes[i].CloseTypeName
+                                    </text>
+                                }
+                            }
+                        </div>
+                    </text>
+                }
+            }
+        </div>
+    </div>
+    <div class="form-group row CloseDate">
+        <div class="detail-col form-group form-inline col-md-12">
+            @Html.LabelFor(m => m.LawCloseDate, new { @class = "detail-msg col-md-2" })
+            @Html.TextBoxFor(m => m.LawCloseDate, new { @id = "LawCloseDate", style = "width:70%", @maxlength = "250", @class = "form-control jquery_datetimepicker" })
+        </div>
+    </div>
+}
+<script>
+    var ViewModel = {
+        SaveClick: function () {
+            if (saveValidator()) {
+                clearMessage();@*清除訊息*@
+                var tabUniqueId = $("#tabUniqueId").val();
+                $("#UpdateSubmit").attr('action', '@Url.Action("UpdateSchedule", "LAWTX009")');
+                $("#UpdateSubmit").submit();
+            }
+        }
+    };
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+        var opt = {
+            dateFormat: 'yy/mm/dd',
+            showTimepicker: false,
+            showSecond: false,
+            mask: true,
+            validateOnBlur: false
+        };
+        $(".jquery_datetimepicker").datetimepicker(opt);
+    });
+
+    function saveValidator() {
+        @*if ($("#UnitName").val() == "") {
+            appendMessage("@( "承辦單位" + EP.PlatformResources.必填)");
+            return false;
+        }*@
+        var Vali = false;
+        if ($('input[name=closetype]:checked').val() == 1) {
+            var CloseTypeName = $("input[name='CloseTypeName']:checked").val()
+            var chk_value = [];//定義checkbox陣列
+
+            $("input[name='CloseTypeName']:checked").each(function () {
+                chk_value.push($(this).val());
+            });
+            if (CloseTypeName == null) {
+                appendMessage("@( LAWResource.尚未選擇已結狀態 + EP.PlatformResources.必填)");
+                //return false;
+                Vali = false;
+            } else {
+                Vali = true;
+            }
+
+            for (var i = 0; i < chk_value.length; i++) {
+                if (chk_value[i] == 7) {
+                    if ($("#CloseTypeNameOther").val() == "") {
+                        appendMessage("@( LAWResource.其他欄位 + EP.PlatformResources.必填)");
+                        Vali = false;
+                        break;
+                    } else {
+                        Vali = true;
+                    }
+                }
+            }
+        } else {
+            Vali = true;
+        }
+
+        return Vali;
+    }
+
+    function UpdateSharedPage(ID, LawId, EditViewType, AgentID) {
+        location.href = '@Url.Action("UpdateSharedPage", "LAWTX009")' + "?ID=" + ID + "&LawId=" + LawId + "&EditViewType=" + EditViewType + "&AgentID=" + AgentID;
+    }
+
+    function seltype(closetype) {
+        if (closetype == 0) {
+            $("input[name='nclose']").prop('disabled', false);
+            $("input[name='CloseTypeName']").prop('disabled', true);
+            $("input[name='LawCloseOtherDesc']").prop('disabled', true);
+            $('.CloseDate').hide();
+        } else if (closetype == 1){
+            $("input[name='nclose']").prop('disabled', true);
+            $("input[name='CloseTypeName']").prop('disabled', false);
+            $("input[name='LawCloseOtherDesc']").prop('disabled', false);
+            $('.CloseDate').show();
+        }
+    }
+    @if (Model.LawStatusType != 2)
+    {
+        <text>
+        @*$('#InsertLawEvidencedesc').keypress(function (e) {
+            var key = window.event ? e.keyCode : e.which;
+            if ($('#InsertLawEvidencedesc').val() == "") {
+            } else {
+                if (key == 13) {
+                    var LawEvidencedesc = $('#InsertLawEvidencedesc').val();
+                    var LawId = '@Model.LawId';
+                    var LawNoteNo = '@Model.LawNoteNo';
+                    $.ajax({
+                        method: "POST",
+                        cache: false,
+                        data: {
+                            LawEvidencedesc: LawEvidencedesc,
+                            LawId: LawId,
+                            LawNoteNo: LawNoteNo
+                        },
+                        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                        url: '@Url.Action("InsertLawEvidencedesc", "LAWTX009", new { area = "LAW" })',
+                        complete: function (data) {
+                            alert("新增完成");
+                            location.reload();
+                        }
+                    });
+                }
+            }
+
+        });
+        $('#InsertLawLitigationprogress').keypress(function (e) {
+            var key = window.event ? e.keyCode : e.which;
+            if ($('#InsertLawLitigationprogress').val() == "") {
+            } else {
+                if (key == 13) {
+                    var LawLitigationprogress = $('#InsertLawLitigationprogress').val();
+                    var LawId = '@Model.LawId';
+                    var LawNoteNo = '@Model.LawNoteNo';
+                    $.ajax({
+                        method: "POST",
+                        cache: false,
+                        data: {
+                            LawLitigationprogress: LawLitigationprogress,
+                            LawId: LawId,
+                            LawNoteNo: LawNoteNo
+                        },
+                        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                        url: '@Url.Action("InsertLawLitigationProgress", "LAWTX009", new { area = "LAW" })',
+                        complete: function (data) {
+                            alert("新增完成");
+                            location.reload();
+                        }
+                    });
+                }
+            }
+        });
+        $('#InsertLawDoprogress').keypress(function (e) {
+            var key = window.event ? e.keyCode : e.which;
+            if ($('#InsertLawDoprogress').val() == "") {
+            } else {
+                if (key == 13) {
+                    var LawDoprogress = $('#InsertLawDoprogress').val();
+                    var LawId = '@Model.LawId';
+                    var LawNoteNo = '@Model.LawNoteNo';
+                    $.ajax({
+                        method: "POST",
+                        cache: false,
+                        data: {
+                            LawDoprogress: LawDoprogress,
+                            LawId: LawId,
+                            LawNoteNo: LawNoteNo
+                        },
+                        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                        url: '@Url.Action("InsertLawDoProgress", "LAWTX009", new { area = "LAW" })',
+                        complete: function (data) {
+                            alert("新增完成");
+                            location.reload();
+                        }
+                    });
+                }
+            }
+        });
+        $('#InsertLawOtherDesc').keypress(function (e) {
+            var key = window.event ? e.keyCode : e.which;
+            if ($('#InsertLawOtherDesc').val() == "") {
+            } else {
+                if (key == 13) {
+                    var LawOtherDesc = $('#InsertLawOtherDesc').val();
+                    var LawId = '@Model.LawId';
+                    var LawNoteNo = '@Model.LawNoteNo';
+                    var LawDueAgentId = '@Model.LawDueAgentId';
+                    $.ajax({
+                        method: "POST",
+                        cache: false,
+                        data: {
+                            LawOtherDesc: LawOtherDesc,
+                            LawId: LawId,
+                            LawNoteNo: LawNoteNo,
+                            LawDueAgentId: LawDueAgentId
+                        },
+                        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                        url: '@Url.Action("InsertLawOtherDesc", "LAWTX009", new { area = "LAW" })',
+                        complete: function (data) {
+                            alert("新增完成");
+                            location.reload();
+                        }
+                    });
+                }
+            }
+        });
+        $('#InsertLawDescDesc').keypress(function (e) {
+            var key = window.event ? e.keyCode : e.which;
+            if ($('#InsertLawDescDesc').val() == "") {
+            } else {
+                if (key == 13) {
+                    var LawDescdesc = $('#InsertLawDescDesc').val();
+                    var LawId = '@Model.LawId';
+                    var LawNoteNo = '@Model.LawNoteNo';
+                    $.ajax({
+                        method: "POST",
+                        cache: false,
+                        data: {
+                            LawDescdesc: LawDescdesc,
+                            LawId: LawId,
+                            LawNoteNo: LawNoteNo,
+                        },
+                        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                        url: '@Url.Action("InsertLawDescDesc", "LAWTX009", new { area = "LAW" })',
+                        complete: function (data) {
+                            alert("新增完成");
+                            location.reload();
+                        }
+                    });
+                }
+            }
+        });*@
+        </text>
+     }
+</script>

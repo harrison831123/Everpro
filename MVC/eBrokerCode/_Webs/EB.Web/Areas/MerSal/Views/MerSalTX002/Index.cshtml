@@ -1,0 +1,783 @@
+﻿@model EB.SL.MerSal.Models.MerSalCheckViewModel
+@{
+    ViewBag.Title = "佣酬發放調整";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    WebChannel<EB.SL.MerSal.Service.IMerSalService> MerSalService = new WebChannel<EB.SL.MerSal.Service.IMerSalService>();
+
+    //保公下拉
+    var companylist = new List<TermVal>();
+    MerSalService.Use(s => companylist = s.GetCompanyCode());
+
+    //目前業績年月
+    string ProductionYMNow = string.Empty;
+    string ProductionYMNowStr = string.Empty;
+    MerSalService.Use(s => ProductionYMNow = s.GetProductionYmNow());
+    if (!String.IsNullOrEmpty(ProductionYMNow))
+    {
+        string[] sArray = ProductionYMNow.Split('/');
+        ProductionYMNowStr = "目前業績工作月：" + (Convert.ToInt32(sArray[0]) + 1911) + "/" + sArray[1];
+        Model.YMNow = ProductionYMNow.Replace("-", "");//傳值給Controller
+    }
+    else
+    {
+        ProductionYMNowStr = string.Empty;
+    }
+
+    //目前人事關檔業績年月
+    string ProductionYMClose = string.Empty;
+    string ProductionYMCloseStr = string.Empty;
+    MerSalService.Use(s => ProductionYMClose = s.GetAgymIndOne());
+    if (!String.IsNullOrEmpty(ProductionYMClose))
+    {
+        string[] sArray = ProductionYMClose.Split('/');
+        ProductionYMCloseStr = "目前人事關檔年月：" + (Convert.ToInt32(sArray[0]) + 1911) + "/" + sArray[1];
+        Model.YmAgymCloseNow = ProductionYMClose.Replace("-", "");//傳值給Controller
+    }
+    else
+    {
+        ProductionYMCloseStr = string.Empty;
+    }
+
+    //入Run薪工作月[資料入AgentCommission]
+    string ProductionYMRun = string.Empty;
+    MerSalService.Use(s => ProductionYMRun = s.GetProductionYmRun());
+
+    // 佣酬類別
+    List<EB.SL.MerSal.Models.Trmval> AmountTypeList = new List<EB.SL.MerSal.Models.Trmval>();
+    MerSalService.Use(s => AmountTypeList = s.GetAmountType());
+    //// 發放註記
+    //List<EB.SL.MerSal.Models.Trmval> PayTypeList = new List<EB.SL.MerSal.Models.Trmval>();
+    //MerSalService.Use(s => PayTypeList = s.GetPayType());
+}
+
+<style>
+    .prompt {
+        padding: 0px 0px 10px 0px;
+    }
+
+        .prompt div {
+            /*padding: 0px 10px 0px 0px;*/
+            color: red;
+        }
+
+    .ui-jqgrid tr.jqgrow td {
+        white-space: normal;
+    }
+
+    .PayTypeHr {
+        margin: 10px 0px 0px 0px;
+        border-top: 1px solid white;
+    }
+</style>
+<div id="divQueryBlock">
+    <div class="ibox ibox-primary">
+        <div class="ibox-head">
+            <div class="ibox-title">佣酬發放調整</div>
+            <div class="ibox-tools">
+                <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
+                <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
+            </div>
+        </div>
+        @using (Ajax.BeginForm("Query", "MerSalTX002", new { area = "MerSal" }, new AjaxOptions { OnSuccess = "BindGrid" }, new { id = "QueryForm" }))
+        {
+            <div class="ibox-body">
+                <div class="prompt row">
+                    <div class="col-md-3">@ProductionYMNowStr</div> <!--目前業績工作月：2022/07-1-->
+                    <div class="col-md-3">@ProductionYMCloseStr</div><!--目前人事關檔年月：2022/07-1-->
+                    <input type="text" style="display:none;" id="ProductionYMNow" name="ProductionYMNow" value="@ProductionYMNow" /> <!--目前業績年月-->
+                    <input type="text" style="display:none;" id="ProductionYMClose" name="ProductionYMClose" value="@ProductionYMClose" /> <!--目前人事關檔業績年月-->
+                    <input type="text" style="display:none;" id="ProductionYMRun" name="ProductionYMRun" value="@ProductionYMRun" /> <!--入Run薪工作月【資料入AgentCommission】-->
+                    @Html.TextBoxFor(m => m.YMNow, new { @id = "txtYmNow", style = "display:none;" })<!--給SQL比對用【目前業績工作月】Ex：0111/061-->
+                    @Html.TextBoxFor(m => m.YmAgymCloseNow, new { style = "display:none;" })<!--給SQL比對用【目前人事關檔年月】Ex：0111/062-->
+                </div>
+                @*轉入工作月  轉入次薪*@
+                <div class="form-group row">
+                    <div class="col-md-1" style="padding-right: 0px">
+                        @Html.LabelFor(m => m.ProductionYM, new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.TextBoxFor(m => m.ProductionYM, new { @class = "form-control datepickerToM", placeholder = "Ex：2000/01" })
+                    </div>
+                    <div class="col-md-1">
+                        @Html.LabelFor(m => m.Sequence, new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-md-2">
+                        @*@Html.TextBoxFor(m => m.Sequence, new { @class = "form-control", placeholder = "1" })*@
+                        <input type="text" class="form-control" name="Sequence" id="Sequence" placeholder="Ex：1" />
+                    </div>
+                </div>
+                @*發放工作月  發放序號*@
+                <div class="form-group row">
+                    <div class="col-md-1" style="padding-right: 0px">
+                        @Html.LabelFor(m => m.PayMonth, new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.TextBoxFor(m => m.PayMonth, new { @class = "form-control datepickerToM", placeholder = "Ex：2000/01" })
+                    </div>
+                    <div class="col-md-1">
+                        @Html.LabelFor(m => m.PaySeq, new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.TextBoxFor(m => m.PaySeq, new { @class = "form-control", placeholder = "Ex：1" })
+                    </div>
+                </div>
+                @*NotPay年月起  NotPay年月迄*@
+                <div class="form-group row">
+                    <div class="col-md-1" style="padding-right: 0px">
+                        @Html.LabelFor(m => m.NotPayYMSS, new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.TextBoxFor(m => m.NotPayYMSS, new { @class = "form-control", placeholder = "Ex：2000/01-1" })
+                    </div>
+                    <div class="col-md-1">
+                        @Html.LabelFor(m => m.NotPayYMSE, new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.TextBoxFor(m => m.NotPayYMSE, new { @class = "form-control", placeholder = "Ex：2000/01-1" })
+                    </div>
+                </div>
+                @*保險公司  檔案序號*@
+                <div class="form-group row">
+                    <label class="col-md-1 col-form-label" style="padding-right: 0px" for="CompanyCode">保險公司</label>
+                    <div class="col-md-2">
+                        <select class="form-select" id="CompanyCode" name="CompanyCode">
+                            <option value="0">請選擇</option>
+                            @foreach (var item in companylist)
+                            {
+                                <option value="@item.TermCode">@item.TermMeaning</option>
+                            }
+                        </select>
+                    </div>
+                    <label class="col-md-1 col-form-label" style="padding-right: 0px" for="FileSeq">檔案序號</label>
+                    <div class="col-md-2">
+                        <select class="form-select" id="FileSeq" name="FileSeq">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                </div>
+                @*保單號碼  險種代碼*@
+                <div class="form-group row">
+                    <div class="col-md-1" style="padding-right: 0px">
+                        @Html.LabelFor(m => m.PolicyNo2, new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.TextBoxFor(m => m.PolicyNo2, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-1">
+                        @Html.LabelFor(m => m.PlanCode, new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.TextBoxFor(m => m.PlanCode, new { @class = "form-control" })
+                    </div>
+                </div>
+                @*佣酬類別  發放註記*@
+                <div class="form-group row">
+                    <label class="col-md-1 col-form-label" style="padding-right: 0px" for="AmountType">佣酬類別</label>
+                    <div class="col-md-2">
+                        <select class="form-select" id="AmountType" name="AmountType">
+                            <option value="">請選擇</option>
+                            @foreach (var item in AmountTypeList)
+                            {
+                                <option value="@item.TermCode">@item.TermMeaning</option>
+                            }
+                        </select>
+                    </div>
+                    <label class="col-md-1 col-form-label" style="padding-right: 0px" for="PayType">發放註記</label>
+                    <div class="col-md-2">
+                        <select class="form-select" id="PayType" name="PayType">
+                            <option value="">請選擇</option>
+                            <option value="Pay">發放</option>
+                            <option value="NotPay">不發放-ALL</option>
+                            <option value="NotPay-00">不發放-簽未回</option>
+                            @*不發放-ALL含簽未回*@
+
+                            @*@foreach (var item in PayTypeList)
+                            {
+                                <option value="@item.TermCode">@item.TermMeaning</option>
+                            }*@
+
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <button class="btn btn-primary" id="btnQuery" data-bind="click: QueryClick">查詢</button>
+                        <button class="btn btn-primary" id="btnSave" data-bind="click: SaveClick">儲存結果</button>
+                        <button class="btn btn-warning" id="btnReport" data-bind="click: ReportClick">轉出Excel報表</button>
+                        <button class="btn btn-default" id="btnClear" data-bind="click: ClearClick">清除</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @section GridActions {
+        <div class="ibox-body">
+            <div class="jqGrid">
+                <table id="Result"></table>
+            </div>
+            <div id="ResultPagger"></div>
+        </div>
+    }
+</div>
+@section Scripts{
+    <script>
+
+        //定義checkbox陣列
+        //佣酬發放
+        var Mainchk_value = [];
+        var chk_value = [];
+        var Notchk_value = [];
+
+        //結轉下期
+        var Mainchk_value2 = [];
+        var chk_value2 = [];
+        var Notchk_value2 = [];
+
+        //人工備註陣列
+        var Memochk_value = [];
+        var memo_value = [];
+        var Notmemo_value = [];
+        
+        var ViewModel = {
+            //查詢
+            QueryClick: function () {
+                if (ChkQuery()) {
+                    $("form#QueryForm").trigger("submit");
+                }
+            },
+
+            //=============================================================================================================存檔 S
+            SaveClick: function () {
+                clearMessage();
+
+                //1. 佣酬發放----------------------
+                chk_value = [];
+                Notchk_value = [];
+                //勾選的+到chk_value、沒勾選的+到Notchk_value
+                for (var i = 0; i < Mainchk_value.length; i++) {
+                    if ($("#Pay-" + Mainchk_value[i]).prop("checked")) {
+                        chk_value.push(Mainchk_value[i]);
+                    }
+                    else {
+                        Notchk_value.push(Mainchk_value[i]);
+                    }
+                }
+                //2. 結轉下期----------------------
+                chk_value2 = [];
+                Notchk_value2 = [];
+                //勾選的+到chk_value、沒勾選的+到Notchk_value
+                for (var i = 0; i < Mainchk_value2.length; i++) {
+                    if ($("#Rpt-" + Mainchk_value2[i]).prop("checked")) {
+                        chk_value2.push(Mainchk_value2[i]);
+                    }
+                    else {
+                        Notchk_value2.push(Mainchk_value2[i]);
+                    }
+                }
+                //3. 人工備註----------------------
+                memo_value = [];
+                Notmemo_value = [];
+                for (var i = 0; i < Memochk_value.length; i++) {
+                    if ($("#MemoText-" + Memochk_value[i]).val() != $("Memo").val()) {
+                        memo_value.push(Memochk_value[i]);
+                    }
+                    else {
+                        Notmemo_value.push(Memochk_value[i]);
+                    }
+                }
+
+                //整合「佣酬發放」&「結轉下期」結果傳至Controller
+                var Mainchk_valueAll = [];
+                var sMainchkValueAll = "";
+                var sFlagChk1 = "X1";
+                var sFlagChk2 = "X2";
+
+                var sMemochkValueAll = "";
+                var sFlagChk3 = "X3";
+                var sMemoError = false;
+
+                //找出二個其中只要有一個有變更的iden
+                var dataIds = $('#Result').jqGrid('getDataIDs');
+                for (var i = 0; i < dataIds.length; i++) {
+                    var data = $('#Result').jqGrid('getRowData', dataIds[i]);
+                    var sIden = data["Iden"]
+
+                    // 1-------------------------------------------------佣酬發放
+                    //V1-   pay
+                    //N1-   notpay
+                    //sFlagChk1==>Y1    有變
+                    //         ==>X1    沒變
+                    if (chk_value.includes(parseInt(data["Iden"]))) {
+                        sMainchkValueAll = sMainchkValueAll + "V1|";
+                        sFlagChk1 = "Y1";
+                    }
+                    else if (Notchk_value.includes(parseInt(data["Iden"]))) {
+                        sMainchkValueAll = sMainchkValueAll + "N1|";
+                        sFlagChk1 = "Y1";
+                    }
+                    else {
+                        sMainchkValueAll = sMainchkValueAll + sFlagChk1 + "|";
+                    }
+
+                    // 2-------------------------------------------------結轉下期
+                    //V2     結轉
+                    //N2     不結轉
+                    //sFlagChk2==>Y2    有變
+                    //         ==>X2    沒變
+                    if (chk_value2.includes(parseInt(data["Iden"]))) {
+                        sMainchkValueAll = sMainchkValueAll + "V2|";
+                        sFlagChk2 = "Y2";
+                    }
+                    else if (Notchk_value2.includes(parseInt(data["Iden"]))) {
+                        sMainchkValueAll = sMainchkValueAll + "N2|";
+                        sFlagChk2 = "Y2";
+                    }
+                    else {
+                        sMainchkValueAll = sMainchkValueAll + sFlagChk2 + "|";
+                    }
+
+                    //3-------------------------------------------------人工備註
+                    if (memo_value.includes(parseInt(data["Iden"])) && (data["Memo"] != $("#MemoText-" + data["Iden"]).val())) {
+                        if (data["Memo"] != $("#MemoText-" + data["Iden"]).val()) {
+                            sMainchkValueAll = sMainchkValueAll + "V3";
+                            sMemochkValueAll = sMemochkValueAll + $("#MemoText-" + data["Iden"]).val();
+                            sFlagChk3 = "Y3";
+                            if (sMemochkValueAll.includes("|")) {
+                                sMemoError = true;
+                            }
+                        }
+                    }
+                    else {
+                        sMainchkValueAll = sMainchkValueAll + sFlagChk3;
+                        sMemochkValueAll = sMemochkValueAll + "";
+                    }
+
+                    //1&2&3==> 有改變的存入Mainchk_valueAll=================================================I
+                    if (sMainchkValueAll != "X1|X2|X3") {
+                        sMainchkValueAll = sMainchkValueAll + "|" + data["Iden"] + "|" + sMemochkValueAll;
+                        Mainchk_valueAll.push(sMainchkValueAll);
+                    }
+
+                    //清除值
+                    sMainchkValueAll = "";
+                    sFlagChk1 = "X1";
+                    sFlagChk2 = "X2";
+                    sMemochkValueAll = "";
+                    sFlagChk3 = "X3";
+                }
+
+                if (sMemoError) {
+                    appendMessage("人工備註不可有特殊符號「|」");
+                }
+                else {
+                    if (chk_value.length === 0 && Notchk_value.length === 0 && chk_value2.length === 0 && Notchk_value2.length === 0 && Memochk_value.length === 0) { 
+                        appendMessage("請選擇欲修改的佣酬發放");
+                    } else {
+                        $.ajax({
+                            method: "POST",
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            async: false,
+                            url: '@Url.Action("UpdatePayTypes", "MerSalTX002", new { area = "MerSal" })',
+                            data: JSON.stringify({ MainChkValueAll: Mainchk_valueAll, ProductionYMNow: $("#ProductionYMNow").val() }),
+                            complete: function (check) {
+
+                                if (check.responseText == "OK") {
+                                    alert("存檔成功");
+                                    $("#btnQuery").click();
+                                    clearCheckBoxAry() //儲存後清空
+
+                                } else {
+                                    alert("存檔失敗");
+                                    clearCheckBoxAry() //儲存後清空
+                                }
+                            }
+                        });
+                    }
+                }
+            },
+
+            //=============================================================================================================產生報表 S
+            ReportClick: function () {
+                var ShowTitle = "";
+                ShowTitle = $('#PayType option:selected').text();
+
+                var formData = new FormData();
+                formData.append('ProductionYM', $('#ProductionYM').val());
+                formData.append('Sequence', $('#Sequence').val());
+                formData.append('CompanyCode', $('#CompanyCode option:selected').val());
+                formData.append('FileSeq', $('#FileSeq option:selected').val());
+                formData.append('PolicyNo2', $('#PolicyNo2').val());
+                formData.append('PlanCode', $('#PlanCode').val());
+                formData.append('AmountType', $('#AmountType option:selected').val());
+                formData.append('PayType', $('#PayType option:selected').val());
+                formData.append('PayMonth', $('#PayMonth').val());
+                formData.append('PaySeq', $('#PaySeq').val());
+                formData.append('NotPayYMSS', $('#NotPayYMSS').val());
+                formData.append('NotPayYMSE', $('#NotPayYMSE').val());
+
+                $.ajax({
+                    method: "POST",
+                    cache: false,
+                    url: '@Url.Action("GetMerSalCheckReport", "MerSalTX002", new { area = "MerSal" })?ShowTitle='+ShowTitle,
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function (data) {
+                        if (data != "Error") {
+                            window.location = '/MerSal/MerSalTX002/Download?fileGuid=' + data.FileGuid
+                                + '&filename=' + data.FileName;
+                        } else {
+
+                        }
+                    },
+                    error: function () {
+                        appendMessage("系統發生錯誤");
+                    }
+                });
+            },
+
+            //清除下拉
+            ClearClick: function () {
+                clearMessage(); @* 清除訊息 *@
+                $('#divQueryBlock input[type=text]').val('');
+                $('#AmountType option[value = ""]').prop('selected', 'selected');
+                $('#CompanyCode option[value = "0"]').prop('selected', 'selected');
+                $('#PayType option[value = ""]').prop('selected', 'selected');
+                $('#FileSeq option[value = "1"]').prop('selected', 'selected');
+            }
+        };
+        $(function () {
+            //jQuery 日期選擇器
+            ko.applyBindings(ViewModel);
+            $(".datepicker").datepicker({ dateFormat: 'yy/mm/dd' });
+            $(".datepickerToM").datepicker({
+                format: "yyyy/mm",
+                viewMode: "months",
+                minViewMode: "months"
+            }).on("changeDate", function (e) {
+                $(this).datepicker('hide');
+            });
+        });
+
+        //1「佣酬發放」存入Mainchk_value1===================================1
+        function ChangeChk(Iden) {
+            let exist = 0;
+            for (let i in Mainchk_value) {
+                let key = Mainchk_value[i];
+                if (Iden == key) {  //和本次修改相同
+                    exist = 1;
+                }
+            }
+            if (exist == 0) {       //和本次修改不同的再加入陣列
+                Mainchk_value.push(Iden);
+
+                //「佣酬發放」原本發改不發，「結轉下期」要可以改***************************************************
+                if (document.getElementById("PayYmFlag-" + Iden).value != "") {//只有PayYm有值的時候才要給結轉下期值  
+                    document.getElementById("Rpt-" + Iden).removeAttribute('disabled');             //移除disable
+                }
+
+                //「佣酬發放」變更為發放時，「結轉下期」變更為不結轉
+                if (document.getElementById("Pay-" + Iden).checked) {
+                    if (document.getElementById("Rpt-" + Iden).checked) {
+                        document.getElementById("Rpt-" + Iden).checked = false;
+                        ChangeChk2(Iden);
+                    }
+                }
+
+            }else {
+                //去除重複
+                let index = Mainchk_value.indexOf(Iden);
+                if (index !== -1) {
+                    Mainchk_value.splice(index, 1);
+                    chk_value.splice(index, 1);
+                    Notchk_value.splice(index, 1);
+                }
+                //「佣酬發放」變更為發放時，「結轉下期」變更為不結轉
+                if (document.getElementById("Pay-" + Iden).checked) {
+                    if (document.getElementById("Rpt-" + Iden).checked) {
+                        document.getElementById("Rpt-" + Iden).checked = false;
+                        document.getElementById("Rpt-" + Iden).setAttribute('disabled', 'disabled');    //給disable
+                        ChangeChk2(Iden);
+                    }
+                }
+            }
+        }
+
+        //2「結轉下期」存入Mainchk_value2===================================2
+        function ChangeChk2(Iden) {
+            let exist = 0;
+            for (let i in Mainchk_value2) {
+                let key = Mainchk_value2[i];
+                if (Iden == key) {
+                    exist = 1;
+                }
+            }
+            if (exist == 0) {
+                Mainchk_value2.push(Iden);
+            } else {
+                //去除重複
+                let index = Mainchk_value2.indexOf(Iden);
+                if (index !== -1) {
+                    Mainchk_value2.splice(index, 1);
+                    chk_value2.splice(index, 1);
+                    Notchk_value2.splice(index, 1);
+                }
+            }
+        }
+
+        //3「人工備註」存入Memochk_value====================================3
+        function ChangeChkMemo(Iden) {
+            let exist = 0;
+            for (let i in Memochk_value) {
+                let key = Memochk_value[i];
+                if (Iden == key) {
+                    exist = 1;
+                }
+            }
+            if (exist == 0) {
+                Memochk_value.push(Iden);
+            } else {
+                //去除重複
+                let index = Memochk_value.indexOf(Iden);
+                if (index !== -1) {
+                    Memochk_value.splice(index, 1);
+                }
+            }
+        }
+
+        //查詢鈕檢核
+        function ChkQuery() {
+            clearMessage();
+            if ($('#CompanyCode option:selected').val() == "0" && $('#PlanCode').val() == "" && $('#PolicyNo2').val() == "") {
+                appendMessage("保險公司、保單號碼、險種代碼不可皆為空白");
+                return false;
+            }
+
+            if ($('#NotPayYMSS').val().length != 0) {
+                if ($('#NotPayYMSS').val().length != 0 && $('#NotPayYMSS').val().length != 9) {
+                appendMessage("【異動工作月起】之長度不等於9");
+                return false;
+                }
+                /*
+                 正則表達式
+                 `\d{4}` 表示匹配4个数字，即年份
+                 `-` 表示匹配一个短横线，`()` 表示分组，`|` 表示交替（OR）
+                 `(0[1-9]|1[0-2])` 表示匹配月份，其中 `0[1-9]` 表示匹配01到09之间的数字，`1[0-2]` 表示匹配10到12之间的数字
+                 */
+                let reS = /^\d{4}\/(0[1-9]|1[0-2])-(1|2)$/
+                if (!reS.test($('#NotPayYMSS').val())) {
+                    appendMessage("【異動工作月起】之格式不正確");
+                    return false;
+                }
+            }
+            if ($('#NotPayYMSE').val().length != 0) {
+                if ($('#NotPayYMSE').val().length != 0 && $('#NotPayYMSE').val().length != 9) {
+                    appendMessage("【異動工作月迄】之長度不等於9");
+                    return false;
+                }
+                let reE = /^\d{4}\/(0[1-9]|1[0-2])-(1|2)$/
+                if (!reE.test($('#NotPayYMSE').val())) {
+                    appendMessage("【異動工作月迄】之格式不正確");
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        //查詢BindGrid
+        function BindGrid() {
+            $("#Result").GridUnload();
+            $("#Result").jqGrid({
+                url: '@Url.Action("BindGrid", "MerSalTX002", new { area = "MerSal" })',
+                datatype: "json",
+                mtype: "POST",
+                colNames: ["序號"
+                    , "轉入<br />工作月", "轉入<br />序號", "保險<br />公司", "檔案<br />序號"
+                    , "佣酬類別", "保單號碼", "保公險種", "年期", "繳別<br />繳次", "保公<br />原因碼", "保費", "保公佣金"
+                    , "預收前端狀態"
+                    , "簽收<br />回條日"
+                    , "發放<br />工作月"
+                    , "佣酬<br />發放"
+                    , "結轉<br />下期"
+                    , "人工備註"
+                    , "系統備註"
+                    , "C"
+                    , "B"
+                    ,"A"],
+                colModel: [
+                    { name: "Iden", index: "Iden"},
+                    { name: "ProductionYM", index: "ProductionYM", width: 80},
+                    { name: "Sequence", index: "Sequence", width: 60},
+                    { name: "CompanyCode", index: "CompanyCode", width: 60},
+                    { name: "FileSeq", index: "FileSeq", width: 60},
+                    { name: "AmountType", index: "AmountType", width: 110},
+                    { name: "PolicyNo2", index: "PolicyNo2"},
+                    { name: "PlanCode", index: "PlanCode"},
+                    { name: "CollectYear", index: "CollectYear", width: 60},
+                    { name: "ModxSequence", index: "ModxSequence", width: 80},
+                    { name: "ReasonCodeC", index: "ReasonCodeC", width: 60 },
+                    { name: "ModePrem", index: "ModePrem" },
+                    { name: "CommPremC", index: "CommPremC" },
+                    { name: "PolicyStatusName", index: "PolicyStatusName" },
+                    { name: "ReceiptDate", index: "ReceiptDate"},
+                    { name: "PayYm", index: "PayYm", width: 90 },
+                    { name: "PayType", index: "PayType", width: 80, align:'center' ,formatter: PayTypeBox },
+                    { name: "RptIncludeFlag", index: "RptIncludeFlag", width: 80, align: 'center' , formatter: RptIncludeFlagBox },
+                    { name: "MemoN", width: 240, formatter: MemoBox },
+                    { name: "Remark", index: "Remark" },
+                    { name: "Memo", index: "Memo", hidden: true},
+                    { name: "PayYmN", formatter: PayYmFlag, hidden: true},
+                    { name: "PaytypeShow", index: "PaytypeShow", hidden: true },
+                ],
+                jsonReader: {
+                    repeatitems: false,
+                    id: "0"
+                },
+                loadComplete: function () {
+                    $('#Result').jqGrid("setGridWidth", $('#resultDIV').width());
+                },
+                pager: "ResultPagger",
+                onPaging: function (pgButton) {
+                    clearCheckBoxAry() //換頁後清空
+                }
+            });
+            $("#Result").trigger("reloadGrid");
+        }
+
+        //GridView-判斷每一列是否顯示「佣酬發放」標示-----------------------------1
+        function PayTypeBox(cellValue, options, rdata, action) {
+            let PayType = rdata.PayType;        //列PayType
+            let PaytypeShow = rdata.PaytypeShow;
+            let PayYm = rdata.PayYm;            //列PayYM
+            let PYMS = rdata.ProductionYM + rdata.Sequence //列轉入工作月+序號
+            let Iden = rdata.Iden;              //列Iden
+            var result = "";
+
+            //判斷GridView是否顯示「佣酬發放」CheckBox標示 -----------------------------＊＊＊＊＊＊＊＊＊＊＊＊1
+            if (PaytypeShow == "N" ^ PaytypeShow == "-") {
+                result = "N-請確認";
+            }
+            else if (PaytypeShow == "X")  {
+                        //case
+                        //     1.目前年月NULL==>X(不可能沒有agym資料)
+                        //當工作月入的資料
+                        //     2.列YM=目前年月 & 目前年月<>人事關檔年月                ==>X[人事未關先不用改，改了也沒用，會重跑]
+                        //     3.列YM=目前年月 & 已入發薪EBroker                      ==>X
+                        //     4.列YM=目前年月 & 目前年月= 人事關檔年月 & 未入發薪      ==>Y
+                        //先前工作月入的資料
+                        //     5.列YM<目前年月 & 目前年月<>人事關檔年月                ==>X只要是人事還沒關就不能做更改 #536琍婷要求
+                        //     6.列YM<目前年月 & NotPay                              ==>Y
+                        //     7.列YM<目前年月 & Pay & pay_month=目前年月 & 未入發薪   ==>Y
+                        //     8.列YM<目前年月 & Pay                                 ==>X
+                        //未來工作月入的資料...
+                        //      .列YM>目前年月 & Pay                                 ==>N[修改列年月比agym大...應該不可能吧]刪除
+                if (PayType.substr(0, 3) == "Pay") { 
+                    result = "<input type='checkbox' id='Pay-" + Iden + "' name='PayType' value='" + Iden + "'  onchange='ChangeChk(" + Iden + ")' checked disabled />發放";
+                } else {
+                    result = "<input type='checkbox' id='Pay-" + Iden + "' name='PayType' value='" + Iden + "'  onchange='ChangeChk(" + Iden + ")' disabled/>不發放";
+                }
+            }
+            else {
+                if (PayType.substr(0,3) == "Pay") {
+                    result = "<input type='checkbox' id='Pay-" + Iden + "' name='PayType' value='" + Iden + "'  onchange='ChangeChk(" + Iden + ")' checked />";
+                } else if (PayType.substr(0,6) == "NotPay") {
+                    result = "<input type='checkbox' id='Pay-" + Iden + "' name='PayType' value='" + Iden + "'  onchange='ChangeChk(" + Iden + ")' />";
+                }
+            }
+            return result;
+        }
+
+        //GridView-判斷是否顯示「結轉下期」標示-----------------------------2
+        function RptIncludeFlagBox(cellValue, options, rdata, action) {
+            let PayType = rdata.PayType;//列PayType
+            let PaytypeShow = rdata.PaytypeShow;
+            let RptIncludeFlag = rdata.RptIncludeFlag;
+            let PayYm = rdata.PayYm;
+            let Iden = rdata.Iden;
+            let PYMS = rdata.ProductionYM + "-"+rdata.Sequence
+            var result = "";
+            let PayYmC = ""; //發放年月
+            let YmNowC = ""; //【目前業績工作月】
+            YmNowC = $('#txtYmNow').val();
+
+            if (PayType.substr(0, 3) == "Pay") {
+                
+                if (PayYm.substr(-1, 1) == "1") {
+                    PayYmC = PayYm.substr(0, 7) + "/01";
+                } else {
+                    PayYmC = PayYm.substr(0, 7) + "/27";
+                }
+
+                if (YmNowC.substr(-1, 1) == "1") {
+                    YmNowC = YmNowC.substr(0, 7) + "/01";
+                } else {
+                    YmNowC = YmNowC.substr(0, 7) + "/27";
+                }
+            }
+
+            if ((PayType.substr(0, 3) == "Pay") && (PayYmC !="") && (PayYmC < YmNowC)) { //非當工作月，己發
+                if (RptIncludeFlag == "Y") {
+                    result = "<input type='checkbox' id='Rpt-" + Iden + "' name='RptIncludeFlag' value='" + Iden + "' onchange='ChangeChk2(" + Iden + ")' disabled />Y";
+                } else if ((RptIncludeFlag == "N") || (RptIncludeFlag == "-")) {
+                    result = "<input type='checkbox' id='Rpt-" + Iden + "' name='RptIncludeFlag' value='" + Iden + "' onchange='ChangeChk2(" + Iden + ")' disabled />N";
+                } else {
+                    result = "<input type='checkbox' id='Rpt-" + Iden + "' name='RptIncludeFlag' value='" + Iden + "' onchange='ChangeChk2(" + Iden + ")' disabled />"+ RptIncludeFlag;
+                }
+            } else {
+                //非當工作月，未發 & 當工作月資料
+                if (PaytypeShow == "Y") {
+                    //●====可修改
+                    if (RptIncludeFlag == "Y") {//◢◣----結轉下期
+                        result = "<input type='checkbox' id='Rpt-" + Iden + "' name='RptIncludeFlag' value='" + Iden + "' onchange='ChangeChk2(" + Iden + ")' checked />";
+                    } else if ((RptIncludeFlag == "N") || (RptIncludeFlag == "-")) {
+                        //if (PayYmC != "") {
+                        if (PayYmC != YmNowC) { //◢◣----己發
+                            result = "<input type='checkbox' id='Rpt-" + Iden + "' name='RptIncludeFlag' value='" + Iden + "' onchange='ChangeChk2(" + Iden + ")' disabled/>";
+                        } else {                //◢◣----未發
+                            result = "<input type='checkbox' id='Rpt-" + Iden + "' name='RptIncludeFlag' value='" + Iden + "' onchange='ChangeChk2(" + Iden + ")' />";
+                        }
+                    } else {
+                        result = "<input type='checkbox' id='Rpt-" + Iden + "' name='RptIncludeFlag' value='" + Iden + "' onchange='ChangeChk2(" + Iden + ")' disabled />" + RptIncludeFlag;
+                    }
+                } else {
+                    //●====不可修改
+                    result = "<input type='checkbox' id='Rpt-" + Iden + "' name='RptIncludeFlag' value='" + Iden + "' onchange='ChangeChk2(" + Iden + ")' disabled />" + RptIncludeFlag;
+                }
+            }
+            return result;
+        }
+
+        //GridView-顯示「人工備註」Text-----------------------------3
+        function MemoBox(cellValue, options, rdata, action) {
+            let sMemo = rdata.Memo;
+            let Iden = rdata.Iden;
+            var result = "<input type='text' id='MemoText-" + Iden + "' name='Memo' value='" + sMemo + "' onchange='ChangeChkMemo(" + Iden + ")'/>";
+            return result
+        }
+
+        //GridView-顯示「發放工作月」column-----------------------------4
+        function PayYmFlag(cellValue, options, rdata, action) {
+            let sPayYm = rdata.PayYm;
+            let Iden = rdata.Iden;
+            var result = "<input type='text' id='PayYmFlag-" + Iden + "' name='PayYmFlag' value='" + sPayYm + "'/>";
+            return result
+        }
+
+        //清除陣列
+        function clearCheckBoxAry() {
+            chk_value = [];
+            Notchk_value = [];
+            Mainchk_value = [];
+            chk_value2 = [];
+            Notchk_value2 = [];
+            Mainchk_value2 = [];
+
+            Memochk_value = [];
+        }
+
+    </script>
+}

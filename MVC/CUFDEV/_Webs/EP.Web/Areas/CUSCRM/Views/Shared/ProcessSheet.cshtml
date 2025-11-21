@@ -1,0 +1,143 @@
+﻿@*處理單*@
+@model ProcessFormViewModel
+
+<div class="panel">
+    @*標題*@
+    <div class="banner text-h-center">
+        <span>客服部</span>
+        <span>申訴暨服務處理單</span>
+    </div>
+    @*小標*@
+    <div class="second-banner text-h-center">
+        <span class="sec-txt">受理編號:@Model.No</span>
+        <span class="sec-txt">承辦人員:@Model.CaseHandler</span>
+        <span class="sec-txt">受理時間:@Model.CreatTime</span>
+    </div>
+    @*內容表格*@
+    <div class="content">
+        <table style="width: 100%;" border="1">
+            <tbody>
+                <tr>
+                    <td class="td-title">來源</td>
+                    @{
+                        var _CC = "□";
+                        var _SC = "□";
+                        var _CS = "□";
+                        var _SS = "□";
+                        if (Model.Source.Equals("CC"))
+                        {
+                            _CC = "■";
+                        }
+                        if (Model.Source.Equals("SC"))
+                        {
+                            _SC = "■";
+                        }
+                        if (Model.Source.Equals("CS"))
+                        {
+                            _CS = "■";
+                        }
+                        if (Model.Source.Equals("SS"))
+                        {
+                            _SS = "■";
+                        }
+                        <text>
+                            <td>@_CC 01.保戶申訴</td>
+                            <td>@_SC 02.業務員申訴</td>
+                            <td>@_CS 03.保戶服務</td>
+                            <td>@_SS 04.業務員服務</td>
+                        </text>
+                    }
+                </tr>
+                <tr>
+                    <td class="td-title">保單基本資料</td>
+                    <td colspan="4">
+                        <div style="height:30px;line-height:30px;">要保人:@Model.Owner</div>
+                        <div style="min-height: 100px;">
+                            @Html.Raw(Model.PolicyHistory)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-title">保戶申訴及服務內容</td>
+                    <td colspan="4">
+                        <div style="min-height: 150px;">
+                            @Model.ContentTXT
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-title">處理過程</td>
+                    <td colspan="4">
+                        聯絡紀錄:@Html.Raw(Model.ContactRecord)
+                        <br />
+                        @Model.DepositLetter  寄發存證信函，寄發日期:@Model.depositLetterDateTime 
+                        <br /><br />
+                        <div style="min-height: 100px;">
+                            @Html.Raw(Model.ProcessRecord)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-title">處理結果</td>
+                    <td colspan="4">
+                        結案紀錄:
+                        <div style="min-height: 100px;">
+                            @Html.Raw(Model.CloseRecord)
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .panel {
+        padding: 10px;
+        display: block;
+        font-family: "標楷體";
+        margin: 0 auto;
+        width: 99%;
+    }
+
+    .banner {
+        positoin: absolute;
+        height: 55px;
+        font-size: 25px;
+        font-weight: bold;
+        width: 100%;
+    }
+
+    .second-banner {
+        positoin: absolute;
+        height: 22px;
+        width: 100%;
+    }
+
+    .text-h-center {
+        text-align: center;
+    }
+
+    .sec-txt {
+        font-size: 14px;
+        margin-left: 10%;
+    }
+
+    .content {
+        float: center;
+        positoin: absolute;
+        margin: auto;
+    }
+
+    .td-title {
+        writing-mode: vertical-lr;
+        width: 30px;
+        text-align: justify;
+        text-justify: distribute-all-lines;
+        text-align-last: justify;
+    }
+
+    td {
+        padding: 5px;
+    }
+</style>

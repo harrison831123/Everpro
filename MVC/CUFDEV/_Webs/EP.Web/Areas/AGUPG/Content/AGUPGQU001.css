@@ -1,0 +1,88 @@
+﻿/* jqgrid */
+.ui-jqgrid tr.jqgrow td {
+    white-space: pre-wrap !important;
+    height: auto !important;
+    text-align: center !important;
+}
+
+/*    @@media screen and (max-width: 430px) {
+        td:before {
+            content: attr(data-Area1);
+            display: block;
+            font-weight: bold;
+            white-space: pre-line;
+            margin-bottom: 4px;
+        }
+    }
+
+    .ui-jqgrid .ui-jqgrid-htable th div {
+        white-space: normal !important;
+        line-height: 1.4;
+        height: auto;
+        overflow: visible;
+    }*/
+
+
+@media screen and (max-width: 430px) {
+    #divQueryBlock {
+        width: 100%;
+        padding-left: 0px;
+        padding-right: 20px; /* 對齊 */
+    }
+
+    .ui-jqgrid {
+        margin-left: 0px !important;
+        font-size: 13px !important;
+    }
+
+        .ui-jqgrid tr.jqgrow td {
+            white-space: pre-wrap !important;
+            height: auto !important;
+            font-size: 13px;
+            text-align: center;
+        }
+}
+
+/* 至頂 */
+.to-top {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    color: #FFF;
+    border: 2px solid #689180;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    z-index: 1001;
+    opacity: 1;
+    cursor: pointer;
+    display: none;
+    padding-top: 5px;
+}
+
+    .to-top i {
+        color: #689180;
+        font-size: 18px;
+        font-style: normal;
+    }
+
+    .to-top:hover {
+        background-color: #689180;
+    }
+
+        .to-top:hover i {
+            display: block;
+            color: #fff;
+        }
+
+#NoData1 {
+    font-size: 36px;
+}
+
+.Remarks {
+    color: red;
+    font-size: 13px;
+    line-height: 1.6; /* 行距 */
+}

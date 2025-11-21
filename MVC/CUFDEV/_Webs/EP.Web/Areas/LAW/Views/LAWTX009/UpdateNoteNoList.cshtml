@@ -1,0 +1,281 @@
+﻿@model EP.SD.SalesSupport.LAW.Models.LawNoteDetail
+@{
+    ViewBag.Title = LAWResource.照會單;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    var thisGroupType = AccountGroupType.System;
+    WebChannel<EP.SD.SalesSupport.LAW.Service.ILAWService> Service = new WebChannel<EP.SD.SalesSupport.LAW.Service.ILAWService>();
+    List<EP.H2OModels.LawNote> lawNotes = new List<EP.H2OModels.LawNote>();
+    Service.Use(s => lawNotes = s.GetLawNoteByLawNoteNo(Model.LawNoteNo).ToList());
+    List<EP.H2OModels.LawEvidType> lawEvids = new List<EP.H2OModels.LawEvidType>();
+    Service.Use(s => lawEvids = s.GetLawEvidType().ToList());
+    List<EP.H2OModels.LawDoUser> lawDoUsers = new List<EP.H2OModels.LawDoUser>();
+    Service.Use(s => lawDoUsers = s.GetLawDouser().ToList());
+    if (lawDoUsers.Count != 0)
+    {
+        Model.LawNotePro = lawDoUsers[0].DouserName;
+        Model.LawNoteTel = lawDoUsers[0].DouserPhoneExt;
+    }
+    var AgentIDNoteNo = Model.AgentID.Substring(0, 10) + "--" + Model.LawNoteNo + LAWResource.照會單作業已發送紀錄;
+}
+<style type='text/css'>
+    #datatable {
+        display: none;
+    }
+
+    #AgentIDNoteNo {
+        display: none;
+        margin-top: 10px;
+    }
+</style>
+
+@using (Html.BeginForm("UpdateLawEvidence", "LAWTX009", null, FormMethod.Post, new { id = "UpdateSubmit" }))
+{
+    @Html.HiddenFor(m => m.AgentID);
+    @Html.HiddenFor(m => m.LawId);
+    @Html.HiddenFor(m => m.LawNoteNo);
+    <div class="row">
+        <div class="detail-col form-group form-inline">
+            @Html.LabelFor(m => m.LawNoteName, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @Html.EditDisplayFor(model => model.LawNoteName, true, new { @class = "form-control detail-cell", style = "width:50%" })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="detail-col form-group form-inline col-md-12">
+            @if (lawNotes.Count == 0)
+            {
+                for (var i = 0; i < 3; i++)
+                {
+                    <text>
+                        <label class="detail-msg control-label col-md-2">@LAWResource.三代主管</label>
+                        <label class="detail-msg control-label">@LAWResource.單位:</label><input type="text" class="form-control" name="LawNoteCenter" />
+                        <label class="detail-msg control-label">@LAWResource.主管:</label><input type="text" class="form-control" name="LawNoteTo" />
+                        <label class="detail-msg control-label">@LAWResource.職稱:</label><input type="text" class="form-control" name="LawNoteLevel" />
+                        <br />
+                    </text>
+                }
+            }
+            else
+            {
+                var i = 0;
+                for (i = 0; i < lawNotes.Count; i++)
+                {
+                    <text>
+                        <label class="detail-msg control-label col-md-2">@LAWResource.三代主管</label>
+                        <label class="detail-msg control-label">@LAWResource.單位:</label><input type="text" class="form-control" name="LawNoteCenter" value="@lawNotes[i].LawNoteCenter" />
+                        <label class="detail-msg control-label">@LAWResource.主管:</label><input type="text" class="form-control" name="LawNoteTo" value="@lawNotes[i].LawNoteTo" />
+                        <label class="detail-msg control-label">@LAWResource.職稱:</label><input type="text" class="form-control" name="LawNoteLevel" value="@lawNotes[i].LawNoteLevel" />
+                        <br />
+                    </text>
+                }
+                if (i < 3)
+                {
+                    for (int j = 0; j < 3 - i; j++)
+                    {
+                        <text>
+                            <label class="detail-msg control-label col-md-2">@LAWResource.三代主管</label>
+                            <label class="detail-msg control-label">@LAWResource.單位:</label><input type="text" class="form-control" name="LawNoteCenter" />
+                            <label class="detail-msg control-label">@LAWResource.主管:</label><input type="text" class="form-control" name="LawNoteTo" />
+                            <label class="detail-msg control-label">@LAWResource.職稱:</label><input type="text" class="form-control" name="LawNoteLevel" />
+                            <br />
+                        </text>
+                    }
+                }
+            }
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="detail-col form-group form-inline" id="recipient-area">
+            <label class="detail-msg">@LAWResource.選擇留言對象</label>
+            <div class="detail-cell">
+                <ul>
+                    <div id="H2OGP">
+                        @{Html.RenderPartial("~/Views/Shared/AccountGroupSelector.cshtml",
+                                                                                      new AccountGroupSelector("AccountGroupSelector", EP.PlatformResources.選擇人員, thisGroupType) { OnSelected = "onDialogSelected" });}
+                        <button type="button" class="btn btn-danger" id="addusers" tabindex="4">@EP.PlatformResources.設定成員</button>
+                        <div class="detail-cell" id="RecipientToShow">
+
+                        </div>
+                        @Html.TextBoxFor(m => m.RecipientToJson, new { style = "display:none;width:100%" })
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="detail-col form-group form-inline col-md-12">
+            <label class="detail-msg control-label col-md-2">@LAWResource.承辦人</label>
+            <select class="form-control col-md-3" id="LawNotePro" name="LawNotePro">
+                @for (var i = 0; i < lawDoUsers.Count; i++)
+                {
+                    if (Model.LawNotePro == @lawDoUsers[i].DouserName)
+                    {
+                        <text>
+                            <option value="@lawDoUsers[i].DouserName" selected>@lawDoUsers[i].DouserName</option>
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                            <option value="@lawDoUsers[i].DouserName">@lawDoUsers[i].DouserName</option>
+                        </text>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="detail-col form-group form-inline col-md-12">
+            <label class="detail-msg control-label col-md-2">@LAWResource.分機</label>
+            <select class="form-control col-md-3" id="LawNoteTel" name="LawNoteTel">
+                @*@for (var i = 0; i < lawDoUsers.Count; i++)
+                    {
+                        <text>
+                            <option value="@lawDoUsers[i].DouserPhoneExt">@lawDoUsers[i].DouserPhoneExt</option>
+                        </text>
+                    }*@
+            </select>
+        </div>
+    </div>
+    <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.儲存" data-bind="click: SaveClick" />
+    @Html.ActionLink(EP.PlatformResources.返回, "Index", "LAWTX009", new { Class = "btn btn-default" })
+}
+<p id="AgentIDNoteNo">@AgentIDNoteNo</p>
+<div class="row col-md-12">
+    <table id="datatable" class="table">
+        <thead>
+            <tr>
+                <th>@LAWResource.序號</th>
+                <th>@LAWResource.發送日期</th>
+                <th>@LAWResource.發送對象</th>
+                <th>@LAWResource.讀取紀錄</th>
+            </tr>
+        </thead>
+        <tbody id="datatbody">
+        </tbody>
+    </table>
+</div>
+<script>
+    var ViewModel = {
+        SaveClick: function () {
+            if (saveValidator()) {
+                clearMessage();@*清除訊息*@
+                var tabUniqueId = $("#tabUniqueId").val();
+                $("#UpdateSubmit").attr('action', '@Url.Action("UpdateNoteNoList", "LAWTX009")');
+                $("#UpdateSubmit").submit();
+                GetNoteQuery()
+            }
+        }
+    };
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+        //隱藏選擇視窗的原本按鍵
+        $("#AccountGroupSelectorPopButton").hide();
+        $("#addusers").click(addUsersClick);
+        if ($("#RecipientToJson").val() != '') {
+            recipientSelectShow($("#RecipientToJson").val());
+        }
+        LawNoteTelVal('@Model.LawNotePro');
+    });
+    $('#LawNotePro').on('change', function () {
+        LawNoteTelVal(this.value);
+    });
+    function LawNoteTelVal(LawNotePro) {
+        var NewLawNoteTel;
+        @for (var i = 0; i < lawDoUsers.Count; i++) {
+            <text>
+            if ('@lawDoUsers[i].DouserName' == LawNotePro) {
+                NewLawNoteTel = '@lawDoUsers[i].DouserPhoneExt'
+            }
+            </text>
+        }
+        $("#LawNoteTel").empty();
+        $('#LawNoteTel').append($('<option>', {
+            value: NewLawNoteTel,
+            text: NewLawNoteTel
+        }));
+        GetNoteQuery()
+    }
+    function GetNoteQuery() {
+        var LawNoteNo = '@Model.LawNoteNo'
+        var k = 0;
+        $.ajax({
+            method: "POST",
+            cache: false,
+            data: {
+                LawNoteNo: LawNoteNo
+            },
+            url: '@Url.Action("NoteQuery", "LAWTX009", new { area = "LAW" })',
+            complete: function (data) {
+                console.log(data.responseJSON)
+                if (data.responseJSON === undefined || data.responseJSON.length == 0) {
+                    $("#datatable").hide();
+                } else {
+                    $(".remtr").remove();
+                    $.each(data.responseJSON, function () {
+                        k++;
+                        let dt = moment(this.MSGOBJCreateTime);
+                        let MSGOBJCreateTime = dt.local().format('YYYY/MM/DD HH:mm:ss');
+                        let str = "<tr class='remtr'><td>" + k + "</td><td>"
+                            + MSGOBJCreateTime + "</td><td>"
+                            + this.MSGOBJName + "</td><td>"
+                            + MSGOBJReaderType(this.MSGOBJReaderIP)
+                            + '</td></tr>';
+                        $("#datatbody").append(str);
+                    });
+                    $("#datatable").show();
+                    $("#AgentIDNoteNo").show();
+                }
+            },
+            error: function (ex) {
+            if (ex.statusText == "OK") {
+            } else {
+                appendMessage("@EP.PlatformResources.系統發生錯誤");
+                }
+            }
+        });
+    }
+    function MSGOBJReaderType(MSGOBJReaderIP) {
+        if (MSGOBJReaderIP == "") {
+            return "@LAWResource.未讀"
+        } else {
+            return "@LAWResource.已讀"
+        }
+    }
+    function saveValidator() {
+        if ($("#RecipientToJson").val() == "") {
+            appendMessage("@( LAWResource.留言對象 + EP.PlatformResources.必填)");
+            return false;
+        }
+        return true;
+    }
+    //@*人員視窗選擇結果處理*@
+    function onDialogSelected() {
+        //取得它的選擇資訊(JSON格式)
+        var hiddenValue = $("#AccountGroupSelector").getHiddens()[0];
+        recipientSelectShow(hiddenValue);
+    }
+    function addUsersClick() {
+        //手動呼叫Dialog視窗
+        $("#AccountGroupSelector").openDialog();
+    }
+    function recipientSelectShow(jsonValue) {
+        var $select = $('#RecipientToShow');
+        $select.attr('style', "height:200px;overflow:auto;").html('');
+        if (jsonValue == undefined) return;
+        var jsonItems = JSON.parse(jsonValue);
+        $("#RecipientToJson").val(jsonValue);
+
+        $.each(jsonItems, function (idx, obj) {
+            var unit = '';
+            //$select.append($('<option>').text(obj.Unit+" "+obj.Text).attr('value', obj.Key).prop("selected", true));
+
+            $select.append('<ul>' + obj.Unit + " " + obj.Text + '</ul>');
+        });
+    }
+
+</script>
+
+

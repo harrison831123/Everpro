@@ -1,0 +1,229 @@
+﻿@model EP.SD.SalesSupport.LAW.Web.Areas.LAW.Model.LawEditModel
+@{
+    if (Model.EditViewType == "1")
+    {
+        ViewBag.Title = LAWResource.存證信函;
+    }
+    else if (Model.EditViewType == "2")
+    {
+        ViewBag.Title = LAWResource.訴訟程序;
+    }
+    else if (Model.EditViewType == "3")
+    {
+        ViewBag.Title = LAWResource.執行程序;
+    }
+    else if (Model.EditViewType == "4")
+    {
+        ViewBag.Title = LAWResource.其他欄位;
+    }
+    else if (Model.EditViewType == "5")
+    {
+        ViewBag.Title = LAWResource.其他欄位 + "金額說明";
+    }
+    else if (Model.EditViewType == "6")
+    {
+        ViewBag.Title = EP.PlatformResources.備註;
+    }
+    ViewBag.Title += "編輯";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+@section LeftActions{
+    <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.更新" data-bind="click: SaveClick" />
+    <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.返回" data-bind="click: BackClick" />
+    @*@Html.ActionLink("返回", "UpdateSchedule", "LAWTX009", new { Class = "btn btn-default" })*@
+}
+
+@using (Html.BeginForm("Update", "LAWTX009", null, FormMethod.Post, new { id = "UpdateSubmit" }))
+{
+    @Html.HiddenFor(model => model.EditViewType)
+    @Html.HiddenFor(model => model.ID)
+    @Html.HiddenFor(model => model.AgentID)
+    @Html.HiddenFor(model => model.LawNoteNo)
+    @Html.HiddenFor(model => model.LawId)
+
+    if (Model.EditViewType == "1")
+    {
+        <div class="detail-col form-group form-inline">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawEvidencedesc, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @Html.TextBoxFor(m => m.LawEvidencedesc, new { @id = "LawEvidencedesc", style = "width:90%", @maxlength = "250", @class = "form-control detail-cell" })
+            </div>
+        </div>
+    }
+    else if (Model.EditViewType == "2")
+    {
+        <div class="detail-col form-group form-inline">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawLitigationprogress, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @Html.TextBoxFor(m => m.LawLitigationprogress, new { @id = "LawLitigationprogress", style = "width:90%", @maxlength = "250", @class = "form-control detail-cell" })
+            </div>
+        </div>
+    }
+    else if (Model.EditViewType == "3")
+    {
+        <div class="detail-col form-group form-inline">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawDoprogress, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @Html.TextBoxFor(m => m.LawDoprogress, new { @id = "LawDoprogress", style = "width:90%", @maxlength = "250", @class = "form-control detail-cell" })
+            </div>
+        </div>
+    }
+    else if (Model.EditViewType == "4")
+    {
+        <div class="detail-col form-group form-inline">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawOtherdesc, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @Html.TextBoxFor(m => m.LawOtherdesc, new { @id = "LawOtherdesc", style = "width:90%", @maxlength = "250", @class = "form-control detail-cell" })
+            </div>
+        </div>
+        if (Model.LawRepaymentMoney != 0)
+        {
+            <div class="detail-col form-group form-inline">
+                <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawRepaymentMoney, new { @class = "detail-msg" })
+                <div class="col-md-offset-1">
+                    @Html.DisplayFor(model => model.LawRepaymentMoney, new { @class = "control-label col-md-2" })<span>@LAWResource.元</span>
+                </div>
+            </div>
+        }
+    }
+    else if (Model.EditViewType == "5")
+    {
+        @Html.HiddenFor(model => model.LawDueAgentId)
+        <div class="detail-col form-group form-inline">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawNoteNo, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @Html.DisplayFor(model => model.LawNoteNo, new { @class = "control-label col-md-2" })
+            </div>
+        </div>
+        <div class="detail-col form-group form-inline">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawRepaymentMoney, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @*@Html.DisplayFor(model => model.LawRepaymentMoney, new { @class = "control-label col-md-2" })*@
+                @Html.EditDisplayFor(model => model.LawRepaymentMoney, true, new { @class = "form-control", style = "margin-left:10px;width:50%" })
+            </div>
+        </div>
+        <div class="detail-col form-group form-inline">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawOtherdesc, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @Html.TextBoxFor(m => m.LawOtherdesc, new { @id = "LawOtherdesc", style = "width:90%", @maxlength = "250", @class = "form-control detail-cell" })
+            </div>
+        </div>
+    }
+    else if (Model.EditViewType == "6")
+    {
+        <div class="detail-col form-group form-inline">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawDescdesc, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @Html.TextBoxFor(m => m.LawDescdesc, new { @id = "LawDescdesc", style = "width:90%", @maxlength = "250", @class = "form-control detail-cell" })
+            </div>
+        </div>
+    }
+    else if (Model.EditViewType == "7")
+    {
+        @Html.HiddenFor(model => model.LawDueAgentId)
+        <div class="detail-col form-group form-inline">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawNoteNo, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @Html.DisplayFor(model => model.LawNoteNo, new { @class = "control-label col-md-2" })
+            </div>
+        </div>
+        <div class="detail-col form-group form-inline">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawCommDeduction, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @*@Html.DisplayFor(model => model.LawRepaymentMoney, new { @class = "control-label col-md-2" })*@
+                @Html.EditDisplayFor(model => model.LawCommDeduction, true, new { @class = "form-control", style = "margin-left:10px;width:50%" })
+            </div>
+        </div>
+        <div class="detail-col form-group form-inline">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawOtherdesc, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @Html.TextBoxFor(m => m.LawOtherdesc, new { @id = "LawOtherdesc", style = "width:90%", @maxlength = "250", @class = "form-control detail-cell" })
+            </div>
+        </div>
+    }
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.EditUser, new { @class = "detail-msg" })
+        <div class="col-md-offset-1">
+            @Html.DisplayFor(model => model.EditUser, new { @class = "control-label col-md-2" })
+        </div>
+    </div>
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.CreateTime, new { @class = "detail-msg" })
+        <div class="col-md-offset-1">
+            @Html.DisplayFor(model => model.CreateTime, new { @class = "control-label col-md-2" })
+        </div>
+    </div>
+}
+<script>
+    var ViewModel = {
+        SaveClick: function () {
+            clearMessage();@*清除訊息*@
+            var tabUniqueId = $("#tabUniqueId").val();
+            if (CheckEditViewType()) {
+                $("#UpdateSubmit").attr('action', '@Url.Action("UpdateSharedPage", "LAWTX009")');
+                $("#UpdateSubmit").submit();
+            }
+        },
+        BackClick: function () {
+            clearMessage();@*清除訊息*@
+            var tabUniqueId = $("#tabUniqueId").val();
+            location.href ='@Html.Raw(Url.Action("UpdateSchedule", "LAWTX009"))' + "?AgentID=" + '@Model.AgentID' + "&NoteNo=" + '@Model.LawNoteNo' + "&LawId=" + '@Model.LawId';
+        }
+    };
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+    });
+    function CheckEditViewType() {
+        var EditViewType = '@Model.EditViewType'
+        var result = false;
+        var ID = '@Model.ID'
+        //狀態欄不為空白，則為修改，否則為刪除
+        switch (EditViewType) {
+            case "1":
+                result = $("#LawEvidencedesc").val() == "" ? false : true;
+                break;
+            case "2":
+                result = $("#LawLitigationprogress").val() == "" ? false : true;
+                break;
+            case "3":
+                result = $("#LawDoprogress").val() == "" ? false : true;
+                break;
+            case "4":
+                result = $("#LawOtherdesc").val() == "" ? false : true;
+                break;
+            case "5":
+                result = $("#LawOtherdesc").val() == "" ? false : true;
+                break;
+            case "6":
+                result = $("#LawDescdesc").val() == "" ? false : true;
+                break;
+            case "7":
+                result = $("#LawOtherdesc").val() == "" ? false : true;
+                break;
+        }
+
+        if (result == false) {
+            DeleteData(ID, EditViewType);
+        }
+        return result;
+    }
+    function DeleteData(ID, EditViewType) {
+        $.ajax({
+            method: "POST",
+            cache: false,
+            url: '@Url.Action("Delete", "LAWTX009", new { area = "LAW" })',
+            data: { ID: ID, EditViewType: EditViewType},
+            complete: function (data) {
+               location.href ='@Html.Raw(Url.Action("UpdateSchedule", "LAWTX009"))' + "?AgentID=" + '@Model.AgentID' + "&NoteNo=" + '@Model.LawNoteNo' + "&LawId=" + '@Model.LawId';
+            },
+            error: function (ex) {
+                if (ex.statusText == "OK") {
+                } else {
+                    appendMessage("@EP.PlatformResources.系統發生錯誤");
+                }
+            }
+        });
+    }
+</script>
+

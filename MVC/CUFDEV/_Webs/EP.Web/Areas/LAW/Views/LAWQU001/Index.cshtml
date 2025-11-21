@@ -1,0 +1,78 @@
+﻿@model  EP.SD.SalesSupport.LAW.Models.LawNoteDetail
+@{
+    ViewBag.Title = LAWResource.通知作業;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+@*查詢執行結果*@
+@using (Ajax.BeginForm("Query", "LAWQU001", null, new AjaxOptions { OnSuccess = "BindGrid" }, new { id = "LawQuery", area = "LAWQU001" }))
+{
+    <div class="wall-title">
+        <img class="index-title-icon" src="~/Content/img/search.png" />(@LAWResource.搜尋條件)
+    </div>
+    <div class="row wall">
+        <div class="col-md-12 form-group detail-col">
+            <div class="col-md-6">
+                <label class="control-label">@LAWResource.照會編號</label>
+                <input id="LawNoteNo" class="form-control" type="text" placeholder="@LAWResource.照會編號" name="LawNoteNo" />
+            </div>
+            <div class="col-md-6">
+                <label class="control-label">@LAWResource.業務員</label>
+                <input id="LawNoteName" class="form-control" type="text" placeholder="@LAWResource.業務員" name="LawNoteName" />
+            </div>
+        </div>
+    </div>
+    <input type="button" id="btnQuery" class="btn btn-default" value="@EP.PlatformResources.查詢" data-bind="hotkeydown: { 'alt+q': QueryClick }, click: QueryClick" />
+
+}
+@section GridActions {
+    <div class="jqGrid">
+        <table id="Result"></table>
+    </div>
+    <div id="ResultPagger"></div>
+}
+
+@section Scripts{
+
+    <script>
+        var ViewModel = {
+            QueryClick: function () {
+                clearMessage();
+                $("form#LawQuery").trigger("submit");
+            }
+        };
+        $(function () {
+            ko.applyBindings(ViewModel);
+            $("#btnQuery").click();
+        });
+        function BindGrid() {
+            $("#Result").GridUnload();
+            $("#Result").jqGrid({
+                url: '@Url.Action("BindGrid", "LAWQU001", new { area = "LAW" })',
+                datatype: "json",
+                mtype: "POST",
+                colNames: ["@LAWResource.照會編號", "@LAWResource.業務員", "@LAWResource.照會單", "@LAWResource.建檔日期"],
+                colModel: [
+                    { name: "LawNoteNo", index: "LawNoteNo" },
+                    { name: "LawNoteName", index: "LawNoteName" },
+                    { name: "", index: "LawNoteId", width: "25", formatter: displayButtonsFn },
+                    { name: "LawNoteCreatedate", index: "LawNoteCreatedate", sortable: true, search: true, formatter: "date", formatoptions: { srcformat: "ISO8601Long", newformat: "Y/m/d" } }
+                ],
+                jsonReader: {
+                    repeatitems: false,
+                    id: "0"
+                },
+                loadComplete: function () {
+                    $('#Result').jqGrid("setGridWidth", $('#resultDIV').width());
+                },
+                pager: "ResultPagger"
+            });
+            $("#Result").trigger("reloadGrid");
+        }
+        function displayButtonsFn(cellValue, options, rdata, action) {
+            var BPMURL = rdata.BPMURL;
+            var result = "<a href='" + BPMURL + "'target='FrmContent'>" + "<img src='/Content/img/book_g.png'></a>";
+            return result;
+        }
+    </script>
+}
+

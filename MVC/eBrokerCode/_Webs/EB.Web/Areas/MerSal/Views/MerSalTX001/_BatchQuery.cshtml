@@ -1,0 +1,81 @@
+﻿@model Microsoft.CUF.BatchQuerySearchModel
+
+<div id="divQueryBlock">
+    @using (Ajax.BeginForm("BatchQuery", "MerSalTX001", new { area = "" }, new AjaxOptions { OnSuccess = "callGrid", HttpMethod = "POST" }, new { id = "BatchQuery" }))
+        {
+
+        }
+    <div class="jqGrid">
+        <table id="resultgrid"></table>
+    </div>
+    <div id="resultpagger"></div>
+</div>
+
+
+<script>
+    $(function () {
+        //$("form#BatchQuery").trigger("submit");
+    });
+
+    function callGrid(datas) {
+        $("#resultgrid").GridUnload();
+        $("#resultgrid").jqGrid({
+            url: '@Url.Action("BindBatchQuery", "MerSalTX001", new { area = "MerSal" })',
+            datatype: "local",
+            mtype: "POST",
+            colNames: ["", "", "狀態", "開始時間", "結束時間", "報表名稱", "查詢條件", "執行結果",   "執行人員"],
+            colModel: [
+                { name: "", hidden: true, align: 'left', width: 90 },@*指定它是unique row no*@
+                { name: "fbatch_status", index: "fbatch_status", hidden: true },
+                { name: "fbatch_status_ch", index: "fbatch_status_ch", align: 'center', width: 90 },
+                { name: "dstart", index: "dstart", align: 'center', width: 180 },
+                { name: "dend", index: "dend", align: 'center', width: 180 },
+                { name: "nreport_name", index: "nreport_name", width: 170 },
+                { name: "nreport_filename", index: "nreport_filename", hidden: true },
+                { name: "nfile_name", index: "nfile_name", width: 250, formatter: formatEditLink },
+                { name: "imember", index: "imember", align: 'center', width: 100 }
+            ],
+            jsonReader: {   //讀JSON格式資料
+                repeatitems: false,
+                id: "0"
+            },
+            pager: "resultpagger"
+        });
+        $("#resultgrid").jqGrid("navGrid", "#resultpagger", { add: false, edit: false, del: false, search: false, refresh: false });
+        //$("#resultgrid").jqGrid("navButtonAdd", "#resultpagger", { id: 'export', caption: '', title: '匯出', onClickButton: Microsoft.UI.Grid.gridExport });
+        $("#resultgrid").jqGrid('setGridParam', { data: datas });
+        $("#resultgrid").trigger("reloadGrid");
+    }
+    //Grid處理連結的函式
+    function PopupWindow(rdata) {
+        var format = "@Url.Action("BatchQuery_Detail")" + "?" + "modelkey={0}";
+        var url = $.validator.format(format, rdata.ibatch_no);
+        var key = $.validator.format("{0}", rdata.ibatch_no);
+        var openName = "BatchQuery" + key;@*為了讓各key值各開新tab*@
+        Microsoft.Common.WindowOpen(url, openName);
+    }
+
+    function formatEditLink(cellvalue, options, rdata) {
+        var ahref = "";
+        var nfnArray = (rdata.nreport_filename || "").split("$$");
+        var nnArray = (rdata.nfile_name || "").split("$$");
+
+        for (var i = 0; i < nfnArray.length; i++) {
+            if (i > 0) {
+                ahref += "<br/>";
+            }
+            if (! /^[0-9a-zA-Z]{8}[0-9a-zA-Z]{4}[0-9a-zA-Z]{4}[0-9a-zA-Z]{4}[0-9a-zA-Z]{12}[0-9]{2}$/.test(nnArray[i])) {
+                if (/^[0-9a-zA-Z]{8}[0-9a-zA-Z]{4}[0-9a-zA-Z]{4}[0-9a-zA-Z]{4}[0-9a-zA-Z]{12}$/.test(nnArray[i])) {
+                    ahref += $.validator.format("<a href='@Url.Action("FileDownload", "MerSalTX001", new { area = "MerSal" })?nfile_name={0}&nreport_filename={1}' target='_blank'>{2}</a>", nnArray[i], encodeURIComponent(nfnArray[i]), nfnArray[i]);
+                }
+                else {
+                    ahref += (nnArray[i] || "");
+                }
+            }
+            else {
+                ahref += $.validator.format("<a href='@Url.Action("FileDownload", "MerSalTX001", new { area = "MerSal" })?nfile_name={0}&nreport_filename={1}' target='_blank'>{2}</a>", nnArray[i], encodeURIComponent(nfnArray[i]), nfnArray[i]);
+            }
+        }
+        return ahref;
+    }
+</script>

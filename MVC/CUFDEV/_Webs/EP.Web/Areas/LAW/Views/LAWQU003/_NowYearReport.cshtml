@@ -1,0 +1,96 @@
+﻿@{
+    string now = (DateTime.Now.Year - 1911) + DateTime.Now.ToString(".MM.dd");
+}
+
+<form id="QueryNowYearForm" action="/LAWQU003/NowYearReport" method="post">
+    <div class="col-md-12" style="margin-top:10px">
+        <button class="btn btn-warning " id="btnInsertLog" onclick="GetCaseReport()">@LAWResource.匯出報表</button>
+    </div>
+</form>
+
+<div class="row col-md-12" id="data" style="margin-top:20px">
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        GetLawNowYear();
+    });
+    function GetLawNowYear() {
+        let currentTime = new Date();
+        let year = currentTime.getFullYear();
+        let url = '@Url.Action("NowYearQuery", "LAWQU003", new { area = "LAW" })'
+        for (var xi = year; xi >= 2010; xi--) {
+            $.ajax({
+                method: "POST",
+                cache: false,
+                async: false,
+                data: { year: xi},
+                url: url,
+                complete: function (data) {
+                    if (data.responseJSON === undefined) {
+                        
+                    } else {
+                        let month = currentTime.getMonth();
+                        let str, str2, str3, str4, str5;
+                        str = "<table class='table'>"
+                        str += "<tr><td colspan=14 ><font color=blue size=3>" + (xi - 1911) + " 年度案件統計表 "+ "@now" + " 止" + "</font></td></tr>"
+                        str += "<tr><td >月份</td>"
+                        for (let jj = 1; jj <= 12; jj++) {
+                            str += "<td >" + jj + "月</td>"
+                        }
+                        str += "<td >總計</td></tr>"
+                        str += "<tr><td >受理案件</td>"
+                        str2 = "<tr><td >委外件數</td>"
+                        str3 = "<tr><td >自辦件數</td>"
+                        str4 = "<tr><td >未結</td>"
+                        str5 = "<tr><td >結案</td>"
+                        for (let i = 0; i < 12; i++) {
+                            if (i > month && xi == year) {
+                                str += "<td></td>"
+                                str2 += "<td></td>"
+                                str3 += "<td></td>"
+                                str4 += "<td></td>"
+                                str5 += "<td></td>"
+                            } else {
+                                str += "<td >" + data.responseJSON.Item1[i] + "</td>"
+                                str2 += "<td >" + data.responseJSON.Item2[i] + "</td>"
+                                str3 += "<td >" + data.responseJSON.Item3[i] + "</td>"
+                                str4 += "<td >" + data.responseJSON.Item4[i] + "</td>"
+                                str5 += "<td >" + data.responseJSON.Item5[i] + "</td>"
+                            }
+                        }
+                        str += "<td ><font color=blue>" + data.responseJSON.Item6[0] + "</font></td></tr>"
+                        str2 += "<td ><font color=blue>" + data.responseJSON.Item6[1] + "</font></td></tr>"
+                        str3 += "<td ><font color=blue>" + data.responseJSON.Item6[2] + "</font></td></tr>"
+                        str4 += "<td ><font color=blue>" + data.responseJSON.Item6[3] + "</font></td></tr>"
+                        str5 += "<td ><font color=blue>" + data.responseJSON.Item6[4] + "</font></td></tr>"
+                        str += str2 + str3 + str4 + str5;
+                        str += "</table><br />"
+                        $("#data").append(str);
+
+                    }
+                }
+            });
+        }
+    }
+
+    function GetCaseReport() {
+
+        var url = $("form#QueryNowYearForm").attr('action');
+
+        var dataJson = $("form#QueryNowYearForm").serializeArray();
+        $.extend(
+            {
+                redirectPost: function (location, args) {
+                    var form = '';
+                    $.each(args, function (key, value) {
+                        form += '<input type="hidden" name="' + value.name + '" value="' + value.value + '">';
+                    });
+                    $('<form action="' + location + '" method="POST">' + form + '</form>').appendTo('body').submit();
+                }
+            });
+
+        $.redirectPost(url, dataJson);
+    }
+</script>

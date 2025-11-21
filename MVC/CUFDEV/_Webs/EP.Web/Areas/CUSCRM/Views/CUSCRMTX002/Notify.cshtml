@@ -1,0 +1,484 @@
+﻿@model EP.SD.SalesSupport.CUSCRM.NotifyCaseViewModel
+@{
+    ViewBag.Title = "通知業務員";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    var thisGroupType = AccountGroupType.System;
+    Model.ViewID = 1;
+    WebChannel<EP.SD.SalesSupport.CUSCRM.Service.INotifyService> Service = new WebChannel<EP.SD.SalesSupport.CUSCRM.Service.INotifyService>();
+    var cus = new List<sc_member>();
+    Service.Use(s => cus = s.GetCustomerUnit());
+    #region 受文者處理
+    var AGList = new List<Tuple<string, string, string, string>>();
+    for (var i = 0; i < Model.NotifyInsurance.Count; i++)
+    {
+        if (!string.IsNullOrWhiteSpace(Model.NotifyInsurance[i].SUAgentCode))
+        {
+            AGList.Add(new Tuple<string, string, string, string>(Model.NotifyInsurance[i].SUAgentCode, NotifyType.To.ToString(), Model.NotifyInsurance[i].SuLvName, "AG"));
+            AGList.Add(new Tuple<string, string, string, string>(Model.NotifyInsurance[i].SUVMLeaderID, NotifyType.CC.ToString(), Model.NotifyInsurance[i].SuVmLvName, "VM"));
+            AGList.Add(new Tuple<string, string, string, string>(Model.NotifyInsurance[i].SUSMLeaderID, NotifyType.CC.ToString(), Model.NotifyInsurance[i].SuSmLvName, "SM"));
+            AGList.Add(new Tuple<string, string, string, string>(Model.NotifyInsurance[i].SUCenterLeaderID, NotifyType.CC.ToString(), Model.NotifyInsurance[i].SuCLvName, "CL"));
+        }
+        else if (!string.IsNullOrWhiteSpace(Model.NotifyInsurance[i].AgentCode))
+        {
+            AGList.Add(new Tuple<string, string, string, string>(Model.NotifyInsurance[i].AgentCode, NotifyType.To.ToString(), Model.NotifyInsurance[i].AgLvName, "AG"));
+            AGList.Add(new Tuple<string, string, string, string>(Model.NotifyInsurance[i].VMLeaderID, NotifyType.CC.ToString(), Model.NotifyInsurance[i].AgVmLvName, "VM"));
+            AGList.Add(new Tuple<string, string, string, string>(Model.NotifyInsurance[i].SMLeaderID, NotifyType.CC.ToString(), Model.NotifyInsurance[i].AgSmLvName, "SM"));
+            AGList.Add(new Tuple<string, string, string, string>(Model.NotifyInsurance[i].CenterLeaderID, NotifyType.CC.ToString(), Model.NotifyInsurance[i].AgCLvName, "CL"));
+        }
+    }
+    for (var i = 0; i < Model.ChinaOM.Count; i++)
+    {
+        AGList.Add(new Tuple<string, string, string, string>(Model.ChinaOM[i].CHAgentCode, NotifyType.CC.ToString(), Model.ChinaOM[i].CHLvName, "CHCL"));
+    }
+
+    var AGDTList = AGList.GroupBy(tuple => tuple.Item4)
+    .Select(tuple => new { Item1 = tuple.First().Item1, Item2 = tuple.First().Item2, Item3 = tuple.First().Item3, Item4 = tuple.First().Item4 }).Distinct().ToList();
+
+    for (var i = 0; i < AGDTList.Count; i++)
+    {
+        if (AGDTList[i].Item1.Contains("Z99999999901"))
+        {
+            AGDTList.RemoveAt(i);
+        }
+    }
+    var AGToList = new List<Tuple<string, string, string, string>>();
+    var AGCCList = new List<Tuple<string, string, string, string>>();
+    for (var i = 0; i < AGDTList.Count; i++)
+    {
+        if (AGDTList[i].Item2 == "To")
+        {
+            AGToList.Add(new Tuple<string, string, string, string>(AGDTList[i].Item1, AGDTList[i].Item2, AGDTList[i].Item3, AGDTList[i].Item4));
+        }
+        else
+        {
+            AGCCList.Add(new Tuple<string, string, string, string>(AGDTList[i].Item1, AGDTList[i].Item2, AGDTList[i].Item3, AGDTList[i].Item4));
+        }
+    }
+    var CLList = new List<Tuple<string, string>>();
+    var CHCLList = new List<Tuple<string, string>>();
+    var VMList = new List<Tuple<string, string>>();
+    var SMList = new List<Tuple<string, string>>();
+
+    for (var i = 0; i < AGCCList.Count; i++)
+    {
+        if (AGCCList[i].Item4 == "CL")
+        {
+            CLList.Add(new Tuple<string, string>(AGCCList[i].Item1, AGCCList[i].Item3));
+        }
+        if (AGCCList[i].Item4 == "CHCL")
+        {
+            CHCLList.Add(new Tuple<string, string>(AGCCList[i].Item1, AGCCList[i].Item3));
+        }
+        if (AGCCList[i].Item4 == "VM")
+        {
+            VMList.Add(new Tuple<string, string>(AGCCList[i].Item1, AGCCList[i].Item3));
+        }
+        if (AGCCList[i].Item4 == "SM")
+        {
+            SMList.Add(new Tuple<string, string>(AGCCList[i].Item1, AGCCList[i].Item3));
+        }
+    }
+    #endregion
+
+}
+
+@section LeftActions{
+    <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.儲存" data-bind="click: SaveClick" />
+    @Html.ActionLink(EP.PlatformResources.返回, "Index", "CUSCRMTX002", new { Class = "btn btn-default" })
+}
+
+<div class="row col-md-12">
+    <table id="datatable" class="table">
+        <thead>
+            <tr>
+                <th>序號</th>
+                <th>保單號碼</th>
+                <th>保險公司</th>
+                <th>要保人</th>
+                <th>被保險人</th>
+                <th>原招攬人</th>
+                <th>接續服務人員</th>
+            </tr>
+        </thead>
+        <tbody id="datatbody">
+
+            @for (var i = 0; i < Model.NotifyInsurance.Count; i++)
+            {
+                <text>
+                    <tr>
+                        <td>@Model.ViewID</td>
+                        <td>@Model.NotifyInsurance[i].PolicyNo</td>
+                        <td>@Model.NotifyInsurance[i].CompanyName</td>
+                        <td>@Model.NotifyInsurance[i].Owner</td>
+                        <td>@Model.NotifyInsurance[i].Insured</td>
+                        <td>@Model.NotifyInsurance[i].AgentName</td>
+                        <td>@Model.NotifyInsurance[i].SUAgentName</td>
+                    </tr>
+                </text>
+                Model.ViewID++;
+            }
+
+        </tbody>
+    </table>
+
+
+    @using (Html.BeginForm("Create", "CUSCRMTX002", null, FormMethod.Post, new { id = "CreateSubmit" }))
+    {
+        @Html.HiddenFor(m => m.No, new { @class = "user-input-field" })
+        <div class="form-group row">
+            <div class="detail-col" id="recipient-area">
+                <label class="detail-msg">受文者:</label>
+                <div class="detail-cell">
+                    <div id="H2OGP">
+                        @for (var i = 0; i < AGToList.Count; i++)
+                        {
+                            <text>
+                                <input type="checkbox" name="ToCheckbox" id="@AGToList[i].Item1" value="@AGToList[i].Item1" /><label for="@AGToList[i].Item1">@AGToList[i].Item3</label>
+                                <br />
+                            </text>
+                        }
+                        <br />
+                        @{Html.RenderPartial("~/Views/Shared/AccountGroupSelector.cshtml", new AccountGroupSelector("AccountGroupSelector", EP.PlatformResources.選擇人員, thisGroupType) { OnSelected = "onDialogSelected" });}
+                        <button type="button" class="btn btn-danger" id="addusers" tabindex="4">@EP.PlatformResources.設定成員</button>
+                        <div class="detail-cell" id="RecipientToShow">
+
+                        </div>
+                        @Html.TextBoxFor(m => m.RecipientToJson, new { style = "display:none;width:100%" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="detail-col" id="recipient-area">
+                <label class="detail-msg">副本受文者:</label>
+                <div class="detail-cell">
+                    <div id="H2OGP">
+                        <table class="table table-bordered" style="width:70%">
+                            <thead>
+                                <tr>
+                                    <th>處經理</th>
+                                    <th>本月處代理人</th>
+                                    <th>協理</th>
+                                    <th>副總</th>
+                                </tr>
+                            </thead>
+                            <tbody id="datatbody">
+                                @*<input type="checkbox" name="CCCheckbox" id="@AGCCList[i].Item1" value="@AGCCList[i].Item1" /><label for="@AGCCList[i].Item1">@AGCCList[i].Item3</label>
+                                    <br />*@
+                                <tr>
+                                    @if (CLList.Count != 0)
+                                    {
+                                        <text>
+                                            <td>
+                                                @for (int i = 0; i < CLList.Count; i++)
+                                                {
+                                                    var CLID = CLList[i].Item1 + "CL";
+                                                    <text>
+                                                        <input type="checkbox" name="CCCheckbox" id="@CLID" value="@CLList[i].Item1" /><label for="@CLID">@CLList[i].Item2</label><br />
+                                                    </text>
+                                                }
+                                            </td>
+                                        </text>
+                                    }
+                                    else
+                                    {
+                                        <text>
+                                            <td></td>
+                                        </text>
+                                    }
+                                    @if (CHCLList.Count != 0)
+                                    {
+                                        <text>
+                                            <td>
+                                                @for (int i = 0; i < CHCLList.Count; i++)
+                                                {
+                                                    var CHCLID = CHCLList[i].Item1 + "CHCL";
+                                                    <text>
+                                                        <input type="checkbox" name="OMProxyCheckbox" id="@CHCLID" value="@CHCLList[i].Item1" /><label for="@CHCLID">@CHCLList[i].Item2</label><br />
+                                                    </text>
+                                                }
+                                            </td>
+                                        </text>
+                                    }
+                                    else
+                                    {
+                                        <text>
+                                            <td></td>
+                                        </text>
+                                    }
+                                    @if (SMList.Count != 0)
+                                    {
+                                        <text>
+                                            <td>
+                                                @for (int i = 0; i < SMList.Count; i++)
+                                                {
+                                                    var CCID = SMList[i].Item1 + "CCS";
+                                                    <text>
+                                                        <input type="checkbox" name="CCCheckbox" id="@CCID" value="@SMList[i].Item1" /><label for="@CCID">@SMList[i].Item2</label><br />
+                                                    </text>
+                                                }
+                                            </td>
+                                        </text>
+                                    }
+                                    else
+                                    {
+                                        <text>
+                                            <td></td>
+                                        </text>
+                                    }
+                                    @if (VMList.Count != 0)
+                                    {
+                                        <text>
+                                            <td>
+                                                @for (int i = 0; i < VMList.Count; i++)
+                                                {
+                                                    var CCIDV = VMList[i].Item1 + "CCV";
+                                                    <text>
+                                                        <input type="checkbox" name="CCCheckbox" id="@CCIDV" value="@VMList[i].Item1" /><label for="@CCIDV">@VMList[i].Item2</label><br />
+                                                    </text>
+                                                }
+                                            </td>
+                                        </text>
+                                    }
+                                    else
+                                    {
+                                        <text>
+                                            <td></td>
+                                        </text>
+                                    }
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br />
+                        @{Html.RenderPartial("~/Views/Shared/AccountGroupSelector.cshtml", new AccountGroupSelector("AccountGroupSelector1", EP.PlatformResources.選擇人員, thisGroupType) { OnSelected = "onDialogSelected1" });}
+                        <button type="button" class="btn btn-danger" id="addusers1" tabindex="4">@EP.PlatformResources.設定成員</button>
+                        <div class="detail-cell" id="RecipientToShow1">
+
+                        </div>
+                        @Html.TextBoxFor(m => m.RecipientCCJson, new { style = "display:none;width:100%" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="detail-col" id="recipient-area">
+                <label class="detail-msg">行專:</label>
+                <div class="detail-cell">
+                    <div id="H2OGP">
+                        @for (var i = 0; i < Model.NotifyEmployee.Count; i++)
+                        {
+                            <text>
+                                <input type="checkbox" name="EPCheckbox" id="@Model.NotifyEmployee[i].Item1" value="@Model.NotifyEmployee[i].Item1" /><label for="@Model.NotifyEmployee[i].Item1">@Model.NotifyEmployee[i].Item2</label>
+                                <br />
+                            </text>
+                        }
+                        <br />
+                        @{Html.RenderPartial("~/Views/Shared/AccountGroupSelector.cshtml", new AccountGroupSelector("AccountGroupSelector2", EP.PlatformResources.選擇人員, thisGroupType) { OnSelected = "onDialogSelected2" });}
+                        <button type="button" class="btn btn-danger" id="addusers2" tabindex="4">@EP.PlatformResources.設定成員</button>
+                        <div class="detail-cell" id="RecipientToShow2">
+
+                        </div>
+                        @Html.TextBoxFor(m => m.RecipientEPJson, new { style = "display:none;width:100%" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="detail-col" id="recipient-area">
+                <div class="col-md-3">
+                    <label class="detail-msg">經辦:</label>
+                    <br />
+                    <select id="DoUser" class="form-control" name="DoUser">
+                        @for (var i = 0; i < cus.Count; i++)
+                        {
+                            if (cus[i].MemberID == User.MemberInfo.ID)
+                            {
+                                <text>
+                                    <option value="@cus[i].MemberID" selected="selected">@cus[i].MemberName</option>
+                                </text>
+                            }
+                            else
+                            {
+                                <text>
+                                    <option value="@cus[i].MemberID">@cus[i].MemberName</option>
+                                </text>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="detail-col">
+                @Html.LabelFor(m => m.DoUserTelExt, new { @class = "detail-msg" })
+                @Html.TextBoxFor(m => m.DoUserTelExt, new { @id = "DoUserTelExt", style = "width:30%", @maxlength = "250", @class = "detail-cell" })
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="detail-col">
+                @Html.LabelFor(m => m.File, new { @class = "detail-msg" })
+                <span class="detail-cell">
+                    <text>
+                        @Html.Partial("~/Views/JFileUpload/_Files.cshtml")
+                        @Html.HiddenFor(m => m.UploadFilesName)
+                    </text>
+                </span>
+            </div>
+        </div>
+    }
+</div>
+<script>
+    var ViewModel = {
+        SaveClick: function () {
+            if (saveValidator()) {
+                clearMessage();@*清除訊息*@
+                var tabUniqueId = $("#tabUniqueId").val();
+                $("#UploadFilesName").getFileUploadItemsString();
+                $("#CreateSubmit").attr('action', '@Url.Action("Create", "CUSCRMTX002")');
+                $("#CreateSubmit").submit();
+            }
+        }
+    };
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+        var tabUniqueId = $("#tabUniqueId").val();
+
+        //隱藏選擇視窗的原本按鍵
+        $("#AccountGroupSelectorPopButton").hide();
+        $("#addusers").click(addUsersClick);
+        if ($("#RecipientToJson").val() != '') {
+            recipientSelectShow($("#RecipientToJson").val());
+        }
+
+        $("#AccountGroupSelector1PopButton").hide();
+        $("#addusers1").click(addUsersClick1);
+        if ($("#RecipientCCJson").val() != '') {
+            recipientSelectShow1($("#RecipientCCJson").val());
+        }
+
+        $("#AccountGroupSelector2PopButton").hide();
+        $("#addusers2").click(addUsersClick2);
+        if ($("#RecipientEPJson").val() != '') {
+            recipientSelectShow1($("#RecipientEPJson").val());
+        }
+
+        //$("#AccountGroupSelector3PopButton").hide();
+        //$("#addusers3").click(addUsersClick3);
+        //if ($("#RecipientDoUserJson").val() != '') {
+        //    recipientSelectShow1($("#RecipientDoUserJson").val());
+        //}
+    });
+    //@*人員視窗選擇結果處理*@
+    function onDialogSelected() {
+        //取得它的選擇資訊(JSON格式)
+        var hiddenValue = $("#AccountGroupSelector").getHiddens()[0];
+        recipientSelectShow(hiddenValue);
+    }
+    //@*人員視窗選擇結果處理*@
+    function onDialogSelected1() {
+        //取得它的選擇資訊(JSON格式)
+        var hiddenValue1 = $("#AccountGroupSelector1").getHiddens()[0];
+        recipientSelectShow1(hiddenValue1);
+    }
+    //@*人員視窗選擇結果處理*@
+    function onDialogSelected2() {
+        //取得它的選擇資訊(JSON格式)
+        var hiddenValue1 = $("#AccountGroupSelector2").getHiddens()[0];
+        recipientSelectShow2(hiddenValue1);
+    }
+    //@*人員視窗選擇結果處理*@
+    //function onDialogSelected3() {
+    //    //取得它的選擇資訊(JSON格式)
+    //    var hiddenValue1 = $("#AccountGroupSelector3").getHiddens()[0];
+    //    recipientSelectShow3(hiddenValue1);
+    //}
+    function addUsersClick() {
+        //手動呼叫Dialog視窗
+        $("#AccountGroupSelector").openDialog();
+    }
+    function addUsersClick1() {
+        //手動呼叫Dialog視窗
+        $("#AccountGroupSelector1").openDialog();
+    }
+    function addUsersClick2() {
+        //手動呼叫Dialog視窗
+        $("#AccountGroupSelector2").openDialog();
+    }
+    function addUsersClick3() {
+        $("#DoUser").hide();
+        $("#DoUser").val("");
+        //手動呼叫Dialog視窗
+        $("#AccountGroupSelector3").openDialog();
+    }
+    function recipientSelectShow(jsonValue) {
+
+        var $select = $('#RecipientToShow');
+        $select.attr('style', "height:200px;overflow:auto;").html('');
+        if (jsonValue == undefined) return;
+        var jsonItems = JSON.parse(jsonValue);
+        $("#RecipientToJson").val(jsonValue);
+
+        $.each(jsonItems, function (idx, obj) {
+            var unit = '';
+            //$select.append($('<option>').text(obj.Unit+" "+obj.Text).attr('value', obj.Key).prop("selected", true));
+
+            $select.append('<ul>' + obj.Unit + " " + obj.Text + '</ul>');
+        });
+    }
+    function recipientSelectShow1(jsonValue) {
+
+        var $select = $('#RecipientToShow1');
+        $select.attr('style', "height:200px;overflow:auto;").html('');
+        if (jsonValue == undefined) return;
+        var jsonItems = JSON.parse(jsonValue);
+        $("#RecipientCCJson").val(jsonValue);
+        console.log(jsonValue)
+        $.each(jsonItems, function (idx, obj) {
+            var unit = '';
+            //$select.append($('<option>').text(obj.Unit+" "+obj.Text).attr('value', obj.Key).prop("selected", true));
+
+            $select.append('<ul>' + obj.Unit + " " + obj.Text + '</ul>');
+        });
+    }
+    function recipientSelectShow2(jsonValue) {
+
+        var $select = $('#RecipientToShow2');
+        $select.attr('style', "height:200px;overflow:auto;").html('');
+        if (jsonValue == undefined) return;
+        var jsonItems = JSON.parse(jsonValue);
+        $("#RecipientEPJson").val(jsonValue);
+        console.log(jsonValue)
+        $.each(jsonItems, function (idx, obj) {
+            var unit = '';
+            //$select.append($('<option>').text(obj.Unit+" "+obj.Text).attr('value', obj.Key).prop("selected", true));
+
+            $select.append('<ul>' + obj.Unit + " " + obj.Text + '</ul>');
+        });
+    }
+    //function recipientSelectShow3(jsonValue) {
+
+    //    var $select = $('#RecipientToShow3');
+    //    $select.attr('style', "height:200px;overflow:auto;").html('');
+    //    if (jsonValue == undefined) return;
+    //    var jsonItems = JSON.parse(jsonValue);
+    //    $("#RecipientDoUserJson").val(jsonValue);
+    //    console.log(jsonValue)
+    //    $.each(jsonItems, function (idx, obj) {
+    //        var unit = '';
+    //        //$select.append($('<option>').text(obj.Unit+" "+obj.Text).attr('value', obj.Key).prop("selected", true));
+
+    //        $select.append('<ul>' + obj.Unit + " " + obj.Text + '</ul>');
+    //    });
+    //}
+    function saveValidator() {
+        //if ($("#DoUser").val() == "") {
+        //    if ($("#RecipientDoUserJson").val() == "") {
+        //        appendMessage("經辦必選");
+        //        return false;
+        //    }
+        //}
+        return true;
+    }
+</script>
+

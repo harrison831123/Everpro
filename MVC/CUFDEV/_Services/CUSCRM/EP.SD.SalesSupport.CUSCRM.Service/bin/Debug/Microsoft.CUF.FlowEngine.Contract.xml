@@ -1,0 +1,1605 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.CUF.FlowEngine.Contract</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.BizFlowCategory">
+            <summary> 功能流程的分類群組 </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.BizFlowCategory.CategoryID">
+            <summary> 分類群組ID </summary>
+            <value> The identifier of the category. </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.BizFlowCategory.CategoryName">
+            <summary> 分類群組名稱 </summary>
+            <value> The name of the category. </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.BizFlowCategory.DisplayOrder">
+            <summary>
+            分類群組顯示順序。
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.BizFlowHandlerBase">
+            <summary>流程處理函式基底物件</summary>
+            <remarks>各交易服務要繼承此物件實作其所需函式</remarks>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.BizFlowHandlerBase.DraftHandle(Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo)">
+            <summary>流程暫存處理函式.</summary>
+            <param name="fwInfo">流程資料個體物件. </param>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.BizFlowHandlerBase.ApproveHandle(Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo)">
+            <summary>流程放行處理函式.</summary>
+            <param name="fwInfo">流程資料個體物件. </param>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.BizFlowHandlerBase.RejectHandle(Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo)">
+            <summary>流程退回處理函式.</summary>
+            <param name="fwInfo">流程資料個體物件. </param>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.BizFlowHandlerBase.DeferHandle(Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo)">
+            <summary>流程延遲處理函式.</summary>
+            <param name="fwInfo">流程資料個體物件. </param>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.BizFlowHandlerBase.SubmitHandle(Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo)">
+            <summary>送審的處理函式。流程從經辦關卡往下走到第二關時會被呼叫。.</summary>
+            <remarks>會被呼叫到的時機點有兩個： 1. 交易未經Draft直接呼叫 IFlowService.Submit();
+                2. 暫存的交易呼叫 IFlowService.Approve();</remarks>
+            <param name="fwInfo">. </param>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.BizFlowHandlerBase.DeleteHandle(Microsoft.CUF.FlowEngine.Contract.TxnModel,System.Collections.Generic.IEnumerable{System.String},System.String,System.String)">
+            <summary>流程項目被刪除時呼叫。.</summary>
+            <param name="masterModel">交易物件資料. </param>
+            <param name="instances">  . </param>
+            <param name="corpID">     公司識別代碼. </param>
+            <param name="delUser">    建立者. </param>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.BizFlowHandlerBase.UpdateHandle(Microsoft.CUF.FlowEngine.Contract.TxnModel,System.String,System.String)">
+            <summary>流程被更新時呼叫。.</summary>
+            <param name="model">  交易物件資料. </param>
+            <param name="corpID"> 公司識別代碼. </param>
+            <param name="creator">建立者. </param>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.BizFlowHandlerBase.InsertHandle(Microsoft.CUF.FlowEngine.Contract.TxnModel,System.String,System.String)">
+            <summary>流程 Detail 有新增時被呼叫。.</summary>
+            <param name="model">  交易物件資料. </param>
+            <param name="corpID"> 公司識別代碼. </param>
+            <param name="creator">建立者. </param>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.BizFlowInfo">
+            <summary> 功能流程的定義資料 </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.BizFlowInfo.SysFlowID">
+            <summary> 該交易功能的代號 </summary>
+            <value>該交易功能的代號 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.BizFlowInfo.SysFlowName">
+            <summary> 該交易功能的名稱</summary>
+            <value> The name of the system flow. </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.BizFlowInfo.BizFlowType">
+            <summary> 交易流程類別. </summary>
+            <value> The type of the biz flow. </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.BizFlowInfo.BizFlowTypeName">
+            <summary>交易流程類別名稱</summary>
+            <value>交易流程類別名稱</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.BizFlowInfo.RequirSecurityLevel">
+            <summary> 該交易要求的安控層級 </summary>
+            <value> The requir security level. </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.BizFlowInfo.RequiredTemplateCurrency">
+            <summary> ?? </summary>
+            <value> The required template currency. </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.BizFlowInfo.SysFlowCategory">
+            <summary>交易功能的分類群組 </summary>
+            <value> The system flow category. </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.BizFlowInfo.SysFlowCategoryName">
+            <summary> 交易功能的分類群組名稱 </summary>
+            <value> The name of the system flow category. </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.BizFlowInfo.SysFlowCategoryDisplayOrder">
+            <summary> 在群組分類下的呈現順序 </summary>
+            <value> The system flow category display order. </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.BizFlowInfo.FlowTemplate">
+            <summary>
+            交易流程套用的流程範本。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.BizFlowInfo.DisplayOrder">
+            <summary>
+            交易流程顯示順序。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.BizFlowInfo.BizFlowHandler">
+            <summary> 流程邏輯的處理Handler </summary>
+            <value> The biz flow handler. </value>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.Client">
+            <summary>
+            客戶資料類別。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.Client.CorpID">
+            <summary>
+            客戶代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.Client.CorpName">
+            <summary>
+            客戶名稱。
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.ClientAccountFlowTemplate">
+            <summary>企業端所屬套用樣版的資料</summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ClientAccountFlowTemplate.TemplateID">
+            <summary> 樣版的GUID編號 </summary>
+            <value> 樣版的GUID編號  </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ClientAccountFlowTemplate.SysFlowID">
+            <summary> 該交易功能的代號 </summary>
+            <value> 該交易功能的代號 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ClientAccountFlowTemplate.CorpID">
+            <summary>擁有者ID </summary>
+            <value> 擁有者ID</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ClientAccountFlowTemplate.CorpAccount">
+            <summary>擁有者帳號 </summary>
+            <value> 擁有者帳號 </value>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.ClientFlowApprover">
+            <summary>企業戶的流程審核關卡資訊(ByUser)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ClientFlowApprover.TemplateID">
+            <summary>
+            流程樣版代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ClientFlowApprover.SysFlowID">
+            <summary> 該交易功能的代號 </summary>
+            <value> 該交易功能的代號 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ClientFlowApprover.CorpID">
+            <summary>擁有者ID </summary>
+            <value> 擁有者ID</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ClientFlowApprover.CorpAccount">
+            <summary>擁有者帳號 </summary>
+            <value> 擁有者帳號 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ClientFlowApprover.ElementNo">
+            <summary>
+            節點代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ClientFlowApprover.ApproverID">
+            <summary>審核者ID </summary>
+            <value> 審核者ID </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ClientFlowApprover.CreateBy">
+            <summary> 建立者 </summary>
+            <value> 建立者 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ClientFlowApprover.CreateTime">
+            <summary> 建立時間 </summary>
+            <value> 建立時間</value>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.ClientFlowApproveRole">
+            <summary>企業戶的流程審核關卡資訊(ByRole)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ClientFlowApproveRole.TemplateID">
+            <summary>
+            流程樣版代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ClientFlowApproveRole.SysFlowID">
+            <summary> 該交易功能的代號 </summary>
+            <value> 該交易功能的代號 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ClientFlowApproveRole.CorpID">
+            <summary>擁有者ID </summary>
+            <value> 擁有者ID</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ClientFlowApproveRole.CorpAccount">
+            <summary>擁有者帳號 </summary>
+            <value> 擁有者帳號 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ClientFlowApproveRole.ElementNo">
+            <summary>
+            節點代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ClientFlowApproveRole.RoleID">
+            <summary>審核者角色 </summary>
+            <value> 審核者角色 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ClientFlowApproveRole.CreateBy">
+            <summary> 建立者 </summary>
+            <value> 建立者 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ClientFlowApproveRole.CreateTime">
+            <summary> 建立時間 </summary>
+            <value> 建立時間</value>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.ElementTypeEnum">
+            <summary>流程節點的類別 </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.ElementTypeEnum.Consignee">
+            <summary>
+            經辦[0]
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.ElementTypeEnum.SignAndApprove">
+            <summary>
+            編審[2]。(只有一個關卡，簽了，就放行)
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.ElementTypeEnum.GroupSign">
+            <summary>
+            同角色共審[4]。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.ElementTypeEnum.NormalSign">
+            <summary>
+            審核[6]。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.ElementTypeEnum.RoleBranch">
+            <summary>
+            角色分支[8]。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.ElementTypeEnum.VolumeBranch">
+            <summary>
+            金額分支[10]。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.ElementTypeEnum.Custom">
+            <summary>
+            自訂關卡[12]。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.AggregateFunctionEnum.SUM">
+            <summary>
+            加總。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.AggregateFunctionEnum.COUNT">
+            <summary>
+            計數。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.AggregateFunctionEnum.DISTINCT">
+            <summary>
+            唯一值。
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.BizFlowTypeEnum">
+            <summary>
+            交易流程類別。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.BizFlowTypeEnum.None">
+            <summary>
+            未定義
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.BizFlowTypeEnum.Single">
+            <summary>
+            單筆。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.BizFlowTypeEnum.Batch">
+            <summary>
+            批次整批。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.BizFlowTypeEnum.Setup">
+            <summary>
+            設定。
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.FlowSecurityLevelEnum">
+            <summary> 流程節點的安控層級 </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.FlowSecurityLevelEnum.None">
+            <summary>
+            不需要安控處理。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.FlowSecurityLevelEnum.OTP">
+            <summary>
+            需要 OTP 等級以上的安控。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.FlowSecurityLevelEnum.PKI">
+            <summary>
+            需要 PKI(iKey) 等級以上的安控。
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.FlowSignCommandEnum">
+            <summary>簽核動作</summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.FlowSignCommandEnum.Approve">
+            <summary>
+            核淮。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.FlowSignCommandEnum.Reject">
+            <summary>
+            退回。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.FlowSignCommandEnum.Defer">
+            <summary>
+            遞延。
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.FlowStatusEnum">
+            <summary>
+            流程狀態列舉。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.FlowStatusEnum.Editing">
+            <summary>
+            流程已建立，仍在經辦關卡。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.FlowStatusEnum.Executing">
+            <summary>
+            送審中。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.FlowStatusEnum.Rejected">
+            <summary>
+            已退回經辦。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.FlowStatusEnum.Approved">
+            <summary>
+            已放行。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.FlowStatusEnum.Overdued">
+            <summary>
+            逾期未放行。資料庫的狀態欄位並不會存4，是以系統日大於交易日計算出來的。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.FlowStatusEnum.Deleted">
+            <summary>
+            已刪除。
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.FlowTemplateTypeEnum">
+            <summary>
+            範本類型。不同類型有不同的編輯及使用方式。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.FlowTemplateTypeEnum.System">
+            <summary>
+            系統的範本。會複製成客戶的預設範本。也只有大眾會持有System類型的範本。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.FlowTemplateTypeEnum.Custom">
+            <summary>
+            客戶自行編輯的範本。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.FlowTemplateTypeEnum.Admin">
+            <summary>
+            安控範本。不允許編輯。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.FlowTemplateTypeEnum.Default">
+            <summary>
+            預設的範本。預設範本不允許客戶編輯。
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.TxnBatchEnum">
+            <summary> 交易的類型 </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.TxnBatchEnum.None">
+            <summary>未定義</summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.TxnBatchEnum.Signle">
+            <summary>
+            單筆。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.TxnBatchEnum.MultiSingle">
+            <summary>
+            整批一扣一入。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.TxnBatchEnum.Batch">
+            <summary>
+            整批一扣多入。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.TxnBatchEnum.Setup">
+            <summary>
+            資料設定。
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.FlowCurrentStatusInfo">
+            <summary>
+            流程目前的關卡狀態
+            </summary>
+            <remarks>20180622-howard-新增</remarks>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowCurrentStatusInfo.InstanceID">
+            <summary>
+            流程執行個體代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowCurrentStatusInfo.FlowStatus">
+            <summary>
+            流程執行狀態。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowCurrentStatusInfo.CurrentSigneeNum">
+            <summary>
+            目前已審核人數
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowCurrentStatusInfo.CurrentElement">
+            <summary>
+            目前的流程關卡節點
+            </summary>
+            <remarks>包括審核者最大數目</remarks>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowCurrentStatusInfo.CurrentApproveRole">
+            <summary>
+            目前的流程關卡的審核角色資訊
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowCurrentStatusInfo.CurrentApprover">
+            <summary>
+            目前的流程關卡的審核人員資訊
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowDisplay.Formatter">
+            <summary>
+            For Date: Date
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.FlowInstance">
+            <summary>
+            流程執行個體(instance)類別。
+            </summary>
+            <remarks></remarks>
+            <remarks>對外傳輸都要將FlowInstance轉為FlowInstanceInfo，FlowInstance僅供FlowEngine.Service使用(因為TemplateElement具多重繼承不易傳輸至外部)</remarks>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.FlowInstance.#ctor">
+            <summary>Default constructor.</summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.InstanceID">
+            <summary>
+            流程執行個體代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.TemplateID">
+            <summary>
+            流程樣版代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.Template">
+            <summary>
+            流程適用的範本。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.SysFlowID">
+            <summary>
+            交易流程代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.CorpID">
+            <summary>擁有者識別代碼 </summary>
+            <value> 擁有者識別代碼 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.BatchType">
+            <summary>
+            交易型態。(同批次類型)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.MasterInstanceID">
+            <summary>主要流程的ID</summary>
+            <value>主要流程的ID</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.Iteration">
+            <summary>
+            流程執行的次數，每次被退回增加1。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.BatchNo">
+            <summary>
+            交易的批號，為必要欄要欄立。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.SerialNo">
+            <summary>
+            交易的序號。交易類型為一扣一入、一扣一入多筆時使用。為一扣多入不需要填這個屬性。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.TransferAccount">
+            <summary>
+            轉帳帳號。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.TxnDate">
+            <summary>
+            交易執行日期。可以用來判斷是否逾期。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.TxnVolume">
+            <summary>
+            交易金額。可以用來判斷是否在授權權限內。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.TxnDataModelType">
+            <summary> 交易資料的類別 </summary>
+            <value> The type of the transaction data model. </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.TxnDataModel">
+            <summary>流程的交易內容，以Model方式記錄下來。</summary>
+            <value>The transaction data model.</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.ExecutingElementNo">
+            <summary>
+            執行節點代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.FlowStatus">
+            <summary>
+            流程狀態。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.CreateBy">
+            <summary>流程建立者，一般是經辦的名字。 </summary>
+            <value> 流程建立者，一般是經辦的名字。 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.CreateTime">
+            <summary>流程建立日期，可以是經辦暫存或是送審的時間。 </summary>
+            <value> 建立時間</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.UpdateBy">
+            <summary>更新者 </summary>
+            <value> 更新時間</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.UpdateTime">
+            <summary> 更新時間 </summary>
+            <value> 更新時間 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.ElementSecurityLevel">
+            <summary>
+            執行的關卡的安控等級。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.ToDoDetailCount">
+            <summary>
+            權限內可以審核的明細筆數。(屬於流程的資訊，會在適當的時間傳給TxnModel)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.ToDoDetailSum">
+            <summary>
+            權限內可以審核的總金額。(屬於流程的資訊，會在適當的時間傳給TxnModel)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.CurrentElement">
+            <summary>
+            取得流程執行中的關卡。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.SubInstances">
+            <summary>
+            子流程。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.SignLogs">
+            <summary>
+            簽核記錄。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstance.CurrentSign">
+            <summary>
+            流程的簽核記錄。
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.FlowInstance.ToInfo">
+            <summary>將FlowInstance轉為FlowInstanceInfo</summary>
+            <returns>This object as a FlowInstanceInfo.</returns>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo">
+            <summary>
+            流程引擎提供的和交易相關的流程資訊。
+            </summary>
+            <remarks>對外傳輸都要將FlowInstance轉為FlowInstanceInfo，FlowInstance僅供FlowEngine.Service使用</remarks>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo.InstanceID">
+            <summary>
+            流程代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo.TransferAccount">
+            <summary>
+            轉帳帳號，用來選擇流程範本。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo.TxnDate">
+            <summary>
+            交易執行的日期，可以用來判斷是否逾期。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo.TxnVolume">
+            <summary>
+            交易金額。可以用來判斷是否在授權權限內。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo.FlowStatus">
+            <summary>
+            流程執行狀態。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo.FlowStatusDisplay">
+            <summary>流程執行狀態</summary>
+            <value>流程執行狀態</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo.TxnDataModelType">
+            <summary>
+            交易 DataModel 的型別。(必須是fullname)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo.TxnDataModel">
+            <summary>
+            交易使用的 DataModel 個體。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo.ToDoDetailCount">
+            <summary>
+            權限內可以審核的明細筆數。(屬於流程的資訊，會在適當的時間傳給TxnModel)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo.ToDoDetailSum">
+            <summary>
+            權限內可以審核的總金額。(屬於流程的資訊，會在適當的時間傳給TxnModel)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo.ElementSecurityLevel">
+            <summary>
+            執行的關卡的安控等級。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo.SubInstanceInfo">
+            <summary>
+            流程的子項目。"整批"類型的交易才會有子項目。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo.SignLogs">
+            <summary>
+            流程的簽核記錄。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo.CurrentSign">
+            <summary>
+            流程的簽核記錄。
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.FlowTemplate">
+            <summary>
+            流程範本類別。
+            </summary>
+            <summary> 流程樣版資料 </summary>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.FlowTemplate.#ctor">
+            <summary>Default constructor.</summary>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.FlowTemplate.#ctor(System.Guid,System.String,System.String,System.String,Microsoft.CUF.FlowEngine.Contract.FlowTemplateTypeEnum)">
+            <summary>Constructor.</summary>
+            <param name="templateID">設定GUID值. </param>
+            <param name="corpID">公司識別代碼</param>
+            <param name="templateName">範本名稱。. </param>
+            <param name="templateCurrency">範本的幣別。. </param>
+            <param name="templateType">範本. </param>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowTemplate.TemplateID">
+            <summary> 樣版的GUID編號 </summary>
+            <value> 設定GUID值 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowTemplate.TemplateName">
+            <summary>
+            範本名稱。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowTemplate.TemplateCurrency">
+            <summary>
+            範本的幣別。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowTemplate.TemplateType">
+            <summary>
+            範本
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowTemplate.CorpID">
+            <summary>擁有者ID </summary>
+            <value> 擁有者ID </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowTemplate.CreateBy">
+            <summary> 建立者 </summary>
+            <value> 建立者 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowTemplate.CreateTime">
+            <summary> 建立時間 </summary>
+            <value> 建立時間</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowTemplate.UpdateBy">
+            <summary>更新者 </summary>
+            <value> 更新時間</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowTemplate.UpdateTime">
+            <summary> 更新時間 </summary>
+            <value> 更新時間 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowTemplate.MaxSecurityLevel">
+            <summary> 安控層級 </summary>
+            <value> The security level. </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowTemplate.InTransitFormNum">
+            <summary>在途表單的數量</summary>
+            <value>在途表單的數量</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowTemplate.StartElement">
+            <summary>
+            起始節點。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowTemplate.Elements">
+            <summary> 流程節點資料 </summary>
+            <value> The elements. </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.FlowTemplate.Connections">
+            <summary>流程節點的連線資訊 </summary>
+            <value> The connections. </value>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.FlowTemplate.GetElement(System.Int32)">
+            <summary>
+            取得指定序號的關卡。
+            </summary>
+            <param name="elementNo">關卡序號。</param>
+            <returns>指定序號的關卡。</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.FlowTemplate.GetElementByElementNo(Microsoft.CUF.FlowEngine.Contract.TemplateElement,System.Int32)">
+            <summary>
+            遞迴方式取得指定序號的關卡。
+            </summary>
+            <param name="element"></param>
+            <param name="eleNo"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.IBizFlowHandler">
+            <summary>流程處理介面</summary>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowHandler.DraftHandle(Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo)">
+            <summary>流程暫存處理函式</summary>
+            <param name="fwInfo">流程資料個體物件</param>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowHandler.ApproveHandle(Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo)">
+            <summary>流程放行處理函式</summary>
+            <param name="fwInfo">流程資料個體物件. </param>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowHandler.RejectHandle(Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo)">
+            <summary>流程退回處理函式</summary>
+            <param name="fwInfo">流程資料個體物件. </param>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowHandler.DeferHandle(Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo)">
+            <summary>流程延遲處理函式</summary>
+            <param name="fwInfo">流程資料個體物件. </param>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowHandler.SubmitHandle(Microsoft.CUF.FlowEngine.Contract.FlowInstanceInfo)">
+            <summary>
+            送審的處理函式。流程從經辦關卡往下走到第二關時會被呼叫。
+            </summary>
+            <remarks>
+            會被呼叫到的時機點有兩個：
+            1. 交易未經Draft直接呼叫 IFlowService.Submit();
+            2. 暫存的交易呼叫 IFlowService.Approve();
+            </remarks>
+            <param name="fwInfo"></param>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowHandler.DeleteHandle(Microsoft.CUF.FlowEngine.Contract.TxnModel,System.Collections.Generic.IEnumerable{System.String},System.String,System.String)">
+            <summary>
+            流程項目被刪除時呼叫。
+            </summary>
+            <param name="masterModel">交易物件資料</param>
+            <param name="instances"></param>
+            <param name="corpID">公司識別代碼</param>
+            <param name="creator">建立者</param>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowHandler.UpdateHandle(Microsoft.CUF.FlowEngine.Contract.TxnModel,System.String,System.String)">
+            <summary>
+            流程被更新時呼叫。
+            </summary>
+            <param name="model">交易物件資料</param>
+            <param name="corpID">公司識別代碼</param>
+            <param name="creator">建立者</param>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowHandler.InsertHandle(Microsoft.CUF.FlowEngine.Contract.TxnModel,System.String,System.String)">
+            <summary>
+            流程 Detail 有新增時被呼叫。
+            </summary>
+            <param name="model">交易物件資料</param>
+            <param name="corpID">公司識別代碼</param>
+            <param name="creator">建立者</param>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.IBizFlowService">
+            <summary>交易功能流程相關的處理服務</summary>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowService.GetBizFlow(System.String)">
+            <summary>依該交易功能的代號取得交易流程定義資訊</summary>
+            <param name="sysFlowID">該交易功能的代號</param>
+            <returns>交易流程定義資訊</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowService.QuerySystemFlow(Microsoft.CUF.FlowEngine.Contract.SystemFlowCondition)">
+            <summary>查詢功能流程定義資訊</summary>
+            <param name="condition">查詢條件</param>
+            <returns>功能流程定義列表資料</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowService.InsertSystemFlow(Microsoft.CUF.FlowEngine.Contract.BizFlowInfo)">
+            <summary>新增功能流程定義資訊</summary>
+            <param name="model">功能流程定義資訊</param>
+            <returns>該交易功能的代號</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowService.UpdateSystemFlow(Microsoft.CUF.FlowEngine.Contract.BizFlowInfo)">
+            <summary>更新功能流程定義資訊</summary>
+            <param name="model">功能流程定義資訊</param>
+            <returns>該交易功能的代號</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowService.GetBizFlowCategory(System.String)">
+            <summary>依該交易功能的分類群組代號取得交易流程分類群組資訊</summary>
+            <param name="categoryID">該交易功能的分類群組代號</param>
+            <returns>交易流程分類群組資訊</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowService.QueryBizFlowCategory(Microsoft.CUF.FlowEngine.Contract.BizFlowCategory)">
+            <summary>查詢功能流程分類群組資訊</summary>
+            <param name="condition">查詢條件</param>
+            <returns>功能流程分類群組列表資料</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowService.InsertBizFlowCategory(Microsoft.CUF.FlowEngine.Contract.BizFlowCategory)">
+            <summary>新增功能流程群組定義資訊</summary>
+            <param name="model">功能流程群組定義資訊</param>
+            <returns>該交易功能的代號</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowService.UpdateBizFlowCategory(Microsoft.CUF.FlowEngine.Contract.BizFlowCategory)">
+            <summary>更新功能流程群組定義資訊</summary>
+            <param name="model">功能流程群組定義資訊</param>
+            <returns>該交易功能的代號</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowService.IsFlowConsignee(System.String,System.String,System.String,System.String)">
+            <summary>檢查指定的人員是否為流程的經辦之一。</summary>
+            <param name="sysFlowID">該交易功能的代號 </param>
+            <param name="corpID">公司識別代碼</param>
+            <param name="corpAccount">. </param>
+            <param name="approver">   The approver. </param>
+            <returns>True if flow consignee, false if not.</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowService.IsEditAndApprove(System.String,System.String,System.String)">
+            <summary>
+            檢查流程範本是否編審放同一關。
+            </summary>
+            <param name="sysFlowID">該交易功能的代號</param>
+            <param name="corpID">公司識別代碼</param>
+            <param name="corpAccount"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowService.GetConsigneeElementSecurityLevel(System.String,System.String,System.String)">
+            <summary>
+            取得流程範本經辦關卡的安控等級。
+            </summary>
+            <param name="sysFlowID"></param>
+            <param name="corpID">公司識別代碼</param>
+            <param name="corpAccount"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowService.GetClientSysFlowTemplate(System.String,System.String,System.String)">
+            <summary>取得指定交易客戶有套用樣版的資料(若客戶未建立，會回傳null)</summary>
+            <param name="corpID">公司識別代碼</param>
+            <param name="sysFlowID">該交易功能的代號</param>
+            <param name="account">  公司帳號 </param>
+            <returns>取得指定交易客戶有套用樣版的資料.</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IBizFlowService.BindAndSetBizFlowPermission(Microsoft.CUF.FlowEngine.Contract.BizFlowPermission)">
+            <summary>
+            設定交易流程的權限，包含交易要套用那一個範本，以及套用範本範本後，每一個關卡的審核人及角色。
+            新的設定會取代原本的設定，若原本並未設定則會新增。
+            </summary>
+            <param name="permission"></param>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.IFlowService">
+            <summary>流程相關的服務</summary>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IFlowService.Draft(Microsoft.CUF.FlowEngine.Contract.TxnModel,System.String,System.String)">
+            <summary>暫存功能</summary>
+            <param name="batch">交易物件資料</param>
+            <param name="corpID">公司識別代碼</param>
+            <param name="draftUser">暫存使用者</param>
+            <returns>流程執行個體.</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IFlowService.Submit(Microsoft.CUF.FlowEngine.Contract.TxnModel,System.String,System.String,System.String,System.String)">
+            <summary>送審</summary>
+            <param name="txnModel">交易物件資料. </param>
+            <param name="corpID">公司識別代碼</param>
+            <param name="submitUser">送審使用者</param>
+            <param name="submitUserRole">送審角色</param>
+            <param name="submitComment"> 送審註解. </param>
+            <returns>流程執行個體.</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IFlowService.Approve(System.Collections.Generic.IEnumerable{System.String},System.String,Microsoft.CUF.FlowEngine.Contract.FlowStatusEnum,System.String,System.String,System.String)">
+            <summary>核淮</summary>
+            <param name="instances">流程執行個體</param>
+            <param name="sysFlowID">交易流程代碼</param>
+            <param name="flowStatus">流程狀態</param>
+            <param name="approver">核淮者</param>
+            <param name="approverRole">核淮角色</param>
+            <param name="approvalComment">核淮註解</param>
+            <returns>流程執行個體</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IFlowService.Reject(System.Collections.Generic.IEnumerable{System.String},System.String,Microsoft.CUF.FlowEngine.Contract.FlowStatusEnum,System.String,System.String,System.String)">
+            <summary>退回</summary>
+            <param name="instances">流程執行個體. </param>
+            <param name="sysFlowID">交易流程代碼. </param>
+            <param name="flowStatus"> 流程狀態. </param>
+            <param name="approver"> 核淮者. </param>
+            <param name="approverRole"> 核淮角色. </param>
+            <param name="approvalComment">核淮註解. </param>
+            <returns> 流程執行個體</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IFlowService.InsertItemInstance(Microsoft.CUF.FlowEngine.Contract.TxnModel,System.String,System.String)">
+            <summary>新增一筆 Master的 Detail，一次也只會新增一筆 Detail，不可能是新增 Master。
+            TxnMdoel 必須傳入該 Detail 所屬的 Master ，items 內含該筆 Detail。新增 Detail會同步更新 Master (金額筆數可能會變)。</summary>
+            <param name="txnModel"> 交易物件資料. </param>
+            <param name="corpID">公司識別代碼</param>
+            <param name="draftUser">暫存使用者. </param>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IFlowService.UpdateInstance(Microsoft.CUF.FlowEngine.Contract.TxnModel,System.String,System.String)">
+            <summary>更新流程執行個體。(一次只更新一筆資料)
+            若更新的資料是 Master，則只需要傳入 Master TxnModel，items 應為 null。
+            若更新的資料是 Detail，則必須傳入該 Detail 所屬的 Master ，items 內含該筆 Detail。Master 及 Detail會同步更新(金額筆數可能會變)。</summary>
+            <param name="txnModel"> 交易物件資料. </param>
+            <param name="corpID">公司識別代碼</param>
+            <param name="draftUser">暫存使用者. </param>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Microsoft.CUF.FlowEngine.Contract.IFlowService.DeleteInstance(Microsoft.CUF.FlowEngine.Contract.TxnModel,System.Collections.Generic.IEnumerable{System.String},System.String,System.String)" -->
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IFlowService.GetToDoSummaryForApproval(System.String)">
+            <summary>取得審核人員待辦統計</summary>
+            <param name="approver">核淮者. </param>
+            <returns>待辦清單資料.</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IFlowService.GetToDoSummaryWithHandledForApproval(System.String)">
+            <summary>取得包括經手過的待辦事項的統計資料。</summary>
+            <param name="approver">審核者. </param>
+            <returns>包括經手過的待辦事項的統計資料。</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IFlowService.GetHandledForApproval(System.String,System.String)">
+            <summary>取得審核人經手過的流程清單</summary>
+            <param name="approver">審核者 </param>
+            <param name="sysFlowID">交易流程代碼 </param>
+            <returns>審核人經手過的流程清單.</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IFlowService.GetApproverToDos(System.String,System.String,Microsoft.CUF.FlowEngine.Contract.FlowStatusEnum)">
+            <summary> 取得待辦人員待辦清單。</summary>
+            <param name="approver"> 核淮者. </param>
+            <param name="sysFlowID">交易流程代碼. </param>
+            <param name="status">流程狀態</param>
+            <returns> 取得待辦人員待辦清單。</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IFlowService.GetApproverToDosByInstanceIDs(System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>取得審核人的待審棈單(依InstanceIDs).</summary>
+            <param name="approver"> 核淮者. </param>
+            <param name="sysFlowID">交易流程代碼. </param>
+            <param name="InstanceIDs"> 指定的InstanceIDs. </param>
+            <returns>審核人的指定待審棈單.</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IFlowService.GetApproverToDoDetails(System.String,System.String,System.String,Microsoft.CUF.FlowEngine.Contract.FlowStatusEnum)">
+            <summary>取得待辦人員待辦清單明細</summary>
+            <remarks>若是一扣多入的狀態，對可以取得該批次的明細。</remarks>
+            <param name="instanceID">流程執行個體代碼 </param>
+            <param name="approver">核淮者. </param>
+            <param name="sysFlowID"> 交易流程代碼. </param>
+            <param name="status">流程狀態. </param>
+            <returns>待辦人員待辦清單明細</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IFlowService.GetFlowSignLog(System.String)">
+            <summary>取得歷程明細</summary>
+            <param name="instanceID">流程執行個體代碼. </param>
+            <returns>取得歷程明細</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IFlowService.GetFlowInstanceByID(System.Guid)">
+            <summary>取得流程執行個體</summary>
+            <param name="instanceID">流程執行個體代碼。.</param>
+            <returns>流程執行個體</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IFlowService.GetFlowInstanceByIDs(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>取得多筆流程執行個體</summary>
+            <param name="InstanceIDs">多筆流程執行個體代碼。.</param>
+            <returns>多筆流程執行個體</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.IFlowService.GetFlowCurrentStatusInfo(System.Guid)">
+            <summary>取得目前流程的狀態資訊</summary>
+            <remarks>20180622新增</remarks>
+            <param name="instanceID"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.ITemplateEditService">
+            <summary>
+            流程範本編輯服務。
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.ITemplateEditService.GetTempateByCompanyID(System.String)">
+            <summary>
+            取得指定公司的所有流程範本。
+            </summary>
+            <param name="corpID">公司識別代碼</param>
+            <returns>流程範本。</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.ITemplateEditService.GetTemplateByID(System.String)">
+            <summary>依樣版ID取得流程樣版</summary>
+            <param name="templateID">流程樣版ID. </param>
+            <returns>依樣版ID取得流程樣版</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.ITemplateEditService.CreateTemplate(Microsoft.CUF.FlowEngine.Contract.TemplateFlowChart)">
+            <summary>建立樣版</summary>
+            <param name="flowChart">流程元件的資訊</param>
+            <returns>流程樣版ID</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.ITemplateEditService.UpdateTemplate(Microsoft.CUF.FlowEngine.Contract.TemplateFlowChart)">
+            <summary>更新樣版資訊</summary>
+            <param name="flowChart">流程元件的資訊. </param>
+            <returns>流程樣版ID</returns>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.ITemplateEditService.LoadTemplateFlowChart(System.String)">
+            <summary>依流程樣版ID取得其流程圖表資訊</summary>
+            <param name="templateID">流程樣版ID</param>
+            <returns>依流程樣版ID取得其流程圖表資訊</returns>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.OTPAuthResult.MessageCode">
+            <summary>
+            驗證結果代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.OTPAuthResult.ErrorMessage">
+            <summary>
+            錯誤訊息。
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.PKIVerifyResult">
+            <summary>
+            驗章結果。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.PKIVerifyResult.MessageCode">
+            <summary>
+            訊息代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.PKIVerifyResult.ErrorMessage">
+            <summary>
+            錯誤訊息。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.PKIVerifyResult.Cert">
+            <summary>
+            憑證。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.PKIVerifyResult.CertSerail">
+            <summary>
+            憑證序號。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.PKIVerifyResult.CertSubject">
+            <summary>
+            憑證主旨。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.PKIVerifyResult.CertFinger">
+            <summary>
+            憑證姆指紋。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.PKIVerifyResult.CertExtraID">
+            <summary>
+            身分證字號後四碼或統一編號。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.PKIVerifyResult.CertIssuer">
+            <summary>
+            憑證發行者。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.PKIVerifyResult.CertNotBefore">
+            <summary>
+            憑證生效日。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.PKIVerifyResult.CertNotAfter">
+            <summary>
+            憑證到期日。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.PKIVerifyResult.UserID">
+            <summary>
+            使用者註冊代號。(應該就是，也必須是CN)
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.SetupSubmitActionType">
+            <summary>
+            審核項目 - 設定類的動作 0:新增, 1:編輯, 2:刪除
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.SetupBizFlowTxnModel.FlowDisplayLastUpdUser">
+            <summary>
+            最近修改人員代碼
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.SetupBizFlowTxnModel.FlowDisplayLastUpdDate">
+            <summary>
+            最近修改日期，顯示在流程引擎用，不寫入資料庫
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.SetupBizFlowTxnModel.FlowDisplayActionName">
+            <summary>
+            告知送審時，此優先序的提交動作是什麼：新增，修改，刪除，上傳設定
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.SignLog">
+            <summary>
+            簽核記錄類別。
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.SignLog.#ctor">
+            <summary>Default constructor.</summary>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.SignLog.#ctor(System.Guid,System.Int32,System.Int32,System.String,System.String,System.String,Microsoft.CUF.FlowEngine.Contract.FlowSignCommandEnum,System.String,System.DateTime)">
+            <summary>Constructor.</summary>
+            <param name="instanceID"> 流程執行個體代碼。. </param>
+            <param name="iteration">流程執行的次數。. </param>
+            <param name="elementNo">關卡編號。. </param>
+            <param name="elementName">關卡名稱。. </param>
+            <param name="signee"> 簽核人員名稱。. </param>
+            <param name="signeeRole"> 簽核人員角色。. </param>
+            <param name="cmd">簽核動作</param>
+            <param name="signComment">簽核意見。. </param>
+            <param name="signTime"> 簽核時間。. </param>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.SignLog.InstanceID">
+            <summary>
+            流程執行個體代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.SignLog.ElementNo">
+            <summary>
+            關卡編號。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.SignLog.ElementName">
+            <summary>
+            關卡名稱。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.SignLog.Iteration">
+            <summary>
+            流程執行的次數。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.SignLog.SignCommand">
+            <summary>
+            簽核動作。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.SignLog.SignCommandDisplay">
+            <summary>簽核動作呈現文字</summary>
+            <value>簽核動作呈現文字</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.SignLog.Signee">
+            <summary>
+            簽核人員名稱。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.SignLog.SigneeRole">
+            <summary>
+            簽核人員角色。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.SignLog.SignTime">
+            <summary>
+            簽核時間。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.SignLog.SignComment">
+            <summary>
+            簽核意見。
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.SystemFlowCondition">
+            <summary>系統流程定義的查詢條件</summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.SystemFlowCondition.BizFlowType">
+            <summary> 交易流程類別. </summary>
+            <remarks>null表示不列入查詢條件</remarks>
+            <value> 交易流程類別. </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.SystemFlowCondition.SysFlowID">
+            <summary> 該交易功能的代號 </summary>
+            <value>該交易功能的代號 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.SystemFlowCondition.SysFlowName">
+            <summary> 該交易功能的名稱</summary>
+            <value> The name of the system flow. </value>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.TemplateElement">
+            <summary>
+            流程範本上關卡的基底類別。
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.TemplateElement.#ctor">
+            <summary>Default constructor.</summary>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.TemplateElement.#ctor(System.Guid,System.Int32,System.String,Microsoft.CUF.FlowEngine.Contract.FlowSecurityLevelEnum,System.Int32,System.Nullable{System.Int64},Microsoft.CUF.FlowEngine.Contract.ElementTypeEnum,System.Nullable{System.Int64},System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>Constructor.</summary>
+            <param name="templateID">流程樣版代碼。. </param>
+            <param name="eleNo">節點代碼. </param>
+            <param name="eleName">節點名稱 </param>
+            <param name="securityLevel">節點的安全等級設定。. </param>
+            <param name="signeeNum"> 需要的授權人數</param>
+            <param name="authVolume"> 授權金額</param>
+            <param name="eleType">關卡類型. </param>
+            <param name="txnBranchVolume">分支金額；下一個關卡。只有分支節點才會有這個屬性值。. </param>
+            <param name="canvasElementID">畫圖的元件ID. </param>
+            <param name="canvasElementType"> 畫圖的元件類型. </param>
+            <param name="coordinateX"> 畫圖的元件所在X軸. </param>
+            <param name="coordinateY"> 畫圖的元件所在Y軸. </param>
+            <param name="sourceEndpointAnchors">定義該節點可當來源的端點位置. </param>
+            <param name="targetEndpointAnchors">定義該節點可當接受點的端點位置. </param>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElement.TemplateID">
+            <summary>
+            流程樣版代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElement.Template">
+            <summary>流程樣版物件 </summary>
+            <value> 流程樣版物件 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElement.ElementNo">
+            <summary>
+            節點代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElement.ElementName">
+            <summary>
+            節點名稱。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElement.ElementType">
+            <summary>
+            關卡類型。(一旦從DB取出後，就用Class來判斷型別，不再用數字來判斷。)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElement.SecurityLevel">
+            <summary>
+            節點的安全等級設定。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElement.RequiredSigneeNum">
+            <summary>
+            需要的授權人數。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElement.AuthorizedVolume">
+            <summary>
+            授權金額。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElement.TxnBranchVolume">
+            <summary>
+            分支金額；下一個關卡。只有分支節點才會有這個屬性值。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElement.CanvasElementID">
+            <summary>畫圖的元件ID </summary>
+            <value>畫圖的元件ID </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElement.CanvasElementType">
+            <summary>畫圖的元件類型 </summary>
+            <value> 畫圖的元件類型</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElement.CoordinateX">
+            <summary>畫圖的元件所在X軸 </summary>
+            <value> 畫圖的元件所在X軸</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElement.CoordinateY">
+            <summary>畫圖的元件所在Y軸 </summary>
+            <value> 畫圖的元件所在Y軸 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElement.SourceEndpointAnchors">
+            <summary>定義該節點可當來源的端點位置 </summary>
+            <value> 定義該節點可當來源的端點位置 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElement.TargetEndpointAnchors">
+            <summary>定義該節點可當接受點的端點位置 </summary>
+            <value> 定義該節點可當接受點的端點位置 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElement.NextElementA">
+            <summary>
+            下一個關卡。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElement.NextElementB">
+            <summary>
+            下一個關卡。只有分支節點才會有這個屬性值。
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.TemplateElement.GetNextElement(Microsoft.CUF.FlowEngine.Contract.FlowInstance)">
+            <summary>
+            依關卡規則取得下一個關卡，關卡規則由子類別來實作。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.TemplateElementConnection">
+            <summary>
+            關卡連接定義類別。
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.TemplateElementConnection.#ctor">
+            <summary>Default constructor.</summary>
+        </member>
+        <member name="M:Microsoft.CUF.FlowEngine.Contract.TemplateElementConnection.#ctor(System.Guid,System.Int32,System.Int32,System.Int32,System.String,System.String,System.String,System.String)">
+            <summary>Constructor.</summary>
+            <param name="templateID"> 流程範本代碼。. </param>
+            <param name="sourceElementNo">來源關卡號碼。. </param>
+            <param name="targetElementNo">目的關卡號碼。. </param>
+            <param name="branchSeq">分支的順序。. </param>
+            <param name="canvasSourceElementID">畫圖的來源元件ID. </param>
+            <param name="canvasTargetElementID">畫圖的接受元件ID. </param>
+            <param name="sourceEndpointUUID"> 畫圖的來源元件的端點ID. </param>
+            <param name="targetEndpointUUID"> 畫圖的接受元件的端點ID. </param>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElementConnection.TemplateID">
+            <summary>
+            流程範本代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElementConnection.SourceElementNo">
+            <summary>
+            來源關卡號碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElementConnection.TargetElementNo">
+            <summary>
+            目的關卡號碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElementConnection.BranchSeq">
+            <summary>
+            分支的順序。
+            </summary>
+            <remarks>
+            若有一分支關卡A，分支至B、C兩個關卡，則AB線段的BranchSeq = 1， AC線段的BranchSeq = 2。
+            </remarks>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElementConnection.CanvasSourceElementID">
+            <summary>畫圖的來源元件ID </summary>
+            <value> 畫圖的來源元件ID </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElementConnection.CanvasTargetElementID">
+            <summary>畫圖的接受元件ID </summary>
+            <value>畫圖的接受元件ID</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElementConnection.SourceEndpointUUID">
+            <summary>畫圖的來源元件的端點ID </summary>
+            <value>畫圖的來源元件的端點ID </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateElementConnection.TargetEndpointUUID">
+            <summary>畫圖的接受元件的端點ID </summary>
+            <value>畫圖的接受元件的端點ID</value>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.TemplateFlowChart">
+            <summary>流程圖元件</summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateFlowChart.TemplateID">
+            <summary>流程樣版代碼</summary>
+            <value>流程樣版代碼</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateFlowChart.CorpID">
+            <summary>公司識別代碼</summary>
+            <value>公司識別代碼</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateFlowChart.Name">
+            <summary>流程樣版名稱</summary>
+            <value>流程樣版名稱</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateFlowChart.Currency">
+            <summary>流程樣版所屬幣別</summary>
+            <value>流程樣版所屬幣別</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateFlowChart.TemplateType">
+            <summary>流程樣版類型</summary>
+            <value>流程樣版類型</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateFlowChart.FlowChart">
+            <summary>流程樣版的圖型JSON資訊</summary>
+            <value>流程樣版的圖型JSON資訊</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateFlowChart.ExecuteBy">
+            <summary>執行身份</summary>
+            <value>執行身份</value>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.TemplateInfo">
+            <summary> 流程樣版資料 </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateInfo.TemplateID">
+            <summary> 樣版的GUID編號 </summary>
+            <value> 設定GUID值 </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateInfo.TemplateName">
+            <summary>樣版名稱</summary>
+            <value> The name of the template. </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateInfo.CurrencyType">
+            <summary>幣別</summary>
+            <value> The type of the currency. </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateInfo.TemplateType">
+            <summary>範本類型</summary>
+            <value> 範本類型</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateInfo.MaxElements">
+            <summary> Gets or sets the maximum elements. </summary>
+            <value> The maximum elements. </value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TemplateInfo.SecurityLevel">
+            <summary> 安控層級 </summary>
+            <value> The security level. </value>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.ToDo">
+            <summary>
+            等待核淮的待辦事項。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ToDo.SysFlowID">
+            <summary>
+            交易流程代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ToDo.SysFlowName">
+            <summary>
+            交易流程名稱。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ToDo.SysFlowDisplayOrder">
+            <summary>
+            交易流程顯示順序。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ToDo.SysFlowCategoryID">
+            <summary>
+            交易流程分類代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ToDo.SysFlowCateName">
+            <summary>
+            交易流程類別名稱。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ToDo.SysFlowCateDisplayOrder">
+            <summary>
+            交易流程分類顯示順序。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ToDo.HandledCount">
+            <summary>經手的交易數量</summary>
+            <value>經手的交易數量</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ToDo.EditingCount">
+            <summary>流程已建立，仍在經辦關卡的數量</summary>
+            <value>流程已建立，仍在經辦關卡的數量</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ToDo.ExecutingCount">
+            <summary>送審中的數量</summary>
+            <value>送審中的數量</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ToDo.RejectedCount">
+            <summary>已退回經辦的數量</summary>
+            <value>已退回經辦的數量</value>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.ToDo.OverduedCount">
+            <summary>逾期未放行的數量</summary>
+            <value>逾期未放行的數量</value>
+        </member>
+        <member name="T:Microsoft.CUF.FlowEngine.Contract.TxnModel">
+            <summary>流程處理的Base物件</summary>
+            <remarks>有套用流程的交易物件，皆需繼承此Model；注意需於Web.config加上knowtype的資訊</remarks>
+            <example>
+                     
+            </example>
+        </member>
+        <member name="F:Microsoft.CUF.FlowEngine.Contract.TxnModel._BatchType">
+            <summary>
+            必須有預設值，不然跨WCF傳遞時會出現序列化的問題。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TxnModel.InstanceID">
+            <summary>
+            流程代碼。(流程引擎在CreateInstance的時候，會把值填入。)
+            </summary>
+            <remarks>
+            標記NonColumn，否則子類別若實作 CUF.IModel ，會報錯：無法在Table找到該欄位。
+            </remarks>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TxnModel.SysFlowID">
+            <summary>
+            交易流程代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TxnModel.BatchNo">
+            <summary>
+            交易的批次代碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TxnModel.SerialNo">
+            <summary>
+            交易序號。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TxnModel.TransferAccount">
+            <summary>
+            轉出銀行帳戶號碼。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TxnModel.TxnDate">
+            <summary>
+            交易日期。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TxnModel.TxnAmount">
+            <summary>
+            總交易金額。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TxnModel.BatchType">
+            <summary>
+            交易類型。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TxnModel.Items">
+            <summary>
+            交易明細。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TxnModel.ToDoDetailCount">
+            <summary>
+            可以審核的明細筆數。(可以審核的筆數不等於整個批次的筆數)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TxnModel.ToDoDetailSum">
+            <summary>
+            可以審核的明細金額。(可以審核的金額不等於整個批次的金額)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TxnModel.FlowStatus">
+            <summary>
+            流程狀態。
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.FlowEngine.Contract.TxnModel.ElementSecurityLevel">
+            <summary>
+            安控等級。
+            </summary>
+        </member>
+    </members>
+</doc>

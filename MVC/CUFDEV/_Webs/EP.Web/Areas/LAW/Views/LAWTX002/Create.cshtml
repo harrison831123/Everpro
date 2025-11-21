@@ -1,0 +1,151 @@
+﻿@model EP.SD.SalesSupport.LAW.Web.Areas.LAW.Model.LawDetailModel
+@{
+    ViewBag.Title = LAWResource.新增經辦人員;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    var thisGroupType = AccountGroupType.System;
+}
+
+@section LeftActions{
+    <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.儲存" data-bind="click: SaveClick" />
+    @Html.ActionLink(EP.PlatformResources.返回, "Index", "LAWTX002", new { Class = "btn btn-default" })
+}
+
+@using (Html.BeginForm("Create", "LAWTX002", null, FormMethod.Post, new { id = "CreateSubmit" }))
+{
+    <div class="detail-col form-group form-inline" id="recipient-area">
+        <img class="index-title-icon" src="~/Content/img/recipient_chat_g.png" />@Html.LabelFor(m => m.DouserName, new { @class = "detail-msg" })
+        <div class="detail-cell">
+            <ul>
+                <div id="H2OGP">
+                    @{Html.RenderPartial("~/Views/Shared/AccountGroupSelector.cshtml",
+                                                                  new AccountGroupSelector("AccountGroupSelector", EP.PlatformResources.選擇人員, thisGroupType) { OnSelected = "onDialogSelected" });}
+                    <button type="button" class="btn btn-danger" id="addusers" tabindex="4">@EP.PlatformResources.設定成員</button>
+                    <div class="detail-cell" id="RecipientToShow">
+
+                    </div>
+                    @Html.TextBoxFor(m => m.LawimemberToJson, new { style = "display:none;width:100%" })
+                </div>
+            </ul>
+        </div>
+    </div>
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.DouserPhoneExt, new { @class = "detail-msg" })
+        <div class="col-md-offset-1">
+            @Html.TextBoxFor(m => m.DouserPhoneExt, new { @id = "DouserPhoneExt", style = "width:15%", @maxlength = "250", @class = "form-control detail-cell", @placeholder = LAWResource.請輸入數字 })
+        </div>
+    </div>
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.DouserSort, new { @class = "detail-msg" })
+        <div class="col-md-offset-1">
+            @Html.TextBoxFor(m => m.DouserSort, new { @id = "DouserSort", style = "width:15%", @maxlength = "250", @class = "form-control detail-cell", @placeholder = LAWResource.請輸入數字 })
+        </div>
+    </div>
+}
+<script>
+    var ViewModel = {
+        SaveClick: function () {
+            if (saveValidator()) {
+                clearMessage();@*清除訊息*@
+                var tabUniqueId = $("#tabUniqueId").val();
+                $("#CreateSubmit").attr('action', '@Url.Action("Create", "LAWTX002")');
+                $("#CreateSubmit").submit();
+            }
+        }
+    };
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+        //隱藏選擇視窗的原本按鍵
+        $("#AccountGroupSelectorPopButton").hide();
+        $("#addusers").click(addUsersClick);
+        if ($("#LawimemberToJson").val() != '') {
+            recipientSelectShow($("#LawimemberToJson").val());
+        }
+    });
+    //@*人員視窗選擇結果處理*@
+    function onDialogSelected() {
+        //取得它的選擇資訊(JSON格式)
+        var hiddenValue = $("#AccountGroupSelector").getHiddens()[0];
+        recipientSelectShow(hiddenValue);
+    }
+    function addUsersClick() {
+        //手動呼叫Dialog視窗
+        $("#AccountGroupSelector").openDialog();
+    }
+    function recipientSelectShow(jsonValue) {
+
+        var $select = $('#RecipientToShow');
+        $select.attr('style', "height:200px;overflow:auto;").html('');
+        if (jsonValue == undefined) return;
+        var jsonItems = JSON.parse(jsonValue);
+        $("#LawimemberToJson").val(jsonValue);
+
+        $.each(jsonItems, function (idx, obj) {
+            var unit = '';
+            //$select.append($('<option>').text(obj.Unit+" "+obj.Text).attr('value', obj.Key).prop("selected", true));
+
+            $select.append('<ul>' + obj.Unit + " " + obj.Text + '</ul>');
+        });
+    }
+    $("#DouserSort").focusout(function () {
+        if ($("#DouserSort").val() != "") {
+            clearMessage();
+            CheckDouserSort();
+        }
+    })
+    function CheckDouserSort() {
+        $.ajax({
+            method: "POST",
+            cache: false,
+            url: '@Url.Action("CheckDouserSort", "LAWTX002", new { area = "LAW" })',
+            data: { DouserSort: $("#DouserSort").val()},
+            complete: function (check) {
+                if (check.responseText == "OK") {
+                } else {
+                    $("#DouserSort").val('');
+                    appendMessage("@LAWResource.此順位已有設定");
+                }
+            },
+            error: function (ex) {
+                    if (ex.statusText == "OK") {
+                    } else {
+                        appendMessage("@LAWResource.系統發生錯誤");
+                    }
+            }
+        });
+    }
+    function saveValidator() {
+        if ($("#LawimemberToJson").val() == "") {
+            appendMessage("@( LAWResource.人員 + EP.PlatformResources.必填)");
+            return false;
+        }
+        if ($("#LawimemberToJson").val() != "") {
+            var Lawimember = JSON.parse($('#LawimemberToJson').val());
+            var length = Object.keys(Lawimember).length;
+            if (length > 1) {
+                appendMessage(@LAWResource.只能選能一位成員);
+                return false;
+            }
+        }
+        if ($("#DouserPhoneExt").val() == "") {
+            appendMessage("@( LAWResource.分機號碼 + EP.PlatformResources.必填)");
+            return false;
+        }
+        if ($("#DouserSort").val() == "") {
+            appendMessage("@( LAWResource.排序 + EP.PlatformResources.必填)");
+            return false;
+        }
+        var pattern = /\d/;
+        var DouserPhoneExt = $("#DouserPhoneExt").val();
+        var DouserSort = $("#DouserSort").val();
+
+        if (pattern.test(DouserPhoneExt) == false) {
+            appendMessage("@LAWResource.分機號碼格式錯誤");
+            return false;
+        }
+        if (pattern.test(DouserSort) == false) {
+            appendMessage("@LAWResource.排序");
+            return false;
+        }
+        return true;
+    }
+</script>

@@ -1,0 +1,183 @@
+﻿@model HrUpg25QueryCondition
+@{
+    ViewBag.Title = AGUPGResource.加計被推介人業績;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+<link href="~/Areas/AGUPG/Content/AGUPGQU001.css" rel="stylesheet" />
+<div id="divQueryBlock">
+    @using (Ajax.BeginForm("IntroduceReturnDetail", "AGUPGQU001", new { area = "AGUPG" }, new AjaxOptions { OnSuccess = "bindGrid" }, new { id = "QueryForm" }))
+    {
+        @Html.HiddenFor(m => m.AgentCode)
+        @Html.HiddenFor(m => m.YYYYSeason)
+        @Html.HiddenFor(m => m.DetailType)
+    }
+    @section GridActions {
+        <div class="row">
+            <div name="NoData1"></div>
+            <div name="AreaHeaderTitle" id="AreaTitle1"></div>
+        </div>
+        <div class="jqGrid">
+            <table id="Area1"></table>
+        </div>
+        <div id="ResultPagger"></div>
+    }
+    @section LeftActions{
+        @Html.ActionLink(EP.PlatformResources.返回, "Index", "AGUPGQU001", new { YYYYSeason = Model.YYYYSeason, code = Model.AgentCode }, new { @class = "btn btn-default" })
+    }
+</div>
+<div class="to-top" style="display: none;"><i>TOP</i></div>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $("form#QueryForm").trigger("submit");
+            scrollFunction();
+            GoToTop();
+        });
+
+        function bindGrid(data) {
+            //if (data.HrUpgGet25Detail3 == null) {
+            //    appendMessage("查無資料!!");
+            //    return
+            //}
+
+            $("div[name='NoData1']").html('<label id="NoData1">查無資料</label>');
+            $("#Area1").jqGrid('GridUnload');
+
+            if (data.HrUpgGet25Detail3.length == 0) {
+                $("#AreaTitle1").hide();
+                $("#NoData1").show();
+            }
+            else {
+                $("#AreaTitle1").show();
+                $("#NoData1").hide();
+
+                $("#Area1").jqGrid({
+                    datatype: "local",
+                    mtype: "POST",
+                    colNames: [
+                        "通訊處",
+                        "處別",
+                        "最初推介人姓名",
+                        "被推介人姓名",
+                        "最新關檔月份<br/>稱謂代號",
+                        "異地推介",
+                        "符合加計條件",
+                        "年份",
+                        "1月",
+                        "2月",
+                        "3月",
+                        "4月",
+                        "5月",
+                        "6月",
+                        "7月",
+                        "8月",
+                        "9月",
+                        "10月",
+                        "11月",
+                        "12月"
+                    ],
+                    colModel: [
+                        { name: "CenterName", index: "CenterName" },
+                        { name: "WcCenterName", index: "WcCenterName" },
+                        { name: "OrigIntroducerName", index: "OrigIntroducerName" },
+                        { name: "AgName", index: "AgName" },
+                        { name: "AgLevel", index: "AgLevel" },
+                        { name: "IsIntroduceRemote", index: "IsIntroduceRemote" },
+                        { name: "PlusStatus", index: "PlusStatus" },
+                        { name: "YYYY", index: "YYYY" },
+                        { name: "Month1", index: "Month1" },
+                        { name: "Month2", index: "Month2" },
+                        { name: "Month3", index: "Month3" },
+                        { name: "Month4", index: "Month4" },
+                        { name: "Month5", index: "Month5" },
+                        { name: "Month6", index: "Month6" },
+                        { name: "Month7", index: "Month7" },
+                        { name: "Month8", index: "Month8" },
+                        { name: "Month9", index: "Month9" },
+                        { name: "Month10", index: "Month10" },
+                        { name: "Month11", index: "Month11" },
+                        { name: "Month12", index: "Month12" }
+
+                    ],
+                    rowNum: 10,              // 每頁10筆
+                    rowList: [10, 20, 50],   // 可選每頁筆數
+                    pager: "ResultPagger",   // 分頁元件（需有這個div）
+                    viewrecords: true,       // 顯示筆數
+                    jsonReader: { /*  讀JSON格式資料*/
+                        repeatitems: false,
+                        id: "0"
+                    },
+                    gridComplete: function (mythis) {
+                        if (mythis == null) { mythis = this; };
+                        var mygrid = $(mythis);
+                        // 讓每個row下的cell 都有colname(供RWD使用)
+                        // mygrid.find("tr:even").css("background", "#F5EFE7");
+                        var cm = mygrid.jqGrid("getGridParam", "colNames");
+                        var trs = mygrid.find('tr');
+                        $.each(trs, function (tri, tritem) {
+                            var tds = $(tritem).find('td');
+                            if ($(tritem).hasClass("jqgfirstrow"))  //排除grid第一筆訂寬度用的
+                                return;
+                            $.each(tds, function (tdi, tditem) {
+                                var mytitle = cm[tdi].replace("<br/>", "\n");
+                                $(tditem).attr('mycolname', mytitle);
+
+                                 //讓RWD時的Header可以自動調高度！註：因加html至Data欄裡面！所以要小心
+                                var dirtyContent = "";
+                                var mytitle2 = cm[tdi].replace("<br/>", "");
+                                if (mytitle2.Blength() > mytitle2.length && mytitle2.Blength() > 14 && window.innerWidth <= 430) {
+                                    for (var ii = 1; ii < (mytitle2.Blength() / 14); ii++)
+                                        dirtyContent += "<br/><br/>";//"\n";
+                                    $(tditem).append(dirtyContent);
+                                }
+                                 //讓RWD時的Header可以自動調高度！
+
+                                if (cm[tdi].indexOf("<input") >= 0) {
+                                    $(tditem).attr('mycolname', "");
+                                }
+
+                            });
+
+                        });
+                         //讓它再執行一次Resize(可移除body出現scrollbar的問題)
+                        jqGridResize();
+                         //若資料是空值則Header出現x - overflow: auto
+                        var hdivgrid = mygrid.parent().parent().parent().find(".ui-jqgrid-hdiv");  /*找到header的Div */
+                        if (mythis.p.reccount === 0) {
+                            hdivgrid.addClass("ui-jqgrid-hdivScrollX");
+                        }
+                        else {
+                            hdivgrid.removeClass("ui-jqgrid-hdivScrollX");
+                        }
+                    },
+                    error: function (ex) {
+                        appendMessage("系統發生錯誤!!");
+                    }
+
+                });
+                $("#Area1").jqGrid('setGridParam', { data: data.HrUpgGet25Detail3 });
+                $("#Area1").trigger("reloadGrid");
+            }
+        }
+
+        window.onscroll = function () { scrollFunction() };
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.querySelector('.to-top').style.display = "block";
+            } else {
+                document.querySelector('.to-top').style.display = "none";
+            }
+        }
+        function GoToTop() {
+            let item = document.querySelector('.to-top');
+            item.addEventListener('click', (e) => {
+                window.scrollTo({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+    </script>
+}

@@ -1,0 +1,216 @@
+﻿@model EP.SD.SalesSupport.LAW.Models.LawContentDetail
+@{
+    ViewBag.Title = Model.PayMentType == "1" ? LAWResource.新增清償明細 : LAWResource.新增律師服務費;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    Model.LawRepaymentDate = Model.LawRepaymentDate == "0001/1/1 AM 12:00:00" ? "" : Model.LawRepaymentDate;
+    WebChannel<EP.SD.SalesSupport.LAW.Service.ILAWService> Service = new WebChannel<EP.SD.SalesSupport.LAW.Service.ILAWService>();
+    List<EP.H2OModels.LawLawyerServiceRates> LawyerServiceRates = new List<EP.H2OModels.LawLawyerServiceRates>();
+    Service.Use(s => LawyerServiceRates = s.GetLawLawyerServiceRates().ToList());
+}
+@section LeftActions{
+    <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.儲存" data-bind="click: SaveClick" />
+    <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.返回" data-bind="click: BackClick" />
+}
+@using (Html.BeginForm("Create", "LAWTX009", null, FormMethod.Post, new { id = "CreateSubmit", style = "margin-top:10px;" }))
+{
+    if (Model.PayMentType == "1")
+    {
+        @Html.HiddenFor(m => m.PayMentType)
+        @Html.HiddenFor(m => m.LawId)
+        @Html.HiddenFor(m => m.AgentID)
+        @Html.HiddenFor(m => m.LawNoteNo)
+        <div class="detail-col form-group form-inline">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawNoteNo, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @Html.EditDisplayFor(m => m.LawNoteNo, true, new { @id = "LawNoteNo", style = "width:50%", @maxlength = "250", @class = "form-control detail-cell" })
+            </div>
+        </div>
+        <div class="detail-col form-group form-inline">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawRepaymentDate, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @Html.TextBoxFor(m => m.LawRepaymentDate, new { @id = "LawRepaymentDate", style = "width:50%", @maxlength = "250", @class = "form-control detail-cell jquery_datetimepicker" })
+            </div>
+        </div>
+        <div class="detail-col">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawRepaymentMoney, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @*@Html.TextBox("LawRepaymentMoney", "", new { @id = "LawRepaymentMoney", style = "width:50%", @maxlength = "250", @class = "form-control detail-cell" })*@
+                <input type="text" id="LawRepaymentMoney" name="LawRepaymentMoney" style="width:50%" value="" class="form-control detail-cell" />
+            </div>
+        </div>
+        <div class="detail-col ">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawRepaymentCapital, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @*@Html.TextBox("LawRepaymentCapital", "", new { @id = "LawRepaymentCapital", style = "width:50%", @maxlength = "250", @class = "form-control detail-cell" })*@
+                <input type="text" id="LawRepaymentCapital" name="LawRepaymentCapital" style="width:50%" value="" class="form-control detail-cell" />
+            </div>
+        </div>
+        <div class="detail-col">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawRepaymentInterest, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @*@Html.TextBox("LawRepaymentInterest", "", new { @id = "LawRepaymentInterest", style = "width:50%", @maxlength = "250", @class = "form-control detail-cell" })*@
+                <input type="text" id="LawRepaymentInterest" name="LawRepaymentInterest" style="width:50%" value="" class="form-control detail-cell" />
+            </div>
+        </div>
+        <div class="detail-col ">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawRepaymentCourt, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @*@Html.TextBox("LawRepaymentCourt", "", new { @id = "LawRepaymentCourt", style = "width:50%", @maxlength = "250", @class = "form-control detail-cell" })*@
+                <input type="text" id="LawRepaymentCourt" name="LawRepaymentCourt" style="width:50%" value="" class="form-control detail-cell" />
+            </div>
+        </div>
+        <div class="detail-col ">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawRepaymentOther, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @*@Html.TextBox("LawRepaymentOther", "", new { @id = "LawRepaymentOther", style = "width:50%", @maxlength = "250", @class = "form-control detail-cell" })*@
+                <input type="text" id="LawRepaymentOther" name="LawRepaymentOther" style="width:50%" value="" class="form-control detail-cell" />
+            </div>
+        </div>
+        <div class="detail-col ">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawCommDeduction, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @*@Html.TextBox("LawCommDeduction", "", new { @id = "LawCommDeduction", style = "width:50%", @maxlength = "250", @class = "form-control detail-cell" })*@
+                <input type="text" id="LawCommDeduction" name="LawCommDeduction" style="width:50%" value="" class="form-control detail-cell" />
+            </div>
+        </div>
+    }
+    else
+    {
+        @Html.HiddenFor(m => m.PayMentType)
+        @Html.HiddenFor(model => model.LawId)
+        @Html.HiddenFor(model => model.LawDueAgentId)
+        @Html.HiddenFor(model => model.LawNoteNo)
+        <div class="detail-col form-group form-inline">
+            <label class="detail-msg">@LAWResource.給付月份</label>
+            <div class="col-md-offset-1" style="display:flex">
+                @Html.TextBoxFor(m => m.LawRewardPayYear, new { @id = "LawRewardPayYear", style = "width:30%", @maxlength = "250", @class = "form-control detail-cell", onkeyup = "IsNumeric(this.value);" })
+                <p class="detail-msg" style="margin-top:20px">@LAWResource.年</p>
+                @Html.TextBoxFor(m => m.LawRewardPayMonth, new { @id = "LawRewardPayMonth", style = "width:30%", @maxlength = "250", @class = "form-control detail-cell", onkeyup = "IsNumeric(this.value);" })
+            <p class="detail-msg" style="margin-top:20px">@LAWResource.月</p>
+            </div>
+            <br><font color="red">範例:0098年、03月</font>
+        </div>
+        <div class="detail-col form-group form-inline">
+            <label class="detail-msg">@LAWResource.計算本金</label>
+            <div class="col-md-offset-1">
+                @*@Html.TextBoxFor(m => m.LawRepaymentMoney, new { @id = "LawRewardPayYear", style = "width:50%", @maxlength = "250", @class = "form-control detail-cell" })*@
+                <input type="text" id="LawRepaymentMoney" name="LawRepaymentMoney" style="width:50%" value="" class="form-control detail-cell" onkeyup='IsNumeric(this.value);' />
+            </div>
+        </div>
+        <div class="detail-col form-group form-inline">
+            @Html.LabelFor(m => m.LawFees, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @Html.TextBoxFor(m => m.LawFees, new { @id = "LawFees", style = "width:50%", @maxlength = "250", @class = "form-control detail-cell", onkeyup = "IsNumeric(this.value);" })
+            </div>
+        </div>
+        <div class="detail-col form-group form-inline">
+            <label class="detail-msg">@LAWResource.計算比例</label>
+            <div class="col-md-offset-1">
+                <select class="form-control" id="LawRates" name="LawRates">
+                    <option value="">@LAWResource.請選擇</option>
+                    @for (var i = 0; i < LawyerServiceRates.Count; i++)
+                    {
+                        <text>
+                            <option value="@LawyerServiceRates[i].LawLawyerServiceRatesId">@LawyerServiceRates[i].LawyerServiceRates</option>
+                        </text>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="detail-col form-group form-inline">
+            @Html.LabelFor(m => m.LawServiceReward, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @*@Html.EditDisplayFor(model => model.LawServiceReward, true, new { @class = "form-control detail-cell", style = "width:50%", Value = "" })*@
+                <input type="text" id="LawServiceReward" name="LawServiceReward" style="width:50%" value="" class="form-control detail-cell" readonly="readonly" />
+            </div>
+        </div>
+    }
+
+}
+<script>
+    var ViewModel = {
+        SaveClick: function () {
+            if (saveValidator()) {
+                clearMessage();@*清除訊息*@
+                var tabUniqueId = $("#tabUniqueId").val();
+                $("#CreateSubmit").attr('action', '@Url.Action("Create", "LAWTX009")');
+                $("#CreateSubmit").submit();
+            }
+        },
+        BackClick: function () {
+            clearMessage();@*清除訊息*@
+            var tabUniqueId = $("#tabUniqueId").val();
+            location.href ='@Html.Raw(Url.Action("UpdateDueMoneyList", "LAWTX009"))' + "?AgentID=" + '@Model.AgentID' + "&NoteNo=" + '@Model.LawNoteNo' + "&LawId=" + '@Model.LawId';
+        }
+    };
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+        var opt = {
+            dateFormat: 'yy/mm/dd',
+            showTimepicker: false,
+            showSecond: false,
+            mask: true,
+            validateOnBlur: false
+        };
+        $(".jquery_datetimepicker").datetimepicker(opt);
+    });
+
+    function saveValidator() {
+        @if (Model.PayMentType == "1") {
+            <text>
+            if ($("#LawRepaymentDate").val() == "") {
+                appendMessage("@( LAWResource.您尚未選擇清償日期 )");
+                return false;
+            }
+            if ($("#LawRepaymentMoney").val() != "" && $("#LawCommDeduction").val() != "") {
+                appendMessage("@( LAWResource.清償金額跟續佣抵扣不得同時存在 )");
+                return false;
+            }
+            var LawRepaymentMoney = $("#LawRepaymentMoney").val() == "" ? 0 : parseInt($("#LawRepaymentMoney").val());
+            var LawRepaymentCapital = $("#LawRepaymentCapital").val() == "" ? 0 : parseInt($("#LawRepaymentCapital").val());
+            var LawRepaymentInterest = $("#LawRepaymentInterest").val() == "" ? 0 : parseInt($("#LawRepaymentInterest").val());
+            var LawRepaymentCourt = $("#LawRepaymentCourt").val() == "" ? 0 : parseInt($("#LawRepaymentCourt").val());
+            var LawRepaymentOther = $("#LawRepaymentOther").val() == "" ? 0 : parseInt($("#LawRepaymentOther").val())
+            //清償金額 = 清償本金+ 清償利息 +法院規費 +其他規費
+            var total = LawRepaymentCapital + LawRepaymentInterest + LawRepaymentCourt + LawRepaymentOther;
+            if (LawRepaymentMoney != total) {
+                appendMessage("@( LAWResource.清償金額需等於清償本金 + LAWResource.清償利息法院規費其他規費 )");
+                return false;
+            }
+
+          </text>
+        }
+        else {
+            <text>
+            if ($("#LawRewardPayYear").val() == "" || $("#LawRewardPayMonth").val() == "") {
+                appendMessage("@( LAWResource.尚未輸入年份或月份 )");
+                return false;
+            }
+            if ($("#LawRepaymentMoney").val() == "" || $("#LawFees").val() == "") {
+                appendMessage("@( LAWResource.尚未輸入相關金額 )");
+                return false;
+            }
+            if ($("#LawRates").val() == "" ) {
+                appendMessage("@( LAWResource.尚未選擇計算比例 )");
+                return false;
+            }
+            </text>
+        }
+        return true;
+    }
+    function IsNumeric(sText) {   //判斷是否為數值
+        //alert(sText);
+        var ValidChars = "0123456789.";
+        var IsNumber = true;
+        var Char;
+
+        for (i = 0; i < sText.length && IsNumber == true; i++) {
+            Char = sText.charAt(i);
+            if (ValidChars.indexOf(Char) == -1) {
+                alert("@LAWResource.數入不合法的數值");
+                IsNumber = false;
+            }
+        }
+        return IsNumber;
+    }
+</script>

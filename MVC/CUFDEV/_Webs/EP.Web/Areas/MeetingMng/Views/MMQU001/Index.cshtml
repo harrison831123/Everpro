@@ -1,0 +1,204 @@
+﻿@{
+    ViewBag.Title = EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.會議列表;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+@if (TempData["message"] != null)
+{
+    <script type="text/javascript">
+        var message = @Html.Raw(Json.Encode(TempData["message"]));
+        alert(message);
+    </script>
+}
+@model EP.PSL.WorkResources.MeetingMng.Service.QueryMeetingCondition
+<div id="divQueryBlock">
+    @*@using (Html.BeginForm("Index", "CUSACQU001N", FormMethod.Post))*@
+    @using (Ajax.BeginForm("Query", "MMQU001", null, new AjaxOptions { OnSuccess = "bindGrid" }, new { id = "MeetingMngQuery", area = "MMQU001" }))
+    {
+        <div class="wall-title">
+            <img class="index-title-icon" src="~/Content/img/search.png" />(@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.搜尋條件)
+        </div>
+        <div class="row wall">
+            <div class="col-md-12 form-group detail-col">
+                <div class="col-md-6">
+                    @*類別*@
+                    @Html.LabelFor(m => m.MeetingReadType, new { @class = "control-label" })
+                    @Html.DropDownListFor(x => x.MeetingReadType, (IEnumerable<SelectListItem>)EP.PSL.WorkResources.MeetingMng.Web.MeetingMngHelper.GetMeetingDefaultTypeList(Model.MeetingReadType, (ValueText m) => m.Text), new { @id = "MeetingReadType", @class = "form-control" })
+                </div>
+                <div class="col-md-6">
+                    <label class="control-label">@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.會議名稱</label>
+                    <input id="MTName" class="form-control" type="text" placeholder="@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.會議名稱關鍵字" name="MTName" />
+                </div>
+                <div class="col-md-12">
+                    <label class="control-label">@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.說明</label>
+                    <input id="MTDesc" class="form-control" type="text" placeholder="@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.會議說明關鍵字" name="MTDesc" />
+                </div>
+            </div>
+        </div>
+        <input type="button" id="btnQuery" class="btn btn-default" value="@EP.PlatformResources.查詢" data-bind="hotkeydown: { 'alt+q': QueryClick }, click: QueryClick" />
+        <input type="button" id="btnClear" class="btn btn-default" value="@EP.PlatformResources.清除" data-bind="hotkeydown: { 'alt+r': ClearClick }, click: ClearClick" />
+
+    }
+</div>
+<div id="MarkPreview">
+    <div class="jqGrid">
+        <table id="Grid"></table>
+    </div>
+    <div id="QueryResultPagger">
+    </div>
+</div>
+<script>
+    @*************************************************
+    //資訊定義區
+    *************************************************@
+
+    var DETAILURL = "@Url.Action("Detail", "MMTX002")";
+    @*定義此頁面所用的KO*@
+    function ViewModel() {
+        var self = this;
+        self.QueryClick = function () {
+            clearMessage();
+            $("#MeetingMngQuery").trigger("submit");
+        };
+        self.ClearClick = function () {
+            clearMessage();@*清除訊息*@
+            $('#divQueryBlock input[type=text]').val('');
+            $("#MeetingReadType").get(0).selectedIndex = 1;
+            //$('#divQueryBlock input[type=radio]').attr('checked', false);
+        };
+    }
+    var vm = new ViewModel();
+    $(document).ready(function () {
+        //Microsoft.UI.Init.DatePicker();
+        ko.applyBindings(vm);
+        var timeoutID = window.setTimeout(function () { $('#btnQuery').click(); }, 250);
+    });
+    function bindGrid() {
+        var url = '@Url.Action("BindGrid", "MMQU001")';
+        $("#Grid").trigger("reloadGrid");
+        $("#Grid").jqGrid({
+            url: url,
+            datatype: "json",
+            mtype: "POST",
+            page: "page",
+            total: "total",
+            rowNum: 10,
+            sortname: "MTStartDate",
+            sortorder: "desc",
+            autowidth: true,
+            rownumbers: true,
+            rowList: [10, 20, 30],
+            pager: "QueryResultPagger",
+            colNames: ["", "@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.會議名稱", "@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.開始日期", "@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.召集人", "@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.會議狀態"],
+            colModel: [
+                { name: "MTID", index: "MTID", hidden: true },
+            { name: "MTName", index: "MTName", sortable: true, search: true },
+            {
+                name: "MTStartDate", index: "MTStartDate", sortable: true, search: true, formatter: "date", formatoptions: { srcformat: "ISO8601Long", newformat: "Y/m/d H:i" }
+            },
+            { name: "MTConvenerName", index: "MTConvenerName", sortable: true, search: false },
+            { name: "MeetingReadType", index: "MeetingReadType", sortable: true, search: false, formatter: GetMeetingReadType },
+            ],
+
+            jsonReader: {   //讀JSON格式資料
+                repeatitems: false,
+                id: '0',
+            },
+            @*@if (Model.MultiSelect)
+                    {  <text>multiselect: true, </text> }
+            else
+            { <text>multiselect: false, </text> }
+                @if (Model.Pagging)
+                { <text> pager: "@(Model.ID)pagger", </text>}
+                else
+                { <text> </text>}*@
+
+            onSelectRow: function (id) {
+                if (id) {
+                    var myGrid = $(this);
+                    var selRowId = myGrid.jqGrid('getGridParam', 'selrow');@*取得那一個row no*@
+                    var selRow = myGrid.getRowData(selRowId);@*取得該row資料*@
+
+                    PopupWindow(selRow);
+                }
+                @*if (id) {
+                    var myGrid = $(this);
+                    var selRowId = myGrid.jqGrid('getGridParam', 'selrow');
+                    var selRow = myGrid.GetResult(selRowId);
+                    @if (!string.IsNullOrEmpty(Model.OnSelectRow) && !Model.MultiSelect)
+                    {
+                        <text>
+                        var func = @Model.OnSelectRow;
+                        func(selRow);
+                        </text>
+                    }
+                }
+            else {
+                }*@
+            },
+            loadComplete: function () {
+                
+                @*addWaterMark();
+            var curHeight = $("#@(Model.ID)").jqGrid('getGridParam', 'height');*@
+                //alert(curHeight);
+            }
+        });
+        $("#Grid").jqGrid("navGrid", "#QueryResultPagger", { add: false, edit: false, del: false, search: false, refresh: false });
+       
+        @*$("#@(Model.ID)").jqGrid("setLabel", "CUQUDate", "", { "text-align": "center" });
+            $("#@(Model.ID)").jqGrid("setLabel", "owner", "", { "text-align": "center" });
+            $("#@(Model.ID)").jqGrid("setLabel", "owner_mobile", "", { "text-align": "center" });*@
+    }
+    window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", function () {
+        //addWaterMark();
+        if (window.orientation === 180 || window.orientation === 0) {
+
+            //alert('目前您的螢幕為縱向！');
+
+        }
+
+        if (window.orientation === 90 || window.orientation === -90) {
+
+            //alert('目前您的螢幕為橫向！');
+
+        }
+
+    }, false);
+
+    //Grid處理連結的函式
+    function PopupWindow(object) {
+
+        @*var groupType = '@(Model!=null?Model.GroupType:null)';*@
+        var format = DETAILURL + "?" + "id={0}";
+        var url = $.validator.format(format, object.MTID);
+        var openName = "Account" + object;
+      
+        window.open(url, openName);
+    }
+    function GetMeetingReadType(cellValue, options, rdata, action) {
+        let datatype = rdata.MeetingReadType;
+        let typestr = "";
+        switch (datatype) {
+            case "1":
+                typestr = "未召開會議"
+                break;
+            case "2":
+                typestr = "已召開會議"
+                break;
+            case "3":
+                typestr = "我舉辦的會議"           
+                break;
+            case "4":
+                typestr = "歷史資料"
+                break;
+        }
+        
+        return typestr;
+    }
+    
+    //$(document).on('click', '.PopupWindow', function () {
+    //    var id = $(this).attr('data-value');
+    //    PopupWindow(id);
+    //});
+
+
+</script>

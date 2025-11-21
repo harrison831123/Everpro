@@ -1,0 +1,65 @@
+﻿
+@model EP.SD.SalesSupport.LAW.Web.Areas.LAW.Model.LawDetailModel
+@{
+    ViewBag.Title = LAWResource.新增結案狀態;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+@section LeftActions{
+    <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.儲存" data-bind="click: SaveClick" />
+    @Html.ActionLink(EP.PlatformResources.返回, "Index", "LAWTX005", new { Class = "btn btn-default" })
+}
+
+<font color="blue">@LAWResource.說明結欠計算方式會影響</font><font color="red"><b><u>@LAWResource.追回本金金額</u></b></font><font color="blue">@LAWResource.之計算設定前請先確認</font>
+@using (Html.BeginForm("Create", "LAWTX005", null, FormMethod.Post, new { id = "CreateSubmit", style = "margin-top:10px;" }))
+{
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.CloseTypeName, new { @class = "detail-msg" })
+        <div class="col-md-offset-1">
+            @Html.TextBoxFor(m => m.CloseTypeName, new { @id = "CloseTypeName", style = "width:50%", @maxlength = "250", @class = "form-control detail-cell" })
+        </div>
+    </div>
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.CountType, new { @class = "detail-msg" })
+        <div class="col-md-offset-1 " style="width:50%;">
+            <input type="radio" name="CountType" value="1" checked><span style="margin-right:5px;">@LAWResource.變動</span><input type="radio" name="CountType" value="0"><span>@LAWResource.不變動</span>
+        </div>
+    </div>
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.CreateName, new { @class = "detail-msg" })
+        <div class="col-md-offset-1">
+            @Html.DisplayFor(model => model.CreateName, new { @class = "control-label col-md-2" })
+        </div>
+    </div>
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.CreateDate, new { @class = "detail-msg" })
+        <div class="col-md-offset-1">
+            @Html.DisplayFor(model => model.CreateDate, new { @class = "control-label col-md-2" })
+        </div>
+    </div>
+}
+<script>
+    var ViewModel = {
+        SaveClick: function () {
+            if (saveValidator()) {
+                clearMessage();@*清除訊息*@
+                var tabUniqueId = $("#tabUniqueId").val();
+                $("#CreateSubmit").attr('action', '@Url.Action("Create", "LAWTX005")');
+                $("#CreateSubmit").submit();
+            }
+        }
+    };
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+    });
+
+    function saveValidator() {
+        if ($("#CloseTypeName").val() == "") {
+            appendMessage("@( LAWResource.結案狀態名稱 + EP.PlatformResources.必填)");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+

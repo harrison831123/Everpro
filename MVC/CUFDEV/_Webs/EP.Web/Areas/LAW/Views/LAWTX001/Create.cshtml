@@ -1,0 +1,83 @@
+﻿@model EP.SD.SalesSupport.LAW.Web.Areas.LAW.Model.LawDetailModel
+@{
+    ViewBag.Title = "新增管理人員";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    var thisGroupType = AccountGroupType.System;
+}
+@section LeftActions{
+    <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.儲存" data-bind="click: SaveClick" />
+    @Html.ActionLink(EP.PlatformResources.返回, "Index", "LAWTX001", new { Class = "btn btn-default" })
+}
+
+@using (Html.BeginForm("Create", "LAWTX001", null, FormMethod.Post, new { id = "CreateSubmit" }))
+{
+    <div class="detail-col form-group form-inline" id="recipient-area">
+        <img class="index-title-icon" src="~/Content/img/recipient_chat_g.png" />@Html.LabelFor(m => m.SysName, new { @class = "detail-msg" })
+        <div class="detail-cell">
+            <ul>
+                <div id="H2OGP">
+                    @{Html.RenderPartial("~/Views/Shared/AccountGroupSelector.cshtml",
+                                                            new AccountGroupSelector("AccountGroupSelector", EP.PlatformResources.選擇人員, thisGroupType) { OnSelected = "onDialogSelected" });}
+                    <button type="button" class="btn btn-danger" id="addusers" tabindex="4">@EP.PlatformResources.設定成員</button>
+                    <div class="detail-cell" id="RecipientToShow">
+
+                    </div>
+                    @Html.TextBoxFor(m => m.LawimemberToJson, new { style = "display:none;width:100%" })
+                </div>
+            </ul>
+        </div>
+    </div>
+}
+<script>
+    var ViewModel = {
+        SaveClick: function () {
+            if (saveValidator()) {
+                clearMessage();@*清除訊息*@
+                var tabUniqueId = $("#tabUniqueId").val();
+                $("#CreateSubmit").attr('action', '@Url.Action("Create", "LAWTX001")');
+                $("#CreateSubmit").submit();
+            }
+        }
+    };
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+        //隱藏選擇視窗的原本按鍵
+        $("#AccountGroupSelectorPopButton").hide();
+        $("#addusers").click(addUsersClick);
+        if ($("#LawimemberToJson").val() != '') {
+            recipientSelectShow($("#LawimemberToJson").val());
+        }
+    });
+    //@*人員視窗選擇結果處理*@
+    function onDialogSelected() {
+        //取得它的選擇資訊(JSON格式)
+        var hiddenValue = $("#AccountGroupSelector").getHiddens()[0];
+        recipientSelectShow(hiddenValue);
+    }
+    function addUsersClick() {
+        //手動呼叫Dialog視窗
+        $("#AccountGroupSelector").openDialog();
+    }
+    function recipientSelectShow(jsonValue) {
+        var $select = $('#RecipientToShow');
+        $select.attr('style', "height:200px;overflow:auto;").html('');
+        if (jsonValue == undefined) return;
+        var jsonItems = JSON.parse(jsonValue);
+        $("#LawimemberToJson").val(jsonValue);
+
+        $.each(jsonItems, function (idx, obj) {
+            var unit = '';
+            //$select.append($('<option>').text(obj.Unit+" "+obj.Text).attr('value', obj.Key).prop("selected", true));
+
+            $select.append('<ul>' + obj.Unit + " " + obj.Text + '</ul>');
+        });
+    }
+    function saveValidator() {
+        if ($("#LawimemberToJson").val() == "") {
+            appendMessage("@( LAWResource.人員 + EP.PlatformResources.必填)");
+            return false;
+        }
+
+        return true;
+    }
+</script>

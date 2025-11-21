@@ -1,0 +1,17 @@
+D:\EPBKS\CUFCode\CUFDEV\_Services\AGUPG\EP.SD.SalesZone.AGUPG.Models\bin\Debug\EP.SD.SalesZone.AGUPG.Models.dll
+D:\EPBKS\CUFCode\CUFDEV\_Services\AGUPG\EP.SD.SalesZone.AGUPG.Models\bin\Debug\EP.SD.SalesZone.AGUPG.Models.pdb
+D:\EPBKS\CUFCode\CUFDEV\_Services\AGUPG\EP.SD.SalesZone.AGUPG.Models\bin\Debug\Microsoft.CUF.Framework.dll
+D:\EPBKS\CUFCode\CUFDEV\_Services\AGUPG\EP.SD.SalesZone.AGUPG.Models\bin\Debug\NLog.dll
+D:\EPBKS\CUFCode\CUFDEV\_Services\AGUPG\EP.SD.SalesZone.AGUPG.Models\bin\Debug\Microsoft.Practices.Unity.dll
+D:\EPBKS\CUFCode\CUFDEV\_Services\AGUPG\EP.SD.SalesZone.AGUPG.Models\bin\Debug\Microsoft.Practices.Unity.Configuration.dll
+D:\EPBKS\CUFCode\CUFDEV\_Services\AGUPG\EP.SD.SalesZone.AGUPG.Models\bin\Debug\Microsoft.CUF.Framework.pdb
+D:\EPBKS\CUFCode\CUFDEV\_Services\AGUPG\EP.SD.SalesZone.AGUPG.Models\bin\Debug\Microsoft.CUF.Framework.xml
+D:\EPBKS\CUFCode\CUFDEV\_Services\AGUPG\EP.SD.SalesZone.AGUPG.Models\bin\Debug\Microsoft.Practices.Unity.xml
+D:\EPBKS\CUFCode\CUFDEV\_Services\AGUPG\EP.SD.SalesZone.AGUPG.Models\bin\Debug\Microsoft.Practices.Unity.Configuration.xml
+D:\EPBKS\CUFCode\CUFDEV\_Services\AGUPG\EP.SD.SalesZone.AGUPG.Models\obj\Debug\EP.SD.SalesZone.AGUPG.Models.AGUPG.zh-CN.Resource.resources
+D:\EPBKS\CUFCode\CUFDEV\_Services\AGUPG\EP.SD.SalesZone.AGUPG.Models\obj\Debug\EP.SD.SalesZone.AGUPG.Models.AGUPGResource.resources
+D:\EPBKS\CUFCode\CUFDEV\_Services\AGUPG\EP.SD.SalesZone.AGUPG.Models\obj\Debug\EP.SD.SalesZone.AGUPG.Models.csproj.GenerateResource.cache
+D:\EPBKS\CUFCode\CUFDEV\_Services\AGUPG\EP.SD.SalesZone.AGUPG.Models\obj\Debug\EP.SD.SalesZone.AGUPG.Models.csproj.CoreCompileInputs.cache
+D:\EPBKS\CUFCode\CUFDEV\_Services\AGUPG\EP.SD.SalesZone.AGUPG.Models\obj\Debug\EP.SD.SalesZone.AGUPG.Models.csproj.CopyComplete
+D:\EPBKS\CUFCode\CUFDEV\_Services\AGUPG\EP.SD.SalesZone.AGUPG.Models\obj\Debug\EP.SD.SalesZone.AGUPG.Models.dll
+D:\EPBKS\CUFCode\CUFDEV\_Services\AGUPG\EP.SD.SalesZone.AGUPG.Models\obj\Debug\EP.SD.SalesZone.AGUPG.Models.pdb

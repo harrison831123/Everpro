@@ -1,0 +1,101 @@
+﻿@model EP.H2OModels.LawLawyerReward
+@{
+    ViewBag.Title = LAWResource.律師服務費編輯;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    WebChannel<EP.SD.SalesSupport.LAW.Service.ILAWService> Service = new WebChannel<EP.SD.SalesSupport.LAW.Service.ILAWService>();
+    List<EP.H2OModels.LawLawyerServiceRates> LawyerServiceRates = new List<EP.H2OModels.LawLawyerServiceRates>();
+    Service.Use(s => LawyerServiceRates = s.GetLawLawyerServiceRates().ToList());
+
+}
+
+@section LeftActions{
+    <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.更新" data-bind="click: SaveClick" />
+    <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.返回" data-bind="click: BackClick" />
+}
+
+@using (Html.BeginForm("Update", "LAWTX009", null, FormMethod.Post, new { id = "UpdateSubmit" }))
+{
+    @Html.HiddenFor(model => model.LawLawyerPayId)
+    @Html.HiddenFor(model => model.LawId)
+    @Html.HiddenFor(model => model.LawDueAgentId)
+    @Html.HiddenFor(model => model.LawNoteNo)
+    <div class="detail-col form-group form-inline">
+        <label class="detail-msg">@LAWResource.給付月份</label>
+        <div class="col-md-offset-1" style="display:flex">
+            @Html.TextBoxFor(m => m.LawRewardPayYear, new { @id = "LawRewardPayYear", style = "width:30%", @maxlength = "250", @class = "form-control detail-cell" })
+            <p class="detail-msg" style="margin-top:20px">@LAWResource.年</p>
+            @Html.TextBoxFor(m => m.LawRewardPayMonth, new { @id = "LawRewardPayMonth", style = "width:30%", @maxlength = "250", @class = "form-control detail-cell" })
+        <p class="detail-msg" style="margin-top:20px">@LAWResource.月</p>
+        </div>
+        <br><font color="red">範例:0098年、03月</font>
+    </div>
+    <div class="detail-col form-group form-inline">
+        @Html.LabelFor(m => m.LawRepaymentMoney, new { @class = "detail-msg" })
+        <div class="col-md-offset-1">
+            @Html.TextBoxFor(m => m.LawRepaymentMoney, new { @id = "LawRewardPayYear", style = "width:50%", @maxlength = "250", @class = "form-control detail-cell" })
+        </div>
+    </div>
+    <div class="detail-col form-group form-inline">
+        @Html.LabelFor(m => m.LawFees, new { @class = "detail-msg" })
+        <div class="col-md-offset-1">
+            @Html.TextBoxFor(m => m.LawFees, new { @id = "LawRewardPayYear", style = "width:50%", @maxlength = "250", @class = "form-control detail-cell" })
+        </div>
+    </div>
+    <div class="detail-col form-group form-inline">
+        <label class="detail-msg">@LAWResource.計算比例</label>
+        <div class="col-md-offset-1">
+            <select class="form-control" id="LawRates" name="LawRates">
+                @for (var i = 0; i < LawyerServiceRates.Count; i++)
+                {
+                    if (LawyerServiceRates[i].LawLawyerServiceRatesId == Model.LawRates)
+                    {
+                        <text>
+                            <option selected value="@LawyerServiceRates[i].LawLawyerServiceRatesId">@LawyerServiceRates[i].LawyerServiceRates</option>
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                            <option value="@LawyerServiceRates[i].LawLawyerServiceRatesId">@LawyerServiceRates[i].LawyerServiceRates</option>
+                        </text>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="detail-col form-group form-inline">
+        @Html.LabelFor(m => m.LawServiceReward, new { @class = "detail-msg" })
+        <div class="col-md-offset-1">
+            @Html.EditDisplayFor(model => model.LawServiceReward, true, new { @class = "form-control detail-cell", style = "width:50%" })
+        </div>
+    </div>
+}
+<script>
+    var ViewModel = {
+        SaveClick: function () {
+            if (saveValidator()) {
+                clearMessage();@*清除訊息*@
+                var tabUniqueId = $("#tabUniqueId").val();
+                $("#UpdateSubmit").attr('action', '@Url.Action("UpdateLawyerReward", "LAWTX009")');
+                $("#UpdateSubmit").submit();
+            }
+        },
+        BackClick: function () {
+            clearMessage();@*清除訊息*@
+            var tabUniqueId = $("#tabUniqueId").val();
+            location.href ='@Html.Raw(Url.Action("UpdateDueMoneyList", "LAWTX009"))' + "?AgentID=" + '@Model.LawDueAgentId' + "&NoteNo=" + '@Model.LawNoteNo' + "&LawId=" + '@Model.LawId';
+        }
+    };
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+    });
+
+    function saveValidator() {
+        if ($("#CloseTypeName").val() == "") {
+            appendMessage("@( LAWResource.承辦單位 + EP.PlatformResources.必填)");
+            return false;
+        }
+
+        return true;
+    }
+</script>

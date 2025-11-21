@@ -1,0 +1,867 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="三代主管" xml:space="preserve">
+    <value>三代主管</value>
+  </data>
+  <data name="上傳資料錯誤明細" xml:space="preserve">
+    <value>上傳資料錯誤明細</value>
+  </data>
+  <data name="上月總累計未結案件" xml:space="preserve">
+    <value>上月總累計未結案件</value>
+  </data>
+  <data name="上次電催日期" xml:space="preserve">
+    <value>上次電催日期</value>
+  </data>
+  <data name="不提供刪除功能" xml:space="preserve">
+    <value>說明：1‧不提供刪除功能，以防已建資料查無造成資料錯誤。</value>
+  </data>
+  <data name="不變動" xml:space="preserve">
+    <value>不變動</value>
+  </data>
+  <data name="不變動2" xml:space="preserve">
+    <value>※不變動</value>
+  </data>
+  <data name="主管" xml:space="preserve">
+    <value>主管</value>
+  </data>
+  <data name="主管照會單編號" xml:space="preserve">
+    <value>主管照會單編號</value>
+  </data>
+  <data name="之計算設定前請先確認" xml:space="preserve">
+    <value>之計算，設定前請先確認！</value>
+  </data>
+  <data name="九五九八年度案件統計表" xml:space="preserve">
+    <value>95-98年度案件統計表</value>
+  </data>
+  <data name="人員" xml:space="preserve">
+    <value>人員</value>
+  </data>
+  <data name="例如選擇97年" xml:space="preserve">
+    <value>※ 例如選擇 97 年，則報表合併計算欄位年度為 95 ~ 97 年，其餘年度仍各自計算與顯示。</value>
+  </data>
+  <data name="修改契撤變原因" xml:space="preserve">
+    <value>修改契撤變原因</value>
+  </data>
+  <data name="修改承辦單位" xml:space="preserve">
+    <value>修改承辦單位</value>
+  </data>
+  <data name="修改經辦人" xml:space="preserve">
+    <value>修改經辦人</value>
+  </data>
+  <data name="修改經辦人員" xml:space="preserve">
+    <value>修改經辦人員</value>
+  </data>
+  <data name="個人資料" xml:space="preserve">
+    <value>個人資料</value>
+  </data>
+  <data name="停用" xml:space="preserve">
+    <value>停用</value>
+  </data>
+  <data name="元" xml:space="preserve">
+    <value>元</value>
+  </data>
+  <data name="公司" xml:space="preserve">
+    <value>公司</value>
+  </data>
+  <data name="公司總計" xml:space="preserve">
+    <value>公司總計</value>
+  </data>
+  <data name="其他" xml:space="preserve">
+    <value>其他</value>
+  </data>
+  <data name="其他欄位" xml:space="preserve">
+    <value>其他欄位</value>
+  </data>
+  <data name="其他規費" xml:space="preserve">
+    <value>其他規費</value>
+  </data>
+  <data name="分期" xml:space="preserve">
+    <value>分期</value>
+  </data>
+  <data name="分機" xml:space="preserve">
+    <value>分機</value>
+  </data>
+  <data name="分機號碼" xml:space="preserve">
+    <value>分機號碼</value>
+  </data>
+  <data name="分機號碼格式錯誤" xml:space="preserve">
+    <value>分機號碼；格式錯誤</value>
+  </data>
+  <data name="列印存證信函設定步驟說明" xml:space="preserve">
+    <value>列印存證信函設定步驟說明</value>
+  </data>
+  <data name="利息" xml:space="preserve">
+    <value>利息</value>
+  </data>
+  <data name="利息天數" xml:space="preserve">
+    <value>利息天數</value>
+  </data>
+  <data name="利息天數與利息為系統計算不須輸入" xml:space="preserve">
+    <value>利息天數與利息為系統計算，不須輸入!</value>
+  </data>
+  <data name="利息訖日" xml:space="preserve">
+    <value>利息訖日</value>
+  </data>
+  <data name="利息起日" xml:space="preserve">
+    <value>利息起日</value>
+  </data>
+  <data name="利息起迄日期有誤" xml:space="preserve">
+    <value>利息起迄日期有誤</value>
+  </data>
+  <data name="利率" xml:space="preserve">
+    <value>利率</value>
+  </data>
+  <data name="刪除排序年度後" xml:space="preserve">
+    <value>※ 刪除排序年度後，請(需)重新設定該年度排序!</value>
+  </data>
+  <data name="前案情形" xml:space="preserve">
+    <value>前案情形</value>
+  </data>
+  <data name="剩餘結欠金額" xml:space="preserve">
+    <value>剩餘結欠金額</value>
+  </data>
+  <data name="匯入" xml:space="preserve">
+    <value>匯入</value>
+  </data>
+  <data name="匯出報表" xml:space="preserve">
+    <value>匯出報表</value>
+  </data>
+  <data name="區塊排序設定" xml:space="preserve">
+    <value>區塊排序設定</value>
+  </data>
+  <data name="協理" xml:space="preserve">
+    <value>協理</value>
+  </data>
+  <data name="協理系" xml:space="preserve">
+    <value>協理系</value>
+  </data>
+  <data name="受理案件" xml:space="preserve">
+    <value>受理案件</value>
+  </data>
+  <data name="只能選能一位成員" xml:space="preserve">
+    <value>只能選能一位成員</value>
+  </data>
+  <data name="合併年度預設為95年起至所選擇年度" xml:space="preserve">
+    <value>※ 合併年度預設為 95 年起至所選擇年度，為連續且不可間斷！</value>
+  </data>
+  <data name="合計未結總數" xml:space="preserve">
+    <value>合計未結總數</value>
+  </data>
+  <data name="名稱" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="否" xml:space="preserve">
+    <value>否</value>
+  </data>
+  <data name="含續佣抵結欠" xml:space="preserve">
+    <value>(含續佣抵結欠)</value>
+  </data>
+  <data name="啟用" xml:space="preserve">
+    <value>啟用</value>
+  </data>
+  <data name="啟用狀態" xml:space="preserve">
+    <value>啟用狀態</value>
+  </data>
+  <data name="單位" xml:space="preserve">
+    <value>單位</value>
+  </data>
+  <data name="團隊" xml:space="preserve">
+    <value>團隊</value>
+  </data>
+  <data name="團隊名稱" xml:space="preserve">
+    <value>團隊名稱</value>
+  </data>
+  <data name="團隊排序" xml:space="preserve">
+    <value>團隊排序</value>
+  </data>
+  <data name="團隊明細" xml:space="preserve">
+    <value>團隊明細</value>
+  </data>
+  <data name="執行人員" xml:space="preserve">
+    <value>執行人員</value>
+  </data>
+  <data name="執行無實益" xml:space="preserve">
+    <value>執行無實益</value>
+  </data>
+  <data name="執行程序" xml:space="preserve">
+    <value>執行程序</value>
+  </data>
+  <data name="報表作業" xml:space="preserve">
+    <value>報表作業</value>
+  </data>
+  <data name="報表排序設定" xml:space="preserve">
+    <value>報表排序設定</value>
+  </data>
+  <data name="契撤變原因" xml:space="preserve">
+    <value>契撤變原因</value>
+  </data>
+  <data name="契撤變原因列表" xml:space="preserve">
+    <value>契撤變原因列表</value>
+  </data>
+  <data name="姓名" xml:space="preserve">
+    <value>姓名</value>
+  </data>
+  <data name="委外件數" xml:space="preserve">
+    <value>委外件數</value>
+  </data>
+  <data name="委外案件數" xml:space="preserve">
+    <value>委外案件數</value>
+  </data>
+  <data name="存證信函" xml:space="preserve">
+    <value>存證信函</value>
+  </data>
+  <data name="存證信函P1" xml:space="preserve">
+    <value>存證信函P1</value>
+  </data>
+  <data name="存證信函P2" xml:space="preserve">
+    <value>存證信函P2</value>
+  </data>
+  <data name="存證信函作業" xml:space="preserve">
+    <value>存證信函作業</value>
+  </data>
+  <data name="小計" xml:space="preserve">
+    <value>小計</value>
+  </data>
+  <data name="尚未輸入年份或月份" xml:space="preserve">
+    <value>尚未輸入年份或月份</value>
+  </data>
+  <data name="尚未輸入相關金額" xml:space="preserve">
+    <value>尚未輸入相關金額</value>
+  </data>
+  <data name="尚未選擇已結狀態" xml:space="preserve">
+    <value>尚未選擇已結狀態</value>
+  </data>
+  <data name="尚未選擇計算比例" xml:space="preserve">
+    <value>尚未選擇計算比例</value>
+  </data>
+  <data name="工作年月" xml:space="preserve">
+    <value>工作年月</value>
+  </data>
+  <data name="工作月" xml:space="preserve">
+    <value>工作月</value>
+  </data>
+  <data name="已有重覆之名稱" xml:space="preserve">
+    <value>已有重覆之名稱,不允許新增</value>
+  </data>
+  <data name="已清償本金累計金額" xml:space="preserve">
+    <value>已清償本金累計金額</value>
+  </data>
+  <data name="已累計清償" xml:space="preserve">
+    <value>已累計清償</value>
+  </data>
+  <data name="已結" xml:space="preserve">
+    <value>已結</value>
+  </data>
+  <data name="已結案件" xml:space="preserve">
+    <value>已結案件</value>
+  </data>
+  <data name="已結案件列表" xml:space="preserve">
+    <value>已結案件列表</value>
+  </data>
+  <data name="已結案件明細列表" xml:space="preserve">
+    <value>已結案件明細列表</value>
+  </data>
+  <data name="已讀" xml:space="preserve">
+    <value>已讀</value>
+  </data>
+  <data name="年" xml:space="preserve">
+    <value>年</value>
+  </data>
+  <data name="年度" xml:space="preserve">
+    <value>年度</value>
+  </data>
+  <data name="年度案件統計" xml:space="preserve">
+    <value>年度案件統計</value>
+  </data>
+  <data name="年度案件統計表" xml:space="preserve">
+    <value>年度案件統計表(計至</value>
+  </data>
+  <data name="年度總計" xml:space="preserve">
+    <value>年度總計</value>
+  </data>
+  <data name="序號" xml:space="preserve">
+    <value>序號</value>
+  </data>
+  <data name="建檔人員" xml:space="preserve">
+    <value>建檔人員</value>
+  </data>
+  <data name="建檔日期" xml:space="preserve">
+    <value>建檔日期</value>
+  </data>
+  <data name="建立時間" xml:space="preserve">
+    <value>建立時間</value>
+  </data>
+  <data name="建立者姓名" xml:space="preserve">
+    <value>建立者姓名</value>
+  </data>
+  <data name="律師服務費" xml:space="preserve">
+    <value>律師服務費</value>
+  </data>
+  <data name="律師服務費率" xml:space="preserve">
+    <value>律師服務費率</value>
+  </data>
+  <data name="律師服務費編輯" xml:space="preserve">
+    <value>律師服務費編輯</value>
+  </data>
+  <data name="您尚未選擇清償日期" xml:space="preserve">
+    <value>您尚未選擇清償日期</value>
+  </data>
+  <data name="應還款累計金額" xml:space="preserve">
+    <value>應還款累計金額</value>
+  </data>
+  <data name="承辦人" xml:space="preserve">
+    <value>承辦人</value>
+  </data>
+  <data name="承辦單位" xml:space="preserve">
+    <value>承辦單位</value>
+  </data>
+  <data name="承辦單位列表" xml:space="preserve">
+    <value>承辦單位列表</value>
+  </data>
+  <data name="承辦部室" xml:space="preserve">
+    <value>承辦部室</value>
+  </data>
+  <data name="排序" xml:space="preserve">
+    <value>排序</value>
+  </data>
+  <data name="排序年度" xml:space="preserve">
+    <value>排序年度</value>
+  </data>
+  <data name="排序設定" xml:space="preserve">
+    <value>排序設定</value>
+  </data>
+  <data name="排序錯誤" xml:space="preserve">
+    <value>排序；格式錯誤</value>
+  </data>
+  <data name="搜尋條件" xml:space="preserve">
+    <value>搜尋條件</value>
+  </data>
+  <data name="數入不合法的數值" xml:space="preserve">
+    <value>數入不合法的數值！請重新輸入！</value>
+  </data>
+  <data name="新增利率" xml:space="preserve">
+    <value>新增利率</value>
+  </data>
+  <data name="新增契撤變原因" xml:space="preserve">
+    <value>新增契撤變原因</value>
+  </data>
+  <data name="新增律師服務費" xml:space="preserve">
+    <value>新增律師服務費</value>
+  </data>
+  <data name="新增律師服務費率" xml:space="preserve">
+    <value>新增律師服務費率</value>
+  </data>
+  <data name="新增承辦單位" xml:space="preserve">
+    <value>新增承辦單位</value>
+  </data>
+  <data name="新增清償明細" xml:space="preserve">
+    <value>新增清償明細</value>
+  </data>
+  <data name="新增管理人員" xml:space="preserve">
+    <value>新增管理人員</value>
+  </data>
+  <data name="新增結案狀態" xml:space="preserve">
+    <value>新增結案狀態</value>
+  </data>
+  <data name="新增經辦人員" xml:space="preserve">
+    <value>新增經辦人員</value>
+  </data>
+  <data name="明細" xml:space="preserve">
+    <value>明細</value>
+  </data>
+  <data name="是" xml:space="preserve">
+    <value>是</value>
+  </data>
+  <data name="是否含當月建檔件" xml:space="preserve">
+    <value>是否含當月建檔件</value>
+  </data>
+  <data name="是否確定停用" xml:space="preserve">
+    <value>是否確定停用?</value>
+  </data>
+  <data name="是否確定啟用" xml:space="preserve">
+    <value>是否確定啟用?</value>
+  </data>
+  <data name="更新完成" xml:space="preserve">
+    <value>更新完成</value>
+  </data>
+  <data name="最後異動日期" xml:space="preserve">
+    <value>最後異動日期</value>
+  </data>
+  <data name="會辦工作月" xml:space="preserve">
+    <value>會辦工作月</value>
+  </data>
+  <data name="月" xml:space="preserve">
+    <value>月</value>
+  </data>
+  <data name="月份" xml:space="preserve">
+    <value>月份</value>
+  </data>
+  <data name="服務費報酬" xml:space="preserve">
+    <value>服務費報酬</value>
+  </data>
+  <data name="未結" xml:space="preserve">
+    <value>未結</value>
+  </data>
+  <data name="未結案" xml:space="preserve">
+    <value>未結案</value>
+  </data>
+  <data name="未結案件列表" xml:space="preserve">
+    <value>未結案件列表</value>
+  </data>
+  <data name="未結案件明細列表" xml:space="preserve">
+    <value>未結案件明細列表</value>
+  </data>
+  <data name="未讀" xml:space="preserve">
+    <value>未讀</value>
+  </data>
+  <data name="本月結案" xml:space="preserve">
+    <value>本月結案</value>
+  </data>
+  <data name="本次應電催日期期限" xml:space="preserve">
+    <value>本次應電催日期期限</value>
+  </data>
+  <data name="本金金額" xml:space="preserve">
+    <value>本金金額</value>
+  </data>
+  <data name="查詢作業" xml:space="preserve">
+    <value>查詢作業</value>
+  </data>
+  <data name="核扣規費" xml:space="preserve">
+    <value>核扣規費</value>
+  </data>
+  <data name="案件狀態" xml:space="preserve">
+    <value>案件狀態</value>
+  </data>
+  <data name="業務員" xml:space="preserve">
+    <value>業務員</value>
+  </data>
+  <data name="止" xml:space="preserve">
+    <value>止</value>
+  </data>
+  <data name="正常" xml:space="preserve">
+    <value>正常</value>
+  </data>
+  <data name="此順位已有設定" xml:space="preserve">
+    <value>此順位已有設定，請重新選擇順位</value>
+  </data>
+  <data name="法催案件維護逾30日未異動通知" xml:space="preserve">
+    <value>法催案件維護逾30日未異動通知</value>
+  </data>
+  <data name="法追明細" xml:space="preserve">
+    <value>法追明細</value>
+  </data>
+  <data name="法追查詢列表" xml:space="preserve">
+    <value>法追查詢列表</value>
+  </data>
+  <data name="法追案件匯入" xml:space="preserve">
+    <value>法追案件匯入</value>
+  </data>
+  <data name="法追統計報表" xml:space="preserve">
+    <value>法追統計報表</value>
+  </data>
+  <data name="法院規費" xml:space="preserve">
+    <value>法院規費</value>
+  </data>
+  <data name="注意事項" xml:space="preserve">
+    <value>※ 注意事項：</value>
+  </data>
+  <data name="注意若不須計算利息利率請選擇" xml:space="preserve">
+    <value>※ 注意：1.若不須計算利息，利率請選擇(0)，利息起迄日則不需輸入!並請按下更新按鈕!</value>
+  </data>
+  <data name="清償利息" xml:space="preserve">
+    <value>清償利息</value>
+  </data>
+  <data name="清償利息法院規費其他規費" xml:space="preserve">
+    <value>清償利息 + 法院規費 + 其他規費</value>
+  </data>
+  <data name="清償日期" xml:space="preserve">
+    <value>清償日期</value>
+  </data>
+  <data name="清償明細" xml:space="preserve">
+    <value>清償明細</value>
+  </data>
+  <data name="清償本金" xml:space="preserve">
+    <value>清償本金</value>
+  </data>
+  <data name="清償金額" xml:space="preserve">
+    <value>清償金額</value>
+  </data>
+  <data name="清償金額分別以結案" xml:space="preserve">
+    <value>※ 清償金額分別以結案(結欠金額)與未結案之清償金額分別計算後再加總=總清償金額！</value>
+  </data>
+  <data name="清償金額跟續佣抵扣不得同時存在" xml:space="preserve">
+    <value>清償金額跟續佣抵扣不得同時存在</value>
+  </data>
+  <data name="清償金額需等於清償本金" xml:space="preserve">
+    <value>清償金額需等於清償本金</value>
+  </data>
+  <data name="無實益案件維護作業" xml:space="preserve">
+    <value>無實益案件維護作業</value>
+  </data>
+  <data name="照會單" xml:space="preserve">
+    <value>照會單</value>
+  </data>
+  <data name="照會單作業已發送紀錄" xml:space="preserve">
+    <value>照會單作業-已發送紀錄</value>
+  </data>
+  <data name="照會單號" xml:space="preserve">
+    <value>照會單號</value>
+  </data>
+  <data name="照會編號" xml:space="preserve">
+    <value>照會編號</value>
+  </data>
+  <data name="狀態" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="狀態名稱" xml:space="preserve">
+    <value>狀態名稱</value>
+  </data>
+  <data name="狀態設定" xml:space="preserve">
+    <value>狀態設定</value>
+  </data>
+  <data name="留言對象" xml:space="preserve">
+    <value>留言對象</value>
+  </data>
+  <data name="當月還款明細" xml:space="preserve">
+    <value>當月還款明細</value>
+  </data>
+  <data name="發函金額" xml:space="preserve">
+    <value>發函金額</value>
+  </data>
+  <data name="發送對象" xml:space="preserve">
+    <value>發送對象</value>
+  </data>
+  <data name="發送日期" xml:space="preserve">
+    <value>發送日期</value>
+  </data>
+  <data name="百分比" xml:space="preserve">
+    <value>百分比</value>
+  </data>
+  <data name="相關費率設定" xml:space="preserve">
+    <value>相關費率設定</value>
+  </data>
+  <data name="第一次電催" xml:space="preserve">
+    <value>第一次電催</value>
+  </data>
+  <data name="第二次電催" xml:space="preserve">
+    <value>第二次電催</value>
+  </data>
+  <data name="筆數" xml:space="preserve">
+    <value>筆數</value>
+  </data>
+  <data name="管理人員設定" xml:space="preserve">
+    <value>管理人員設定</value>
+  </data>
+  <data name="系統發生錯誤" xml:space="preserve">
+    <value>系統發生錯誤</value>
+  </data>
+  <data name="系統紀錄Log" xml:space="preserve">
+    <value>系統紀錄Log</value>
+  </data>
+  <data name="結案" xml:space="preserve">
+    <value>結案</value>
+  </data>
+  <data name="結案日期" xml:space="preserve">
+    <value>結案日期</value>
+  </data>
+  <data name="結案狀態" xml:space="preserve">
+    <value>結案狀態</value>
+  </data>
+  <data name="結案狀態一旦有案件參考後" xml:space="preserve">
+    <value>結案狀態一旦有案件參考後，不可進行刪除作業</value>
+  </data>
+  <data name="結案狀態列表" xml:space="preserve">
+    <value>結案狀態列表</value>
+  </data>
+  <data name="結案狀態名稱" xml:space="preserve">
+    <value>結案狀態名稱</value>
+  </data>
+  <data name="結案類型" xml:space="preserve">
+    <value>結案類型</value>
+  </data>
+  <data name="結欠月" xml:space="preserve">
+    <value>結欠月</value>
+  </data>
+  <data name="結欠總金額" xml:space="preserve">
+    <value>結欠總金額</value>
+  </data>
+  <data name="結欠計算方式" xml:space="preserve">
+    <value>結欠計算方式</value>
+  </data>
+  <data name="結欠計算方式會影響" xml:space="preserve">
+    <value>1.結欠計算方式會影響</value>
+  </data>
+  <data name="結欠金額" xml:space="preserve">
+    <value>結欠金額</value>
+  </data>
+  <data name="結欠金額表" xml:space="preserve">
+    <value>結欠金額表</value>
+  </data>
+  <data name="給付月份" xml:space="preserve">
+    <value>給付月份</value>
+  </data>
+  <data name="經辦人員設定" xml:space="preserve">
+    <value>經辦人員設定</value>
+  </data>
+  <data name="維護" xml:space="preserve">
+    <value>維護</value>
+  </data>
+  <data name="維護作業" xml:space="preserve">
+    <value>維護作業</value>
+  </data>
+  <data name="總表" xml:space="preserve">
+    <value>總表</value>
+  </data>
+  <data name="總計" xml:space="preserve">
+    <value>總計</value>
+  </data>
+  <data name="續佣扣抵" xml:space="preserve">
+    <value>續佣扣抵</value>
+  </data>
+  <data name="職稱" xml:space="preserve">
+    <value>職稱</value>
+  </data>
+  <data name="自辦件數" xml:space="preserve">
+    <value>自辦件數</value>
+  </data>
+  <data name="自辦案件數" xml:space="preserve">
+    <value>自辦案件數</value>
+  </data>
+  <data name="舊案" xml:space="preserve">
+    <value>舊案</value>
+  </data>
+  <data name="處別" xml:space="preserve">
+    <value>處別</value>
+  </data>
+  <data name="計算本金" xml:space="preserve">
+    <value>計算本金</value>
+  </data>
+  <data name="計算比例" xml:space="preserve">
+    <value>計算比例</value>
+  </data>
+  <data name="訴訟程序" xml:space="preserve">
+    <value>訴訟程序</value>
+  </data>
+  <data name="說明" xml:space="preserve">
+    <value>※ 說明：</value>
+  </data>
+  <data name="說明服務費報酬計算方式" xml:space="preserve">
+    <value>※ 說明-服務費報酬計算方式：(計算本金 - 核扣規費) X 計算比例</value>
+  </data>
+  <data name="說明結欠計算方式會影響" xml:space="preserve">
+    <value>※ 說明：結欠計算方式會影響</value>
+  </data>
+  <data name="請勿上傳空檔" xml:space="preserve">
+    <value>請勿上傳空檔</value>
+  </data>
+  <data name="請勿設定其他" xml:space="preserve">
+    <value>2‧請勿設定『其他』，此為特定選項供自行輸入。</value>
+  </data>
+  <data name="請注意此舊案件匯入格式多2個欄位訴訟程序執行程序" xml:space="preserve">
+    <value>※&amp;nbsp;1.請注意！此舊案件匯入格式多2個欄位：訴訟程序、執行程序！</value>
+  </data>
+  <data name="請輸入數字" xml:space="preserve">
+    <value>請輸入數字!</value>
+  </data>
+  <data name="請輸入民國年" xml:space="preserve">
+    <value>※請輸入民國年</value>
+  </data>
+  <data name="請選擇" xml:space="preserve">
+    <value>請選擇</value>
+  </data>
+  <data name="讀取紀錄" xml:space="preserve">
+    <value>讀取紀錄</value>
+  </data>
+  <data name="變動" xml:space="preserve">
+    <value>變動</value>
+  </data>
+  <data name="身分證" xml:space="preserve">
+    <value>身分證</value>
+  </data>
+  <data name="身分證ID" xml:space="preserve">
+    <value>身分證ID</value>
+  </data>
+  <data name="追回本金金額" xml:space="preserve">
+    <value>追回本金金額</value>
+  </data>
+  <data name="追回金額" xml:space="preserve">
+    <value>追回金額</value>
+  </data>
+  <data name="追索程序" xml:space="preserve">
+    <value>追索程序</value>
+  </data>
+  <data name="通知作業" xml:space="preserve">
+    <value>通知作業</value>
+  </data>
+  <data name="進度表" xml:space="preserve">
+    <value>進度表</value>
+  </data>
+  <data name="進行中" xml:space="preserve">
+    <value>進行中</value>
+  </data>
+  <data name="達成率" xml:space="preserve">
+    <value>達成率</value>
+  </data>
+  <data name="選擇合併年度" xml:space="preserve">
+    <value>選擇合併年度</value>
+  </data>
+  <data name="選擇留言對象" xml:space="preserve">
+    <value>選擇留言對象</value>
+  </data>
+  <data name="選擇管理人員" xml:space="preserve">
+    <value>選擇管理人員</value>
+  </data>
+  <data name="選擇經辦人員" xml:space="preserve">
+    <value>選擇經辦人員</value>
+  </data>
+  <data name="選擇類別" xml:space="preserve">
+    <value>選擇類別</value>
+  </data>
+  <data name="避免影響案件結案狀態之完整性" xml:space="preserve">
+    <value>，避免影響案件結案狀態之完整性，刪除前請先確認！</value>
+  </data>
+  <data name="金額" xml:space="preserve">
+    <value>金額</value>
+  </data>
+  <data name="錯誤描述" xml:space="preserve">
+    <value>錯誤描述</value>
+  </data>
+  <data name="電話催告作業請至法追進度表中執行" xml:space="preserve">
+    <value>1. 電話催告作業請至法追進度表中執行，此處僅作催告通知列表，不進行催告作業!</value>
+  </data>
+  <data name="電話催告審閱完畢請點選更新按鈕" xml:space="preserve">
+    <value>2. 電話催告審閱完畢請點選更新按鈕，以利紀錄催告通知時間</value>
+  </data>
+  <data name="電話催告通知" xml:space="preserve">
+    <value>電話催告通知</value>
+  </data>
+  <data name="預設經辦順位" xml:space="preserve">
+    <value>預設經辦順位</value>
+  </data>
+  <data name="體系名稱" xml:space="preserve">
+    <value>體系名稱</value>
+  </data>
+  <data name="體系排序" xml:space="preserve">
+    <value>體系排序</value>
+  </data>
+  <data name="體系排序設定" xml:space="preserve">
+    <value>體系排序設定</value>
+  </data>
+</root>

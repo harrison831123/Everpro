@@ -1,0 +1,104 @@
+﻿@model EP.SD.SalesSupport.LAW.Web.Areas.LAW.Model.LawDetailModel
+@{
+    ViewBag.Title = LAWResource.體系排序設定;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+@section LeftActions{
+    <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.更新" data-bind="click: SaveClick" />
+    @Html.ActionLink(EP.PlatformResources.返回, "Index", "LAWTX007", new { Class = "btn btn-default" })
+}
+@using (Html.BeginForm("UpdateSM", "LAWTX007", null, FormMethod.Post, new { id = "UpdateSubmit" }))
+{
+    @Html.HiddenFor(model => model.yy)
+    <div class="row col-md-12">
+        <table id="datatable" class="table">
+            <thead>
+                <tr>
+                    <th>@LAWResource.年度</th>
+                    <th>@LAWResource.團隊排序</th>
+                    <th>@LAWResource.團隊名稱</th>
+                    <th>@LAWResource.體系排序</th>
+                    <th>@LAWResource.體系名稱</th>                    
+                </tr>
+            </thead>
+            <tbody id="datatbody">
+            </tbody>
+        </table>
+    </div>
+}
+<script>
+    var ViewModel = {
+        SaveClick: function () {
+            clearMessage();@*清除訊息*@
+            UpdateLawsys();
+            GetLawsys();
+        }
+    };
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+        GetLawsys();
+    });
+    function UpdateLawsys() {
+        $("input[name='SortSm']").each(function (index, element) {
+            var SortVmSmName = element.id;
+            var SortSm = element.value;
+            var yy = "@Model.yy";
+            if (SortSm == '') {
+                SortSm = 0;
+            }
+            $.ajax({
+                method: "POST",
+                cache: false,
+                async: false,
+                data: { SortVmSmName: SortVmSmName, SortSm: SortSm, yy : yy},
+                url: '@Url.Action("UpdateSM", "LAWTX007", new { area = "LAW" })',
+                complete: function (data) {
+                },
+                error: function (ex) {
+                    if (ex.statusText == "OK") {
+                    } else {
+                        appendMessage("@EP.PlatformResources.系統發生錯誤");
+                    }
+                }
+            });
+        });
+        appendMessage("@EP.PlatformResources.更新成功");
+    }
+    function GetLawsys() {
+         $.ajax({
+             method: "POST",
+             cache: false,
+             data: { SortYear: @Model.yy},
+             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+             url: '@Url.Action("SMData", "LAWTX007", new { area = "LAW" })',
+             complete: function (data) {
+                        if (data.responseJSON === undefined) {
+                        } else {
+                            $(".remtr").remove();
+                            $.each(data.responseJSON, function () {
+                                let SortVm = this.SortVm == 0 ? '' : this.SortVm;
+                                let str = "<tr class='remtr'><td>" + this.SortYear + "</td><td>"
+                                    + SortVm + "</td><td>"
+                                    + this.SortVmName + "</td><td>"
+                                    + SortSmBTN(this.SortSm, this.SortSmName, this.SortVmName) + "</td><td>"
+                                    + this.SortSmName + "</td></tr>"
+                                $("#datatbody").append(str);
+                            });
+                        }
+             },
+             error: function (ex) {
+             if (ex.statusText == "OK") {
+             } else {
+                 appendMessage("@EP.PlatformResources.系統發生錯誤");
+                 }
+             }
+         });
+    }
+    function SortSmBTN(SortSm, SortSmName, SortVmName) {
+        if (SortSm == 0) {
+            SortSm = '';
+        }
+        return '<input type="text" id="' + SortSmName + "|" + SortVmName + '" class="SortSm" name="SortSm" value="' + SortSm + '">';
+    }
+
+</script>

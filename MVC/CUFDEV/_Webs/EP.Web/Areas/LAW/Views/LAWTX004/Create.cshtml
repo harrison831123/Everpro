@@ -1,0 +1,81 @@
+﻿
+@model EP.SD.SalesSupport.LAW.Web.Areas.LAW.Model.LawDetailModel
+@{
+    if (Model.LirType == "1")
+    {
+        ViewBag.Title = LAWResource.新增利率;
+    }
+    else
+    {
+        ViewBag.Title = LAWResource.新增律師服務費率;
+    }
+
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+@section LeftActions{
+    <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.儲存" data-bind="click: SaveClick" />
+    @Html.ActionLink(EP.PlatformResources.返回, "Index", "LAWTX004", new { Class = "btn btn-default" })
+}
+
+@using (Html.BeginForm("Create", "LAWTX004", null, FormMethod.Post, new { id = "CreateSubmit" }))
+{
+    @Html.HiddenFor(model => model.LirType)
+    if (Model.LirType == "1")
+    {
+        <div class="detail-col form-group form-inline">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.InterestRates, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @Html.TextBoxFor(m => m.InterestRates, new { @id = "InterestRates", style = "width:50%", @maxlength = "250", @class = "form-control detail-cell" })
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="detail-col form-group form-inline">
+            <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.LawyerServiceRates, new { @class = "detail-msg" })
+            <div class="col-md-offset-1">
+                @Html.TextBoxFor(m => m.LawyerServiceRates, new { @id = "LawyerServiceRates", style = "width:50%", @maxlength = "250", @class = "form-control detail-cell" })
+            </div>
+        </div>
+    }
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.CreateName, new { @class = "detail-msg" })
+        <div class="col-md-offset-1">
+            @Html.DisplayFor(model => model.CreateName, new { @class = "control-label col-md-2" })
+        </div>
+    </div>
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.CreateDate, new { @class = "detail-msg" })
+        <div class="col-md-offset-1">
+            @Html.DisplayFor(model => model.CreateDate, new { @class = "control-label col-md-2" })
+        </div>
+    </div>
+}
+<script>
+    var ViewModel = {
+        SaveClick: function () {
+            if (saveValidator()) {
+                clearMessage();@*清除訊息*@
+                $("#CreateSubmit").attr('action', '@Url.Action("Create", "LAWTX004")');
+                $("#CreateSubmit").submit();
+            }
+        }
+    };
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+    });
+
+    function saveValidator() {
+        if ($("#InterestRates").val() == "") {
+            appendMessage("@( LAWResource.利率 + EP.PlatformResources.必填)");
+            return false;
+        }
+        if ($("#LawyerServiceRates").val() == "") {
+            appendMessage("@( LAWResource.律師服務費率 + EP.PlatformResources.必填)");
+            return false;
+        }
+        return true;
+    }
+</script>
+

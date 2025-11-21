@@ -1,0 +1,259 @@
+﻿
+@{
+    ViewBag.Title = (ViewBag.Title) ?? "CUSCRMQU001_維護";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+
+}
+
+@model HistoryMaintainViewModel
+<style>
+    .detail-col {
+        border: 1px solid rgba(223, 233, 247, 1);
+        margin:0;
+    }
+  
+</style>
+<div class="wall-title accordion">
+    @Model.crm_no 聯繫紀錄
+</div>
+<div class="row wall">
+    <div class="col-md-12 form-group">
+        <div class="col-md-12 form-group">
+            <div class="detail-col col-md-3">
+                <div class="col-md-4">
+                    @Html.Label("受理編號", new { @class = "control-label" })
+                </div>
+                <div class="col-md-8">
+                    @Html.Label(Model.crm_no, new { @class = "control-label" })
+                </div>
+            </div>
+            <div class="detail-col col-md-3">
+                <div class="col-md-4">
+                    @Html.Label("輸入者", new { @class = "control-label" })
+                </div>
+                <div class="col-md-8">
+                    @Html.Label(Model.crm_do_createname, new { @class = "control-label" })
+                </div>
+            </div>
+            <div class="detail-col col-md-3">
+                <div class="col-md-4">
+                    @Html.Label("日期", new { @class = "control-label" })
+                </div>
+                <div class="col-md-8">
+                    @Html.Label(Model.crm_do_createdate, new { @class = "control-label" })
+                </div>
+            </div>
+            <div class="detail-col col-md-3">
+                <div class="col-md-4">
+                    @Html.Label("時間", new { @class = "control-label" })
+                </div>
+                <div class="col-md-8">
+                    @Html.Label(Model.crm_do_time, new { @class = "control-label" })
+                </div>
+            </div>
+            <div class="col-md-12 detail-col form-group">
+                <div class="col-md-1">
+                    @Html.Label("摘要", new { @class = "control-label" })
+                </div>
+                <div class="col-md-10">
+                    <textarea id="crm_do" name=crm_do></textarea>
+                </div>
+            </div>
+            <div class="col-md-12 detail-col form-group">
+                <div class="col-md-1">
+                    @Html.Label("上傳檔案", new { @class = "control-label" })
+                </div>
+                <div class="col-md-10">
+                    @*<input id="upload_pdf" style="display:none;" type="file" onchange="checkfile(this);" accept=".pdf" multiple="">*@
+                    <input style="margin: 10px 10px 10px 50px;" id="upload" type="file" multiple="">
+                    <label id="filename" style="color:blue"></label>
+                </div>
+            </div>
+            <div class="col-md-12 detail-col form-group">
+                <div class="col-md-1">
+                    @Html.Label("結案狀態", new { @class = "control-label" })
+                </div>
+                <div class="col-md-10">
+                    <input checked type=radio value=16 name=closestatus>A
+                    <input type=radio value=22 name=closestatus>A-IB
+                    <input type=radio value=17 name=closestatus>B
+                    <input type=radio value=23 name=closestatus>B-IB
+                    <input type=radio value=19 name=closestatus>C
+                    <input type=radio value=24 name=closestatus>C-IB
+                    <input type=radio value=20 name=closestatus>D
+                    <input type=radio value=21 name=closestatus>E
+                    <input type=radio value=25 name=closestatus>E-IB
+                    <input type=radio value=83 name=closestatus>F
+                </div>
+            </div>
+            
+        </div>
+        <div class="col-md-12">
+            <INPUT id="CreateBTN" class="btn btn-default" type=submit value="維護"> 
+            <INPUT class="btn btn-default" type=reset value="清除" />
+            <INPUT id="CloseBTN" class="btn btn-default" type=submit value="結案">
+        </div>
+    </div>
+</div>
+
+
+
+
+@if (Model.maintainlist.Any())
+{
+    <div class="wall-title accordion">
+        @Model.crm_no 聯繫記錄歷程
+    </div>
+    <div class="row wall">
+        <div class="col-md-12 form-group">
+            <div class="col-md-12 form-group detail-col">
+                <div class="col-md-2">
+                    @Html.Label("受理編號", new { @class = "control-label" })
+                </div>
+                <div class="col-md-2">
+                    @Html.Label("輸入者", new { @class = "control-label" })
+                </div>
+                <div class="col-md-2">
+                    @Html.Label("日期", new { @class = "control-label" })
+                </div>
+                <div class="col-md-2">
+                    @Html.Label("時間", new { @class = "control-label" })
+                </div>
+                <div class="col-md-4">
+                    @Html.Label("摘要", new { @class = "control-label" })
+                </div>
+            </div>
+            @foreach (var record in Model.maintainlist)
+            {
+                <div class="col-md-12 form-group detail-col">
+                    <div class="col-md-2">
+                        @Html.Label(record.crm_no, new { @class = "control-label", @style = "line-height: 8;" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.Label(record.crm_do_createname, new { @class = "control-label", @style = "line-height: 8" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.Label(record.crm_do_createdate, new { @class = "control-label", @style = "line-height: 8" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.Label(record.crm_do_time, new { @class = "control-label" ,@style= "line-height: 8;" })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.TextArea("crmtexarea", record.crm_do, new { @class = "control-label", @readonly = "readonly" ,@style= "min-height:100px;cols='50' rows='5';overflow:hidden;overflow-y: scroll" })
+                    </div>
+                </div>
+            }
+            <div class="col-md-12 form-group detail-col">
+                <div class="col-md-2">
+                    @Html.Label("附加檔案", new { @class = "control-label" })
+                </div>
+                <div class="col-md-10">
+                    @if (Model.filelist.Any() )
+                    {
+                        foreach (var file in Model.filelist) { 
+                            <div>
+                                <a class="crmlink" href="#" onclick="DownloadFile('@file.Value')">@file.Text</a>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>        
+        </div>
+    </div>
+}
+@section scripts {
+    <script>
+        $(function () {
+            $("#CreateBTN").click(() => { CreateMaintainRecord() })
+            $("#CloseBTN").click(() => { CreateCloseRecord() })
+
+        })
+        function CreateCloseRecord () {
+            var formData = new FormData();
+            formData.append("crm_do", $('#crm_do').val());
+            formData.append("crm_no", '@Model.crm_no');
+            formData.append("closestatus", $('input[type=radio][name="closestatus"]:checked').val());
+            $.ajax({
+                url: '@Url.Action("CreateCloseRecord", "CUSCRMQU001")',
+                type: 'post',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (result) {
+                    appendMessage('新增成功')
+                    location.reload()
+                },
+                error: function () {
+                    appendMessage("系統發生錯誤");
+                }
+            })
+
+        }
+
+        function CreateMaintainRecord() {
+            var formData = new FormData();
+            // 將檔案append FormData
+
+            var files = $("#upload").get(0).files;
+            if (files.length > 0) {
+                for (let i = 0; i < files.length;i++) {
+                    formData.append("upload" + i, files[i]);
+                }
+            }
+            formData.append("crm_do", $('#crm_do').val());
+            formData.append("crm_no", '@Model.crm_no');
+            $.ajax({
+                url: '@Url.Action("CreateMaintainRecord", "CUSCRMQU001")',
+                type: 'post',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (result) {
+                    appendMessage('新增成功')
+                },
+                error: function () {
+                    appendMessage("系統發生錯誤");
+                }
+            })
+
+        }
+
+        function checkfile(sender) {
+            // 可接受的附檔名
+            var input = document.getElementById('upload')
+            var fileExt = sender.value;
+            if (fileExt == '') {
+                $("#filename").html('');
+                return false;
+
+            }
+            var files = $("#upload").get(0).files;
+            if (files.length == 0)
+                return false
+            if (files.length > 5) {
+                alert("檔案最多上傳五個！！")
+                return false;
+            }
+
+            var txt =""
+            for (let i = 0; i < files.length; i++) {
+                if (files[i].name.length > 100) {
+                    alert("檔案名稱長度不能超過100");
+                    return false;
+                }
+                txt += files[i].name+"</br>"
+
+            }
+            let fname = sender.value.split("\\")
+            $("#filename").html(txt)
+            return true;
+
+        }
+        function DownloadFile(fileName) {
+            window.open('@Url.Action("DownloadCRMFile", "CUSCRMQU001")' + '?fileName=' + fileName)
+
+        }
+
+
+    </script>
+}

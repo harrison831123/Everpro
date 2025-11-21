@@ -1,0 +1,81 @@
+﻿@model GridViewInit
+<div id="MarkPreview">
+    <div class="jqGrid">
+        <table id="@(Model.ID)"></table>
+    </div>
+    <div id="@(Model.ID)pagger"></div>
+    <table id="@(Model.ID)"></table>
+</div>
+<script>
+    function @(Model.ID)bindGrid() {
+        $("#@(Model.ID)").jqGrid({
+
+            url: '@Model.BindUrl',
+            datatype: "json",
+            mtype: "POST",
+            sortname: "JBStartDate",
+            sortorder:"desc",
+            page: 1,
+            rowNum: 10,
+            autowidth: true,
+            colNames: ["", "", "", "", "@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.標題", "@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.開始日期", "@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.結束日期", @*"@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.完成度",*@ "@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.成員"],
+            colModel: [
+            { name: "JBID", index: "JBID", hidden: true },
+            { name: "JPID", index: "JPID", hidden: true },
+            { name: "MTID", index: "MTID", hidden: true },
+            { name: "imember", index: "imember", hidden: true },
+            { name: "JBSubject", index: "JBSubject", sortable: true},
+            { name: "JBStartDate", index: "JBStartDate", sortable: true, formatter: "date", formatoptions: {srcformat:"ISO8601Long",newformat:"Y/m/d H:i"} },
+            { name: "JBEndDate", index: "JBEndDate", sortable: true, formatter: "date", formatoptions: { srcformat: "ISO8601Long", newformat: "Y/m/d H:i" } },
+            //{ name: "JPPercentage", index: "JPPercentage", sortable: true },
+            { name: "JBUnitName", index: "JBUnitName", sortable: true },
+            ],
+            jsonReader: {   //讀JSON格式資料
+                repeatitems: false,
+                id: '0',
+            },
+            @if (Model.MultiSelect)
+            {  <text>multiselect: true, </text> }
+            else
+            { <text>multiselect: false, </text> }
+            @if (Model.Pagging)
+            { <text> pager: "@(Model.ID)pagger", </text>}
+            else
+            { <text> </text>}
+
+            onSelectRow: function (id) {
+                if (id) {
+                    var myGrid = $(this);
+                    var selRowId = myGrid.jqGrid('getGridParam', 'selrow'); @* 取得那一個row no *@
+                    var selRow = myGrid.getRowData(selRowId); @* 取得該row資料 *@
+
+                    PopupJobWindow(selRow);
+                }
+            },
+            loadComplete: function () {
+                var curHeight = $("#@(Model.ID)").jqGrid('getGridParam', 'height');
+                //alert(curHeight);
+            }
+        });
+        $("#@(Model.ID)").jqGrid("navGrid", "#@(Model.ID)pagger", { add: false, edit: false, del: false, search: false, refresh: false });
+        $("#@(Model.ID)").trigger("reloadGrid");
+    }
+
+    var DETAILURL = "@Url.Action("DetailJob", "MMTX002")";
+
+
+    //Grid處理連結的函式
+    function PopupJobWindow(OBJ) {
+        console.log("pop:", OBJ);
+        @*var groupType = '@(Model!=null?Model.GroupType:null)';*@
+        //var format = DETAILURL + "?" + "MTID={0}" + "&JBID={1}" + "&imember={2}";
+        var format = DETAILURL + "?" + "JPID={0}";
+        var url = $.validator.format(format, OBJ.JPID);
+        var openName = "Account" + OBJ;
+        window.open(url, openName);
+    }
+
+</script>
+
+
+

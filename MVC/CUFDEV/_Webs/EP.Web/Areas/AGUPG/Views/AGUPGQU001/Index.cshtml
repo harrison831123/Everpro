@@ -1,0 +1,721 @@
+﻿@model HrUpg25RstViewModel
+@{
+    ViewBag.Title = AGUPGResource.晉級;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+<style>
+    /* jqgrid */
+    .ui-jqgrid tr.jqgrow td {
+        white-space: pre-wrap !important;
+        height: auto !important;
+        /*text-align: center !important;*/
+    }
+
+    .ui-jqgrid .ui-jqgrid-htable th {
+        white-space: normal !important;
+        word-break: break-word;
+    }
+
+    @@media screen and (max-width: 430px) {
+        /*.ui-jqgrid-hdiv {
+            display: none !important;
+        }
+
+        .ui-jqgrid-btable td {
+            padding-left: 5px !important;
+            padding-right: 0px !important;
+            text-align: left !important;
+        }*/
+    }
+
+    @@media screen and (max-width: 430px) {
+        #divQueryBlock {
+            width: 100%;
+            padding-left: 0px;
+            padding-right: 20px; /* 對齊 */
+        }
+
+        .ui-jqgrid {
+            margin-left: 0px !important;
+            font-size: 13px !important;
+        }
+
+            .ui-jqgrid tr.jqgrow td {
+                white-space: pre-wrap !important;
+                height: auto !important;
+                font-size: 14px;
+                text-align: left;
+            }
+    }
+
+    #NoData1 {
+        display: none;
+        font-size: 36px;
+    }
+
+    /* 特別說明 */
+    .RemarksButtom {
+        color: red;
+        font-size: 13px;
+        line-height: 1.6; /* 行距 */
+        /*padding: 10px 15px;*/
+        /*border-radius: 4px;*/
+        margin-top: 5px;
+    }
+
+    @@media screen and (max-width: 430px) {
+        .RemarksButtom {
+            margin-right: 20px; /* 對齊 */
+        }
+    }
+
+    .AgentTitle {
+        /*display: block;*/
+        margin-top:5px;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 5px;
+        /*box-shadow: 0 2px 5px rgba(0,0,0,0.1);*/
+        table-layout: fixed; /* 固定 */
+        /*width: calc(100% - 30px);*/
+        width: 100%;
+        overflow: hidden;
+    }
+        /* 表格標題行 th.title */
+        .AgentTitle th.title {
+            /*background: linear-gradient(to bottom, #fff3e0, #ffe0b2);*/
+            background-color: #019846;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px 0;
+        }
+        /*  th 和 td 設定 */
+        .AgentTitle th, .AgentTitle td {
+            /*background: linear-gradient(to bottom, #fff3e0, #ffe0b2);*/
+            background-color: #ffffff;
+            border: none;
+            padding: 6px 8px;
+            font-size: 13px;
+            text-align: left;
+            word-break: break-word;
+            white-space: nowrap;
+            height: auto !important;
+        }
+
+            .AgentTitle td.value-cell {
+                white-space: normal; /* 允許內容換行 */
+            }
+        /* tr 設定 */
+        .AgentTitle tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+            .AgentTitle tr:last-of-type {
+                border-bottom: 2px solid #009879;
+            }
+
+            .AgentTitle tr:nth-of-type(even) td {
+                background-color: #f3f3f3;
+            }
+
+    /* 加油 */
+    .ComeOn {
+        padding: 15px;
+        margin-right: 20px; /* 對齊 */
+    }
+
+    #RstUpgradeMemo {
+        color: red;
+        font-weight: bold;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .Upg {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    @@media screen and (max-width: 430px) {
+        .Upg {
+            display: block;
+            text-align: center;
+        }
+    }
+
+    /* 隱藏搜尋標題 */
+    @@media screen and (max-width: 430px) {
+        .wall-title {
+            display: none;
+        }
+
+        .wall .form-group.row {
+            display: none;
+        }
+
+        .wall .form-group.row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-direction: column;
+            margin-bottom: 0;
+        }
+
+            .wall .form-group.row .form-text.SalesPeriod .form-select,
+            #YYYYSeason {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                margin: 0;
+                /*padding: 8px 10px;*/
+                font-size: 13px;
+            }
+
+        .wall {
+            margin-top: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            border: none;
+        }
+
+        .wall, .detail-col {
+            margin: 0;
+            padding: 0;
+        }
+        /* 隱藏 Label */
+        .form-group.row .form-text:not(.SalesPeriod) {
+            display: none !important;
+        }
+    }
+
+    /* 至頂 */
+    .to-top {
+        position: fixed;
+        right: 10px;
+        bottom: 10px;
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        color: #FFF;
+        border: 2px solid #689180;
+        -webkit-border-radius: 50%;
+        border-radius: 50%;
+        z-index: 1001;
+        opacity: 1;
+        cursor: pointer;
+        display: none;
+        padding-top: 5px;
+    }
+
+        .to-top i {
+            color: #689180;
+            font-size: 18px;
+            font-style: normal;
+        }
+
+        .to-top:hover {
+            background-color: #689180;
+        }
+
+            .to-top:hover i {
+                display: block;
+                color: #fff;
+            }
+
+    /* 標題 */
+    .AreaTitle {
+        display: none;
+        margin-top: 10px;
+    }
+
+    .AreaHeaderTitle {
+        display: none;
+    }
+
+    @@media screen and (max-width: 430px) {
+        .AreaHeaderTitle {
+            display: block;
+        }
+
+            .AreaHeaderTitle div {
+                padding: 3px 0px 3px 0px;
+            }
+    }
+</style>
+
+<div id="divQueryBlock">
+    @if (Model.IsAdmin)
+    {
+        @Html.ActionLink(EP.PlatformResources.返回, "Index", "AGUPGQU002", null, new { @class = "btn btn-default" })
+    }
+    <table class="AgentTitle">
+        <colgroup>
+            <col style="width: 25%;">
+            <col style="width: 25%;">
+            <col style="width: 25%;">
+            <col style="width: 25%;">
+        </colgroup>
+        <thead>
+            <tr>
+                <th colspan="2" id="AgentName" class="title"></th>
+                <th colspan="2" id="AgLevelOccpName" class="title"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>查詢日期：</td>
+                <td id="QueryDate" class="value-cell"></td>
+                <td>區單位：</td>
+                <td id="CenterName" class="value-cell"></td>
+            </tr>
+            <tr>
+                <td>簽約日期：</td>
+                <td id="RegisterDate" class="value-cell"></td>
+                <td>通訊處：</td>
+                <td id="WcCenterName" class="value-cell"></td>
+            </tr>
+            <tr>
+                <td class="value-cell">原始登錄日：</td>
+                <td id="MinRecordDate" class="value-cell"></td>
+                <td class="value-cell">第一代輔導人：</td>
+                <td id="DirectorName" class="value-cell"></td>
+            </tr>
+        </tbody>
+    </table>
+    @using (Ajax.BeginForm("Query", "AGUPGQU001", new { area = "AGUPG" }, new AjaxOptions { OnSuccess = "bindGrid" }, new { id = "QueryForm" }))
+    {
+        @*輔導主管ID*@
+        <input type="hidden" id="DirectorId" name="DirectorId" />
+
+        @*導頁過來的業務員ID*@
+        <input type="hidden" id="AgentCode" name="AgentCode" value="@Model.AgentCode" />
+
+        <div class="wall-title">
+            <img class="index-title-icon" src="~/Content/img/search.png" />(搜尋條件)
+        </div>
+        <div class="row wall">
+            <div class="detail-col col-12">
+                @*業績區間*@
+                <div class="form-group row">
+                    <div class="form-text">
+                        @Html.Label("業績區間", new { @class = "control-label" })
+                    </div>
+                    <div class="form-text SalesPeriod">
+                        <select id="YYYYSeason" name="YYYYSeason" class="form-select">
+                            @*<option value="">-- 請選擇 --</option>*@
+                            @foreach (var item in Model.hrUpg25List)
+                            {
+                                <option value="@item.YYYYSeason">@item.NowData</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @section GridActions {
+        <div class="ComeOn">
+            <p id="RstUpgradeMemo"></p>
+            <div class="Upg">
+                <p id="UpgMonth"></p>
+                <p>如欲申請晉級，請於 <span id="UpgApplyDate"></span>  前以「異動申請書」提出。</p>
+            </div>
+        </div>
+        <div name="NoData1"><label id="NoData1">查無資料</label></div>
+        <div class="row AreaTitle">
+            <div class="AreaHeaderTitle">
+                <div>一、業績、組織適用標準（達成其一即可）</div>
+            </div>
+        </div>
+        <div class="jqGrid">
+            <table id="Area1"></table>
+        </div>
+        <div class="row AreaTitle">
+            @*<div name="NoData2"></div>*@
+            <div class="AreaHeaderTitle">
+                <div>二、其他必要條件</div>
+            </div>
+        </div>
+        <div class="jqGrid">
+            <table id="Area2"></table>
+        </div>
+        <div class="row AreaTitle">
+            @*<div name="NoData3"></div>*@
+            <div class="AreaHeaderTitle">
+                <div>三、其他說明（參考資訊）</div>
+            </div>
+        </div>
+        <div class="jqGrid">
+            <table id="Area3"></table>
+        </div>
+        <div class="RemarksButtom">
+            <label>特別說明：</label><br />
+            <label>1、	晉級標準請詳展業規範第參章。</label><br />
+            <label>2、	以上數據皆為已核實業績，僅供參考；查核結果須以申請時業行部資料為準。</label><br />
+            <label>3、	達成晉級標準者，得於每年一、四、七、十工作月以「人事異動申請書」提出申請，逾期恕不受理。</label><br />
+        </div>
+    }
+</div>
+<div class="to-top" style="display: none;"><i>TOP</i></div>
+@section Scripts{
+    <script>
+        $(function () {
+            scrollFunction();
+            GoToTop();
+
+            // 如果URL上有YYYYSeason，還原下拉選項
+            const params = new URLSearchParams(window.location.search);
+            const season = params.get("YYYYSeason");
+            if (season) {
+                // 從明細返回
+                $("#YYYYSeason").val(season).change();
+            } else {
+                // 正常進入頁面
+                $("form#QueryForm").trigger("submit");
+            }
+        });
+
+        $("#YYYYSeason").change(function () {
+            $("form#QueryForm").trigger("submit");
+        });
+
+        //document.addEventListener("DOMContentLoaded", function () {
+        //    // 將 Top 內容複製到 Bottom
+        //    const top = document.querySelector('.RemarksTop');
+        //    const bottom = document.querySelector('.RemarksButtom');
+        //    if (top && bottom) {
+        //        bottom.innerHTML = top.innerHTML;
+        //    }
+        //});
+
+        function bindGrid(data) {
+            // 判斷資料是否為空
+            if (data.HrUpg25RstTitle == null || data.HrUpg25RstGrid1.length == 0 || data.HrUpg25RstGrid2.length == 0 || data.HrUpg25RstGrid3.length == 0) {
+                $(".AgentTitle").hide();
+                $(".ComeOn").hide();
+                $(".AreaTitle").hide();
+                $("#NoData1").show();
+                return
+            }
+
+            $("#Area1").jqGrid('GridUnload');
+            $("#Area2").jqGrid('GridUnload');
+            $("#Area3").jqGrid('GridUnload');
+
+            // 業務員資訊
+            $("#AgentName").text(data.HrUpg25RstTitle.AgentName);
+            $("#AgLevelOccpName").text(data.HrUpg25RstTitle.AgLevelOccpName);
+            $("#QueryDate").text(data.HrUpg25RstTitle.QueryDate);
+            $("#CenterName").text(data.HrUpg25RstTitle.CenterName);
+            $("#RegisterDate").text(data.HrUpg25RstTitle.RegisterDate);
+            $("#WcCenterName").text(data.HrUpg25RstTitle.WcCenterName);
+            $("#MinRecordDate").text(data.HrUpg25RstTitle.MinRecordDate);
+            $("#DirectorName").text(data.HrUpg25RstTitle.DirectorName);
+            $("#DirectorId").val(data.HrUpg25RstTitle.DirectorId);// 輔導人ID
+            // 加油
+            $("#RstUpgradeMemo").text(data.HrUpg25RstTitle.RstUpgradeMemo);
+            $("#UpgMonth").text(data.HrUpg25RstTitle.UpgMonth);
+            $("#UpgApplyDate").text(data.HrUpg25RstTitle.UpgApplyDate);
+
+            // 一、業績、組織適用標準（達成其一即可）
+            $(".AreaTitle").show();
+            $("#NoData1").hide();
+            $("#Area1").jqGrid({
+                datatype: "local",
+                mtype: "POST",
+                colNames: ["", "", "",""],
+                colModel: [
+                    { name: "ShowCol1", index: "ShowCol1" , formatter: SetShowCol },
+                    { name: "ShowCol3", index: "ShowCol3" },
+                    { name: "ShowCol4", index: "ShowCol4" },
+                    { name: "Rst", formatter: RstForDetail}
+                ],
+                jsonReader: {   @*讀JSON格式資料*@
+                    repeatitems: false,
+                    id: "0"
+                },
+                gridComplete: function (mythis) {
+                    if (mythis == null) { mythis = this; };
+                    var mygrid = $(mythis);
+                    @* 讓每個row下的cell 都有colname(供RWD使用)
+                    mygrid.find("tr:even").css("background", "#F5EFE7");*@
+                    var cm = mygrid.jqGrid("getGridParam", "colNames");
+                    var trs = mygrid.find('tr');
+                    $.each(trs, function (tri, tritem) {
+                        var tds = $(tritem).find('td');
+                        if ($(tritem).hasClass("jqgfirstrow")) @* 排除grid第一筆訂寬度用的 *@
+                            return;
+                        $.each(tds, function (tdi, tditem) {
+                            var mytitle = cm[tdi].replace("<br/>", "\n");
+                            $(tditem).attr('mycolname', mytitle);
+
+                            @* 讓RWD時的Header可以自動調高度！註：因加html至Data欄裡面！所以要小心 *@
+                            var dirtyContent = "";
+                            var mytitle2 = cm[tdi].replace("<br/>", "");
+                            if (mytitle2.Blength() > mytitle2.length && mytitle2.Blength() > 14 && window.innerWidth <= 430) {
+                                for (var ii = 1; ii < (mytitle2.Blength() / 14); ii++)
+                                    dirtyContent += "<br/><br/>";//"\n";
+                                $(tditem).append(dirtyContent);
+                            }
+                            @* 讓RWD時的Header可以自動調高度！*@
+
+                            if (cm[tdi].indexOf("<input") >= 0) {
+                                $(tditem).attr('mycolname', "");
+                            }
+
+                        });
+                    });
+                    @* 讓它再執行一次Resize(可移除body出現scrollbar的問題) *@
+                    jqGridResize();
+                    @* 若資料是空值則Header出現x - overflow: auto *@
+                    var hdivgrid = mygrid.parent().parent().parent().find(".ui-jqgrid-hdiv"); @* 找到header的Div *@
+                    if (mythis.p.reccount === 0) {
+                        hdivgrid.addClass("ui-jqgrid-hdivScrollX");
+                    }
+                    else {
+                        hdivgrid.removeClass("ui-jqgrid-hdivScrollX");
+                    }
+                    updateColNamesForWidth();
+                },
+                error: function (ex) {
+                    appendMessage("系統發生錯誤!!");
+                }
+
+            });
+            $("#Area1").jqGrid('setGridParam', { data: data.HrUpg25RstGrid1 });
+            $("#Area1").trigger("reloadGrid");
+
+            // 二、其他必要條件
+            $("#NoData2").hide();
+            $("#Area2").jqGrid({
+                datatype: "local",
+                mtype: "POST",
+                colNames: ["", "", ""],
+                colModel: [
+                    { name: "ShowCol2", index: "ShowCol2" },
+                    { name: "ShowCol3", index: "ShowCol3" },
+                    { name: "ShowCol4", index: "ShowCol4" },
+                ],
+                jsonReader: {   @*讀JSON格式資料*@
+                    repeatitems: false,
+                    id: "0"
+                },
+                gridComplete: function (mythis) {
+                    if (mythis == null) { mythis = this; };
+                    var mygrid = $(mythis);
+                    @*讓每個row下的cell 都有colname(供RWD使用)
+                    mygrid.find("tr:even").css("background", "#F5EFE7");*@
+                    var cm = mygrid.jqGrid("getGridParam", "colNames");
+                    var trs = mygrid.find('tr');
+                    $.each(trs, function (tri, tritem) {
+                        var tds = $(tritem).find('td');
+                        if ($(tritem).hasClass("jqgfirstrow"))@*排除grid第一筆訂寬度用的*@
+                            return;
+                        $.each(tds, function (tdi, tditem) {
+                            var mytitle = cm[tdi].replace("<br/>", "\n");
+                            $(tditem).attr('mycolname', mytitle);
+
+                            @*讓RWD時的Header可以自動調高度！註：因加html至Data欄裡面！所以要小心*@
+                            var dirtyContent = "";
+                            var mytitle2 = cm[tdi].replace("<br/>", "");
+                            if (mytitle2.Blength() > mytitle2.length && mytitle2.Blength() > 14 && window.innerWidth <= 430) {
+                                for (var ii = 1; ii < (mytitle2.Blength() / 14); ii++)
+                                    dirtyContent += "<br/><br/>";//"\n";
+                                $(tditem).append(dirtyContent);
+                            }
+                            @*讓RWD時的Header可以自動調高度！*@
+                            if (cm[tdi].indexOf("<input") >= 0) {
+                                $(tditem).attr('mycolname', "");
+                            }
+                        });
+                    });
+                    @*讓它再執行一次Resize(可移除body出現scrollbar的問題)*@
+                    jqGridResize();
+                    @*若資料是空值則Header出現x-overflow:auto*@
+                    var hdivgrid = mygrid.parent().parent().parent().find(".ui-jqgrid-hdiv");@*找到header的Div*@
+                    if (mythis.p.reccount === 0) {
+                        hdivgrid.addClass("ui-jqgrid-hdivScrollX");
+                    }
+                    else {
+                        hdivgrid.removeClass("ui-jqgrid-hdivScrollX");
+                    }
+                    updateColNamesForWidth();
+                },
+                error: function (ex) {
+                    appendMessage("系統發生錯誤!!");
+                }
+            });
+            $("#Area2").jqGrid('setGridParam', { data: data.HrUpg25RstGrid2 });
+            $("#Area2").trigger("reloadGrid");
+
+            // 三、其他說明（參考資訊）
+            $("#NoData3").hide();
+            $("#Area3").jqGrid({
+                datatype: "local",
+                mtype: "POST",
+                colNames: ["", "", "", ""],
+                colModel: [
+                    { name: "ShowCol2", index: "ShowCol2" },
+                    { name: "ShowCol3", index: "ShowCol3" },
+                    { name: "ShowCol4", index: "ShowCol4" },
+                    { name: "Order", formatter: OrderForDetail }
+                ],
+                jsonReader: {   @*讀JSON格式資料*@
+                    repeatitems: false,
+                    id: "0"
+                },
+                gridComplete: function (mythis) {
+                    if (mythis == null) { mythis = this; };
+                    var mygrid = $(mythis);
+                    @* 讓每個row下的cell 都有colname(供RWD使用)
+                    mygrid.find("tr:even").css("background", "#F5EFE7");*@
+                    var cm = mygrid.jqGrid("getGridParam", "colNames");
+                    var trs = mygrid.find('tr');
+                    $.each(trs, function (tri, tritem) {
+                        var tds = $(tritem).find('td');
+                        if ($(tritem).hasClass("jqgfirstrow")) @* 排除grid第一筆訂寬度用的 *@
+                            return;
+                        $.each(tds, function (tdi, tditem) {
+                            var mytitle = cm[tdi].replace("<br/>", "\n");
+                            $(tditem).attr('mycolname', mytitle);
+
+                            @* 讓RWD時的Header可以自動調高度！註：因加html至Data欄裡面！所以要小心 *@
+                            var dirtyContent = "";
+                            var mytitle2 = cm[tdi].replace("<br/>", "");
+                            if (mytitle2.Blength() > mytitle2.length && mytitle2.Blength() > 14 && window.innerWidth <= 430) {
+                                for (var ii = 1; ii < (mytitle2.Blength() / 14); ii++)
+                                    dirtyContent += "<br/><br/>";//"\n";
+                                $(tditem).append(dirtyContent);
+                            }
+                            @* 讓RWD時的Header可以自動調高度！*@
+                            if (cm[tdi].indexOf("<input") >= 0) {
+                                $(tditem).attr('mycolname', "");
+                            }
+
+                        });
+                    });
+                    @* 讓它再執行一次Resize(可移除body出現scrollbar的問題) *@
+                    jqGridResize();
+                    @* 若資料是空值則Header出現x - overflow: auto *@
+                    var hdivgrid = mygrid.parent().parent().parent().find(".ui-jqgrid-hdiv"); @* 找到header的Div *@
+                    if (mythis.p.reccount === 0) {
+                        hdivgrid.addClass("ui-jqgrid-hdivScrollX");
+                    }
+                    else {
+                        hdivgrid.removeClass("ui-jqgrid-hdivScrollX");
+                    }
+                    updateColNamesForWidth();
+                    //if (window.innerWidth <= 532) {
+                    //    mygrid.find("td[aria-describedby='Area3_ShowCol2']").each(function () {
+                    //        var text = $(this).text();
+                    //        $(this).html(text.replace(/\s{3,}/g, "<br/>"));
+                    //    });
+                    //}
+                    //var $headers = $("#Area1").closest(".ui-jqgrid").find(".ui-jqgrid-htable th");
+                    //var $customHeaders = $(".AreaHeaderTitle div");
+
+                    //$headers.each(function (i) {
+                    //    var w = $(this).outerWidth();
+                    //    $customHeaders.eq(i).css("width", w + "px");
+                    //});
+                },
+                error: function (ex) {
+                    appendMessage("系統發生錯誤!!");
+                }
+            });
+            $("#Area3").jqGrid('setGridParam', { data: data.HrUpg25RstGrid3 });
+            $("#Area3").trigger("reloadGrid");
+            //$(window).on('resize', function () {
+            //    var grid = $("#Area1");
+            //    var newWidth = grid.closest(".ui-jqgrid").parent().width();
+            //    grid.setGridWidth(newWidth, true);
+            //}).trigger('resize');
+        }
+
+        // 調整Jqgrid的標題 再RWD的顯示
+        function updateColNamesForWidth() {
+            var w = $(window).width();
+
+            if (w > 430) {
+                $("#Area1").jqGrid('setLabel', 'ShowCol1', '一、業績、組織適用標準（達成其一即可）');
+                $("#Area1").jqGrid('setLabel', 'ShowCol3', '我的數字');
+                $("#Area1").jqGrid('setLabel', 'ShowCol4', '晉升標準');
+                $("#Area1").jqGrid('setLabel', 'Rst', '');
+
+                $("#Area2").jqGrid('setLabel', 'ShowCol2', '二、其他必要條件');
+                $("#Area2").jqGrid('setLabel', 'ShowCol3', '我的數字');
+                $("#Area2").jqGrid('setLabel', 'ShowCol4', '晉升標準');
+
+                $("#Area3").jqGrid('setLabel', 'ShowCol2', '三、其他說明（參考資訊）');
+                $("#Area3").jqGrid('setLabel', 'ShowCol3', '我的數字');
+                $("#Area3").jqGrid('setLabel', 'ShowCol4', '晉升標準');
+                $("#Area3").jqGrid('setLabel', 'Order', '');
+            } else {
+                $("#Area1").jqGrid('setLabel', 'ShowCol1', '');
+                $("#Area1").jqGrid('setLabel', 'ShowCol3', '我的數字');
+                $("#Area1").jqGrid('setLabel', 'ShowCol4', '晉升標準');
+                $("#Area1").jqGrid('setLabel', 'Rst', '');
+
+                $("#Area2").jqGrid('setLabel', 'ShowCol2', '');
+                $("#Area2").jqGrid('setLabel', 'ShowCol3', '我的數字');
+                $("#Area2").jqGrid('setLabel', 'ShowCol4', '晉升標準');
+
+                $("#Area3").jqGrid('setLabel', 'ShowCol2', '');
+                $("#Area3").jqGrid('setLabel', 'ShowCol3', '我的數字');
+                $("#Area3").jqGrid('setLabel', 'ShowCol4', '晉升標準');
+                $("#Area3").jqGrid('setLabel', 'Order', '');
+            }
+        }
+        // 監聽視窗縮放自動切換
+        $(window).on('resize', function () {
+            updateColNamesForWidth();
+        });
+
+        function SetShowCol(cellValue, options, rdata, action) {
+            return rdata.ShowCol1 + "   " + rdata.ShowCol2;
+        }
+        function RstForDetail(cellValue, options, rowObject) {
+            var YYYYSeason = $("#YYYYSeason option:selected").val();
+            // 明細設定
+            if (options.rowId == 2) {
+                return "<a class='detail-link' data-row='2' href='" + '@Html.Raw(Url.Action("RightEmpOM01", "AGUPGQU001"))' + "?YYYYSeason=" + YYYYSeason + "&DetailType=" + "RightEmpOM01" + "&AgentCode=" + "@Model.AgentCode" +"' >" + "明細" + "</a>";
+            } else if (options.rowId == 4) {
+                return "<a class='detail-link' data-row='4' href='" + '@Html.Raw(Url.Action("FourSeason", "AGUPGQU001"))' + "?YYYYSeason=" + YYYYSeason + "&DetailType=" + "4Season" + "&AgentCode=" + "@Model.AgentCode" + "' >" + "明細" + "</a>";
+            } else {
+                return ''; // 其他列不顯示
+            }
+        }
+        function OrderForDetail(cellValue, options, rowObject) {
+            var YYYYSeason = $("#YYYYSeason option:selected").val();
+            // 明細設定
+            if (options.rowId == 2) {
+                return "<a class='detail-link' data-row='2' href='" + '@Html.Raw(Url.Action("IntroduceReturn", "AGUPGQU001"))' + "?YYYYSeason=" + YYYYSeason + "&DetailType=" + "IntroduceReturn" + "&AgentCode=" + "@Model.AgentCode" + "' >" + "明細" + "</a>";
+            } else if (options.rowId == 4) {
+                return "<a class='detail-link' data-row='4' href='" + '@Html.Raw(Url.Action("VBPolicy", "AGUPGQU001"))' + "?YYYYSeason=" + YYYYSeason + "&DetailType=" + "VBPolicy" + "&AgentCode=" + "@Model.AgentCode" + "' >" + "明細" + "</a>";
+            } else {
+                return ''; // 其他列不顯示
+            }
+        }
+
+        window.onscroll = function () { scrollFunction() };
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.querySelector('.to-top').style.display = "block";
+            } else {
+                document.querySelector('.to-top').style.display = "none";
+            }
+        }
+        function GoToTop() {
+            let item = document.querySelector('.to-top');
+            item.addEventListener('click', (e) => {
+                window.scrollTo({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+    </script>
+}

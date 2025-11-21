@@ -1,0 +1,432 @@
+﻿@model EB.SL.MerSal.Models.MerSalViewModel
+@{
+    ViewBag.Title = "佣酬檢核作業";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    WebChannel<EB.SL.MerSal.Service.IMerSalService> MerSalService = new WebChannel<EB.SL.MerSal.Service.IMerSalService>();
+
+    //保公
+    var companylist = new List<TermVal>();
+    MerSalService.Use(s => companylist = s.GetCompanyCode());
+
+    //目前人事關檔年月-次薪
+    string ProductionAgymInd = string.Empty;
+
+    int AgymIndSequenceDate = 0;
+    string ProductionAgymIndSTR = string.Empty; //目前人事關檔年月-次薪字串 [西元年]
+    MerSalService.Use(s => ProductionAgymInd = s.GetAgymIndOne());
+
+    //目前人事關檔年月日=============================================================================================[西元]
+    string ProductionYMAgymIndDate = string.Empty;
+
+    if (!String.IsNullOrEmpty(ProductionAgymInd))
+    {
+        string[] sArray = ProductionAgymInd.Split('/');
+        ProductionAgymIndSTR = "目前人事關檔年月：" + (Convert.ToInt32(sArray[0]) + 1911) + "/" + sArray[1];
+        ProductionYMAgymIndDate = (Convert.ToInt32(sArray[0]) + 1911).ToString() + "/" + sArray[1].Substring(0, 2);
+        AgymIndSequenceDate = Convert.ToInt32(sArray[1].Substring(3, 1));
+        AgymIndSequenceDate = AgymIndSequenceDate == 1 ? 1 : 27;
+        ProductionYMAgymIndDate = ProductionYMAgymIndDate + "/" + AgymIndSequenceDate;
+    }
+    else
+    {
+        ProductionAgymIndSTR = string.Empty;
+    }
+
+    //目前工作月[西元年]
+    string ProductionYM = string.Empty;
+    MerSalService.Use(s => ProductionYM = s.GetProductionYm());
+    ProductionYM = !String.IsNullOrEmpty(ProductionYM) ? EB.SL.MerSal.Web.Areas.MerSal.Utilities.MerSalHelper.RocToWY(ProductionYM) : ProductionYM;
+
+    //目前次薪
+    string Sequence = string.Empty;
+    MerSalService.Use(s => Sequence = s.GetSequence());
+
+    int SequenceDate = 0;
+    SequenceDate = Convert.ToInt32(Sequence) ;
+    SequenceDate= SequenceDate == 1 ? 1 : 27;
+
+    //agym最大業績年月===============================================================================================[西元]
+    string ProductionYMSDate = ProductionYM + "/" + SequenceDate;
+
+    //目前業績關檔年月-次薪[民國]
+    string ProductionAgbcInd = string.Empty;
+    int AgbcIndSequence = 0;
+    MerSalService.Use(s => ProductionAgbcInd = s.GetAgbcIndOne());
+
+    //目前業績關檔年月日=============================================================================================[西元]
+    string ProductionYMAgbcIndDate = string.Empty;
+
+    if (!String.IsNullOrEmpty(ProductionAgbcInd))
+    {
+        string[] sArray = ProductionAgbcInd.Split('/');
+        ProductionYMAgbcIndDate = (Convert.ToInt32(sArray[0]) + 1911).ToString() + "/" + sArray[1].Substring(0, 2);
+        AgbcIndSequence = Convert.ToInt32(sArray[1].Substring(3, 1));
+        AgbcIndSequence = AgbcIndSequence == 1 ? 1 : 27;
+        ProductionYMAgbcIndDate = ProductionYMAgbcIndDate + "/" + AgbcIndSequence;
+    }
+
+    //取得佣酬檢核狀態為「4 - 資料入發佣」
+    string process_status_MSR = string.Empty;
+    MerSalService.Use(s => process_status_MSR = s.Getprocess_status_MSR(EB.Common.StringExtension.WYearMonthToCYearMonth(ProductionYM), Sequence.ToString()));
+
+    //【目前人事關檔年月】 Compare 【目前業績關檔年月】
+    //人=業 result=0  [不能執行檢核]
+    //人>業 result=1  [可執行，但人事未關檔]
+    //人<業 result=-1 [應該不會這樣]
+    int result = DateTime.Compare(Convert.ToDateTime(ProductionYMAgymIndDate), Convert.ToDateTime(ProductionYMAgbcIndDate));
+
+    //【目前業績關檔年月】 Compare 【agym業績年月】
+    //業=A result2=0     [不能可以執行檢核]
+    //業>A result2=1     [應該不會這樣]
+    //業<A result2=-1    [可執行檢核]
+    int result2 = DateTime.Compare(Convert.ToDateTime(ProductionYMAgbcIndDate), Convert.ToDateTime(ProductionYMSDate));
+
+    string ProductionYMshow = "agym最大業績年月shwo：" + ProductionYM + "/" + SequenceDate;
+    string ProductionYMAgymIndshow = "目前人事關檔年月show：" + ProductionYMAgymIndDate;
+    string ProductionYMAgbcIndshow = "目前業績關檔年月show：" + ProductionYMAgbcIndDate;
+    string resultshow = "resultshow：" + result;
+    string result2show = "result2show：" + result2;
+
+    //「檢核執行」按鈕顯示狀態
+    string btnReportStatus = string.Empty;
+}
+
+<style>
+    .ui-jqgrid tr.jqgrow td {
+        white-space: normal !important;
+        height: auto;
+        vertical-align: text-top;
+        word-break: break-all;
+        font-size: 10pt;
+        padding: 5px 0 5px 0;
+        vertical-align: middle;
+    }
+
+    button:disabled {
+        background: #dddddd;
+        border: 1px solid grey;
+        text-decoration: line-through;
+    }
+
+        button:disabled:hover {
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+    .prompt p {
+        padding: 10px 10px 10px 0px;
+        color: red;
+    }
+</style>
+
+<div id="divQueryBlock" style="margin-top:30px">
+    <div class="ibox ibox-primary">
+        <div class="ibox-head">
+            <div class="ibox-title">佣酬檢核作業</div>
+            <div class="ibox-tools">
+                <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
+                <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
+            </div>
+        </div>
+        @using (Ajax.BeginForm("Query", "MerSalTX001", new { area = "MerSal" }, new AjaxOptions { OnSuccess = "BindGrid" }, new { id = "QueryForm" }))
+        {
+            <div class="ibox-body">
+                <div class="prompt">
+                @*
+                1. process_status_MSR==>//取得佣酬檢核狀態為「4 - 資料入發佣」
+        
+                2.
+                result==>【目前人事關檔年月】 Compare 【目前業績關檔年月】
+                    人=業 result=0  [不能執行檢核]
+                    人>業 result=1  [可執行，但人事未關檔]
+                    人<業 result=-1 [X應該不會這樣]
+
+                result2==>【目前業績關檔年月】 Compare 【agym最大業績年月】
+                    業=A  result2=0  [不能執行檢核]
+                    業>A  result2=1  [X應該不會這樣]
+                    業<A  result2=-1 [可執行檢核]
+                *@
+                    @if (!String.IsNullOrEmpty(process_status_MSR) && (result == 1))//process_status_MSR=4 & 目前人事關檔年月 晚於 業績關檔年月 ==>已經在跑op
+                    {
+                        <text>
+                            <p>資料己入發佣流程，如需重新檢核，請洽資訊人員！</p>
+                            @Html.TextBox("btnReportStatus", "N", new { @type = "hidden" })
+                        </text>
+
+
+                    }
+                    else if ((result == 0) && (result2 == 0))//(目前人事關檔年月=目前業績關檔年月) && (目前業績關檔年月=agym業績年月)
+                    {
+                        <text>
+                            <p>佣酬業績已關檔，如需重新執行，請洽資訊人員！</p>
+                            @Html.TextBox("btnReportStatus", "N", new { @type = "hidden" })
+                        </text>
+                    }
+                    else
+                    {
+                        @Html.TextBox("btnReportStatus", "Y", new { @type = "hidden" })
+                    }
+
+                    <p>@ProductionAgymIndSTR</p>
+
+                    @*
+                    測試用
+                        <p>@ProductionYMshow</p>
+                        <p>@ProductionYMAgymIndshow</p>
+                        <p>@ProductionYMAgbcIndshow</p>
+                        <p>@resultshow</p>
+                        <p>@result2show</p>
+                    *@
+
+
+
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-1" style="padding-right: 0px">
+                        @Html.LabelFor(m => m.ProductionYM, new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.TextBoxFor(m => m.ProductionYM, new { @class = "form-control", @Value = ProductionYM, @readonly = "readonly" })
+                    </div>
+                    <div class="col-md-1">
+                        @Html.LabelFor(m => m.Sequence, new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-md-1">
+                        @Html.TextBoxFor(m => m.Sequence, new { @class = "form-control", @Value = Sequence, @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-1 col-form-label" style="padding-right: 0px" for="CompanyCode">保險公司</label>
+                    <div class="col-md-2">
+                        <select class="form-select" id="CompanyCode" name="CompanyCode">
+                            <option value="0">請選擇</option>
+                            @foreach (var item in companylist)
+                            {
+                                <option value="@item.TermCode">@item.TermMeaning</option>
+                            }
+                        </select>
+                    </div>
+                    <label class="col-md-1 col-form-label" style="padding-right: 0px" for="FileSeq">檔案序號</label>
+                    <div class="col-md-1">
+                        <select class="form-select" id="FileSeq" name="FileSeq" >
+                            <option value="1">1</option>
+                            @*<option value="2">2</option>*@
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-12">
+
+                        @*人事未關時，要可以執行檢核*@
+                        @if ((!String.IsNullOrEmpty(process_status_MSR) && result == 1) || ((result == 0) && (result2 == 0)))
+                        {
+                            <button class="btn btn-warning" id="btnReport" data-bind="click: ReportClick" disabled="disabled">檢核執行X</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-warning" id="btn" data-bind="click: ReportClick">檢核執行</button>
+                        }
+                        <button class="btn btn-primary" id="btnQuery" data-bind="click: QueryClick">檢核記錄查詢</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    @*BatchQuery*@
+    <div id="batchDIV" class="ibox ibox-primary" style="display:none;">
+        <div class="ibox-head">
+            <div class="ibox-title">批次執行紀錄</div>
+            <div class="ibox-tools">
+                <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
+                <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
+            </div>
+        </div>
+        <div class="ibox-body">
+            @Html.Partial("_BatchQuery")
+        </div>
+    </div>
+    @section GridActions {
+        <div id="batchDIVQuery" class="ibox ibox-primary" style="display:none;">
+            <div class="ibox-head">
+                <div class="ibox-title">檢核執行紀錄</div>
+                <div class="ibox-tools">
+                    <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
+                    <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
+                </div>
+            </div>
+            <div class="ibox-body">
+                <div class="jqGrid">
+                    <table id="Result"></table>
+                </div>
+                <div id="ResultPagger"></div>
+            </div>
+        </div>
+    }
+</div>
+@section Scripts{
+    <script>
+        var ViewModel = {
+            QueryClick: function () {
+                if (ChkQuery()) {
+                    $("form#BatchQuery").trigger("submit");
+                    $("#batchDIV").show();
+                    $("form#QueryForm").trigger("submit");
+                    $("#batchDIVQuery").show();
+                }
+            },
+            ReportClick: function () {
+                if (ChkSummit()) {
+                    Batch();
+                    $("form#BatchQuery").trigger("submit");
+                    $("#batchDIV").show();
+                    $("form#QueryForm").trigger("submit");
+                    $("#batchDIVQuery").show();
+                }
+            }
+        };
+        $(function () {
+            ko.applyBindings(ViewModel);
+            var CheckPSMSRVal = "";
+            if ($("#CompanyCode option:selected").val() != "0") {
+                CheckSeqNo();
+            }
+        });
+        $("#CompanyCode").change(function () {
+            if ($("#CompanyCode option:selected").val() != "0") {
+                CheckSeqNo();//發佣原始檔，需有上傳資料且狀態為3
+                CheckPSMSR();//詢問-資料己入佣酬調整，請確認是否重新執行檢核！
+                $("#CompanyCodeT").remove()
+                let str = '<input type="text" id="CompanyCodeT" name="CompanyCodeT" style="display:none" value="' + $("#ProductionYM").val() + $("#Sequence").val() +"-"+ $("#CompanyCode option:selected").val() + '" /> ';
+                $("form#BatchQuery").append(str)
+            }
+        })
+
+        function CheckSeqNo() {
+            $.ajax({
+                method: "POST",
+                cache: false,
+                async: false,
+                url: '@Url.Action("CheckSeqNo", "MerSalTX001", new { area = "MerSal" })',
+                data: { ProductionYM: $("#ProductionYM").val(), Sequence: $("#Sequence").val(), CompanyCode: $("#CompanyCode").val() },
+                complete: function (check) {
+
+                    if ($("#btnReportStatus").val() == "N") {
+                        $("#btnReport").attr("disabled", true)
+                    } else {
+                        //發佣原始檔，需有上傳資料且狀態為3
+                        if (check.responseText != "3") {
+                            $("#btnReport").attr("disabled", true)
+                        }
+                    }
+                }
+            });
+        }
+
+        function CheckPSMSR() {
+            $.ajax({
+                method: "POST",
+                cache: false,
+                async: false,
+                url: '@Url.Action("GetPSMSR", "MerSalTX001", new { area = "MerSal" })',
+                data: { ProductionYM: $("#ProductionYM").val(), Sequence: $("#Sequence").val(), CompanyCode: $("#CompanyCode").val() },
+                complete: function (check) {
+                    CheckPSMSRVal = check.responseText;
+                }
+            });
+        }
+
+        function BindGrid(datas) {
+            $("#Result").GridUnload();
+            $("#Result").jqGrid({
+                url: '@Url.Action("BindGrid", "MerSalTX001", new { area = "MerSal" })',
+                datatype: "local",
+                mtype: "POST",
+                colNames: ["工作月", "序號", "保險公司", "檔案序號", "執行檢核筆數", "錯誤筆數", "警告筆數", "入正式筆數", "入剪檔筆數","業務員資料來源", "處理注記", "檢核時間起", "檢核時間訖", "執行者"],
+                colModel: [
+                    { name: "ProductionYM", index: "ProductionYM", width: 80  },
+                    { name: "Sequence", index: "Sequence", width: 50  },
+                    { name: "CompanyCode", index: "CompanyCode", width: 90 },
+                    { name: "FileSeq", index: "FileSeq", width: 90  },
+                    { name: "ImpCount", index: "ImpCount" },
+                    { name: "ErrCount", index: "ErrCount"},
+                    { name: "WarCount", index: "WarCount" },
+                    { name: "FormalCount", index: "FormalCount" },
+                    { name: "CutCount", index: "CutCount" },
+                    { name: "AgFromName", index: "AgFromName" },
+                    { name: "ProcessStatusMSR", index: "ProcessStatusMSR" },
+                    { name: "DataChecktimeS", index: "DataChecktimeS", width: 205  },
+                    { name: "DataChecktimeE", index: "DataChecktimeE", width: 205  },
+                    { name: "CreateUserCode", index: "CreateUserCode", width: 90 },
+                ],
+                jsonReader: {
+                    repeatitems: false,
+                    id: "0"
+                },
+                loadComplete: function () {
+                    $('#Result').jqGrid("setGridWidth", $('#resultDIV').width());
+                },
+                pager: "ResultPagger"
+            });
+            $("#Result").jqGrid('setGridParam', { data: datas });
+            $("#Result").trigger("reloadGrid");
+        }
+
+        function Batch() {
+            clearMessage();
+            var pragName = "佣酬檢核報表";
+            $.ajax({
+                method: "POST",
+                cache: false,
+                dataType: "json",
+                data: {
+                    ProductionYm: $('#ProductionYM').val(),
+                    FileSeq: $('#FileSeq option:selected').val(),
+                    Sequence: $('#Sequence ').val(),
+                    CompanyCode: $('#CompanyCode option:selected').val(),
+                    programName: pragName
+                },
+                url: '@Url.Action("RealtimeBatch", "MerSalTX001", new { area = "MerSal" })',
+                success: function (data) {
+
+                    if (data.DataValue == "CmBatchControlR") {
+                        appendMessage("該工作已經在排程中執行，請勿頻繁重覆上傳！");
+                    } else if (data.DataValue == "JobNotOk") {
+                        appendMessage("即時批次作業失敗");
+                    }
+                    else {
+                        $("#batchDIV").show();
+                    }
+                },
+                error: function () {
+                    appendMessage("即時批次作業失敗");
+                }
+            });
+        }
+
+        function ChkSummit() {
+            clearMessage();
+            if ($('#CompanyCode option:selected').val() == "0") {
+                appendMessage("保險公司不可為空白");
+                return false;
+            }
+
+            if (CheckPSMSRVal != "") {//MerSalrun.process_status_MSR='3'
+                if (confirm('資料己入佣酬調整，請確認是否重新執行檢核！')) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function ChkQuery() {
+            clearMessage();
+            if ($('#CompanyCode option:selected').val() == "0") {
+                appendMessage("保險公司不可為空白");
+                return false;
+            }
+            return true;
+        }
+    </script>
+}

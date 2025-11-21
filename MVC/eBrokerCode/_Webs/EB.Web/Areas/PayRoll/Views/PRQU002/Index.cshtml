@@ -1,0 +1,174 @@
+﻿@*
+    程式名稱：人工調帳
+    建立人員：Harrison
+    建立日期：202207
+    修改記錄：（[需求單號]、[修改內容]、日期、人員）
+    需求單號:20240122004-因現有VLIFE系統(核心系統)使用已長達20多年，架構老舊，已不敷使用，且為提升資訊安全等級，故計劃執行VLIFE系統改版(新核心系統:eBroker系統)。; 修改內容:上線; 修改日期:20240613; 修改人員:Harrison;
+    需求單號:20240807001-調整人工調帳系統產出之相關畫面及報表修改等功能。; 修改日期:20240807; 修改人員:Harrison;
+*@
+@model EB.SL.PayRoll.Models.AgentBonusAdjustViewModel
+@{
+    ViewBag.Title = "調帳原因碼總表";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    string productionY = DateTime.Now.ToString("yyyy");
+    //取業績年月
+    WebChannel<EB.SL.PayRoll.Service.IPayRollService> Service = new WebChannel<EB.SL.PayRoll.Service.IPayRollService>();
+    //var productionYM = "";
+    var agym = new EB.VLifeModels.agym();
+    Service.Use(s => agym = s.GetYMData("", true).FirstOrDefault());
+}
+@if (TempData["message"] != null)
+{
+    <script type="text/javascript">
+        var message = @Html.Raw(Json.Encode(TempData["message"]));
+        alert(message);
+    </script>
+}
+@*查詢執行結果*@
+@using (Ajax.BeginForm("Query", "PRQU002", new { area = "PayRoll" }, new AjaxOptions { OnSuccess = "BindGrid" }, new { id = "QueryForm" }))
+{
+    <div id="resultDIV" class="ibox ibox-primary">
+        <div class="ibox-head">
+            <div class="ibox-title">調帳原因碼總表</div>
+        </div>
+        <div class="ibox-body">
+            <div class="form-group row">
+                <label class="col-md-1 col-form-label" for="productionY">年度</label>
+                <div class="col-md-2">
+                    <input type="text" class="form-control" id="productionY" name="productionY" value="@productionY" />
+                </div>
+                <label class="col-md-1 col-form-label" for="ProductionYM">工作月</label>
+                <div class="col-md-2">
+                    <select class="form-select" id="productionYM" name="productionYM">
+                        <option value="">請選擇</option>
+                    </select>
+                </div>
+                <label class="col-md-1 col-form-label" for="SequenceStart">次薪</label>
+                <div class="col-md-1">
+                    <input type="text" class="form-control" id="Sequence" name="Sequence" value="@agym.sequence" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-1 col-form-label" for="nunit">部門別</label>
+                <div class="col-md-2">
+                    @if (User.HasPermission("EB.SL.PayRoll.PRTX002.Admin") || User.HasPermission("EB.SL.PayRoll.PRTX002.FIN"))
+                    {
+                        <text>
+                            @Html.DropDownListFor(m => m.CreateUnit, EB.SL.PayRoll.Web.Areas.PayRoll.Utilities.PayRollHelper.QueryMainnunitListItem(User.MemberInfo.ID, (EB.CUFModels.sc_unit m) => m.UnitName), new { @id = "nunit", @class = "form-select" })
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                            @Html.DropDownListFor(m => m.CreateUnit, EB.SL.PayRoll.Web.Areas.PayRoll.Utilities.PayRollHelper.QuerynunitListItem(User.MemberInfo.ID, (EB.CUFModels.sc_unit m) => m.UnitName), new { @id = "nunit", @class = "form-select" })
+                        </text>
+                    }
+                </div>
+                <label class="col-md-1 col-form-label" for="nmember">上傳者</label>
+                <div class="col-md-2">
+                    <input type="text" class="form-control" id="nmember" name="nmember" value="@Model.nmember" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <button class="btn btn-warning" id="btn" data-bind="click: ReportClick">匯出報表</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts{
+    <script>
+        var ViewModel = {
+            ReportClick: function () {
+                clearMessage();
+                if (QueryCheck()) {
+                    GetReport();
+                }
+            }
+        };
+        $(function () {
+            ko.applyBindings(ViewModel);
+            GetproductionYM(@productionY)
+            $('#productionY').change(function () {
+                GetproductionYM($('#productionY').val());
+            });
+        });
+
+        function GetproductionYM(productionY) {
+            if (productionY != "") {
+                $.ajax({
+                    method: "POST",
+                    cache: false,
+                    url: '@Url.Action("GetproductionYM", "PRQU002", new { area = "PayRoll" })',
+                    data: { productionY: productionY },
+                    async: false,
+                    complete: function (data) {
+                        $("#productionYM").html('');
+                        $("#productionYM").append("<option value=''>" + "請選擇" + "</option>");
+                        let lastElement = data.responseJSON[data.responseJSON.length - 1];
+                        for (let i = 0; i < data.responseJSON.length; i++) {
+                            if (data.responseJSON[i] == lastElement) {
+                                $("#productionYM").append("<option selected value='" + data.responseJSON[i] + "'>" + data.responseJSON[i] + "</option>");
+                            } else {
+                                $("#productionYM").append("<option value='" + data.responseJSON[i] + "'>" + data.responseJSON[i] + "</option>");
+                            }
+                        }
+                    },
+                    error: function (ex) {
+                        if (ex.statusText == "OK") {
+                        } else {
+                            appendMessage("系統發生錯誤");
+                        }
+                    }
+                });
+            } else {
+                $("#productionYM").html('');
+                $("#productionYM").append("<option value=''>" + "請選擇" + "</option>");
+            }
+        }
+        function QueryCheck() {
+            if ($("#productionY").val() == "") {
+                appendMessage("年度必填");
+                return false;
+            }
+            if ($("#productionYM option:selected").val() == "") {
+                appendMessage("工作月必選");
+                return false;
+            }
+            if ($("#Sequence").val() == "") {
+                appendMessage("次薪必填");
+                return false;
+            } else if ($("#Sequence").val() != 1 && $("#Sequence").val() != 2){
+                appendMessage("次薪格式不正確");
+                return false;
+            }
+            var regex_date = /\d{4}/;
+            if (!regex_date.test($("#productionY").val())) {
+                appendMessage("年度日期格式不正確");
+                return false;
+            }
+
+            return true;
+        }
+        function GetReport() {
+            var url = "@Url.Action("GetTotalReasonCodeReport", "PRQU002", new { area = "PayRoll" })";
+            var dataJson = $("form#QueryForm").serializeArray();
+            $.extend(
+                {
+                    redirectPost: function (location, args) {
+                        var form = '';
+                        $.each(args, function (key, value) {
+                            form += '<input type="hidden" name="' + value.name + '" value="' + value.value + '">';
+                        });
+                        $('<form action="' + location + '" method="POST">' + form + '</form>').appendTo('body').submit();
+                    }
+                });
+
+            $.redirectPost(url, dataJson);
+
+        }
+    </script>
+}
+
+

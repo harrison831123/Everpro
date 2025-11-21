@@ -1,0 +1,177 @@
+﻿
+@{
+    ViewBag.Title = LAWResource.法追案件匯入;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+<style>
+    .filestyle {
+        /*line-height: 28px;*/
+        border: 1px solid #00000026;
+        width: 100%;
+    }
+</style>
+<div id="divQueryBlock">
+    <div class="wall-title">@LAWResource.法追案件匯入</div>
+    <div class="wall">
+        @using (Html.BeginForm("Upload", "LAWTX008", new { area = "LAW" }, FormMethod.Post, new { id = "UploadForm" }))
+        {
+            <div class="row" style="margin-top:10px">
+                <div class="col-md-12 form-group detail-col">
+                    <div class="col-md-12">
+                        <font id="fontold" color="red" style="display:none;">※ 1.請注意！此舊案件匯入格式多2個欄位：訴訟程序、執行程序！</font>
+                        <label class="control-label detail-msg">@LAWResource.狀態設定</label>
+                        <br />
+                        <select id="RptType" class="form-control" style="width:35%;" name="RptType">
+                            <option value="1">@LAWResource.正常</option>
+                            <option value="2">@LAWResource.舊案</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="control-label detail-msg">下載法追案件格式:</label>
+                        <a href='~/Areas/LAW/Template/法追案件.csv' target='_parent'><img src=~/Content/img/book_g.png border=0><font color=red size=3>【法追案件】</font></a>
+                        <a href='~/Areas/LAW/Template/法追舊案件.csv' target='_parent'><img src=~/Content/img/book_g.png style="" CURSOR: hand;"" border=0><font color=red size=3>【法追舊案件】</font></a>
+                    </div>
+                    <div class="col-md-12" style="margin-top:10px">
+                        Select File (.CSV):<input id="file" name="file" type="file" class="filestyle" data-icon="false" accept=".csv" />
+                    </div>
+                    <div class="col-md-3" style="margin-top:30px">
+                        @*<button type="submit" class="btn btn-primary">匯入</button>*@
+                        <input id="btnSave" type="button" class="btn btn-primary" value="@LAWResource.匯入" data-bind="click: SaveClick" />
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="form-group quarydata" style="display:none;color:red;">
+            <span class="quarydatashow"></span>
+        </div>
+    </div>
+
+    @*上傳資料錯誤明細*@
+    <div id="errorDIV" class="" style="display: none;">
+        <div class="wall-title">@LAWResource.上傳資料錯誤明細</div>
+        <div class="wall">
+            <div class="form-group row">
+                <table id="errorTbl" class="table table-striped error-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">@LAWResource.錯誤描述</th>
+                        </tr>
+                    </thead>
+                    <tbody class="error-tbody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var ViewModel = {
+        SaveClick: function () {
+            //clearMessage();
+            @*$("#UploadSubmit").attr('action', '@Url.Action("Upload", "LAWTX008")');
+            $("#UploadSubmit").submit();*@
+            $(".error-tbody").html('');
+            if ($("#file").val() == '') {
+                appendMessage("@LAWResource.請勿上傳空檔");
+                return false;
+            }
+            else {
+                var formData = new FormData();
+                var fileUpload = $("#file").get(0);
+                var file = fileUpload.files;
+                var tabUniqueId = $("#tabUniqueId").val();
+                var RptType = $("#RptType").val();
+                formData.append('file', file[0]);
+                formData.append('tabUniqueId', tabUniqueId);
+                if (RptType == 1) {
+                    $.ajax({
+                        method: "POST",
+                        cache: false,
+                        url: '@Url.Action("Upload", "LAWTX008", new { area = "LAW" })',
+                        processData: false,
+                        contentType: false,
+                        data: formData,
+                        success: function (data) {
+                            var pattern = /^[0-9]*$/;
+                            if (data != null && pattern.test(data) == true) {
+                                $(".quarydata").show();
+                                $(".quarydatashow").remove();
+                                $(".quarydata").append('<span class="quarydatashow">總共' + data + '筆資料</span>');
+                            }
+                            else {
+                                var c = 1;
+                                $(".quarydata").hide();
+                                $(".quarydatashow").remove();
+                                $.each(data, function () {
+                                    var d = this.split(',');
+                                    $(".error-tbody").append("<tr><th scope='row'>" + c + "</th><td>" + d[0] + "</td></tr>");
+                                    c++;
+                                });
+                                $("#errorDIV").show();
+                            }
+                        },
+                        complete: function () {
+                            $("#file").val("");
+
+                        },
+                        error: function (ex) {
+                            appendMessage("@LAWResource.系統發生錯誤");
+                        }
+                    });
+                }
+                else {
+                   $.ajax({
+                        method: "POST",
+                        cache: false,
+                        url: '@Url.Action("UploadOld", "LAWTX008", new { area = "LAW" })',
+                        processData: false,
+                        contentType: false,
+                        data: formData,
+                        success: function (data) {
+                            var pattern = /^[0-9]*$/;
+                            if (data != null && pattern.test(data) == true) {
+                                $(".quarydata").show();
+                                $(".quarydatashow").remove();
+                                $(".quarydata").append('<span class="quarydatashow">總共' + data + '筆資料</span>');
+                            }
+                            else {
+                                var c = 1;
+                                $(".quarydata").hide();
+                                $(".quarydatashow").remove();
+                                $.each(data, function () {
+                                    var d = this.split(',');
+                                    $(".error-tbody").append("<tr><th scope='row'>" + c + "</th><td>" + d[0] + "</td></tr>");
+                                    c++;
+                                });
+                                $("#errorDIV").show();
+                            }
+                        },
+                        complete: function () {
+                            $("#file").val("");
+
+                        },
+                        error: function (ex) {
+                            appendMessage("@LAWResource.系統發生錯誤");
+                        }
+                   });
+                }
+           }
+        }
+    };
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+        $("#RptType").change(function () {
+            if ($("#RptType").val() == 1) {
+                $("#fontold").css('display', 'none');
+            }
+            else {
+                $("#fontold").css('display', 'block');
+            }
+        })
+    });
+
+
+</script>

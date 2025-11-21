@@ -1,0 +1,981 @@
+﻿
+@model EP.PSL.WorkResources.MeetingMng.Web.Areas.MeetingMng.Model.MeetingDetailModel
+
+@{
+    if (MyPageStatus == PageStatus.Create)
+    {
+        ViewBag.Title = EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.新增會議;
+    }
+    else if (MyPageStatus == PageStatus.Edit)
+    {
+        ViewBag.Title = EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.修改會議;
+    }
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    var thisGroupType = AccountGroupType.System;
+}
+@if (TempData["message"] != null)
+{
+    <script type="text/javascript">
+        var message = @Html.Raw(Json.Encode(TempData["message"]));
+        alert(message);
+    </script>
+}
+
+
+
+@section LeftActions{
+    @if (MyPageStatus != PageStatus.View)
+    {
+        <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.儲存" data-bind="click: SaveClick" />
+        @Html.ActionLink("返回", "Detail", "MMTX002", new { id = Model.MTID }, new { Class = "btn btn-default" })
+        <input id="btnCancel" type="button" class="btn btn-default" value="@EP.PlatformResources.取消" data-bind="click: CancelClick" />
+    }
+
+    @*<input id="btnExit" type="button" class="btn btn-default" value="@EP.PlatformResources.結束" data-bind="click: CloseClick" />*@
+}
+
+@using (Html.BeginForm("Create", "MMTX001", null, FormMethod.Post, new { id = "CreateSubmit" }))
+{
+    <div id="DetailTabOne" class="row">
+        @Html.HiddenFor(m => m.MTID)
+        @*新增會議*@
+        <div class="col-md-12">
+            @if (MyPageStatus == PageStatus.Create)
+            {
+                <div class="DetailData line">
+                    @*召集人*@
+                    <div class="detail-col form-group form-inline">
+                        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.MTConvener, new { @class = "detail-msg" })
+                        @*@Model.MTConvenerName*@
+                        @Html.DisplayFor(model => model.MTConvenerName, new { @class = "control-label col-md-2" })
+                        @Html.HiddenFor(m => m.MTConvener)
+                    </div>
+                    @*會議名稱*@
+                    <div class="detail-col form-group form-inline">
+                        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.MTName, new { @class = "detail-msg" })
+                        <div class="col-md-offset-1">
+                            @Html.TextBoxFor(m => m.MTName, new { @id = "MTName", style = "width:88%", @maxlength = "250", @class = "form-control detail-cell", @placeholder = EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.請輸入會議名稱 })
+                        </div>
+                    </div>
+                    @*會議地點*@
+                    <div class="detail-col form-group form-inline" id="Place">
+                        <img class="index-title-icon" src="~/Content/img/birdemail_g.png" />
+                        @Html.LabelFor(m => m.MTPlace, new { @class = "detail-msg" })
+                        <div class="col-md-offset-1">
+                            <div id="DDMTP">
+                                @Html.DropDownListFor(m => m.MDName, MyPageStatus != PageStatus.Create, EP.PSL.WorkResources.MeetingMng.Web.MeetingMngHelper.QueryMeetingDevicePlaceListItem((EP.H2OModels.MeetingDevice m) => m.MDName), new { @id = "MDName", @class = (MyPageStatus != PageStatus.Create ? "detail-cell" : "form - control"), @onchange = "ChkTime();" })
+                            </div>
+                            <div>
+                                <input type="text" name="MTNewPlace" id="MTNewPlace" style="display:none" />
+                                <input type="checkbox" name="" id="chkplace" />@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.自定新增會議地點
+                            </div>
+                            @*<p style="color:red">@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.會議地點請以欄位</p>*@
+                        </div>
+                    </div>
+                    @*場地與設備*@
+                    @*<div class="detail-col form-group form-inline">*@
+                    @*<img class="index-title-icon" src="~/Content/img/surgeon_g.png" />*@
+                    @*@Html.LabelFor(m => m.MDName, new { @class = "detail-msg" })*@
+                    <!-- Button trigger modal -->
+                    <!--<div class="col-md-offset-1">
+                    <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#exampleModalCenter">
+                       @* @EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.場地與設備
+                    </button>-->
+                            @*<input type="checkbox" name="" id="Customplace" />@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.自訂選擇會議地點*@
+                            @*<p style="color:red">@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.會議地點請以欄位</p>*@
+                            <!--</div>-->
+                    @*<div class="col-md-offset-1" style="background-color:white;width:80%;margin-top:10px;" id="MDShowList">
+
+                        </div>*@
+                    <!-- Modal -->
+                    @*<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalCenterTitle">@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.場地與設備</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        @if (MyPageStatus == Microsoft.CUF.Web.PageStatus.Create)
+                                        {
+                                            foreach (var item in EP.PSL.WorkResources.MeetingMng.Web.MeetingMngHelper.GetMeetingDeviceList())
+                                            {
+                                                <input type="checkbox" name="MDID" id="@(item.MDID)MDID" value="@item.MDID" onchange="ChkTime();" /> <span id="mdshowname">@item.MDName</span><br />
+
+
+                                            }
+                                        }
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" id="MDPN" class="btn btn-secondary" data-dismiss="modal">@EP.PlatformResources.確認</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>*@
+                    @*</div>*@
+
+                    @*會議說明*@
+                    <div class="detail-col form-group form-inline">
+                        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.MTDesc, new { @class = "detail-msg" })
+                        <div class="detail-cell-content">
+                            <textarea id="MTDesc" name="MTDesc" style="width:100%;" rows="10" placeholder="@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.請輸入會議說明" cols="60"></textarea>
+                        </div>
+                    </div>
+                    @*開始日期*@
+                    <div class="detail-col form-group form-inline">
+                        <img class="index-title-icon" src="~/Content/img/calendar_g.png" />@Html.LabelFor(m => m.MTStartDate, new { @class = "detail-msg" })
+                        <div class="col-md-offset-1 " style="display:flex;">
+                            @Html.TextBoxFor(m => m.MTStartDate, new { @class = "jquery_datetimepicker form-control " + "detail-cell ", @style = "margin:0px 10px 0px 10px", @Value = Model.MTStartDate.ToString("yyyy/MM/dd"), @maxlength = "16", @onchange = "ChkTime();" })
+
+                            <div class="">
+                                <select class="form-control text-box single-line" id="shour" name="shour" onchange="ChkTime();">
+                                    @for (var h = 0; h < 24; h++)
+                                    {
+                                        <option value="@(Convert.ToString(h < 10 ? "0" : ""))@h">@(Convert.ToString(h < 10 ? "0" : ""))@h</option>
+                                    };
+                                </select>
+                            </div>
+                            <div class="">
+                                <label for="start-hour" class="start-hour-text" style="font-size:25px;">@EP.PSL.WorkResources.EquCenter.Models.EquCenterResource.時</label>
+                            </div>
+                            <div class="">
+                                <select id="smin" name="smin" class="form-control text-box single-line" onchange="ChkTime();">
+                                    @for (var h = 0; h < 60; h++)
+                                    {
+                                        <option value="@(Convert.ToString(h < 10 ? "0" : ""))@h">@(Convert.ToString(h < 10 ? "0" : ""))@h</option>
+                                    };
+                                </select>
+                            </div>
+                            <div class="">
+                                <label for="start-min" class="start-min-text" style="font-size:25px;">分</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*結束日期*@
+                    <div class="detail-col form-group form-inline">
+                        <img class="index-title-icon" src="~/Content/img/calendar_g.png" />@Html.LabelFor(m => m.MTEndDate, new { @class = "detail-msg" })
+                        <div class="col-md-offset-1" style="display:flex;">
+                            @Html.TextBoxFor(m => m.MTEndDate, new { @class = "jquery_datetimepicker form-control " + "detail-cell", @style = "margin:0px 10px 0px 10px", @Value = Model.MTEndDate.ToString("yyyy/MM/dd"), @maxlength = "16", @onchange = "ChkTime();" })
+
+                            <div class="">
+                                <select class="form-control text-box single-line" id="ehour" name="ehour" onchange="ChkTime();">
+                                    @for (var h = 0; h < 24; h++)
+                                    {
+                                        <option value="@(Convert.ToString(h < 10 ? "0" : ""))@h">@(Convert.ToString(h < 10 ? "0" : ""))@h</option>
+                                    };
+                                </select>
+                            </div>
+                            <div class="">
+                                <label for="start-hour" class="start-hour-text" style="font-size:25px;">@EP.PSL.WorkResources.EquCenter.Models.EquCenterResource.時</label>
+                            </div>
+                            <div class="">
+                                <select id="emin" name="emin" class="form-control text-box single-line" onchange="ChkTime();">
+                                    @for (var h = 0; h < 60; h++)
+                                    {
+                                        <option value="@(Convert.ToString(h < 10 ? "0" : ""))@h">@(Convert.ToString(h < 10 ? "0" : ""))@h</option>
+                                    };
+                                </select>
+                            </div>
+                            <div class="">
+                                <label for="start-min" class="start-min-text" style="font-size:25px;">分</label>
+                            </div>
+                        </div>
+                    </div>
+                    @*設定主席*@
+                    <div class="detail-col form-group form-inline" id="recipient-area">
+                        <img class="index-title-icon" src="~/Content/img/recipient_chat_g.png" />@Html.LabelFor(m => m.MTChairmanName, new { @class = "detail-msg" })
+                        <div class="detail-cell">
+                            <ul>
+                                <div id="H2OLP">
+                                    @{Html.RenderPartial("~/Views/Shared/AccountGroupSelectorChairman.cshtml",
+                                                                      new AccountGroupSelector("AccountGroupSelectorChairman", EP.PlatformResources.選擇人員, thisGroupType) { OnSelected = "onDialogSelectedChairman" });}
+                                    <button type="button" class="btn btn-danger" id="addChairman" tabindex="4">@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.主席</button>
+                                    <div class="detail-cell" id="ChairmanToShow">
+                                    </div>
+                                    @Html.TextBoxFor(m => m.MTChairmanName, new { style = "display:none;width:100%" })
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+                    @*設定紀錄者*@
+                    <div class="detail-col form-group form-inline" id="recipient-area">
+                        <img class="index-title-icon" src="~/Content/img/recipient_chat_g.png" />@Html.LabelFor(m => m.MTRecorderName, new { @class = "detail-msg" })
+                        <div class="detail-cell">
+                            <ul>
+                                <div id="H2OPP">
+                                    @{Html.RenderPartial("~/Views/Shared/AccountGroupSelectorRecorder.cshtml",
+                                                                      new AccountGroupSelector("AccountGroupSelectorRecorder", EP.PlatformResources.選擇人員, thisGroupType) { OnSelected = "onDialogSelectedRecorder" });}
+                                    <button type="button" class="btn btn-danger" id="addRecorder" tabindex="4">@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.紀錄者</button>
+                                    <div class="detail-cell" id="RecorderToShow">
+                                    </div>
+                                    @Html.TextBoxFor(m => m.MTRecorderName, new { style = "display:none;width:100%" })
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+                    @*設定成員*@
+                    <div class="detail-col form-group form-inline" id="recipient-area">
+                        <img class="index-title-icon" src="~/Content/img/recipient_chat_g.png" />@Html.LabelFor(m => m.Participants, new { @class = "detail-msg" })
+                        <div class="detail-cell">
+                            <ul>
+                                <div id="H2OGP">
+                                    @{Html.RenderPartial("~/Views/Shared/AccountGroupSelector.cshtml",
+                                                                      new AccountGroupSelector("AccountGroupSelector", EP.PlatformResources.選擇人員, thisGroupType) { OnSelected = "onDialogSelected" });}
+                                    <button type="button" class="btn btn-danger" id="addusers" tabindex="4">@EP.PlatformResources.設定成員</button>
+                                    <div class="detail-cell" id="RecipientToShow">
+
+                                    </div>
+                                    @Html.TextBoxFor(m => m.RecipientToJson, new { style = "display:none;width:100%" })
+                                </div>
+                            </ul>
+                            <input type="checkbox" name="Convenerchk" value="true" checked />@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.召集人亦是會議成員
+                        </div>
+                    </div>
+
+                    @*附件檔*@
+                    <div class="detail-col">
+                        <img class="index-title-icon" src="~/Content/img/folder_g.png" />
+                        @Html.LabelFor(m => m.File, new { @class = "detail-msg" })
+                        <span class="detail-cell">
+                            <text>
+                                @Html.Partial("~/Views/JFileUpload/_Files.cshtml")
+                                @Html.HiddenFor(m => m.UploadFilesName)
+                            </text>
+                        </span>
+                    </div>
+                    @*傳送訊息*@
+                    <div class="detail-col">
+                        <img class="index-title-icon" src="~/Content/img/folder_g.png" />
+                        @Html.LabelFor(m => m.MTMessageChk, new { @class = "detail-msg" })
+                        <div class="detail-cell">
+                            <input type="checkbox" name="MTMessageChk" value="true" checked />@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.以線上留言通知
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        @*編輯會議*@
+        <div class="col-md-12">
+            @if (MyPageStatus == PageStatus.Edit)
+            {
+                <div class="DetailData line">
+                    @*召集人*@
+                    <div class="detail-col form-group form-inline">
+                        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.MTConvenerName, new { @class = "detail-msg" })
+                        @Model.MTConvenerName
+                        @Html.HiddenFor(m => m.MTConvener)
+                    </div>
+                    @*會議名稱*@
+                    <div class="detail-col form-group form-inline">
+                        <img class="index-title-icon" src="~/Content/img/megaphone_g.png" />@Html.LabelFor(m => m.MTName, new { @class = "detail-msg" })
+                        <div class="col-md-offset-1">
+                            @Html.TextBoxFor(m => m.MTName, new { @id = "MTName", style = "width:88%", @maxlength = "250", @class = "form-control detail-cell", @placeholder = EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.請輸入會議名稱 })
+                        </div>
+                    </div>
+                    @*會議地點*@
+                    <div class="detail-col form-group form-inline" id="Place">
+                        <img class="index-title-icon" src="~/Content/img/birdemail_g.png" />
+                        @Html.LabelFor(m => m.MTPlace, new { @class = "detail-msg" })
+                    <div class="col-md-offset-1">
+                        @if (Model.chkplace == false)
+                        {
+
+                            <div id="DDMTP" >
+
+                                @Html.DropDownListFor(m => m.MDName, MyPageStatus != PageStatus.Edit, EP.PSL.WorkResources.MeetingMng.Web.MeetingMngHelper.QueryMeetingDevicePlaceListItem((EP.H2OModels.MeetingDevice m) => m.MDName), new { @id = "MDName", @class = "form - control", @onchange = "ChkTime();" })
+                                @*@Html.DropDownListFor(m => m.MTPlace, MyPageStatus != PageStatus.Edit, EP.PSL.WorkResources.MeetingMng.Web.MeetingMngHelper.QueryMeetingPlaceListItem((EP.H2OModels.Meeting m) => m.MTPlace), new { @id = "MTPlace", @class = "form - control" })*@
+                            </div>
+                            <div>
+                                <input type="text" name="MTNewPlace" id="MTNewPlace" style="display:none" />
+                                <input type="checkbox" name="chkplace" id="chkplace" />@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.自定新增會議地點
+                            </div>
+                        }
+                        else
+                        {
+                            <div id="DDMTP" style="display: none">
+                                @Html.DropDownListFor(m => m.MDName, MyPageStatus != PageStatus.Edit, EP.PSL.WorkResources.MeetingMng.Web.MeetingMngHelper.QueryMeetingDevicePlaceListItem((EP.H2OModels.MeetingDevice m) => m.MDName), new { @id = "MDName", @class = "form - control", @onchange = "ChkTime();" })
+                                @*@Html.DropDownListFor(m => m.MTPlace, MyPageStatus != PageStatus.Edit, EP.PSL.WorkResources.MeetingMng.Web.MeetingMngHelper.QueryMeetingPlaceListItem((EP.H2OModels.Meeting m) => m.MTPlace), new { @id = "MTPlace", @class = "form - control" })*@
+                            </div>
+                            <div>
+                                <input type="text" name="MTNewPlace" id="MTNewPlace" style="display:block" value="@Model.MTPlace" />
+                                <input type="checkbox" name="chkplace" id="chkplace" checked />@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.自定新增會議地點
+                            </div>
+                        }
+                    </div>
+                    </div>
+                    @*場地與設備*@
+                    <!--<div class="detail-col form-group form-inline">
+                        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />
+                        @Html.LabelFor(m => m.MDName, new { @class = "detail-msg" })
+                        <!-- Button trigger modal -->
+                    <!--<div class="col-md-offset-1">
+                        <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#exampleModalCenter">
+                            @EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.場地與設備
+                        </button>
+                        <input type="checkbox" name="" id="Customplace" />@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.自訂選擇會議地點
+                        <p style="color:red">@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.會議地點請以欄位</p>
+                    </div>
+                    <div class="col-md-offset-1" style="background-color:white;width:80%;margin-top:10px;" id="MDShowList">
+
+                    </div>-->
+                    <!-- Modal -->
+                    <!--@*<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                           <div class="modal-dialog modal-dialog-centered" role="document">
+                               <div class="modal-content">
+                                   <div class="modal-header">
+                                       <h5 class="modal-title" id="exampleModalCenterTitle">@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.場地與設備</h5>
+                                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                           <span aria-hidden="true">&times;</span>
+                                       </button>
+
+                                   </div>
+                                   <div class="modal-body">
+                                       @if (ViewBag.chk == true) //確認新增時有沒有選設備地點
+                                       {
+                                           foreach (var item in EP.PSL.WorkResources.MeetingMng.Web.MeetingMngHelper.GetMeetingDeviceList()) //沒有直接跑全部
+                                           {
+                                               <input type="checkbox" name="MDID" id="@(item.MDID)MDID" value="@item.MDID" onchange="ChkTime();" /><span id="mdshowname">@item.MDName</span><br />
+
+
+                                           }
+                                       }
+                                       else
+                                       {
+                                           foreach (var item in EP.PSL.WorkResources.MeetingMng.Web.MeetingMngHelper.GetMeetingDeviceList())
+                                           {
+                                               bool hasvalue = false;
+                                               //找出這筆會議所選的設備
+                                               foreach (var item1 in EP.PSL.WorkResources.MeetingMng.Web.MeetingMngHelper.GetEditMeetingDeviceList(Model.MTID))
+                                               {
+                                                   if (item.MDID == item1.MDID) //比對有無，找到這筆會議所選的設備
+                                                   {
+                                                       hasvalue = true;
+                                                       break;
+                                                   }
+                                               }
+                                               if (hasvalue == true)//在新增時所選的設備給checked
+                                               {
+
+                                                   <input type="checkbox" name="MDID" id="@(item.MDID)MDID" value="@(item.MDID)" checked onchange="ChkTime();" /><span id="mdshowname">@item.MDName</span><br />
+                                               }
+                                               else
+                                               {
+                                                   <input type="checkbox" name="MDID" id="@(item.MDID)MDID" value="@(item.MDID)" onchange="ChkTime();" /><span id="mdshowname">@item.MDName</span><br />
+
+                                               }
+                                           }
+                                       }
+
+                                   </div>
+                                   <div class="modal-footer">
+                                       <button type="button" id="MDPN" class="btn btn-secondary" data-dismiss="modal">@EP.PlatformResources.確認</button>
+                                   </div>
+                               </div>
+                           </div>
+                       </d
+                       <!--@*<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                               <div class="modal-dialog modal-dialog-centered" role="document">
+                                   <div class="modal-content">
+                                       <div class="modal-header">
+                                           <h5 class="modal-title" id="exampleModalCenterTitle">@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.場地與設備</h5>
+                                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                               <span aria-hidden="true">&times;</span>
+                                           </button>
+
+                                       </div>
+                                       <div class="modal-body">
+                                           @if (ViewBag.chk == true) //確認新增時有沒有選設備地點
+                                           {
+                                               foreach (var item in EP.PSL.WorkResources.MeetingMng.Web.MeetingMngHelper.GetMeetingDeviceList()) //沒有直接跑全部
+                                               {
+                                                   <input type="checkbox" name="MDID" id="@(item.MDID)MDID" value="@item.MDID" onchange="ChkTime();" /><span id="mdshowname">@item.MDName</span><br />
+
+
+                                               }
+                                           }
+                                           else
+                                           {
+                                               foreach (var item in EP.PSL.WorkResources.MeetingMng.Web.MeetingMngHelper.GetMeetingDeviceList())
+                                               {
+                                                   bool hasvalue = false;
+                                                   //找出這筆會議所選的設備
+                                                   foreach (var item1 in EP.PSL.WorkResources.MeetingMng.Web.MeetingMngHelper.GetEditMeetingDeviceList(Model.MTID))
+                                                   {
+                                                       if (item.MDID == item1.MDID) //比對有無，找到這筆會議所選的設備
+                                                       {
+                                                           hasvalue = true;
+                                                           break;
+                                                       }
+                                                   }
+                                                   if (hasvalue == true)//在新增時所選的設備給checked
+                                                   {
+
+                                                       <input type="checkbox" name="MDID" id="@(item.MDID)MDID" value="@(item.MDID)" checked onchange="ChkTime();" /><span id="mdshowname">@item.MDName</span><br />
+                                                   }
+                                                   else
+                                                   {
+                                                       <input type="checkbox" name="MDID" id="@(item.MDID)MDID" value="@(item.MDID)" onchange="ChkTime();" /><span id="mdshowname">@item.MDName</span><br />
+
+                                                   }
+                                               }
+                                           }
+
+                                       </div>
+                                       <div class="modal-footer">
+                                           <button type="button" id="MDPN" class="btn btn-secondary" data-dismiss="modal">@EP.PlatformResources.確認</button>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>*@
+                       </div>-->
+                    @*會議說明*@
+                    <div class="detail-col form-group form-inline">
+                        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.MTDesc, new { @class = "detail-msg" })
+                        <div class="detail-cell-content">
+
+                            @Html.TextAreaFor(m => m.MTDesc, new { style = "width:100%", @placeholder = EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.請輸入會議說明 })
+                        </div>
+                    </div>
+                    @*開始日期*@
+                    <div class="detail-col form-group form-inline">
+                        <img class="index-title-icon" src="~/Content/img/calendar_g.png" />@Html.LabelFor(m => m.MTStartDate, new { @class = "detail-msg" })
+                        <div class="col-md-offset-1 " style="display:flex;">
+                            @Html.TextBoxFor(m => m.MTStartDate, new { @class = "jquery_datetimepicker form-control " + "detail-cell ", @style = "margin:0px 10px 0px 10px", @Value = Model.MTStartDate.ToString("yyyy/MM/dd"), @maxlength = "16", @onchange = "ChkTime();" })
+
+                            <div class="">
+                                <select class="form-control text-box single-line" id="shour" name="shour" onchange="ChkTime();">
+                                    @for (var h = 0; h < 24; h++)
+                                    {
+                                        if (Convert.ToInt32(Model.shour) != h)
+                                        {
+                                            <option value="@(Convert.ToString(h < 10 ? "0" : ""))@h">@(Convert.ToString(h < 10 ? "0" : ""))@h</option>
+                                        }
+                                        else
+                                        {
+                                            <option selected="selected" value="@(Convert.ToString(h < 10 ? "0" : ""))@h">@(Convert.ToString(h < 10 ? "0" : ""))@h</option>
+                                        }
+                                    };
+                                </select>
+                            </div>
+                            <div class="">
+                                <label for="start-hour" class="start-hour-text" style="font-size:25px;">@EP.PSL.WorkResources.EquCenter.Models.EquCenterResource.時</label>
+                            </div>
+                            <div class="">
+                                <select id="smin" name="smin" class="form-control text-box single-line" onchange="ChkTime();">
+                                    @for (var h = 0; h < 60; h++)
+                                    {
+                                        if (Convert.ToInt32(Model.smin) != h)
+                                        {
+                                            <option value="@(Convert.ToString(h < 10 ? "0" : ""))@h">@(Convert.ToString(h < 10 ? "0" : ""))@h</option>
+                                        }
+                                        else
+                                        {
+                                            <option selected="selected" value="@(Convert.ToString(h < 10 ? "0" : ""))@h">@(Convert.ToString(h < 10 ? "0" : ""))@h</option>
+                                        }
+                                    };
+                                </select>
+                            </div>
+                            <div class="">
+                                <label for="start-min" class="start-min-text" style="font-size:25px;">分</label>
+                            </div>
+                        </div>
+                    </div>
+                    @*結束日期*@
+                    <div class="detail-col form-group form-inline">
+                        <img class="index-title-icon" src="~/Content/img/calendar_g.png" />@Html.LabelFor(m => m.MTEndDate, new { @class = "detail-msg" })
+                        <div class="col-md-offset-1" style="display:flex;">
+                            @Html.TextBoxFor(m => m.MTEndDate, new { @class = "jquery_datetimepicker form-control " + "detail-cell", @style = "margin:0px 10px 0px 10px", @Value = Model.MTEndDate.ToString("yyyy/MM/dd"), @maxlength = "16", @onchange = "ChkTime();" })
+
+                            <div class="">
+                                <select class="form-control text-box single-line" id="ehour" name="ehour" onchange="ChkTime();">
+                                    @for (var h = 0; h < 24; h++)
+                                    {
+                                        if (Convert.ToInt32(Model.ehour) != h)
+                                        {
+                                            <option value="@(Convert.ToString(h < 10 ? "0" : ""))@h">@(Convert.ToString(h < 10 ? "0" : ""))@h</option>
+                                        }
+                                        else
+                                        {
+                                            <option selected="selected" value="@(Convert.ToString(h < 10 ? "0" : ""))@h">@(Convert.ToString(h < 10 ? "0" : ""))@h</option>
+                                        }
+                                    };
+                                </select>
+                            </div>
+                            <div class="">
+                                <label for="start-hour" class="start-hour-text" style="font-size:25px;">@EP.PSL.WorkResources.EquCenter.Models.EquCenterResource.時</label>
+                            </div>
+                            <div class="">
+                                <select id="emin" name="emin" class="form-control text-box single-line" onchange="ChkTime();">
+                                    @for (var h = 0; h < 60; h++)
+                                    {
+                                        if (Convert.ToInt32(Model.emin) != h)
+                                        {
+                                            <option value="@(Convert.ToString(h < 10 ? "0" : ""))@h">@(Convert.ToString(h < 10 ? "0" : ""))@h</option>
+                                        }
+                                        else
+                                        {
+                                            <option selected="selected" value="@(Convert.ToString(h < 10 ? "0" : ""))@h">@(Convert.ToString(h < 10 ? "0" : ""))@h</option>
+                                        }
+                                    };
+                                </select>
+                            </div>
+                            <div class="">
+                                <label for="start-min" class="start-min-text" style="font-size:25px;">分</label>
+                            </div>
+                        </div>
+                    </div>
+                    @*設定主席*@
+                    <div class="detail-col form-group form-inline" id="recipient-area">
+                        <img class="index-title-icon" src="~/Content/img/recipient_chat_g.png" />@Html.LabelFor(m => m.MTChairmanName, new { @class = "detail-msg" })
+                        <div class="detail-cell">
+                            <ul>
+                                <div id="H2OLP">
+                                    @{Html.RenderPartial("~/Views/Shared/AccountGroupSelectorChairman.cshtml",
+                                                                new AccountGroupSelector("AccountGroupSelectorChairman", EP.PlatformResources.選擇人員, thisGroupType) { OnSelected = "onDialogSelectedChairman" });}
+                                    <button type="button" class="btn btn-danger" id="addChairman" tabindex="4">@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.主席</button>
+                                    <div class="detail-cell" id="ChairmanToShow">
+                                    </div>
+                                    @Html.TextBoxFor(m => m.MTChairmanName, new { style = "display:none;width:100%" })
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+                    @*設定紀錄者*@
+                    <div class="detail-col form-group form-inline" id="recipient-area">
+                        <img class="index-title-icon" src="~/Content/img/recipient_chat_g.png" />@Html.LabelFor(m => m.MTRecorderName, new { @class = "detail-msg" })
+                        <div class="detail-cell">
+                            <ul>
+                                <div id="H2OPP">
+                                    @{Html.RenderPartial("~/Views/Shared/AccountGroupSelectorRecorder.cshtml",
+                                                                new AccountGroupSelector("AccountGroupSelectorRecorder", EP.PlatformResources.選擇人員, thisGroupType) { OnSelected = "onDialogSelectedRecorder" });}
+                                    <button type="button" class="btn btn-danger" id="addRecorder" tabindex="4">@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.紀錄者</button>
+                                    <div class="detail-cell" id="RecorderToShow">
+                                    </div>
+                                    @Html.TextBoxFor(m => m.MTRecorderName, new { style = "display:none;width:100%" })
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+                    @*設定成員*@
+                    <div class="detail-col form-group form-inline" id="recipient-area">
+                        <img class="index-title-icon" src="~/Content/img/recipient_chat_g.png" />@Html.LabelFor(m => m.Participants, new { @class = "detail-msg" })
+                        <p style="color:red">＊@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.編輯成員需全部成員重選！</p>
+                        <div class="detail-cell">
+                            <ul>
+                                <div id="H2OGP">
+                                    @{Html.RenderPartial("~/Views/Shared/AccountGroupSelector.cshtml",
+                                                                new AccountGroupSelector("AccountGroupSelector", EP.PlatformResources.選擇人員, thisGroupType) { OnSelected = "onDialogSelected" });}
+                                    <button type="button" class="btn btn-danger" id="addusers" tabindex="4">@EP.PlatformResources.設定成員</button>
+                                    <div class="detail-cell" id="RecipientToShow">
+
+                                    </div>
+                                    @Html.TextBoxFor(m => m.RecipientToJson, new { style = "display:none;width:100%" })
+                                </div>
+                            </ul>
+                            <input type="checkbox" name="Convenerchk" value="true" checked />@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.召集人亦是會議成員
+                        </div>
+                    </div>
+
+                    @*附件檔*@
+                    <div class="detail-col">
+                        <img class="index-title-icon" src="~/Content/img/folder_g.png" />
+                        @Html.LabelFor(m => m.File, new { @class = "detail-msg" })
+                        <span class="detail-cell">
+                            @Html.Partial("~/Views/JFileUpload/_Files.cshtml")
+                            @Html.HiddenFor(m => m.UploadFilesName)
+                        </span>
+                    </div>
+                    @*傳送訊息*@
+                    <div class="detail-col">
+                        <img class="index-title-icon" src="~/Content/img/folder_g.png" />
+                        @Html.LabelFor(m => m.MTMessageChk, new { @class = "detail-msg" })
+                        <div class="detail-cell">
+                            <input type="checkbox" name="MTMessageChk" value="true" checked />@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.以線上留言通知
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+@section scripts {
+    <script>
+
+    @*定義此頁面所用的KO*@
+        @if (MyPageStatus == PageStatus.Create)
+    {
+        <text>
+    var ViewModel = {
+        SaveClick: function () {
+            if (saveValidator()) {
+                clearMessage();@*清除訊息*@
+                var tabUniqueId = $("#tabUniqueId").val();
+                $("#UploadFilesName").getFileUploadItemsString();
+                $("#CreateSubmit").attr('action', '@Url.Action("Create", "MMTX001")');
+                $("#CreateSubmit").submit();
+            }
+        },
+        CancelClick: function () {
+            clearMessage();@*清除訊息*@
+            window.close();
+        }
+    };
+    </text>
+    }
+    @if (MyPageStatus == PageStatus.Edit)
+    {
+        <text>
+    var ViewModel = {
+        SaveClick: function () {
+            if (saveValidator()) {
+                clearMessage();@*清除訊息*@
+                var tabUniqueId = $("#tabUniqueId").val();
+                $("#UploadFilesName").getFileUploadItemsString();
+                $("#CreateSubmit").attr('action', '@Url.Action("Edit", "MMTX001")');
+                $("#CreateSubmit").submit();
+            }
+        },
+        CancelClick: function () {
+            clearMessage();@*清除訊息*@
+            window.close();
+        }
+        };
+        @*該筆會議地點selected*@
+           $.ajax({
+              url: "/MeetingMng/MMTX001/GetMDIDToShow",
+            dataType: 'json',
+            data: { "MTID": @Model.MTID },
+           }).done(function (result) {
+                $("#MDName").val(result).change();
+           });
+
+
+    </text>
+    }
+    $(document).ready(function () {
+        var opt = {
+            dateFormat: 'yy/mm/dd',
+            showTimepicker: false,
+            showSecond: false,
+            mask: true,
+            validateOnBlur: false
+        };
+        var chk_value = [];//定義checkbox陣列
+        //var MDShowList = document.getElementById("MDShowList");
+        //name是CheckBox的name屬性定義的名稱
+        //$('input[name="MDID"]:checked').each(function () {
+        //    chk_value.push($(this).val());
+        //});
+        //$.ajax({
+        //    url: "/MeetingMng/MMTX001/GetMDIDToShow",
+        //    type: 'Post',
+        //    data: { MDID: JSON.stringify(chk_value) },
+        //    dataType: 'text',
+        //    success: function (result) {
+        //        console.log(result)
+        //        MDShowList.empty;
+        //        MDShowList.innerHTML = "<p>" + result + "</p>";
+        //    }
+        //})
+
+
+        $(".jquery_datetimepicker").datetimepicker(opt);
+
+        //隱藏選擇視窗的原本按鍵
+        $("#AccountGroupSelectorPopButton").hide();
+        $("#AccountGroupSelectorChairmanPopButton").hide();
+        $("#AccountGroupSelectorRecorderPopButton").hide();
+        $("#addusers").click(addUsersClick);
+        $("#addChairman").click(addChairmanClick);
+        $("#addRecorder").click(addRecorderClick);
+        if ($("#RecipientToJson").val() != '') {
+            recipientSelectShow($("#RecipientToJson").val());
+        }
+        if ($("#MTChairmanName").val() != '') {
+            ChairmanSelectShow($("#MTChairmanName").val());
+        }
+        if ($("#MTRecorderName").val() != '') {
+            RecorderSelectShow($("#MTRecorderName").val());
+        }
+        @*註冊KO*@
+        ko.applyBindings(ViewModel);
+        $.ajax({
+            url: "/MeetingMng/MMTX001/GetFilesList",
+            dataType: 'json',
+            context: $('#fileupload')[0],
+            data: { "MTID": @Model.MTID },
+        }).done(function (result) {
+            $(this).fileupload('option', 'done')
+                .call(this, null, { result: result });
+        });
+
+        $('#chkplace').click(function () {
+            if ($("#MTNewPlace").css('display') == 'none') {
+                $("#MTNewPlace").css("display", "block");
+                $("#DDMTP").css("display", "none");
+                $("#MTPlace").val("@EP.PlatformResources.請選擇");
+            } else {
+                $("#MTNewPlace").val("");
+                $("#MTNewPlace").css("display", "none");
+                $("#DDMTP").css("display", "block");
+            }
+        });
+        //$('#Customplace').click(function () {
+        //    if ($("#Place").css('display') == 'none') {
+        //        $("#Place").css("display", "block");
+
+        //    } else {
+        //        $("#Place").css("display", "none");
+
+        //    }
+        //});
+        $("table").on("click", ".delete", function () {
+            var mdfname = $(this).attr('data-url');
+            $.ajax({
+                url: "/MeetingMng/MMTX001/deletefile",
+                type: 'Post',
+                data: { file: mdfname },
+                dataType: 'json'
+            })
+        });
+    });
+
+    //@*人員視窗選擇結果處理*@
+    function onDialogSelected() {
+        //取得它的選擇資訊(JSON格式)
+        var hiddenValue = $("#AccountGroupSelector").getHiddens()[0];
+        recipientSelectShow(hiddenValue);
+    }
+    function onDialogSelectedChairman() {
+        //取得它的選擇資訊(JSON格式)
+        var hiddenValue = $("#AccountGroupSelectorChairman").getHiddens()[0];
+        ChairmanSelectShow(hiddenValue);
+    }
+    function onDialogSelectedRecorder() {
+        //取得它的選擇資訊(JSON格式)
+        var hiddenValue = $("#AccountGroupSelectorRecorder").getHiddens()[0];
+        RecorderSelectShow(hiddenValue);
+    }
+    function addUsersClick() {
+        //手動呼叫Dialog視窗
+        $("#AccountGroupSelector").openDialog();
+    }
+    function addChairmanClick() {
+        //手動呼叫Dialog視窗
+        $("#AccountGroupSelectorChairman").openDialog();
+    }
+    function addRecorderClick() {
+        //手動呼叫Dialog視窗
+        $("#AccountGroupSelectorRecorder").openDialog();
+    }
+    function recipientSelectShow(jsonValue) {
+        var $select = $('#RecipientToShow');
+        $select.attr('style', "height:200px;overflow:auto;").html('');
+        if (jsonValue == undefined) return;
+        var jsonItems = JSON.parse(jsonValue);
+        $("#RecipientToJson").val(jsonValue);
+
+        $.each(jsonItems, function (idx, obj) {
+            var unit = '';
+            //$select.append($('<option>').text(obj.Unit+" "+obj.Text).attr('value', obj.Key).prop("selected", true));
+
+            $select.append('<ul>' + obj.Unit + " " + obj.Text + '</ul>');
+        });
+    }
+    function ChairmanSelectShow(jsonValue) {
+        var $select = $('#ChairmanToShow');
+        //var $selectAC = $('#AccountGroupSelectorChairmanrightlist');
+        $select.attr('style', "overflow:auto;").html('');
+        if (jsonValue == undefined) return;
+        var jsonItems = JSON.parse(jsonValue);
+        $("#MTChairmanName").val(jsonValue);
+
+        $.each(jsonItems, function (idx, obj) {
+            var unit = '';
+            //$selectAC.append($('<option>').text(obj.Unit+" "+obj.Text).attr('value', obj.Key).prop("selected", true));
+            $select.append('<ul>' + obj.Unit + " " + obj.Text + '</ul>');
+        });
+    }
+    function RecorderSelectShow(jsonValue) {
+        var $select = $('#RecorderToShow');
+        $select.attr('style', "overflow:auto;").html('');
+        if (jsonValue == undefined) return;
+        var jsonItems = JSON.parse(jsonValue);
+        $("#MTRecorderName").val(jsonValue);
+
+        $.each(jsonItems, function (idx, obj) {
+            var unit = '';
+            //$select.append($('<option>').text(obj.Unit+" "+obj.Text).attr('value', obj.Key).prop("selected", true));
+
+            $select.append('<ul>' + obj.Unit + " " + obj.Text + '</ul>');
+        });
+    }
+
+
+        //$('input[name="MDID"]').on("click", function () {
+        //    var chk_value = [];//定義checkbox陣列
+        //    var MDShowList = document.getElementById("MDShowList");
+        //    //name是CheckBox的name屬性定義的名稱
+        //    $('input[name="MDID"]:checked').each(function () {
+        //        chk_value.push($(this).val());
+        //    });
+        //    $.ajax({
+        //        url: "/MeetingMng/MMTX001/GetMDIDToShow",
+        //        type: 'Post',
+        //        data: { MDID: JSON.stringify(chk_value) },
+        //        dataType: 'text',
+        //        success: function (result) {
+        //            console.log(result)
+        //            MDShowList.empty;
+        //            MDShowList.innerHTML = "<p>" + result + "</p>";
+        //        }
+        //    })
+        //});
+
+
+    //確認重複時間
+    var timechkval = 0;
+        function ChkTime() {
+
+        var sdate = $("#MTStartDate").val();
+        var shour = $("#shour").val();
+        var smin = $("#smin").val();
+        var edate = $("#MTEndDate").val();
+        var ehour = $("#ehour").val();
+        var emin = $("#emin").val();
+        //var chk_value = [];//定義checkbox陣列
+        //timechkval = [];
+        //name是CheckBox的name屬性定義的名稱
+        //$('input[name="MDID"]:checked').each(function () {
+        //    chk_value.push($(this).val());
+        //});
+        sdate = sdate + " " + shour + ":" + smin;
+        edate = edate + " " + ehour + ":" + emin;
+        var chk_value = $("#MDName :selected").val();
+        console.log(chk_value)
+        @*判斷會議地點為空時*@
+        if (chk_value >= 1){
+            @if (MyPageStatus == PageStatus.Create)
+                 {
+                     <text>
+            $.ajax({
+                url: "/MeetingMng/MMTX001/GetMDIDToChk",
+                type:'Post',
+                data: { MDID: chk_value,sdate:sdate,edate:edate},
+                dataType: 'json',
+                success: function (result) {
+                    timechkval = result;
+                }
+            })
+            </text>
+                }
+                else if(MyPageStatus == PageStatus.Edit)
+                {
+                     <text>
+            $.ajax({
+                url: "/MeetingMng/MMTX001/GetEditMDIDToChk",
+                type:'Post',
+                data: { MDID: chk_value,sdate:sdate,edate:edate ,MTID : @Model.MTID},
+                dataType: 'json',
+                success: function (result) {
+                    timechkval = result;
+                }
+            })
+            </text>
+                }
+        }
+        }
+
+
+    function saveValidator() {
+        var sdate = $("#MTStartDate").val();
+        var edate = $("#MTEndDate").val();
+        var smin = $("#smin").val();
+        var shour = $("#shour").val();
+        var ehour = $("#ehour").val();
+        var emin = $("#emin").val();
+        sdate = sdate + " " + shour + ":" + smin;
+        edate = edate + " " + ehour + ":" + emin;
+        if (sdate != "" && edate != "") {
+            @*判斷時間格式*@
+            var StartDate = new Date(sdate);
+            var EndDate = new Date(edate);
+            if (EndDate <= StartDate) {
+                appendMessage("@( EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.日期格式有誤)");
+                return false;
+            }
+        }
+        //var chk_value = [];//定義checkbox陣列
+        ////name是CheckBox的name屬性定義的名稱
+        //$('input[name="MDID"]:checked').each(function () {
+        //    chk_value.push($(this).val());
+        //});
+        @*判斷設備與場地為空時*@
+        @*if (chk_value.length < 1) {
+            var msg = "@( EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.未選擇場地與設備)";
+            if (confirm(msg)==false){
+                return false;
+            }
+        }*@
+        console.log(timechkval)
+        @*var judgeObj = function (timechkval) {
+            for (var item in timechkval) {
+                return true;
+            }
+            appendMessage("@( EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.時間重複)");
+            return false;
+        }
+        console.log(judgeObj)*@
+        if ($("#chkplace").prop("checked")) {
+            if ($("#MTNewPlace").val() == "") {
+                appendMessage("@( EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.會議地點 + EP.PlatformResources.必填)");
+                timechkval = 1
+                return false;
+            } else {
+                timechkval = 0
+            }
+        }
+
+        if (timechkval != 0) {
+                appendMessage("@( EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.時間重複)");
+                return false;
+        }
+        if ($("#MTName").val() == "") {
+            appendMessage("@( EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.會議名稱 +  EP.PlatformResources.必填)");
+            return false;
+        }
+        @*console.log(chk_value)
+        if (($("#MTPlace").val() == "" && $("#MTNewPlace").val() == "") && chk_value.length == 0) {
+            appendMessage("@( EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.會議地點 + "或者" + EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.場地與設備 + EP.PlatformResources.必填)");
+            return false;
+        }*@
+        console.log($("#MDName :selected").val())
+        if ($("#MTNewPlace").val() == "") {
+            if ($("#MDName :selected").val() == "0") {
+                appendMessage("@( EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.會議地點 + EP.PlatformResources.必填)");
+                return false;
+
+            }
+        }
+        if ($("#MTChairmanName").val() == "") {
+            appendMessage("@( EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.主席 + EP.PlatformResources.必填)");
+            return false;
+        }
+        if ($("#MTRecorderName").val() == "") {
+            appendMessage("@( EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.紀錄者 + EP.PlatformResources.必填)");
+            return false;
+        }
+        if ($("#RecipientToJson").val() == "") {
+            appendMessage("@( EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.與會人員 + EP.PlatformResources.必填)");
+            return false;
+        }
+
+        //setValueBeforeSubmit();
+        return true;
+    }
+
+    </script>
+}

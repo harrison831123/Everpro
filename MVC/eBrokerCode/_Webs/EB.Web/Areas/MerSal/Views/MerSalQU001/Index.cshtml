@@ -1,0 +1,148 @@
+﻿@model EB.SL.MerSal.Models.MerSalViewModel
+@{
+    ViewBag.Title = "原始檔報表";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    WebChannel<EB.SL.MerSal.Service.IMerSalService> MerSalService = new WebChannel<EB.SL.MerSal.Service.IMerSalService>();
+    var companylist = new List<TermVal>();
+    MerSalService.Use(s => companylist = s.GetCompanyCode());
+}
+<div id="divQueryBlock">
+    <div class="ibox ibox-primary">
+        <div class="ibox-head">
+            <div class="ibox-title">原始檔報表</div>
+            <div class="ibox-tools">
+                <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
+                <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
+            </div>
+        </div>
+        @using (Ajax.BeginForm("Query", "MerSalQU001", new { area = "MerSal" }, new AjaxOptions { OnSuccess = "BindGrid" }, new { id = "QueryForm" }))
+        {
+            <div class="ibox-body">
+                <div class="form-group row">
+                    <div class="col-md-1" style="padding-right: 0px">
+                        @Html.LabelFor(m => m.ProductionYM, new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.TextBoxFor(m => m.ProductionYM, new { @class = "form-control datepickerToM", placeholder = "Ex：2000/01" })
+                    </div>
+
+                    <div class="col-md-1">
+                        @Html.LabelFor(m => m.Sequence, new { @class = "col-form-label" })
+                    </div>
+                    <div class="col-md-1">
+                        @Html.TextBoxFor(m => m.Sequence, new { @class = "form-control", placeholder = "Ex：1" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-1 col-form-label" style="padding-right: 0px" for="CompanyCode">保險公司</label>
+                    <div class="col-md-2">
+                        <select class="form-select" id="CompanyCode" name="CompanyCode">
+                            @foreach (var item in companylist)
+                            {
+                                <option value="@item.TermCode">@item.TermMeaning</option>
+                            }
+                            <option value="">全部保險公司</option>
+                        </select>
+                    </div>
+                    <label class="col-md-1 col-form-label" style="padding-right: 0px" for="ReportType">報表類型</label>
+                    <div class="col-md-2">
+                        <select class="form-select" id="ReportType" name="ReportType">
+                            <option value="2">保險公司佣收檢核報表</option>
+                            <option value="1">入佣資料報表</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <button class="btn btn-warning" id="btn" data-bind="click: ReportClick">報表產出</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts{
+    <script>
+        var ViewModel = {
+            ReportClick: function () {
+                if (ChkSummit()) {
+                    var formData = new FormData();
+                    formData.append('ProductionYM', $('#ProductionYM').val());
+                    formData.append('Sequence', $('#Sequence').val());
+                    formData.append('CompanyCode', $('#CompanyCode option:selected').val());
+                    //1.入佣資料報表
+                    if ($('#ReportType option:selected').val() == 1) {
+                        $.ajax({
+                            method: "POST",
+                            cache: false,
+                            url: '@Url.Action("GetMerSalDReport", "MerSalQU001", new { area = "MerSal" })',
+                            processData: false,
+                            contentType: false,
+                            data: formData,
+                            success: function (data) {
+                                if (data != "Error") {
+                                    window.location = '/MerSal/MerSalQU001/Download?fileGuid=' + data.FileGuid
+                                        + '&filename=' + data.FileName;
+                                } else {
+
+                                }
+                            },
+                            error: function () {
+                                appendMessage("系統發生錯誤");
+                            }
+                        });
+                    } else {
+                        //2.保險公司佣收檢核報表
+                        GetReport();
+                    }
+                }
+            }
+        };
+        $(function () {
+            ko.applyBindings(ViewModel);
+            $(".datepickerToM").datepicker({
+                format: "yyyy/mm",
+                viewMode: "months",
+                minViewMode: "months"
+            }).on("changeDate", function (e) {
+                $(this).datepicker('hide');
+            });
+        });
+        function ChkSummit() {
+            clearMessage();
+            if ($('#ProductionYM').val() == "") {
+                appendMessage("業績年月不可為空白");
+                return false;
+            }
+            if ($('#Sequence').val() == "") {
+                appendMessage("序號不可為空白");
+                return false;
+            }
+            if ($('#ReportType').val() == "1") {
+                if ($('#CompanyCode option:selected').val() == "") {
+                    appendMessage("資料量過大，不可查詢全部保險公司");
+                    return false;
+                }
+            }
+            return true;
+        }
+        function GetReport() {
+            //var url = $("form#QueryForm").attr('action');
+            var url = "@Url.Action("GetCompaneyMerSalDReport", "MerSalQU001", new { area = "MerSal" })";
+            var dataJson = $("form#QueryForm").serializeArray();
+            $.extend(
+                {
+                    redirectPost: function (location, args) {
+                        var form = '';
+                        $.each(args, function (key, value) {
+                            form += '<input type="hidden" name="' + value.name + '" value="' + value.value + '">';
+                        });
+                        $('<form action="' + location + '" method="POST">' + form + '</form>').appendTo('body').submit();
+                    }
+                });
+
+            $.redirectPost(url, dataJson);
+
+        }
+    </script>
+}

@@ -1,0 +1,1158 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.CUF.Models</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.CUF.AccountAgent">
+            <summary>
+            帳號代理
+            </summary>   
+        </member>
+        <member name="F:Microsoft.CUF.AccountAgent.AccountID">
+            <summary>
+            被代理人編號
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.AccountAgent.GrantToAccountID">
+            <summary>
+            代理人編號
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.AccountAgent.EffectivePeriod">
+            <summary>
+            代理有效期間
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.AccountAgent.GrantType">
+            <summary>
+            代理授權依據
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.AccountAgent.GrantRoleIDs">
+            <summary>
+            授權角色代號
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.AccountAgent.GrantPermissionGUIDs">
+            <summary>
+            授權權限GUID
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.AccountAgentGrantType">
+            <summary>代理授權依據</summary>
+        </member>
+        <member name="F:Microsoft.CUF.AccountAgentGrantType.Role">
+            <summary>角色</summary>
+        </member>
+        <member name="F:Microsoft.CUF.AccountAgentGrantType.Permission">
+            <summary>權限</summary>
+        </member>
+        <member name="T:Microsoft.CUF.AccountProfile">
+            <summary>帳號Profile</summary>
+        </member>
+        <member name="F:Microsoft.CUF.AccountProfile.AccountID">
+            <summary>帳號</summary>
+        </member>
+        <member name="T:Microsoft.CUF.batchresult">
+            <summary>
+            批次結果資訊
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.batchresult.Status">
+            <summary>Status</summary>
+        </member>
+        <member name="P:Microsoft.CUF.batchresult.PID">
+            <summary>PID</summary>
+        </member>
+        <member name="P:Microsoft.CUF.batchresult.FunctionCode">
+            <summary>FunctionCode</summary>
+        </member>
+        <member name="P:Microsoft.CUF.batchresult.FunctionType">
+            <summary>FunctionType</summary>
+        </member>
+        <member name="P:Microsoft.CUF.batchresult.ExecutionTime">
+            <summary>ExecutionTime</summary>
+        </member>
+        <member name="P:Microsoft.CUF.batchresult.EndTime">
+            <summary>EndTime</summary>
+        </member>
+        <member name="P:Microsoft.CUF.batchresult.FunctionName">
+            <summary>FunctionName</summary>
+        </member>
+        <member name="P:Microsoft.CUF.batchresult.FileName">
+            <summary>FileName</summary>
+        </member>
+        <member name="P:Microsoft.CUF.batchresult.ReportNum">
+            <summary>ReportNum</summary>
+        </member>
+        <member name="P:Microsoft.CUF.batchresult.ReportSize">
+            <summary>ReportSize</summary>
+        </member>
+        <member name="T:Microsoft.CUF.BusinessConditionExpression">
+            <summary>業務條件過濾式</summary>
+        </member>
+        <member name="F:Microsoft.CUF.BusinessConditionExpression.OfficerID">
+            <summary>經辦代號</summary>
+        </member>
+        <member name="F:Microsoft.CUF.BusinessConditionExpression.RouteID">
+            <summary>通路代號</summary>
+        </member>
+        <member name="F:Microsoft.CUF.BusinessConditionExpression.LeaderID">
+            <summary>管理人代號</summary>
+        </member>
+        <member name="T:Microsoft.CUF.cm_board">
+            <summary>
+            公佈欄
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_board.seq">
+            <summary>序號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_board.org_unit">
+            <summary>發佈單位</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_board.deffect">
+            <summary>生效起日</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_board.dexpire">
+            <summary>生效迄日</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_board.sortseq">
+            <summary>資料排序</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_board.content">
+            <summary>公佈內容</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_board.icreate">
+            <summary>建檔人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_board.dcreate">
+            <summary>建檔日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_board.iupdate">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_board.dupdate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="T:Microsoft.CUF.cm_filedownload">
+            <summary>
+            下載專區
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_filedownload.seq">
+            <summary>序號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_filedownload.org_unit">
+            <summary>發佈單位</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_filedownload.deffect">
+            <summary>生效起日</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_filedownload.dexpire">
+            <summary>生效迄日</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_filedownload.sortseq">
+            <summary>資料排序</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_filedownload.display">
+            <summary>顯示名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_filedownload.file_size">
+            <summary>檔案大小</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_filedownload.file_id">
+            <summary>檔案識別ID</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_filedownload.icreate">
+            <summary>建檔人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_filedownload.dcreate">
+            <summary>建檔日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_filedownload.iupdate">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_filedownload.dupdate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="T:Microsoft.CUF.cm_serviceperson">
+            <summary>
+            服務窗口
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_serviceperson.seq">
+            <summary>序號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_serviceperson.org_unit">
+            <summary>發佈單位</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_serviceperson.deffect">
+            <summary>生效起日</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_serviceperson.dexpire">
+            <summary>生效迄日</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_serviceperson.sortseq">
+            <summary>資料排序</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_serviceperson.category">
+            <summary>窗口類別</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_serviceperson.content">
+            <summary>人員內容</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_serviceperson.icreate">
+            <summary>建檔人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_serviceperson.dcreate">
+            <summary>建檔日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_serviceperson.iupdate">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_serviceperson.dupdate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="T:Microsoft.CUF.CodeNameMirrorTrans">
+            <summary>
+            代碼異動監控表
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.CodeNameMirrorTrans.UpdateTime">
+            <summary>來源的代碼表被異動的時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.CodeNameMirrorTrans.UpdateMode">
+            <summary>來源的代碼表異動的原因, I:新增  U:更新 D:刪除</summary>
+        </member>
+        <member name="P:Microsoft.CUF.CodeNameMirrorTrans.UpdateTable">
+            <summary>來源的代碼表</summary>
+        </member>
+        <member name="P:Microsoft.CUF.CodeNameMirrorTrans.KeyValue">
+            <summary>代碼表鍵值, 若是多鍵值, 則以逗號隔開, Ex: 870377,870401</summary>
+        </member>
+        <member name="P:Microsoft.CUF.CodeNameMirrorTrans.RowGUID">
+            <summary>異動的資料序號</summary>
+        </member>
+        <member name="T:Microsoft.CUF.IKeyValue">
+            <summary>定義KeyValue的介面</summary>
+        </member>
+        <member name="P:Microsoft.CUF.IKeyValue.ikey">
+            <summary>KEY</summary>
+        </member>
+        <member name="P:Microsoft.CUF.IKeyValue.fvalue">
+            <summary>Value</summary>
+        </member>
+        <member name="T:Microsoft.CUF.sc_account_profile">
+            <summary>
+            account profile
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_account_profile.iaccount">
+            <summary>帳號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_account_profile.ikey">
+            <summary>
+            KEY
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_account_profile.fvalue">
+            <summary>
+            VALUE
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.cm_file_upload">
+            <summary>sysdb 檔案上傳 (cm_file_upload)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_file_upload.ufile">
+            <summary>檔案GUID</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_file_upload.nfile">
+            <summary>檔案名稱(含延伸檔名)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_file_upload.isize">
+            <summary>檔案大小</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_file_upload.ndesc">
+            <summary>描述說明</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_file_upload.fileBytes">
+            <summary>檔案實体 bytearray</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_file_upload.CreatorID">
+            <summary>建立人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_file_upload.CreateDate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_file_upload.dcreate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_file_upload.UpdaterID">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_file_upload.UpdateDate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_file_upload.dupdate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="T:Microsoft.CUF.sc_program_profile">
+            <summary>程式Profile</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_program_profile.iprogram">
+            <summary>程式代號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_program_profile.ikey">
+            <summary>KEY</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_program_profile.fvalue">
+            <summary>VALUE</summary>
+        </member>
+        <member name="T:Microsoft.CUF.sc_roleapply">
+            <summary>安控申請角色</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_roleapply.iserial">
+            <summary>申請序號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_roleapply.iseq">
+            <summary>明細序號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_roleapply.iuse">
+            <summary>職務異動</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_roleapply.iaccount">
+            <summary>申請人帳號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_roleapply.uunit">
+            <summary>申請人所屬單位</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_roleapply.irole">
+            <summary>角色</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_roleapply.deffect">
+            <summary>生效時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_roleapply.istatus">
+            <summary>申請狀態</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_roleapply.nremark">
+            <summary>申請事由</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_roleapply.icreate">
+            <summary>建立/填表人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_roleapply.dcreate">
+            <summary>建立時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_roleapply.iupdate">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_roleapply.dupdate">
+            <summary>更新時間</summary>
+        </member>
+        <member name="T:Microsoft.CUF.sc_unit_external_member">
+            <summary>
+            單位外部人員
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_unit_external_member.uunit">
+            <summary>
+            單位GUID
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_unit_external_member.UnitMemberType">
+            <summary>
+            類型
+            [1]管理人(只能維護單位與人員)  [2]檢視人(只能檢視資料)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_unit_external_member.imember">
+            <summary>
+            人員編號
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_unit_external_member.fexternal_property">
+            <summary>
+            屬性資料
+            fexternal_type=2檢視人時, 為險別AHCFOM…, null表示全險別
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_unit_external_member.ViewUnitPropertyValue">
+            <summary>檢視人員的屬性資訊</summary>
+        </member>
+        <member name="T:Microsoft.CUF.sc_business_condition">
+            <summary>
+            業務條件
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_business_condition.ftype">
+            <summary>
+            設定類型(單位/人員)
+            [1]單位  [2]人員
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_business_condition.iobject">
+            <summary>
+            設定對象(單位代號/人員編號)
+            ftype=1的話為sc_unit.uunit
+            ftype=2的話為sc_member.imember
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_business_condition.iins_category">
+            <summary>險別簡碼</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_business_condition.InsureCategory">
+            <summary>設定險別</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_business_condition.fcondition">
+            <summary>可用條件設定, xml format</summary>
+        </member>
+        <member name="F:Microsoft.CUF.sc_business_condition.CategoryItems">
+            <summary>可用經辦通路條件</summary>
+        </member>
+        <member name="T:Microsoft.CUF.ConditionCategoryRoot">
+            <summary>可用經辦通路條件</summary>
+            <remarks>供XML轉換使用</remarks>
+        </member>
+        <member name="F:Microsoft.CUF.ConditionCategoryRoot.CategoryItems">
+            <summary>可用經辦通路條件</summary>
+        </member>
+        <member name="T:Microsoft.CUF.ConditionCategoryItems">
+            <summary>可用經辦通路條件</summary>
+        </member>
+        <member name="F:Microsoft.CUF.ConditionCategoryItems.dataOfficerType">
+            <summary>可用經辦類型 </summary>
+        </member>
+        <member name="P:Microsoft.CUF.ConditionCategoryItems.dataType">
+            <summary>可用經辦類型 </summary>
+        </member>
+        <member name="F:Microsoft.CUF.ConditionCategoryItems.dataOfficer">
+            <summary>可用經辦-值</summary>
+        </member>
+        <member name="F:Microsoft.CUF.ConditionCategoryItems.dataRoute">
+            <summary>可用通路-值</summary>
+        </member>
+        <member name="T:Microsoft.CUF.sc_agent">
+            <summary>
+            代理
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_agent.GUID">
+            <summary>代理GUID</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_agent.imember">
+            <summary>被代理人編號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_agent.igrant_member">
+            <summary>代理人編號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_agent.dbegin">
+            <summary>代理起始時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_agent.dend">
+            <summary>代理結束時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_agent.fgrant">
+            <summary>授權項目</summary>
+            <remarks>在設定值時，直接將它轉成物件</remarks>
+        </member>
+        <member name="P:Microsoft.CUF.sc_agent.GrantItem">
+            <summary>授權項目(物件)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_agent.ndescription">
+            <summary>描述說明</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_agent.CreatorID">
+            <summary>建立人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_agent.CreateDate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_agent.dcreate">
+            <summary>
+            建立日期
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_agent.UpdaterID">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.sc_agent.UpdateDate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="T:Microsoft.CUF.AgentGrantItem">
+            <summary>代理授權資訊項目</summary>
+        </member>
+        <member name="F:Microsoft.CUF.AgentGrantItem.ftype">
+            <summary>類別(字串)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.AgentGrantItem.GrantType">
+            <summary>授權類別(列舉)</summary>
+        </member>
+        <member name="F:Microsoft.CUF.AgentGrantItem.Value">
+            <summary>授權值</summary>
+        </member>
+        <member name="T:Microsoft.CUF.DataPermissionColumn">
+            <summary>
+            資料授權-額外加上是否有權限欄位
+            (資料授權底層使用)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.DataPermissionColumn.permissioncolumn">
+            <summary>查詢語法額外加上判斷是否有權限之欄位</summary>
+        </member>
+        <member name="T:Microsoft.CUF.DataPermission`1">
+            <summary>
+            資料授權物件
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Microsoft.CUF.DataPermission`1.#ctor">
+            <summary>
+            資料授權物件-建構子
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.DataPermission`1.#ctor(`0)">
+            <summary>
+            資料授權物件-建構子
+            </summary>
+            <param name="model">物件</param>
+        </member>
+        <member name="P:Microsoft.CUF.DataPermission`1.Model">
+            <summary>
+            原物件資料
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.DataPermission`1.HasPermission">
+            <summary>查詢語法額外加上判斷是否有權限之欄位</summary>      
+        </member>
+        <member name="T:Microsoft.CUF.RowCountLimit">
+            <summary>資料筆數限制</summary>
+        </member>
+        <member name="F:Microsoft.CUF.RowCountLimit.NoLimit">
+            <summary>定義無筆數限制</summary>
+        </member>
+        <member name="F:Microsoft.CUF.RowCountLimit.Default">
+            <summary>預設筆數為500筆</summary>
+        </member>
+        <member name="T:Microsoft.CUF.cm_batch_control">
+            <summary>
+            批次控制表
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_batch_control.ibatch_no">
+            <summary>批次編號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_batch_control.fbatch_status">
+            <summary>
+            批次狀態
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_batch_control.ffunction_no">
+            <summary>程式代號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_batch_control.dstart">
+            <summary>執行時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_batch_control.dend">
+            <summary>結束時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_batch_control.nreport_name">
+            <summary>報表名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_batch_control.nreport_filename">
+            <summary>自訂檔案名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_batch_control.freport_type">
+            <summary>報表型態</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_batch_control.nfile_name">
+            <summary>檔案名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_batch_control.ffile_size">
+            <summary>檔案大小(bytes)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_batch_control.fargument">
+            <summary>查詢條件</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_batch_control.imember">
+            <summary>執行人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_batch_control.icreate">
+            <summary>操作人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_batch_control.dcreate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_batch_control.dupdate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_batch_control.ferror_desc">
+            <summary>錯誤描述</summary>
+        </member>
+        <member name="P:Microsoft.CUF.cm_batch_control.ireport_type">
+            <summary>報表類型</summary>
+        </member>
+        <member name="T:Microsoft.CUF.DBSchema">
+            <summary>
+            資料庫的DBSChema
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.DBSchema.newa00">
+            <summary></summary>
+        </member>
+        <member name="F:Microsoft.CUF.DBSchema.newa22">
+            <summary></summary>
+        </member>
+        <member name="F:Microsoft.CUF.DBSchema.newa33">
+            <summary></summary>
+        </member>
+        <member name="F:Microsoft.CUF.DBSchema.newa40">
+            <summary></summary>
+        </member>
+        <member name="F:Microsoft.CUF.DBSchema.newa66">
+            <summary></summary>
+        </member>
+        <member name="F:Microsoft.CUF.DBSchema.newa70">
+            <summary></summary>
+        </member>
+        <member name="T:Microsoft.CUF.InsuranceCategory">
+            <summary>險種類別</summary>
+            <remarks>由Common搬至Mis層級是因為平台需使用~屬特例</remarks>
+        </member>
+        <member name="F:Microsoft.CUF.InsuranceCategory.Car">
+            <summary>車險</summary>
+        </member>
+        <member name="F:Microsoft.CUF.InsuranceCategory.ResidentialFire">
+            <summary>住火</summary>
+        </member>
+        <member name="F:Microsoft.CUF.InsuranceCategory.CommercialFire">
+            <summary>商火</summary>
+        </member>
+        <member name="F:Microsoft.CUF.InsuranceCategory.Marine">
+            <summary>水險</summary>
+        </member>
+        <member name="F:Microsoft.CUF.InsuranceCategory.AccidentAndHealth">
+            <summary>傷害險</summary>
+        </member>
+        <member name="F:Microsoft.CUF.InsuranceCategory.Other">
+            <summary>新種險</summary>
+        </member>
+        <member name="T:Microsoft.CUF.ConditionInsureType">
+            <summary>可用經辦通路險別定義</summary>
+            <remarks>用於sc_business_condition</remarks>
+        </member>
+        <member name="F:Microsoft.CUF.ConditionInsureType.None">
+            <summary>
+            未定義
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.ConditionInsureType.All">
+            <summary>
+            全險預設
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.ConditionInsureType.Car">
+            <summary>車險</summary>
+        </member>
+        <member name="F:Microsoft.CUF.ConditionInsureType.ResidentialFire">
+            <summary>住火</summary>
+        </member>
+        <member name="F:Microsoft.CUF.ConditionInsureType.CommercialFire">
+            <summary>商火</summary>
+        </member>
+        <member name="F:Microsoft.CUF.ConditionInsureType.Marine">
+            <summary>水險</summary>
+        </member>
+        <member name="F:Microsoft.CUF.ConditionInsureType.Other">
+            <summary>新種險</summary>
+        </member>
+        <member name="F:Microsoft.CUF.ConditionInsureType.Accident">
+            <summary>傷害險</summary>
+        </member>
+        <member name="T:Microsoft.CUF.ConditionOfficerType">
+            <summary>設定可用經辦類型</summary>
+            <remarks>sc_business_condition使用</remarks>
+        </member>
+        <member name="F:Microsoft.CUF.ConditionOfficerType.None">
+            <summary>無</summary>
+        </member>
+        <member name="F:Microsoft.CUF.ConditionOfficerType.iOfficer">
+            <summary>經辦代號</summary>
+        </member>
+        <member name="F:Microsoft.CUF.ConditionOfficerType.iLeader">
+            <summary>管理人代號</summary>
+        </member>
+        <member name="T:Microsoft.CUF.BussinessConditionType">
+            <summary>可用經辦通路代號-設定類別</summary>
+            <remarks>此有此段程式需要，故定義於此</remarks>
+            <remarks>sc_business_condition使用</remarks>
+        </member>
+        <member name="F:Microsoft.CUF.BussinessConditionType.Unit">
+            <summary>單位設定</summary>
+        </member>
+        <member name="F:Microsoft.CUF.BussinessConditionType.Member">
+            <summary>人員設定</summary>
+        </member>
+        <member name="T:Microsoft.CUF.RealtimeToBatchStatus">
+            <summary>即時轉批次狀態</summary>
+        </member>
+        <member name="F:Microsoft.CUF.RealtimeToBatchStatus.Realtime">
+            <summary>即時回覆</summary>
+        </member>
+        <member name="F:Microsoft.CUF.RealtimeToBatchStatus.ManualToBatch">
+            <summary>手動轉批次</summary>
+        </member>
+        <member name="F:Microsoft.CUF.RealtimeToBatchStatus.Timeout">
+            <summary>完成</summary>
+        </member>
+        <member name="F:Microsoft.CUF.RealtimeToBatchStatus.ManualCancel">
+            <summary>手動取消</summary>
+        </member>
+        <member name="F:Microsoft.CUF.RealtimeToBatchStatus.Exception">
+            <summary>異常</summary>
+        </member>
+        <member name="F:Microsoft.CUF.RealtimeToBatchStatus.Unknown">
+            <summary>未知狀態</summary>
+        </member>
+        <member name="T:Microsoft.CUF.BatchStatus">
+            <summary>批次狀態</summary>
+        </member>
+        <member name="F:Microsoft.CUF.BatchStatus.S">
+            <summary>成功結束</summary>
+        </member>
+        <member name="F:Microsoft.CUF.BatchStatus.F">
+            <summary>執行失敗</summary>
+        </member>
+        <member name="F:Microsoft.CUF.BatchStatus.R">
+            <summary>處理中</summary>
+        </member>
+        <member name="F:Microsoft.CUF.BatchStatus.P">
+            <summary>待處理</summary>
+        </member>
+        <member name="F:Microsoft.CUF.BatchStatus.T">
+            <summary>週期性</summary>
+        </member>
+        <member name="T:Microsoft.CUF.MenuVerifyType">
+            <summary>
+            Menu 權限的驗証方式
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.MenuVerifyType.ByProgram">
+            <summary>
+            依Program
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.AgentGrantType">
+            <summary>代理類型</summary>
+        </member>
+        <member name="F:Microsoft.CUF.AgentGrantType.None">
+            <summary>未設定</summary>
+        </member>
+        <member name="F:Microsoft.CUF.AgentGrantType.All">
+            <summary>全權代理</summary>
+        </member>
+        <member name="F:Microsoft.CUF.AgentGrantType.FlowForm">
+            <summary>表單</summary>
+        </member>
+        <member name="F:Microsoft.CUF.AgentGrantType.Role">
+            <summary>角色</summary>
+        </member>
+        <member name="F:Microsoft.CUF.AgentGrantType.Permission">
+            <summary>權限</summary>
+        </member>
+        <member name="T:Microsoft.CUF.FavMenuOpType">
+            <summary>
+            常用Menu 的操作模式
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.FinalKeepDicType.OperatorAccount">
+            <summary>登入者帳號資訊(操作者/代理人)</summary>
+            <remarks>為了好控管它異動時間</remarks>
+        </member>
+        <member name="F:Microsoft.CUF.FinalKeepDicType.UserAccount">
+            <summary>使用者帳號資訊(被代理人)</summary>
+            <remarks>為了好控管它異動時間</remarks>
+        </member>
+        <member name="F:Microsoft.CUF.FinalKeepDicType.Member">
+            <summary>使用者人員資訊</summary>
+        </member>
+        <member name="F:Microsoft.CUF.FinalKeepDicType.OperatorMember">
+            <summary>操作人員資訊</summary>
+        </member>
+        <member name="F:Microsoft.CUF.FinalKeepDicType.Unit">
+            <summary>使用者所屬單位</summary>
+        </member>
+        <member name="F:Microsoft.CUF.FinalKeepDicType.Roles">
+            <summary>使用者最終具有的角色</summary>
+        </member>
+        <member name="F:Microsoft.CUF.FinalKeepDicType.ManagerUnits">
+            <summary>使用者最終管理的單位</summary>
+        </member>
+        <member name="F:Microsoft.CUF.FinalKeepDicType.ViewUnits">
+            <summary>可檢視的單位資訊</summary>
+        </member>
+        <member name="F:Microsoft.CUF.FinalKeepDicType.Permissions">
+            <summary>使用者最終所具有的權限</summary>
+        </member>
+        <member name="F:Microsoft.CUF.FinalKeepDicType.FlowPermissionIDs">
+            <summary>Flow使用的權限(存字串)</summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowStatusCode.Start">
+            <summary>起案</summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowStatusCode.Accept">
+            <summary>核准</summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowStatusCode.Reject">
+            <summary>退件</summary>
+        </member>
+        <member name="F:Microsoft.CUF.FlowStatusCode.Cancel">
+            <summary>抽單</summary>
+        </member>
+        <member name="T:Microsoft.CUF.Menu">
+            <summary>選單</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Menu.GUID">
+            <summary>選單GUID</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Menu.ParentGUID">
+            <summary>上層選單的Guid。null表示此為選單為最上層。</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Menu.Name">
+            <summary>選單名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Menu.Url">
+            <summary>選單URL。null表示此為選單節點。</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Menu.fverify_type">
+            <summary>選單權限的驗証方式</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Menu.VerifyType">
+            <summary>選單權限的驗証方式</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Menu.ProgramID">
+            <summary>程式代號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Menu.AllowPermissionExpression">
+            <summary>允許權限。</summary>
+            <remarks>
+            Menu是否會顯示是依據Program所設定的AllowPermissionExpression，
+            若有Menu有設定AllowPermissionExpression則會改判斷Menu.AllowPermissionExpression來決定是否顯示此Menu節點。
+            </remarks>
+        </member>
+        <member name="P:Microsoft.CUF.Menu.Sort">
+            <summary>
+            選單順序
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Menu.icreate">
+            <summary>建立人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Menu.dcreate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Menu.dcreateDisplay">
+            <summary>
+            建立日期呈現
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Menu.iupdate">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Menu.dupdate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Menu.dupdateDisplay">
+            <summary>
+            更新日期呈現
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Menu.NodeKey">
+            <summary>該樹狀節點的Key值</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Menu.ParentNodeKey">
+            <summary>該樹狀父節點的Key值，null表示無父節點</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Menu.NodeName">
+            <summary>該樹狀節點的名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Menu.OrderByValue">
+            <summary>節點的排序</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Menu.Childs">
+            <summary>放子節點的資訊</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Menu.AddChild(Microsoft.CUF.ITreeNode)">
+            <summary>新增子節點</summary>
+            <param name="node">子節點</param>
+        </member>
+        <member name="M:Microsoft.CUF.Menu.AddChilds(Microsoft.CUF.ITreeNode[])">
+            <summary>新增子節點(多筆)</summary>
+            <param name="nodes">子節點</param>
+            <returns>此節點</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Menu.AddChilds(System.Collections.Generic.IEnumerable{Microsoft.CUF.ITreeNode})">
+            <summary>新增子節點(多筆)</summary>
+            <param name="nodes">子節點</param>
+            <returns>此節點</returns>
+        </member>
+        <member name="T:Microsoft.CUF.Privilege">
+            <summary>特權</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Privilege.GUID">
+            <summary>特權GUID</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Privilege.uprivilege">
+            <summary>特權GUID</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Privilege.AccountID">
+            <summary>帳號</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Privilege.ProgramID">
+            <summary>程式代號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Privilege.EffectiveBegin">
+            <summary>啟用時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Privilege.dbegin">
+            <summary>啟用時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Privilege.EffectiveEnd">
+            <summary>停用時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Privilege.dend">
+            <summary>停用時間</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Privilege.Type">
+            <summary>特權類型</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Privilege.Value">
+            <summary>特權屬性值</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Privilege.Description">
+            <summary>描述說明</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Privilege.CreatorID">
+            <summary>建立人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Privilege.CreateDate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Privilege.dcreate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Privilege.UpdaterID">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Privilege.UpdateDate">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Privilege.dupdate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Privilege.CreatorName">
+            <summary>建立人員名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Privilege.UpdaterName">
+            <summary>更新人員名稱</summary>
+        </member>
+        <member name="T:Microsoft.CUF.PrivilegeType">
+            <summary>
+            特權類型
+            參考 [權限控管-需求規格書.doc] P71
+            「屬性類型」的選項：
+            a.	可擴充功能清單：權限, 角色, 所屬單位, 職級, 身份別, 管理單位。
+            b.	未來會再依特性客製擴充值。
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.PrivilegeType.Permission">
+            <summary>權限</summary>
+        </member>
+        <member name="F:Microsoft.CUF.PrivilegeType.Role">
+            <summary>角色</summary>
+        </member>
+        <member name="F:Microsoft.CUF.PrivilegeType.Unit">
+            <summary>人員所屬單位</summary>
+        </member>
+        <member name="F:Microsoft.CUF.PrivilegeType.JobGrade">
+            <summary>職級</summary>
+        </member>
+        <member name="F:Microsoft.CUF.PrivilegeType.MemberType">
+            <summary>人員身份別</summary>
+        </member>
+        <member name="F:Microsoft.CUF.PrivilegeType.ManageUnit">
+            <summary>人員身份別</summary>
+        </member>
+        <member name="T:Microsoft.CUF.Program">
+            <summary>程式</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Program.ID">
+            <summary>程式代號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Program.Name">
+            <summary>程式名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Program.AllowPermissionExpression">
+            <summary>允許權限</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Program.HelpText">
+            <summary>幫助說明</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Program.IsAllowInternet">
+            <summary>是否允許外網使用</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Program.Profile">
+            <summary>程式Profile資訊</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Program.icreate">
+            <summary>建立人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Program.dcreate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Program.iupdate">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Program.dupdate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="T:Microsoft.CUF.servertbl">
+            <summary>取得分公司別</summary>
+        </member>
+        <member name="P:Microsoft.CUF.servertbl.branch">
+            <summary></summary>
+        </member>
+        <member name="P:Microsoft.CUF.servertbl.server">
+            <summary></summary>
+        </member>
+        <member name="P:Microsoft.CUF.servertbl.dbname">
+            <summary></summary>
+        </member>
+        <member name="P:Microsoft.CUF.servertbl.chinese">
+            <summary></summary>
+        </member>
+        <member name="P:Microsoft.CUF.servertbl.hostname">
+            <summary></summary>
+        </member>
+        <member name="T:Microsoft.CUF.UIDatePicker">
+            <summary>
+            指定為民國年或西元年
+            </summary>
+            <remarks>指定 model 的 datetime 欄位在 view 上顯示時, 使用 DatePicker 元件</remarks>
+        </member>
+        <member name="F:Microsoft.CUF.UIDatePicker.C">
+            <summary>
+            民國年
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.UIDatePicker.E">
+            <summary>
+            西元年
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.UITimePicker">
+            <summary>
+            指定呈現時間的格式
+            </summary>
+            <remarks>指定 model 的 datetime 欄位在 view 上顯示時, 使用 TimePicker 元件</remarks>
+        </member>
+        <member name="F:Microsoft.CUF.UITimePicker.HH">
+            <summary>
+            時
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.UITimePicker.HHMM">
+            <summary>
+            時分
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.UITimePicker.HHMMDD">
+            <summary>
+            時分秒
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.UIHintAttribute">
+            <summary>
+            當套用至型別成員時, 可使用指定輸出範本的控制項, 目前只支援 DatePicker 與 TimePicker
+            </summary>
+            <remarks>覆寫 UIHintAttribute, 且 overload 建構式, 以支援使用列舉來指定使用 DatePicker 與 TimePicker</remarks>
+        </member>
+        <member name="M:Microsoft.CUF.UIHintAttribute.#ctor(Microsoft.CUF.UIDatePicker)">
+            <summary>
+            客製的UIHint-建構子
+            </summary>
+            <param name="uiPicker">指定為民國年或西元年</param>
+        </member>
+        <member name="M:Microsoft.CUF.UIHintAttribute.#ctor(Microsoft.CUF.UITimePicker)">
+            <summary>
+            客製的UIHint-建構子
+            </summary>
+            <param name="uiPicker">指定呈現時間的格式</param>
+        </member>
+        <member name="T:Microsoft.CUF.ActionLog">
+            <summary>Action紀錄</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ActionLog.LogTime">
+            <summary>紀錄時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ActionLog.OperatorAccountID">
+            <summary>執行人員ID</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ActionLog.UserAccountID">
+            <summary>人員ID</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ActionLog.SourceIP">
+            <summary>IP</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ActionLog.Controller">
+            <summary>Controller</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ActionLog.Action">
+            <summary>Action</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ActionLog.ActionParameter">
+            <summary>ActionParameter</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ActionLog.Message">
+            <summary>訊息</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ActionLog.FunctionName">
+            <summary>功能名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ActionLog.ModelName">
+            <summary>Model名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ActionLog.ModelContent">
+            <summary>Model內容(Json格式)</summary>
+        </member>
+        <member name="T:Microsoft.CUF.zipcode">
+            <summary>郵遞區號檔</summary>
+        </member>
+        <member name="P:Microsoft.CUF.zipcode.izipcode">
+            <summary>郵遞區號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.zipcode.ncity">
+            <summary>縣市</summary>
+        </member>
+        <member name="P:Microsoft.CUF.zipcode.ncounty">
+            <summary>鄉鎮市區</summary>
+        </member>
+        <member name="P:Microsoft.CUF.zipcode.ireins">
+            <summary></summary>
+        </member>
+        <member name="P:Microsoft.CUF.zipcode.iearthquake">
+            <summary></summary>
+        </member>
+        <member name="P:Microsoft.CUF.zipcode.iearthquake_yz">
+            <summary></summary>
+        </member>
+        <member name="P:Microsoft.CUF.zipcode.ityphoon_flood">
+            <summary></summary>
+        </member>
+        <member name="P:Microsoft.CUF.zipcode.iconst_price">
+            <summary></summary>
+        </member>
+    </members>
+</doc>

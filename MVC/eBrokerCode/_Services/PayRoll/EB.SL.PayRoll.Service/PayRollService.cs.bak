@@ -1,0 +1,2148 @@
+﻿///========================================================================================== 
+/// 程式名稱：人工調帳
+/// 建立人員：Harrison
+/// 建立日期：2022/07
+/// 修改記錄：（[需求單號]、[修改內容]、日期、人員）
+/// 需求單號:20240122004-因現有VLIFE系統(核心系統)使用已長達20多年，架構老舊，已不敷使用，且為提升資訊安全等級，故計劃執行VLIFE系統改版(新核心系統:eBroker系統)。; 修改內容:上線; 修改日期:20240613; 修改人員:Harrison;
+/// 需求單號:20240807001-調整人工調帳系統產出之相關畫面及報表修改等功能。; 修改日期:20240807; 修改人員:Harrison;
+///==========================================================================================
+using EB.Common;
+using EB.CUFModels;
+using EB.EBrokerModels;
+using EB.Platform.Service;
+using EB.SL.PayRoll.Models;
+using EB.SL.PayRoll.Service.Contracts;
+using EB.VLifeModels;
+using Microsoft.CUF;
+using Microsoft.CUF.Framework.Data;
+using Microsoft.CUF.Framework.Service;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace EB.SL.PayRoll.Service
+{
+	public class PayRollService : IPayRollService
+	{
+		#region 單筆調整
+		/// <summary>
+		/// 查詢一筆OpCalendar時間
+		/// </summary>
+		public OpCalendar QueryOpCalendar(OpCalendar model)
+		{
+			string sqlGetData = @"select *
+                                  from OpCalendar 
+                                  where production_ym=@productionYM and sequence=@sequence ";
+			OpCalendar result = DbHelper.Query<OpCalendar>(EBrokerRepository.ConnectionStringName, sqlGetData, new
+			{
+				productionYM = model.ProductionYM,
+				sequence = model.Sequence
+			}).FirstOrDefault();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 輸入原因碼取得對應的型態代碼
+		/// </summary>
+		/// <param name="reasonCode">原因碼</param>
+		/// <returns></returns>
+		public string GetReasonCodeToAdjTypeMappingValue(string reasonCode)
+		{
+			var result = EBrokerRepository.Select<GroupMapping>(new { GroupID = "reason_codeTOadj_type" }).Where(x => x.MappingSource == reasonCode).FirstOrDefault();
+
+			if (result != null)
+			{
+				return result.MappingValue;
+			}
+			else
+			{
+				return "";
+			}
+		}
+
+		/// <summary>
+		/// 查詢調整紀錄
+		/// </summary>
+		/// <param name="adjustModel">AgentBonusAdjust 調整model</param>
+		/// <param name="descContent">AgentBonusDesc 原因說明</param>
+		public IEnumerable<Tuple<AgentBonusAdjust, AgentBonusDesc>> QueryAgentBonus(QueryAgentBonusCondition condition)
+		{
+			string sql = @"select a.*, '' as splitOn, b.*  
+                            from AgentBonusAdjust as a 
+                            inner join AgentBonusDesc as b on a.AgentBonusDesc_guid = b.guid
+                            where 1=1";
+			if (!string.IsNullOrEmpty(condition.ProductionYM))
+			{
+				sql += " and a.production_ym = @productionYM";
+			}
+			if (!string.IsNullOrEmpty(condition.Sequence.ToString()))
+			{
+				sql += " and a.sequence = @sequence";
+			}
+			if (!string.IsNullOrEmpty(condition.AdjType))
+			{
+				sql += " and a.adj_type = @adjType";
+			}
+			if (!string.IsNullOrEmpty(condition.CompanyCode))
+			{
+				sql += " and a.company_code = @companyCode";
+			}
+			if (!string.IsNullOrEmpty(condition.AgentCode))
+			{
+				sql += " and a.agent_code = @agentCode";
+			}
+			if (!string.IsNullOrEmpty(condition.ReasonCode))
+			{
+				sql += " and a.reason_code = @reasonCode";
+			}
+			if (!string.IsNullOrEmpty(condition.DescContent))
+			{
+				sql += " and b.desc_content like '%'+@descContent+'%'";
+			}
+			if (!string.IsNullOrEmpty(condition.PolicyNo2))
+			{
+				sql += " and a.policy_no2 = @PolicyNo2";
+			}
+			if (condition.Amount != 0)
+			{
+				sql += " and a.amount = @Amount";
+			}
+			if (condition.FYC != 0)
+			{
+				sql += " and a.fyc = @FYC";
+			}
+			if (condition.FYP != 0)
+			{
+				sql += " and a.fyp = @FYP";
+			}
+			if (!string.IsNullOrEmpty(condition.PlanCode))
+			{
+				sql += " and a.plan_code = @PlanCode";
+			}
+			if (condition.CollectYear != 0)
+			{
+				sql += " and a.collect_year = @CollectYear";
+			}
+			if (!string.IsNullOrEmpty(condition.ModxSequence))
+			{
+				sql += " and a.modx_sequence = @ModxSequence";
+			}
+			//if (condition.CommModePrem != 0)
+			//{
+			//    sql += " and a.comm_mode_prem = @CommModePrem";
+			//}
+			if (!string.IsNullOrEmpty(condition.CreateUserCode))
+			{
+				sql += " and a.create_user_code = @CreateUserCode";
+			}
+
+			IEnumerable<Tuple<AgentBonusAdjust, AgentBonusDesc>> result = null;
+			result = DbHelper.Query<AgentBonusAdjust, AgentBonusDesc, Tuple<AgentBonusAdjust, AgentBonusDesc>>(EBrokerRepository.ConnectionStringName, sql,
+				map: (AgentBonusAdjust, AgentBonusDesc) =>
+				{
+					var tuple = Tuple.Create(AgentBonusAdjust, AgentBonusDesc);
+					return tuple;
+				},
+				splitOn: "splitOn",
+				param: condition
+				);
+
+			return result;
+		}
+
+		/// <summary>
+		/// 新增單筆調整
+		/// </summary>
+		/// <param name="adjustModel">業務佣酬調整資料檔</param>
+		/// <param name="descModel">業務佣酬說明檔</param>
+		public List<AgentBonusAdjust> InsertSingleAgentBonusAdjust(AgentBonusAdjust adjustModel, AgentBonusDesc descModel)
+		{
+			var result = new List<AgentBonusAdjust>();
+			try
+			{
+				if (adjustModel != null && descModel != null)
+				{
+					string sql = @"INSERT INTO AgentBonusAdjust ([guid],production_ym, [sequence],adj_type,process_no,company_code,policy_no2,plan_code,collect_year,modx_sequence,agent_code
+                    ,agent_name,reason_code,fyc,fyp,comm_mode_prem,amount,wc_code,process_code,AgentBonusDesc_guid,create_datetime, create_user_code,create_unit,create_unit_name,source_table,source_table_key)
+                    VALUES (@Guid,@ProductionYM, @Sequence,@AdjType,@ProcessNo,@CompanyCode,@PolicyNo2,@PlanCode,@CollectYear,@ModxSequence,@AgentCode,@AgentName,@ReasonCode,@FYC,@FYP,@CommModePrem,@Amount,@WCCode,@ProcessCode,@AgentBonusDescGuid,@CreateDatetime,@CreateUserCode,@CreateUnit,@CreateUnitName,@SourceTable,@SourceTableKey)";
+
+					string sqldesc = "INSERT INTO AgentBonusDesc " +
+					"VALUES (@Guid, @ProductionYM, @Sequence, @DescContent,@DescContentMask, @DescValue, @ProcessCode, @RelationTable, @CreateDatetime, @CreateUserCode)";
+
+					DbHelper.Execute(EBrokerRepository.ConnectionStringName, sql, adjustModel);
+					DbHelper.Execute(EBrokerRepository.ConnectionStringName, sqldesc, descModel);
+					result.Add(adjustModel);
+				}
+			}
+			catch (Exception e)
+			{
+
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// 用業務酬佣說明檔GUID刪除單筆調整某一筆資料
+		/// </summary>
+		/// <param name="agentBonusDescGuid">業務酬佣說明檔GUID</param>
+		/// <param name="UserID">UserID</param>
+		/// <returns></returns>
+		public bool DeleteAgentBonusAdjustByAgentBonusDescGuid(string agentBonusDescGuid, string UserID)
+		{
+			var result = false;
+			if (!string.IsNullOrEmpty(agentBonusDescGuid))
+			{
+				using (TransactionScope ts = new TransactionScope())
+				{
+					string adjustSql = @"update AgentBonusAdjust set 
+                        update_datetime = getdate(),
+                        update_user_code = @UpdateUserCode
+                        where AgentBonusDesc_guid = @AgentBonusDescGuid
+                    ";
+					DbHelper.Execute(EBrokerRepository.ConnectionStringName, adjustSql, new
+					{
+						UpdateUserCode = UserID,
+						AgentBonusDescGuid = agentBonusDescGuid
+					});
+					EBrokerRepository.Delete<AgentBonusAdjust>(new { AgentBonusDescGuid = agentBonusDescGuid });
+					EBrokerRepository.Delete<AgentBonusDesc>(new { Guid = agentBonusDescGuid });
+					result = true;
+					ts.Complete();
+				}
+			}
+			return result;
+		}
+
+		/// <summary>
+		/// 更新紀錄
+		/// </summary>
+		/// <param name="adjustModel">業務佣酬調整資料檔</param>
+		/// <param name="descModel">業務佣酬說明檔</param>
+		public bool UpdateAgentBonusAdjust(AgentBonusAdjust adjustModel, AgentBonusDesc descModel)
+		{
+			var result = false;
+			if (adjustModel != null && descModel != null)
+			{
+				using (TransactionScope ts = new TransactionScope())
+				{
+					//AgentBonusAdjust
+					string adjustSql = @"update AgentBonusAdjust set 
+                        production_ym = @ProductionYM,
+                        sequence = @Sequence,
+                        adj_type = @AdjType,
+                        company_code = @CompanyCode,
+                        policy_no2 = @PolicyNo2,
+                        plan_code = @PlanCode,
+                        collect_year = @CollectYear,
+                        modx_sequence = @ModxSequence,
+                        agent_code = @AgentCode,
+                        agent_name = @AgentName,
+                        reason_code = @ReasonCode,
+                        fyc = @FYC,
+                        fyp = @FYP,
+                        amount = @Amount,
+                        update_datetime = getdate(),
+                        update_user_code = @UpdateUserCode
+                        where AgentBonusDesc_guid = @AgentBonusDescGuid
+                    ";
+					DbHelper.Execute(EBrokerRepository.ConnectionStringName, adjustSql, new
+					{
+						ProductionYM = adjustModel.ProductionYM,
+						Sequence = adjustModel.Sequence,
+						AdjType = adjustModel.AdjType,
+						CompanyCode = adjustModel.CompanyCode,
+						PolicyNo2 = adjustModel.PolicyNo2,
+						PlanCode = adjustModel.PlanCode,
+						CollectYear = adjustModel.CollectYear,
+						ModxSequence = adjustModel.ModxSequence,
+						AgentCode = adjustModel.AgentCode,
+						AgentName = adjustModel.AgentName,
+						ReasonCode = adjustModel.ReasonCode,
+						FYC = adjustModel.FYC,
+						FYP = adjustModel.FYP,
+						Amount = adjustModel.Amount,
+						UpdateUserCode = adjustModel.UpdateUserCode,
+						AgentBonusDescGuid = adjustModel.AgentBonusDescGuid
+					});
+
+					//AgentBonusDesc
+					string descSql = @"update AgentBonusDesc set 
+                        desc_content = @DescContent,
+                        create_datetime = getdate(),
+                        create_user_code = @CreateUserCode
+                        where [guid] = @AgentBonusDescGuid
+                    ";
+					DbHelper.Execute(EBrokerRepository.ConnectionStringName, descSql, new
+					{
+						DescContent = descModel.DescContent,
+						CreateUserCode = descModel.CreateUserCode,
+						AgentBonusDescGuid = adjustModel.AgentBonusDescGuid
+					});
+
+					result = true;
+					ts.Complete();
+				}
+			}
+			return result;
+		}
+
+		/// <summary>
+		/// 取單筆資料by iden
+		/// </summary>
+		/// <param name="iden"></param>
+		/// <returns></returns>
+		public Tuple<AgentBonusAdjust, AgentBonusDesc> QueryAgentBonusByIden(int iden)
+		{
+			string sql = @"select a.*, '' as splitOn, b.*  
+                            from AgentBonusAdjust as a 
+                            inner join AgentBonusDesc as b on a.AgentBonusDesc_guid = b.guid
+                            where a.iden =" + iden;
+
+			Tuple<AgentBonusAdjust, AgentBonusDesc> result = null;
+			result = DbHelper.Query<AgentBonusAdjust, AgentBonusDesc, Tuple<AgentBonusAdjust, AgentBonusDesc>>(EBrokerRepository.ConnectionStringName, sql,
+				map: (AgentBonusAdjust, AgentBonusDesc) =>
+				{
+					var tuple = Tuple.Create(AgentBonusAdjust, AgentBonusDesc);
+					return tuple;
+				},
+					splitOn: "splitOn"
+				).FirstOrDefault();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 取得所有實駐名稱
+		/// </summary>
+		/// <returns></returns>
+		//public List<AGWCSet> GetAGWCSet()
+		//{
+		//    string sql = @"select * from agwc_set where is_active='Y'";
+		//    return DbHelper.Query<AGWCSet>(EBrokerRepository.ConnectionStringName, sql).ToList();
+		//}
+
+
+
+		/// <summary>
+		/// 用保險公司分公司代碼取得保險公司代碼
+		/// </summary>
+		/// <param name="subCode">保險公司分公司代碼</param>
+		/// <returns></returns>
+		public string GetCompanyCodeBySubCode(string subCode)
+		{
+			string sql = @"select combine_code
+                            from company_set where company_code = @subCode";
+			string result = DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql,
+				new
+				{
+					subCode = subCode
+				}).FirstOrDefault();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 取得工作月
+		/// </summary>
+		/// <param name="strSel">query type</param>
+		/// <param name="exclude88">是否排掉 sequence=88</param>
+		/// <param name="selectTop">要取得的筆數</param>
+		/// <returns></returns>
+		public List<agym> GetYMData(string strSel, bool exclude88, int selectTop = 1)
+		{
+			string sql = @"select top " + selectTop + " production_ym,sequence,agbc_ind,agym_ind from agym where 1=1";
+
+			if (strSel == "agym")
+			{
+				sql += " and agym_ind='1'";
+			}
+
+			if (strSel == "agbc")
+			{
+				sql += " and agym_ind='1'";
+			}
+
+			//排掉88
+			if (exclude88)
+			{
+				sql += " and [sequence] <> 88";
+			}
+
+			sql += " order by production_ym desc,sequence desc";
+
+			List<agym> result = DbHelper.Query<agym>(
+				  VLifeRepository.ConnectionStringName, sql).ToList();
+			if (result != null)
+			{
+				for (int i = 0; i < result.Count; i++)
+				{
+					string[] sArray = result[i].ProductionYM.Split('/');
+					result[i].ProductionYM = (Convert.ToInt32(sArray[0]) + 1911) + "/" + sArray[1];
+				}
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// 查詢任職型態3(內勤)人員，FYC需為0
+		/// </summary>
+		/// <param name="subCode">保險公司分公司代碼</param>
+		/// <returns></returns>
+		public string GetOrgibByagentcode(string agentcode, string ProductionYM, string Sequence)
+		{
+			string sql = @"select ag_occp_ind from orgib where agent_code = @agentcode and production_ym = @ProductionYM  and sequence = @Sequence";
+			string result = DbHelper.Query<string>(VLifeRepository.ConnectionStringName, sql,
+				new
+				{
+					agentcode = agentcode,
+					ProductionYM = ProductionYM,
+					Sequence = Sequence
+				}).FirstOrDefault();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 查詢任職型態3(內勤)人員
+		/// </summary>
+		/// <param name="subCode">保險公司分公司代碼</param>
+		/// <returns></returns>
+		public List<string> GetOrgibByagentcodeList(string ProductionYM, string Sequence)
+		{
+			string sql = @"select agent_code from orgib where ag_occp_ind = 3 and production_ym = @ProductionYM  and sequence = @Sequence";
+			List<string> result = DbHelper.Query<string>(VLifeRepository.ConnectionStringName, sql,
+				new
+				{
+					ProductionYM = ProductionYM,
+					Sequence = Sequence
+				}).ToList();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 查詢是否為免評估人員
+		/// </summary>
+		/// <param name="agentcode"></param>
+		/// <returns></returns>
+		public string GetaginbByagentcode(string agentcode, string ProductionYM, string Sequence)
+		{
+			string sql = @"select FD_status from aginb where agent_code = @agentcode and production_ym = @ProductionYM and sequence = @Sequence";
+			string result = DbHelper.Query<string>(VLifeRepository.ConnectionStringName, sql,
+				new
+				{
+					agentcode = agentcode,
+					ProductionYM = ProductionYM,
+					Sequence = Sequence
+				}).FirstOrDefault();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 查詢所有免評估人員
+		/// </summary>
+		/// <param name="agentcode"></param>
+		/// <returns></returns>
+		public List<string> GetaginbByagentcodeList(string ProductionYM, string Sequence)
+		{
+			string sql = @"select agent_code from aginb where FD_status = 1 and production_ym = @ProductionYM and sequence = @Sequence";
+			List<string> result = DbHelper.Query<string>(VLifeRepository.ConnectionStringName, sql,
+				new
+				{
+					ProductionYM = ProductionYM,
+					Sequence = Sequence
+				}).ToList();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 查詢簽約日期(報聘日)
+		/// </summary>
+		/// <param name="subCode">保險公司分公司代碼</param>
+		/// <returns></returns>
+		public string GetAginbbByAgentcode(string agentcode)
+		{
+			string sql = @"select SUBSTRING(convert(varchar, convert(int, substring(register_date, 1, charindex('/', register_date)-1))+1911)+ substring(register_date, charindex('/', register_date), 10),0,8)  from aginb where agent_code = @agentcode";
+			string result = DbHelper.Query<string>(VLifeRepository.ConnectionStringName, sql,
+				new
+				{
+					agentcode = agentcode
+				}).FirstOrDefault();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 查詢所有業務員、簽約日期(報聘日)
+		/// </summary>
+		/// <returns></returns>
+		public Dictionary<string, string> GetOrgin()
+		{
+			string sql = @"select agent_code as 'Key', SUBSTRING(convert(varchar, convert(int, substring(register_date, 1, charindex('/', register_date)-1))+1911)+ substring(register_date, charindex('/', register_date), 10),0,8) as 'Value'  from orgin";
+			//string result = DbHelper.Query<string>(VLifeRepository.ConnectionStringName, sql).FirstOrDefault();
+			Dictionary<string, string> result = new Dictionary<string, string>();
+
+			DbHelper.Query<KeyValuePair<string, string>>(VLifeRepository.ConnectionStringName, sql).ForEach(x =>
+			{
+				result.Add(x.Key, x.Value);
+			});
+
+			return result;
+		}
+
+		/// <summary>
+		/// 確認業務員是否在黑名單
+		/// </summary>
+		/// <param name="ProductionYM"></param>
+		/// <param name="Sequence"></param>
+		/// <param name="agentcode"></param>
+		/// <param name="ReasonCode"></param>
+		/// <returns></returns>
+		public string GetBonusReserveSetting(string ProductionYM, string Sequence, string agentcode, string ReasonCode)
+		{
+			string sql = @"select distinct agent_code FROM BonusReserveSetting rv
+            where rv.reserve_type IN ('11')
+            AND ( 
+				    (rv.production_ym_str  <= @ProductionYM and rv.sequence_str <= @Sequence) AND (rv.production_ym_end  >= @ProductionYM and rv.sequence_end >= @Sequence)
+                )
+		    AND (
+				    (rv.agent_code = @agentcode)
+			    )";
+			string result = DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql,
+				new
+				{
+					ProductionYM = ProductionYM,
+					Sequence = Sequence,
+					ReasonCode = ReasonCode,
+					agentcode = agentcode
+				}).FirstOrDefault();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 取得黑名單
+		/// </summary>
+		/// <param name="ProductionYM"></param>
+		/// <param name="Sequence"></param>
+		/// <param name="agentcode"></param>
+		/// <param name="ReasonCode"></param>
+		/// <returns></returns>
+		public List<BlackList> GetBonusReserveSettingList(string ProductionYM, string Sequence)
+		{
+			string sql = @"select distinct agent_code FROM BonusReserveSetting rv
+            where rv.reserve_type IN ('11')
+            AND ( 
+				    (rv.production_ym_str  <= @ProductionYM and rv.sequence_str <= @Sequence) AND (rv.production_ym_end  >= @ProductionYM and rv.sequence_end >= @Sequence)
+                ) and agent_code != ''";
+
+			List<BlackList> result = DbHelper.Query<BlackList>(EBrokerRepository.ConnectionStringName, sql,
+				 new
+				 {
+					 ProductionYM = ProductionYM,
+					 Sequence = Sequence,
+				 }).ToList();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 檢核對應的原因碼，繳别繳次必須要有內容
+		/// </summary>
+		/// <param name="reasoncode"></param>
+		/// <returns></returns>
+		public string GetGroupMappingTOmodxseq(string reasoncode)
+		{
+			string sql = @"select mapping_source from GroupMapping where group_id = 'reason_codeTOmodxseq' and mapping_source = @reasoncode";
+			string result = DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql,
+				new
+				{
+					reasoncode = reasoncode
+				}).FirstOrDefault();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 取得繳别繳次必須要有內容的原因碼
+		/// </summary>
+		/// <param name="reasoncode"></param>
+		/// <returns></returns>
+		public List<string> GetGroupMappingTOmodxseqList()
+		{
+			string sql = @"select mapping_source from GroupMapping where group_id = 'reason_codeTOmodxseq'";
+			List<string> result = DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql).ToList();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 取得初年度服務報酬檢核的原因碼
+		/// </summary>
+		/// <returns></returns>
+		public List<string> GetGroupMappingTOfirstyearList()
+		{
+			string sql = @"select mapping_source from GroupMapping where group_id = 'reason_codeTOfirstyear'";
+			List<string> result = DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql).ToList();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 檢核對應的原因碼，R2、N4及NB原因碼不可人工調整
+		/// </summary>
+		/// <param name="reasoncode"></param>
+		/// <returns></returns>
+		public string GetGroupMappingTOnotin(string reasoncode)
+		{
+			string sql = @"select mapping_source from GroupMapping where group_id = 'reason_codeTOnotin' and mapping_source = @reasoncode";
+			string result = DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql,
+				new
+				{
+					reasoncode = reasoncode
+				}).FirstOrDefault();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 取得不可人工調整的R2、N4及NB原因碼
+		/// </summary>
+		/// <param name="reasoncode"></param>
+		/// <returns></returns>
+		public List<string> GetGroupMappingTOnotinList()
+		{
+			string sql = @"select mapping_source from GroupMapping where group_id = 'reason_codeTOnotin'";
+			List<string> result = DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql).ToList();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 檢核對應的原因碼，此原因碼金額應為正數
+		/// </summary>
+		/// <param name="reasoncode"></param>
+		/// <returns></returns>
+		public string GetGroupMappingTOplus(string reasoncode)
+		{
+			string sql = @"select mapping_source from GroupMapping where group_id = 'reason_codeTOplus' and mapping_source = @reasoncode";
+			string result = DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql,
+				new
+				{
+					reasoncode = reasoncode
+				}).FirstOrDefault();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 取得金額應為正數的原因碼
+		/// </summary>
+		/// <param name="reasoncode"></param>
+		/// <returns></returns>
+		public List<string> GetGroupMappingTOplusList()
+		{
+			string sql = @"select mapping_source from GroupMapping where group_id = 'reason_codeTOplus'";
+			List<string> result = DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql).ToList();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 檢核對應的原因碼，此原因碼金額應為負數
+		/// </summary>
+		/// <param name="reasoncode"></param>
+		/// <returns></returns>
+		public string GetGroupMappingTOminus(string reasoncode)
+		{
+			string sql = @"select mapping_source from GroupMapping where group_id = 'reason_codeTOminus' and mapping_source = @reasoncode";
+			string result = DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql,
+				new
+				{
+					reasoncode = reasoncode
+				}).FirstOrDefault();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 取得金額應為負數的原因碼
+		/// </summary>
+		/// <param name="reasoncode"></param>
+		/// <returns></returns>
+		public List<string> GetGroupMappingTOminusList()
+		{
+			string sql = @"select mapping_source from GroupMapping where group_id = 'reason_codeTOminus'";
+			List<string> result = DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql).ToList();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 檢核對應的原因碼，此原因碼為初年度服務報酬
+		/// </summary>
+		/// <param name="reasoncode"></param>
+		/// <returns></returns>
+		public string GetGroupMappingTOZeroFour(string reasoncode)
+		{
+			string sql = @"select mapping_source from GroupMapping where remark like '%初年度%' and group_id = 'reason_codeTOadj_type' and mapping_source = @reasoncode";
+			string result = DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql,
+				new
+				{
+					reasoncode = reasoncode
+				}).FirstOrDefault();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 檢核對應的原因碼，查詢型態為6的原因碼
+		/// </summary>
+		/// <param name="reasoncode"></param>
+		/// <returns></returns>
+		public string GetGroupMappingTOsix(string reasoncode)
+		{
+			string sql = @"select mapping_source from GroupMapping where group_id = 'reason_codeTOsix' and mapping_source = @reasoncode";
+			string result = DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql,
+				new
+				{
+					reasoncode = reasoncode
+				}).FirstOrDefault();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 查詢型態為6的原因碼的原因碼
+		/// </summary>
+		/// <returns></returns>
+		public List<string> GetGroupMappingTOsixList()
+		{
+			string sql = @"select mapping_source from GroupMapping where group_id = 'reason_codeTOsix'";
+			List<string> result = DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql).ToList();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 檢核FYC僅原因碼01~04不可空白，其餘原因碼系統預設為0
+		/// </summary>
+		/// <returns></returns>
+		public List<string> GetGroupMappingTOFYC()
+		{
+			string sql = @"select mapping_source from GroupMapping where group_id = 'reason_codeTOFYC'";
+			List<string> result = DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql).ToList();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 檢核FYP除原因碼01~07、0A~0G不得空白，其餘原因碼系動自動帶0
+		/// </summary>
+		/// <returns></returns>
+		public List<string> GetGroupMappingTOFYP()
+		{
+			string sql = @"select mapping_source from GroupMapping where group_id = 'reason_codeTOFYP'";
+			List<string> result = DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql).ToList();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 檢核年期原因碼01~07、0A~0B+0G，其餘型態預設為0，但查詢畫面及報表產出為空白
+		/// </summary>
+		/// <returns></returns>
+		public List<string> GetGroupMappingTOYear()
+		{
+			string sql = @"select mapping_source from GroupMapping where group_id = 'reason_codeTOCYear'";
+			List<string> result = DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql).ToList();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 檢核險種代碼僅原因碼01~03、05~06及0A~0B須有險種代號
+		/// </summary>
+		/// <returns></returns>
+		public List<string> GetGroupMappingTOPlanCode()
+		{
+			string sql = @"select mapping_source from GroupMapping where group_id = 'reason_codeTOPlanCode'";
+			List<string> result = DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql).ToList();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 檢核金額>保費，原因碼01~07、0A~0G
+		/// </summary>
+		/// <returns></returns>
+		public List<string> GetGroupMappingTOAF()
+		{
+			string sql = @"select mapping_source from GroupMapping where group_id = 'reason_codeTOAF'";
+			List<string> result = DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql).ToList();
+
+			return result;
+		}
+		#endregion
+
+		#region 大批調整
+		/// <summary>
+		/// 大批調整刪除該user該工作月資料
+		/// </summary>
+		/// <param name="productionYM">業績年月</param>
+		/// <param name="sequence">N次薪</param>
+		/// <param name="accountID">user id</param>
+		/// <returns></returns>
+		public void DeleteAdjustByAccountID(string productionYM, string sequence, string accountID, string ProcessCode)
+		{
+			try
+			{
+				using (TransactionScope ts = new TransactionScope())
+				{
+					EBrokerRepository.Delete<AgentBonusAdjust>(new { ProductionYM = @productionYM, Sequence = @sequence, CreateUserCode = @accountID, ProcessCode = @ProcessCode });
+					EBrokerRepository.Delete<AgentBonusDesc>(new { ProductionYM = @productionYM, Sequence = @sequence, CreateUserCode = @accountID, ProcessCode = @ProcessCode });
+					ts.Complete();
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.ToString());
+			}
+		}
+
+		/// <summary>
+		/// 大批調整bulkinsert
+		/// </summary>
+		/// <param name="dt">data</param>
+		public void ag078BulkInsert(DataTable dt, List<AgentBonusDesc> descs)
+		{
+			try
+			{
+				using (SqlBulkCopy bulkCopy = new SqlBulkCopy(EBrokerRepository.DbInfo.ConnectionString, SqlBulkCopyOptions.FireTriggers))
+				{
+					bulkCopy.DestinationTableName = dt.TableName;
+					List<KeyValuePair<string, string>> kv = GetTableColumnName(dt.TableName);
+					foreach (var d in kv)
+					{
+						if (!d.Key.Equals("iden") && !d.Key.Equals("company_code_sub") && !d.Key.Equals("wc_code"))
+						{
+							bulkCopy.ColumnMappings.Add(d.Key, d.Value);
+						}
+					}
+					bulkCopy.WriteToServer(dt);
+				}
+
+				string sql = "INSERT INTO AgentBonusDesc " +
+							 "VALUES (@Guid, @ProductionYM, @Sequence, @DescContent,@DescContentMask, @DescValue, @ProcessCode, @RelationTable, @CreateDatetime, @CreateUserCode)";
+				DbHelper.Execute(EBrokerRepository.ConnectionStringName, sql, descs);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.ToString());
+			}
+		}
+
+		/// <summary>
+		/// 取table的欄位對照
+		/// </summary>
+		/// <param name="tableName">table名稱</param>
+		/// <returns></returns>
+		public List<KeyValuePair<string, string>> GetTableColumnName(string tableName)
+		{
+			List<KeyValuePair<string, string>> result = new List<KeyValuePair<string, string>>();
+			//string sql = @"select column_name as [Key], trim(column_name) as [Value] from v_TableInfo where table_name =@tableName";
+			string sql = @"SELECT column_name as [Key], trim(column_name) as [Value] FROM INFORMATION_SCHEMA.COLUMNS where table_name = @tableName";
+
+			DbHelper.Query<KeyValuePair<string, string>>(EBrokerRepository.ConnectionStringName, sql, new { tableName = tableName }).ForEach(d =>
+			{
+				KeyValuePair<string, string> kvalue = new KeyValuePair<string, string>(d.Key, d.Value);
+				result.Add(kvalue);
+			});
+			return result;
+		}
+
+		/// <summary>
+		/// 取得所有原因碼與型態對應表
+		/// </summary>
+		/// <returns></returns>
+		public List<GroupMapping> GetALLGroupMappingList()
+		{
+			return EBrokerRepository.Select<GroupMapping>(new { GroupID = "reason_codeTOadj_type" }).ToList();
+		}
+
+		/// <summary>
+		/// 新增上傳原因碼log
+		/// </summary>
+		/// <param name="log">SampleFileUploadLog model</param>
+		public void CreateSampleFileUploadLog(SampleFileUploadLog log)
+		{
+			string sql = "INSERT INTO SampleFileUploadLog " +
+			"VALUES (@ProgramName,@FileName, @UploadDatetime, @UploadUserCode)";
+
+			DbHelper.Execute(EBrokerRepository.ConnectionStringName, sql, log);
+		}
+
+		/// <summary>
+		/// 從AginB取得指定工作月的所有業務員ID與姓名
+		/// </summary>
+		/// <param name="productionYM">工作月</param>
+		/// <returns></returns>
+		public Dictionary<string, string> GetAginbAgentCodeAndAgentNameByproductionYM(string productionYM)
+		{
+			Dictionary<string, string> result = new Dictionary<string, string>();
+
+			string sql = @"SELECT  distinct trim(b.agent_code) as 'Key', trim(n.name) as 'Value'
+                              FROM aginb as b
+                              left join orgin as n on b.agent_code = n.agent_code
+                              where production_ym = @productionYM";
+
+			DbHelper.Query<KeyValuePair<string, string>>(VLifeRepository.ConnectionStringName, sql,
+			new
+			{
+				productionYM = productionYM
+			}).ForEach(x =>
+			{
+				result.Add(x.Key, x.Value);
+			});
+
+			return result;
+		}
+
+		/// <summary>
+		/// 取得保險公司代碼清單
+		/// </summary>
+		/// <returns></returns>
+		public List<TermVal> GetCompanySetList()
+		{
+			string sql = @"select term_id,trim(term_code) as term_code,term_meaning,term_sequence from TermVal where term_id = 'company_code'";
+
+			return DbHelper.Query<TermVal>(EBrokerRepository.ConnectionStringName, sql).ToList();
+		}
+
+		/// <summary>
+		/// 取得該工作月離職人員ID清單
+		/// </summary>
+		/// <param name="productionYM">業績年月</param>
+		/// <returns></returns>
+		public List<string> GetAginBQuitAG(string productionYM)
+		{
+			string sql = @"select trim(agent_code) from aginb where production_ym = @productionYM and ag_status_code in (2,3)";
+			return DbHelper.Query<string>(VLifeRepository.ConnectionStringName, sql, new { productionYM = productionYM }).ToList();
+		}
+
+		/// <summary>
+		/// 從poag確認有無該業務員
+		/// </summary>
+		/// <param name="PolicyNo2">保單號碼</param>
+		/// <returns></returns>
+		public string CheckAgentNameByPoag(string PolicyNo2)
+		{
+			string sql = @"select agent_code  from poag a join podt b on  a.policy_no = b.policy_no
+                        join nain c on SUBSTRING(a.agent_code,1,10) = c.client_id
+                        where policy_no2 = @PolicyNo2";
+
+			string result = DbHelper.Query<string>(VLifeRepository.ConnectionStringName, sql,
+				new
+				{
+					PolicyNo2 = PolicyNo2
+				}).FirstOrDefault();
+
+			return result = !String.IsNullOrEmpty(result) ? result : "";
+		}
+
+		/// <summary>
+		/// 從poag取得所有保單
+		/// </summary>
+		/// <returns></returns>
+		public List<Poag> GetAgentNameByPoagList()
+		{
+			string sql = @"select TRIM(policy_no2) as policy_no2,a.agent_code  from poag a join podt b on  a.policy_no = b.policy_no
+                        join nain c on SUBSTRING(a.agent_code,1,10) = c.client_id";
+
+			List<Poag> result = DbHelper.Query<Poag>(VLifeRepository.ConnectionStringName, sql).ToList();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 從poag取得所有保單
+		/// </summary>
+		/// <returns></returns>
+		//public Dictionary<string, string> GetAgentNameByPoagList()
+		//{
+		//	//string sql = @"select TRIM(policy_no2)  from poag a join podt b on  a.policy_no = b.policy_no
+		//	//                     join nain c on SUBSTRING(a.agent_code,1,10) = c.client_id";
+
+		//	//List<string> result = DbHelper.Query<string>(VLifeRepository.ConnectionStringName, sql).ToList();
+
+		//	Dictionary<string, string> result = new Dictionary<string, string>();
+
+		//	string sql = @"select TRIM(policy_no2) as 'Key',trim(a.agent_code) as 'Value' from poag a join podt b on  a.policy_no = b.policy_no
+		//                      join nain c on SUBSTRING(a.agent_code,1,10) = c.client_id";
+
+		//	DbHelper.Query<KeyValuePair<string, string>>(VLifeRepository.ConnectionStringName, sql,
+		//	new
+		//	{
+		//	}).ForEach(x =>
+		//	{
+		//		result.Add(x.Key, x.Value);
+		//	});
+
+		//	return result;
+		//}
+		#endregion
+
+		#region AG078報表
+		/// <summary>
+		/// 取得所有總公司所有部門
+		/// </summary>
+		/// <returns></returns>
+		public List<sc_unit> Getnunit()
+		{
+			string sql = @"select * from sc_unit a join sc_unit_ext b on a.uunit = b.uunit where organization_level = '34_3'";
+			return DbHelper.Query<sc_unit>(EBrokerRepository.ConnectionStringName, sql).ToList();
+		}
+
+		/// <summary>
+		/// 依照年分撈取業績年月
+		/// </summary>
+		/// <param name="sql"></param>
+		public List<string> GetAllYMData(string ym)
+		{
+			string sql = @"select distinct production_ym from agym where production_ym like @ym";
+			List<string> result = DbHelper.Query<string>(
+				  VLifeRepository.ConnectionStringName, sql, new
+				  {
+					  ym = "%" + ym + "%"
+				  }).ToList();
+			return result;
+		}
+
+		/// <summary>
+		/// 撈取 業務佣酬調整資料檔
+		/// </summary>
+		/// <param name="sql"></param>
+		public List<AgentBonusAdjustViewModel> GetAgentBonusAdjust(AgentBonusAdjustViewModel condition)
+		{
+			string sql = @"select a.*,c.nmember,b.desc_content
+                from AgentBonusAdjust a 
+                inner join AgentBonusDesc as b on a.AgentBonusDesc_guid = b.guid and a.process_code in ('PRTX002','PRTX003')
+                left join sc_account e on a.create_user_code = e.iaccount 
+                join  sc_member c on e.imember = c.imember where 1=1";
+			if (!string.IsNullOrEmpty(condition.ProductionYM))
+			{
+				sql += " and a.production_ym = @productionYM";
+			}
+			if (!string.IsNullOrEmpty(condition.ProductionY))
+			{
+				sql += " and a.production_ym like @ProductionY";
+			}
+			if (condition.SequenceStart != 0 && condition.SequenceFinish != 0)
+			{
+				sql += " and a.sequence between @SequenceStart and @SequenceFinish";
+			}
+			if (!string.IsNullOrEmpty(condition.CreateUnit))
+			{
+				sql += " and a.create_unit like @CreateUnit";
+			}
+			if (!string.IsNullOrEmpty(condition.nmember))
+			{
+				sql += " and c.nmember like @nmember";
+			}
+			if (!string.IsNullOrEmpty(condition.AdjType))
+			{
+				sql += " and a.adj_type like @AdjType";
+			}
+			if (!string.IsNullOrEmpty(condition.ReasonCode))
+			{
+				sql += " and a.reason_code like @ReasonCode";
+			}
+			if (!string.IsNullOrEmpty(condition.CompanyCode))
+			{
+				sql += " and a.company_code like @CompanyCode";
+			}
+			sql += " order by a.production_ym,a.sequence,a.create_datetime";
+			List<AgentBonusAdjustViewModel> result = DbHelper.Query<AgentBonusAdjustViewModel>(
+				  EBrokerRepository.ConnectionStringName, sql, new
+				  {
+					  ProductionYM = condition.ProductionYM,
+					  ProductionY = "%" + condition.ProductionY + "%",
+					  SequenceStart = condition.SequenceStart,
+					  SequenceFinish = condition.SequenceFinish,
+					  CreateUnit = "%" + condition.CreateUnit + "%",
+					  nmember = "%" + condition.nmember + "%",
+					  AdjType = condition.AdjType,
+					  ReasonCode = condition.ReasonCode,
+					  CompanyCode = condition.CompanyCode
+				  }).ToList();
+			return result;
+		}
+		#region 報表
+
+		public Stream GetAG078ReportList(AgentBonusAdjustViewModel condition)
+		{
+			string sql = @"select a.*,c.nmember,d.desc_content
+             from AgentBonusAdjust a 
+            left join sc_account b on a.create_user_code = b.iaccount 
+            inner join AgentBonusDesc as d on a.AgentBonusDesc_guid = d.guid
+            join  sc_member c on b.imember = c.imember where 1=1";
+			if (!string.IsNullOrEmpty(condition.ProductionYM))
+			{
+				sql += " and a.production_ym = @productionYM";
+			}
+			if (!string.IsNullOrEmpty(condition.ProductionY))
+			{
+				sql += " and a.production_ym like @ProductionY";
+			}
+			if (condition.SequenceStart != 0 && condition.SequenceFinish != 0)
+			{
+				sql += " and a.sequence between @SequenceStart and @SequenceFinish";
+			}
+			if (!string.IsNullOrEmpty(condition.CreateUnit))
+			{
+				sql += " and a.create_unit like @CreateUnit";
+			}
+			if (!string.IsNullOrEmpty(condition.nmember))
+			{
+				sql += " and c.nmember like @nmember";
+			}
+			if (!string.IsNullOrEmpty(condition.AdjType))
+			{
+				sql += " and a.adj_type like @AdjType";
+			}
+			if (!string.IsNullOrEmpty(condition.ReasonCode))
+			{
+				sql += " and a.reason_code like @ReasonCode";
+			}
+			sql += " order by production_ym,sequence";
+			List<AgentBonusAdjustViewModel> agentBonus = new List<AgentBonusAdjustViewModel>();
+			List<AgentBonusAdjustReportModel> Report = new List<AgentBonusAdjustReportModel>();
+			//取出資料
+			agentBonus = DbHelper.Query<AgentBonusAdjustViewModel>(EBrokerRepository.ConnectionStringName, sql, new
+			{
+				ProductionYM = condition.ProductionYM,
+				ProductionY = "%" + condition.ProductionY + "%",
+				SequenceStart = condition.SequenceStart,
+				SequenceFinish = condition.SequenceFinish,
+				CreateUnit = "%" + condition.CreateUnit + "%",
+				nmember = "%" + condition.nmember + "%",
+				AdjType = condition.AdjType,
+				ReasonCode = condition.ReasonCode
+			}).ToList();
+			MemoryStream ms = new MemoryStream();
+			ExcelPackage excel = new ExcelPackage();
+			ExcelWorksheet sheet = excel.Workbook.Worksheets.Add("人工調整明細報表");
+
+			#region 基本設定
+			//直排
+			int a = 1, b = 2, c = 3, d = 4, e = 5, f = 6, g = 7, h = 8, j = 9, k = 10, l = 11, m = 12, n = 13, o = 14, p = 15;
+			//橫排
+			int aa = 3, bb = 0, TotalAmount = 0, TotalFYC = 0, TotalFYP = 0, TotalCommModePrem = 0;
+
+			TaiwanCalendar tc = new TaiwanCalendar();
+			DateTime dt = DateTime.Now;
+			string ReportDate = String.Format("0{0}/{1}/{2}", tc.GetYear(dt), tc.GetMonth(dt), tc.GetDayOfMonth(dt));
+
+			//設置列寬
+			//sheet.Column(1).Width = 10;
+			//字型
+			sheet.Cells.Style.Font.Name = "微軟正黑體";
+			//文字大小
+			sheet.Cells.Style.Font.Size = 12;
+			//單元格自動適應大小
+			//sheet.Cells.Style.ShrinkToFit = true;
+			#endregion
+
+			#region 標題
+			string DateNow = "報表日期：" + "0" + (DateTime.Now.Year - 1911).ToString() + DateTime.Now.ToString("/MM/dd HH:mm:ss");
+			ExcelSetCell(sheet, new string[] { DateNow }, 1, 1);
+			ExcelSetCell(sheet, new string[] { "" }, 1, 15);
+			for (int i = 2; i < 15; i++)
+			{
+				ExcelSetCell(sheet, new string[] { "" }, 1, i);
+			}
+			sheet.Cells[1, 1, 1, 15].Merge = true;
+			sheet.Cells[1, 1, 1, 15].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			//sheet 標題 橫排 直排
+			ExcelSetCell(sheet, new string[] { "工作月" }, 2, a);
+			sheet.Cells[2, a].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			ExcelSetCell(sheet, new string[] { "型態" }, 2, b);
+			sheet.Cells[2, b].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			ExcelSetCell(sheet, new string[] { "保險公司代碼" }, 2, c);
+			sheet.Cells[2, c].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			ExcelSetCell(sheet, new string[] { "業務員代碼" }, 2, d);
+			sheet.Cells[2, d].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			ExcelSetCell(sheet, new string[] { "姓名" }, 2, e);
+			sheet.Cells[2, e].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			ExcelSetCell(sheet, new string[] { "原因碼" }, 2, f);
+			sheet.Cells[2, f].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			ExcelSetCell(sheet, new string[] { "保單號碼" }, 2, g);
+			sheet.Cells[2, g].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			ExcelSetCell(sheet, new string[] { "繳別繳次" }, 2, h);
+			sheet.Cells[2, h].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			ExcelSetCell(sheet, new string[] { "金額" }, 2, j);
+			sheet.Cells[2, j].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			ExcelSetCell(sheet, new string[] { "FYC" }, 2, k);
+			sheet.Cells[2, k].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			ExcelSetCell(sheet, new string[] { "保費" }, 2, l);
+			sheet.Cells[2, l].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			//ExcelSetCell(sheet, new string[] { "計佣保費" }, 2, k);
+			//sheet.Cells[2, j].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			ExcelSetCell(sheet, new string[] { "說明" }, 2, m);
+			sheet.Cells[2, m].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			ExcelSetCell(sheet, new string[] { "部門" }, 2, n);
+			sheet.Cells[2, n].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			ExcelSetCell(sheet, new string[] { "承辦" }, 2, o);
+			sheet.Cells[2, o].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			ExcelSetCell(sheet, new string[] { "處理日" }, 2, p);
+			sheet.Cells[2, p].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+			#endregion
+
+			#region 人工調整明細&合計
+			for (int i = 0; i < agentBonus.Count; i++)
+			{
+				AgentBonusAdjustReportModel adjustReportModel = new AgentBonusAdjustReportModel();
+				agentBonus[i].CreateDatetimeString = agentBonus[i].CreateDatetime.ToString("yyyy/MM/dd");
+				agentBonus[i].ProductionYMSequence = WYToRoc(agentBonus[i].ProductionYM) + "-" + agentBonus[i].Sequence;
+				adjustReportModel.CreateDatetime = agentBonus[i].CreateDatetimeString;
+				adjustReportModel.ProductionYMSequence = agentBonus[i].ProductionYMSequence;
+				adjustReportModel.AdjType = agentBonus[i].AdjType;
+				adjustReportModel.AgentName = agentBonus[i].AgentName;
+				adjustReportModel.AmountTS = agentBonus[i].Amount != 0 ? agentBonus[i].Amount.ToString("###,###") : "0";
+				//adjustReportModel.CommModePrem = agentBonus[i].CommModePrem;
+				adjustReportModel.DescContent = agentBonus[i].DescContent;
+				adjustReportModel.FYCTS = agentBonus[i].FYC != 0 ? agentBonus[i].FYC.ToString("###,###") : "0";
+				adjustReportModel.FYPTS = agentBonus[i].FYP != 0 ? agentBonus[i].FYP.ToString("###,###") : "0";
+				adjustReportModel.ModxSequence = agentBonus[i].ModxSequence;
+				adjustReportModel.nmember = agentBonus[i].nmember;
+				adjustReportModel.nunit = agentBonus[i].CreateUnitName;
+				adjustReportModel.PolicyNo2 = agentBonus[i].PolicyNo2;
+				adjustReportModel.ReasonCode = agentBonus[i].ReasonCode;
+				adjustReportModel.AgentCode = agentBonus[i].AgentCode;
+				adjustReportModel.CompanyCode = agentBonus[i].CompanyCode;
+
+				TotalAmount = TotalAmount + agentBonus[i].Amount;
+				TotalFYC = TotalFYC + agentBonus[i].FYC;
+				TotalFYP = TotalFYP + agentBonus[i].FYP;
+
+				Report.Add(adjustReportModel);
+			}
+
+			for (int i = 0; i < Report.Count; i++)
+			{
+				ExcelSetCell(sheet, new string[] { Report[i].ProductionYMSequence }, aa, a);
+				sheet.Cells[aa, a].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+				ExcelSetCell(sheet, new string[] { Report[i].AdjType }, aa, b);
+				sheet.Cells[aa, b].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+				ExcelSetCell(sheet, new string[] { Report[i].CompanyCode }, aa, c);
+				sheet.Cells[aa, c].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+				ExcelSetCell(sheet, new string[] { Report[i].AgentCode }, aa, d);
+				sheet.Cells[aa, d].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+				ExcelSetCell(sheet, new string[] { Report[i].AgentName }, aa, e);
+				sheet.Cells[aa, e].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+				ExcelSetCell(sheet, new string[] { Report[i].ReasonCode }, aa, f);
+				sheet.Cells[aa, f].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+				ExcelSetCell(sheet, new string[] { Report[i].PolicyNo2 }, aa, g);
+				sheet.Cells[aa, g].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+				ExcelSetCell(sheet, new string[] { Report[i].ModxSequence }, aa, h);
+				sheet.Cells[aa, h].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+				ExcelSetCell(sheet, new string[] { Report[i].AmountTS }, aa, j);
+				sheet.Cells[aa, j].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+
+				//ExcelSetCell(sheet, new int[] { Report[i].CommModePrem }, aa, k);
+				//sheet.Cells[aa, j].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+				ExcelSetCell(sheet, new string[] { Report[i].FYCTS }, aa, k);
+				sheet.Cells[aa, k].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+
+				ExcelSetCell(sheet, new string[] { Report[i].FYPTS }, aa, l);
+				sheet.Cells[aa, l].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+
+				ExcelSetCell(sheet, new string[] { Report[i].DescContent }, aa, m);
+				sheet.Cells[aa, m].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+				ExcelSetCell(sheet, new string[] { Report[i].nunit }, aa, n);
+				sheet.Cells[aa, n].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+				ExcelSetCell(sheet, new string[] { Report[i].nmember }, aa, o);
+				sheet.Cells[aa, o].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+				ExcelSetCell(sheet, new string[] { Report[i].CreateDatetime }, aa, p);
+				sheet.Cells[aa, p].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+				//sheet.Cells[aa, p].AutoFitColumns();
+
+				//TotalCommModePrem = TotalCommModePrem + Report[i].CommModePrem;
+
+				aa++;
+			}
+			#endregion
+
+			bb = aa;
+			ExcelSetCell(sheet, new string[] { "" }, bb, a);
+			ExcelSetCell(sheet, new string[] { "" }, bb, b);
+			ExcelSetCell(sheet, new string[] { "" }, bb, c);
+			ExcelSetCell(sheet, new string[] { "" }, bb, d);
+			ExcelSetCell(sheet, new string[] { "" }, bb, e);
+			ExcelSetCell(sheet, new string[] { "" }, bb, l);
+			ExcelSetCell(sheet, new string[] { "" }, bb, m);
+			ExcelSetCell(sheet, new string[] { "" }, bb, n);
+			ExcelSetCell(sheet, new string[] { "" }, bb, o);
+			ExcelSetCell(sheet, new string[] { "" }, bb, p);
+
+			ExcelSetCell(sheet, new string[] { "筆數:" }, bb, f);
+			sheet.Cells[bb, f].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+			ExcelSetCell(sheet, new string[] { Report.Count.ToString("###,###") }, bb, g);
+			sheet.Cells[bb, g].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+			ExcelSetCell(sheet, new string[] { "合計:" }, bb, h);
+			sheet.Cells[bb, h].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+			ExcelSetCell(sheet, new string[] { TotalAmount == 0 ? "0" : TotalAmount.ToString("###,###") }, bb, j);
+			sheet.Cells[bb, j].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+
+			ExcelSetCell(sheet, new string[] { TotalFYC == 0 ? "0" : TotalFYC.ToString("###,###") }, bb, k);
+			sheet.Cells[bb, k].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+
+			ExcelSetCell(sheet, new string[] { TotalFYP == 0 ? "0" : TotalFYP.ToString("###,###") }, bb, l);
+			sheet.Cells[bb, l].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+			//ExcelSetCell(sheet, new int[] { TotalCommModePrem }, bb, k);
+			//sheet.Cells[bb, j].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+			#region 列印設定
+			//自動適應欄位
+			sheet.Cells.AutoFitColumns();
+			// 設定頁面方向
+			//sheet.PrinterSettings.Orientation = eOrientation.Landscape;
+			//集中在一頁列印
+			sheet.PrinterSettings.FitToPage = true;
+			// 設定紙張大小（A4）
+			sheet.PrinterSettings.PaperSize = ePaperSize.A4;
+			// 設定縮放比例
+			//sheet.PrinterSettings.Scale = 40;
+			// 設定水平置中
+			sheet.PrinterSettings.HorizontalCentered = true;
+			// 設定標題列
+			sheet.PrinterSettings.RepeatRows = sheet.Cells["$1:$2"];
+			// 設定標題欄
+			//sheet.PrinterSettings.RepeatColumns = sheet.Cells["A:O"];
+			// 設定邊界			
+			sheet.PrinterSettings.TopMargin = 0M;
+			sheet.PrinterSettings.BottomMargin = 0.8M / 2.54M;
+			sheet.PrinterSettings.LeftMargin = 0M;
+			sheet.PrinterSettings.RightMargin = 0M;
+			sheet.PrinterSettings.HeaderMargin = 0M;
+			sheet.PrinterSettings.FooterMargin = 0M;
+			// 設定頁面寬度&高度
+			sheet.PrinterSettings.FitToWidth = 1;
+			sheet.PrinterSettings.FitToHeight = 0;
+			//頁尾
+			sheet.HeaderFooter.OddFooter.CenteredText = string.Format("第{0}頁,共{1}頁", ExcelHeaderFooter.PageNumber, ExcelHeaderFooter.NumberOfPages);
+			// 应用边线
+			sheet.Cells[sheet.Dimension.Address].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+			sheet.Cells[sheet.Dimension.Address].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+			sheet.Cells[sheet.Dimension.Address].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+			sheet.Cells[sheet.Dimension.Address].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+			#endregion
+
+			excel.SaveAs(ms);
+			excel.Dispose();
+			ms.Position = 0;
+			return ms;
+		}
+		#endregion
+
+		#endregion
+
+		#region 原因碼總表
+		/// <summary>
+		/// 取得AgentBonusAdjust工作月
+		/// </summary>
+		/// <returns></returns>
+		public List<string> GetAgentBonusAdjustProductionYm(string ProductionY, string CreateUnit)
+		{
+			string sql = string.Empty;
+			sql = @"select distinct production_ym from AgentBonusAdjust 
+            where production_ym like @ProductionY and create_unit = @CreateUnit
+            order by production_ym";
+
+			return DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql, new { ProductionY = "%" + ProductionY + "%", CreateUnit = CreateUnit }).ToList();
+		}
+
+		/// <summary>
+		/// 取得AgentBonusAdjust工作月(業行、財務)
+		/// </summary>
+		/// <returns></returns>
+		public List<string> GetAgentBonusAdjustMainProductionYm(string ProductionY, string CreateUnit)
+		{
+			string sql = string.Empty;
+			sql = @"select distinct production_ym from AgentBonusAdjust 
+            where production_ym like @ProductionY
+            order by production_ym";
+
+			return DbHelper.Query<string>(EBrokerRepository.ConnectionStringName, sql, new { ProductionY = "%" + ProductionY + "%", CreateUnit = CreateUnit }).ToList();
+		}
+
+		/// <summary>
+		/// 確認原因碼總表是否為空
+		/// </summary>
+		/// <param name="condition"></param>
+		/// <returns></returns>
+		public List<TotalReasonCodeReportModel> CheckTotalReasonCodeReport(AgentBonusAdjustCondition condition)
+		{
+			List<TotalReasonCodeReportModel> reasonCodeReport = new List<TotalReasonCodeReportModel>();
+
+			string sql = @"select reason_code,b.remark,COUNT(reason_code) cnt,SUM(amount) amount,nmember,nunit   from AgentBonusAdjust a
+            join GroupMapping b on a.reason_code = b.mapping_source and group_id = 'reason_codeTOadj_type' 
+            join sc_account c on a.create_user_code = c.iaccount
+            join sc_member d on c.imember = d.imember
+            join sc_unit e on a.create_unit = e.iunit
+            where production_ym = @ProductionYM  and sequence = @Sequence ";
+
+			if (!String.IsNullOrEmpty(condition.CreateUnit))
+			{
+				sql += " and create_unit = @CreateUnit";
+			}
+
+			if (!String.IsNullOrEmpty(condition.nmember))
+			{
+				sql += " and nmember like @nmember";
+			}
+
+			sql += " group by reason_code,remark,nmember,nunit order by reason_code ";
+
+			reasonCodeReport = DbHelper.Query<TotalReasonCodeReportModel>(EBrokerRepository.ConnectionStringName, sql,
+				new
+				{
+					ProductionYM = condition.ProductionYM,
+					Sequence = condition.Sequence,
+					CreateUnit = condition.CreateUnit,
+					nmember = "%" + condition.nmember + "%"
+				}).ToList();
+
+			return reasonCodeReport;
+		}
+
+		/// <summary>
+		/// 原因碼總表
+		/// </summary>
+		/// <param name="year">年度</param>
+		/// <returns>Stream</returns>
+		public Stream GetTotalReasonCodeReport(AgentBonusAdjustCondition condition)
+		{
+			MemoryStream ms = new MemoryStream();
+			ExcelPackage excel = new ExcelPackage();
+			List<TotalReasonCodeReportModel> reasonCodeReport = new List<TotalReasonCodeReportModel>();
+			string sql = string.Empty;
+			if (!String.IsNullOrEmpty(condition.nmember))
+			{
+				sql = @"select reason_code,b.remark,COUNT(reason_code) cnt,SUM(amount) amount,nmember,nunit   from AgentBonusAdjust a
+            join GroupMapping b on a.reason_code = b.mapping_source and group_id = 'reason_codeTOadj_type' 
+            join sc_account c on a.create_user_code = c.iaccount
+            join sc_member d on c.imember = d.imember
+            join sc_unit e on a.create_unit = e.iunit
+            where production_ym = @ProductionYM  and sequence = @Sequence ";
+
+				if (!String.IsNullOrEmpty(condition.CreateUnit))
+				{
+					sql += " and create_unit = @CreateUnit";
+				}
+
+				sql += " and nmember like @nmember";
+				sql += " group by reason_code,remark,nmember,nunit order by reason_code ";
+			}
+			else
+			{
+				sql = @"select reason_code,b.remark,COUNT(reason_code) cnt,SUM(amount) amount   from AgentBonusAdjust a
+            join GroupMapping b on a.reason_code = b.mapping_source and group_id = 'reason_codeTOadj_type' 
+			where production_ym = @ProductionYM  and sequence = @Sequence ";
+
+				if (!String.IsNullOrEmpty(condition.CreateUnit))
+				{
+					sql += " and create_unit = @CreateUnit";
+				}
+
+				sql += " group by reason_code,remark order by reason_code ";
+			}
+
+			reasonCodeReport = DbHelper.Query<TotalReasonCodeReportModel>(EBrokerRepository.ConnectionStringName, sql,
+				new
+				{
+					ProductionYM = condition.ProductionYM,
+					Sequence = condition.Sequence,
+					CreateUnit = condition.CreateUnit,
+					nmember = "%" + condition.nmember + "%"
+				}).ToList();
+
+			#region 基本設定
+			ExcelWorksheet sheet = excel.Workbook.Worksheets.Add("調帳原因碼總表");
+
+			//直排
+			int a = 1, b = 2, f = 6, g = 7, h = 8, j = 9, k = 10, l = 11;
+			//橫排
+			int aa = 7, TotalCnt = 0;
+			double TotalAmount = 0;
+			TaiwanCalendar tc = new TaiwanCalendar();
+			DateTime dt = DateTime.Now;
+			string ReportDate = String.Format("0{0}/{1}/{2}", tc.GetYear(dt), tc.GetMonth(dt), tc.GetDayOfMonth(dt));
+
+			//設置列寬
+			sheet.Column(1).Width = 10;
+			//單元格自動適應大小
+			sheet.Cells.Style.ShrinkToFit = true;
+			//字型
+			sheet.Cells.Style.Font.Name = "微軟正黑體";
+			//文字大小
+			sheet.Cells.Style.Font.Size = 12;
+
+			#endregion
+
+			#region 標題
+			//sheet 標題 橫排 直排
+			sheet.Cells[1, 1].Value = "永達保險經紀人股份有限公司";
+			sheet.Cells[1, 1, 1, 11].Merge = true;
+			sheet.Cells[1, 1, 1, 11].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			sheet.Cells[2, 1].Value = "調帳原因碼總表";
+			//sheet.Cells[2, 1].Style.Font.Size = 16;
+			sheet.Cells[2, 1].Style.Font.Bold = true;
+			sheet.Cells[2, 1, 2, 11].Merge = true;
+			sheet.Cells[2, 1, 2, 11].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			sheet.Cells[3, 1].Value = "業績年月: " + StringExtension.WYearMonthToCYearMonth(condition.ProductionYM) + " 序次: " + condition.Sequence;
+			sheet.Cells[3, 1, 3, 11].Merge = true;
+			sheet.Cells[3, 1, 3, 11].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			sheet.Cells[4, 1].Value = "報表日期: " + ReportDate;
+			sheet.Cells[4, 1, 4, 2].Merge = true;
+
+			if (reasonCodeReport.Count != 0)
+			{
+				if (!String.IsNullOrEmpty(condition.CreateUnit) && !String.IsNullOrEmpty(condition.nmember))
+				{
+					sheet.Cells[5, 1].Value = "經辦: " + reasonCodeReport[0].nunit + reasonCodeReport[0].nmember;
+					sheet.Cells[5, 1, 5, 2].Merge = true;
+				}
+				else if (!String.IsNullOrEmpty(condition.nmember))
+				{
+					sheet.Cells[5, 1].Value = "經辦: " + reasonCodeReport[0].nmember;
+					sheet.Cells[5, 1, 5, 2].Merge = true;
+				}
+				else if (!String.IsNullOrEmpty(condition.CreateUnit))
+				{
+					sheet.Cells[5, 1].Value = "經辦: " + reasonCodeReport[0].nunit;
+					sheet.Cells[5, 1, 5, 2].Merge = true;
+				}
+				else
+				{
+					sheet.Cells[5, 1].Value = "經辦: 全公司";
+					sheet.Cells[5, 1, 5, 2].Merge = true;
+				}
+			}
+
+			sheet.Cells[5, 10].Value = "製表人: " + condition.CreateReportUnitName + condition.CreateReportUserName;
+			sheet.Cells[5, 10, 5, 11].Merge = true;
+
+			ExcelSetCell(sheet, new string[] { "原因碼" }, 6, 1);
+			ExcelSetCell(sheet, new string[] { "原因碼名稱" }, 6, 2);
+			for (int y = 3; y <= 6; y++)
+			{
+				ExcelSetCell(sheet, new string[] { "" }, 6, y);
+			}
+			sheet.Cells[6, 2, 6, 6].Merge = true;
+			ExcelSetCell(sheet, new string[] { "筆數" }, 6, 7);
+			sheet.Cells[6, 7].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+			ExcelSetCell(sheet, new string[] { "調整金額" }, 6, 8);
+			for (int y = 9; y <= 11; y++)
+			{
+				ExcelSetCell(sheet, new string[] { "" }, 6, y);
+			}
+			sheet.Cells[6, 8, 6, 11].Merge = true;
+			sheet.Cells[6, 8, 6, 11].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+
+			#endregion
+
+			#region 原因碼總表
+			for (int i = 0; i < reasonCodeReport.Count; i++)
+			{
+				ExcelSetCell(sheet, new string[] { reasonCodeReport[i].reason_code }, aa, a);
+				sheet.Cells[aa, a].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+				ExcelSetCell(sheet, new string[] { reasonCodeReport[i].remark }, aa, b);
+				sheet.Cells[aa, b, aa, f].Merge = true;
+				for (int y = b + 1; y <= f; y++)
+				{
+					ExcelSetCell(sheet, new string[] { "" }, aa, y);
+				}
+
+				ExcelSetCell(sheet, new string[] { Convert.ToInt32(reasonCodeReport[i].cnt).ToString("###,###") }, aa, g);
+				sheet.Cells[aa, g].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+				TotalCnt = TotalCnt + Convert.ToInt32(reasonCodeReport[i].cnt);
+
+				ExcelSetCell(sheet, new string[] { reasonCodeReport[i].amount.ToString() != "0" ? reasonCodeReport[i].amount.ToString("###,###") : "0" }, aa, h);
+				sheet.Cells[aa, h].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+				sheet.Cells[aa, h, aa, l].Merge = true;
+				for (int y = h + 1; y <= l; y++)
+				{
+					ExcelSetCell(sheet, new string[] { "" }, aa, y);
+				}
+				TotalAmount = TotalAmount + Convert.ToDouble(reasonCodeReport[i].amount);
+
+				aa++;
+			}
+			#endregion
+
+			//橫排
+			int bb = aa, cc = bb + 1, dd = bb + 4, ee = bb + 5, ff = bb + 8;
+			#region 合計 經辦 檢核人
+			ExcelSetCell(sheet, new string[] { "合計" }, bb, a);
+			sheet.Cells[bb, a, bb, f].Merge = true;
+			for (int y = b; y <= f; y++)
+			{
+				ExcelSetCell(sheet, new string[] { "" }, bb, y);
+			}
+
+			//筆數
+			ExcelSetCell(sheet, new string[] { TotalCnt.ToString("###,###") }, bb, g);
+			sheet.Cells[bb, g].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+
+			//調整金額加總
+			ExcelSetCell(sheet, new string[] { "NT$" + TotalAmount.ToString("###,###") }, bb, h);
+			sheet.Cells[bb, h].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+			for (int y = j; y <= l; y++)
+			{
+				ExcelSetCell(sheet, new string[] { "" }, bb, y);
+			}
+			sheet.Cells[bb, h, bb, l].Merge = true;
+
+			ExcelSetCell(sheet, new string[] { "經辦" }, cc, a);
+			ExcelSetCell(sheet, new string[] { "" }, cc + 1, a);
+			ExcelSetCell(sheet, new string[] { "" }, cc + 2, a);
+			ExcelSetCell(sheet, new string[] { "" }, cc + 3, a);
+			sheet.Cells[cc, a, dd, f].Merge = true;
+			for (int y = b; y <= f; y++)
+			{
+				ExcelSetCell(sheet, new string[] { "" }, cc, y);
+				ExcelSetCell(sheet, new string[] { "" }, cc + 1, y);
+				ExcelSetCell(sheet, new string[] { "" }, cc + 2, y);
+				ExcelSetCell(sheet, new string[] { "" }, dd, y);
+			}
+
+			//經辦旁邊空格
+			ExcelSetCell(sheet, new string[] { "" }, cc, g);
+			sheet.Cells[cc, g, dd, l].Merge = true;
+			for (int y = h; y <= l; y++)
+			{
+				ExcelSetCell(sheet, new string[] { "" }, cc, y);
+				ExcelSetCell(sheet, new string[] { "" }, cc + 1, y);
+				ExcelSetCell(sheet, new string[] { "" }, cc + 2, y);
+				ExcelSetCell(sheet, new string[] { "" }, dd, y);
+			}
+
+			ExcelSetCell(sheet, new string[] { "檢核人" }, ee, a);
+			ExcelSetCell(sheet, new string[] { "" }, ee + 1, a);
+			ExcelSetCell(sheet, new string[] { "" }, ee + 2, a);
+			ExcelSetCell(sheet, new string[] { "" }, ee + 3, a);
+			for (int y = b; y <= f; y++)
+			{
+				ExcelSetCell(sheet, new string[] { "" }, ee, y);
+				ExcelSetCell(sheet, new string[] { "" }, ee + 1, y);
+				ExcelSetCell(sheet, new string[] { "" }, ee + 2, y);
+				ExcelSetCell(sheet, new string[] { "" }, ff, y);
+			}
+			sheet.Cells[ee, a, ff, f].Merge = true;
+
+			ExcelSetCell(sheet, new string[] { "Run 薪前" }, ee, g);
+			sheet.Cells[ee, g, ee, j].Merge = true;
+			sheet.Cells[ee, g, ee, j].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			ExcelSetCell(sheet, new string[] { "Run 薪後" }, ee, k);
+			ExcelSetCell(sheet, new string[] { "" }, ee, l);
+			sheet.Cells[ee, k, ee, l].Merge = true;
+			sheet.Cells[ee, k, ee, l].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+			//Run 薪前下面空格
+			for (int y = g; y <= j; y++)
+			{
+				ExcelSetCell(sheet, new string[] { "" }, ee + 1, y);
+				ExcelSetCell(sheet, new string[] { "" }, ee + 2, y);
+				ExcelSetCell(sheet, new string[] { "" }, ff, y);
+			}
+			sheet.Cells[ee + 1, g, ff, j].Merge = true;
+
+			//Run 薪後下面空格
+			for (int y = k; y <= l; y++)
+			{
+				ExcelSetCell(sheet, new string[] { "" }, ee + 1, y);
+				ExcelSetCell(sheet, new string[] { "" }, ee + 2, y);
+				ExcelSetCell(sheet, new string[] { "" }, ff, y);
+			}
+			sheet.Cells[ee + 1, k, ff, l].Merge = true;
+
+			#endregion
+
+			#region 列印設定
+			//自動適應欄位
+			sheet.Cells.AutoFitColumns();
+			// 設定頁面方向
+			//sheet.PrinterSettings.Orientation = eOrientation.Landscape;
+			//集中在一頁列印
+			sheet.PrinterSettings.FitToPage = true;
+			// 設定紙張大小（A4）
+			sheet.PrinterSettings.PaperSize = ePaperSize.A4;
+			// 設定縮放比例
+			//sheet.PrinterSettings.Scale = 40;
+			// 設定水平置中
+			sheet.PrinterSettings.HorizontalCentered = true;
+			// 設定標題列
+			sheet.PrinterSettings.RepeatRows = sheet.Cells["$1:$6"];
+			// 設定標題欄
+			//sheet.PrinterSettings.RepeatColumns = sheet.Cells["A:O"];
+			// 設定邊界			
+			sheet.PrinterSettings.TopMargin = 0M;
+			sheet.PrinterSettings.BottomMargin = 0M;
+			sheet.PrinterSettings.LeftMargin = 0M;
+			sheet.PrinterSettings.RightMargin = 0M;
+			sheet.PrinterSettings.HeaderMargin = 0M;
+			sheet.PrinterSettings.FooterMargin = 0M;
+			// 設定頁面寬度&高度
+			sheet.PrinterSettings.FitToWidth = 1;
+			sheet.PrinterSettings.FitToHeight = 0;
+			//頁尾
+			sheet.HeaderFooter.OddFooter.CenteredText = string.Format("第{0}頁,共{1}頁", ExcelHeaderFooter.PageNumber, ExcelHeaderFooter.NumberOfPages);
+			// 应用边线
+			//sheet.Cells[sheet.Dimension.Address].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+			//sheet.Cells[sheet.Dimension.Address].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+			//sheet.Cells[sheet.Dimension.Address].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+			//sheet.Cells[sheet.Dimension.Address].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+			#endregion
+
+			excel.SaveAs(ms);
+			excel.Dispose();
+			ms.Position = 0;
+
+			return ms;
+		}
+
+
+		#endregion
+
+		#region GetProcessNo(取得處理號碼)
+
+		/// <summary>
+		/// 取得處理號碼
+		/// </summary>
+		/// <returns></returns>
+		public string GetProcessNo()
+		{
+			var service = new BatchFlowService();
+			return service.GetProcessNo();
+		}
+
+		/// <summary>
+		/// 輸入業務員代碼，從aginb串nain取得業務員姓名
+		/// </summary>
+		/// <param name="productionYM">業績年月</param>
+		/// <param name="agentCode">業務員代碼</param>
+		/// <returns></returns>
+		public string GetAgentNameByAginb(string productionYM, string agentCode)
+		{
+			string sql = @"select a.names 
+                            from nain as a inner join aginb as b on SUBSTRING(b.agent_code,1,10) = a.client_id 
+                            where b.production_ym = @productionYM and b.agent_code = @agentCode";
+			string result = DbHelper.Query<string>(VLifeRepository.ConnectionStringName, sql,
+				new
+				{
+					agentCode = agentCode,
+					productionYM = productionYM
+				}).FirstOrDefault();
+
+			return result;
+		}
+
+		/// <summary>
+		/// 輸入保單號碼，取得業務員姓名
+		/// </summary>
+		/// <param name="PolicyNo2">保單號碼</param>
+		/// <returns></returns>
+		public List<string> GetAgentNameByPoag(string PolicyNo2)
+		{
+			string sql = @"select a.agent_code + '|' + names as 'Value' from poag a join podt b on  a.policy_no = b.policy_no
+                        join nain c on SUBSTRING(a.agent_code,1,10) = c.client_id
+                        where policy_no2 = @PolicyNo2";
+
+			List<string> result = DbHelper.Query<string>(VLifeRepository.ConnectionStringName, sql,
+				new
+				{
+					PolicyNo2 = PolicyNo2
+				}).ToList();
+
+			return result;
+		}
+		#endregion
+
+		#region SequenceData(序號資料檔)相關處理
+
+		/// <summary>
+		/// 新增序號資料檔
+		/// </summary>
+		/// <param name="model">資料Model</param>
+		/// <returns>新增序號資料檔是否成功 True:成功 False:失敗</returns>
+		public bool CreateSequenceData(SequenceData model)
+		{
+			model.CreateDateTime = DateTime.Now;
+			model.SeqValue = string.Empty;
+			return model.Insert(EBrokerRepository.ConnectionStringName);
+		}
+
+		/// <summary>
+		/// 更新序號資料檔
+		/// </summary>
+		/// <param name="model">資料Model</param>
+		/// <returns>更新序號資料檔是否成功 True:成功 False:失敗</returns>
+		public bool UpdateSequenceData(SequenceData model)
+		{
+			return model.Update(new[] { EBrokerRepository.ConnectionStringName });
+		}
+		#endregion
+
+		#region 資料填入Excel的Cell ExcelSetCell
+		/// <summary>
+		/// 資料填入Excel的Cell
+		/// </summary>
+		/// <param name="workSheet">sheet object</param>
+		/// <param name="valueList">Data Array</param>
+		/// <param name="rowStartPosition">Row Start Position</param>
+		/// <param name="columnStartPosition">Column Start Position</param>
+		public static void ExcelSetCell(ref ExcelWorksheet workSheet, object[] valueList, int rowStartPosition, int columnStartPosition)
+		{
+			foreach (var value in valueList)
+			{
+				// 全部資料範圍設定框線
+				//workSheet.Cells[rowStartPosition, columnStartPosition].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+				workSheet.Cells[rowStartPosition, columnStartPosition++].Value = value;
+			}
+		}
+
+		public static void ExcelSetCellStyle(ref ExcelWorksheet sheet, int rowStart = 1, int colStart = 1, int rowEnd = 1, int colEnd = 1, ExcelBorderStyle borderStyle = ExcelBorderStyle.Thin)
+		{
+			// 全部資料範圍設定框線
+			sheet.Cells[rowStart, colStart, rowEnd, colEnd].Style.Border.BorderAround(borderStyle);
+
+			// 自動調整欄位大小
+			for (int i = 1; i <= colEnd; i++)
+			{
+				sheet.Column(i).AutoFit();
+			}
+		}
+
+		public static void CellAutoFit(ref ExcelWorksheet sheet)
+		{
+			sheet.Cells.AutoFitColumns();
+		}
+
+		public static void CellFillBorderStyle(ref ExcelWorksheet sheet, int? rowStart = null, int? colStart = null, int? rowEnd = null, int? colEnd = null)
+		{
+			if (!rowStart.HasValue)
+			{
+				rowStart = 1;
+			}
+			if (!rowEnd.HasValue)
+			{
+				rowEnd = sheet.Cells.Rows;
+			}
+
+			if (!colStart.HasValue)
+			{
+				colStart = 1;
+			}
+
+			if (!colEnd.HasValue)
+			{
+				colEnd = sheet.Cells.Columns;
+			}
+			var cells = sheet.Cells[rowStart.Value, colStart.Value, rowEnd.Value, colEnd.Value];
+			cells.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+			cells.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+			cells.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+			cells.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+			cells.AutoFitColumns();
+		}
+
+		#region EPPlus
+		/// <summary>
+		/// 資料填入Excel的Cell
+		/// </summary>
+		/// <param name="workSheet">sheet object</param>
+		/// <param name="valueList">Data Array</param>
+		/// <param name="rowStartPosition">Row Start Position</param>
+		/// <param name="columnStartPosition">Column Start Position</param>
+		private static void ExcelSetCell(ExcelWorksheet workSheet, string[] valueList, int rowStartPosition, int columnStartPosition)
+		{
+			var orgColPos = columnStartPosition;
+			foreach (var value in valueList)
+			{
+				workSheet.Cells[rowStartPosition, columnStartPosition++].Value = value;
+
+			}
+			columnStartPosition = (columnStartPosition != orgColPos ? columnStartPosition - 1 : columnStartPosition);
+			//下框線
+			workSheet.Cells[rowStartPosition, orgColPos, rowStartPosition, columnStartPosition].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+			//上框線
+			workSheet.Cells[rowStartPosition, orgColPos, rowStartPosition, columnStartPosition].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+			//右框線
+			workSheet.Cells[rowStartPosition, orgColPos, rowStartPosition, columnStartPosition].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+			//左框線
+			workSheet.Cells[rowStartPosition, orgColPos, rowStartPosition, columnStartPosition].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+		}
+
+		/// <summary>
+		/// 資料填入Excel的Cell
+		/// </summary>
+		/// <param name="workSheet">sheet object</param>
+		/// <param name="valueList">Data Array</param>
+		/// <param name="rowStartPosition">Row Start Position</param>
+		/// <param name="columnStartPosition">Column Start Position</param>
+		private static void ExcelSetCell(ExcelWorksheet workSheet, int[] valueList, int rowStartPosition, int columnStartPosition)
+		{
+			var orgColPos = columnStartPosition;
+			foreach (var value in valueList)
+			{
+				workSheet.Cells[rowStartPosition, columnStartPosition++].Value = value;
+
+			}
+			columnStartPosition = (columnStartPosition != orgColPos ? columnStartPosition - 1 : columnStartPosition);
+			//下框線
+			workSheet.Cells[rowStartPosition, orgColPos, rowStartPosition, columnStartPosition].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+			//上框線
+			workSheet.Cells[rowStartPosition, orgColPos, rowStartPosition, columnStartPosition].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+			//右框線
+			workSheet.Cells[rowStartPosition, orgColPos, rowStartPosition, columnStartPosition].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+			//左框線
+			workSheet.Cells[rowStartPosition, orgColPos, rowStartPosition, columnStartPosition].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+		}
+
+		/// <summary>
+		/// 資料填入Excel的Cell
+		/// </summary>
+		/// <param name="workSheet">sheet object</param>
+		/// <param name="valueList">Data Array</param>
+		/// <param name="rowStartPosition">Row Start Position</param>
+		/// <param name="columnStartPosition">Column Start Position</param>
+		private static void ExcelSetCell(ExcelWorksheet workSheet, double[] valueList, int rowStartPosition, int columnStartPosition)
+		{
+			var orgColPos = columnStartPosition;
+			foreach (var value in valueList)
+			{
+				workSheet.Cells[rowStartPosition, columnStartPosition++].Value = value;
+
+			}
+			columnStartPosition = (columnStartPosition != orgColPos ? columnStartPosition - 1 : columnStartPosition);
+			//下框線
+			workSheet.Cells[rowStartPosition, orgColPos, rowStartPosition, columnStartPosition].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+			//上框線
+			workSheet.Cells[rowStartPosition, orgColPos, rowStartPosition, columnStartPosition].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+			//右框線
+			workSheet.Cells[rowStartPosition, orgColPos, rowStartPosition, columnStartPosition].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+			//左框線
+			workSheet.Cells[rowStartPosition, orgColPos, rowStartPosition, columnStartPosition].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+		}
+
+		/// <summary>
+		/// 資料填入Excel的Cell
+		/// </summary>
+		/// <param name="workSheet">sheet object</param>
+		/// <param name="valueList">Data Array</param>
+		/// <param name="rowStartPosition">Row Start Position</param>
+		/// <param name="columnStartPosition">Column Start Position</param>
+		private static void ExcelSetCell(ExcelWorksheet workSheet, float[] valueList, int rowStartPosition, int columnStartPosition)
+		{
+			var orgColPos = columnStartPosition;
+			foreach (var value in valueList)
+			{
+				workSheet.Cells[rowStartPosition, columnStartPosition++].Value = value;
+
+			}
+			columnStartPosition = (columnStartPosition != orgColPos ? columnStartPosition - 1 : columnStartPosition);
+			//下框線
+			workSheet.Cells[rowStartPosition, orgColPos, rowStartPosition, columnStartPosition].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+			//上框線
+			workSheet.Cells[rowStartPosition, orgColPos, rowStartPosition, columnStartPosition].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+			//右框線
+			workSheet.Cells[rowStartPosition, orgColPos, rowStartPosition, columnStartPosition].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+			//左框線
+			workSheet.Cells[rowStartPosition, orgColPos, rowStartPosition, columnStartPosition].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+		}
+		#endregion
+
+		#endregion
+
+		#region 私用函式
+		/// <summary>
+		///  民國轉西元
+		/// </summary>
+		/// <returns></returns>
+		public string RocToWY(string date)
+		{
+			string[] sArray = date.Split('/');
+			string newDate = (Convert.ToInt32(sArray[0]) + 1911).ToString();
+			newDate = newDate + "/" + sArray[1];
+			return newDate;
+		}
+
+		/// <summary>
+		///  西元轉民國 0yyy/MM
+		/// </summary>
+		/// <returns></returns>
+		public static string WYToRoc(string date)
+		{
+			//string sampleDate = "2012-2-29";
+			DateTime dt = DateTime.Parse(date);
+			CultureInfo culture = new CultureInfo("zh-TW");
+			culture.DateTimeFormat.Calendar = new TaiwanCalendar();
+			return dt.ToString("0" + "yyy/MM", culture);
+		}
+
+		/// <summary>
+		/// 取得部門level
+		/// </summary>
+		/// <param name="unitid">部門編號</param>
+		public int GetUnitlevel(string unitid)
+		{
+			string sqlGetData = @"select * from sc_unit a join sc_unit_ext b on a.uunit = b.uunit
+                                where iunit = @iunit
+                                order by organization_level";
+			sc_unit_ext result = DbHelper.Query<sc_unit_ext>(EBrokerRepository.ConnectionStringName, sqlGetData, new
+			{
+				iunit = unitid
+			}).FirstOrDefault();
+
+			return Convert.ToInt32(result.sign_level);
+		}
+
+		/// <summary>
+		/// 取得管理或任職在的部門單位
+		/// </summary>
+		/// <param name="memberID">使用者帳號</param>
+		/// <param name="displayAll">顯示所有部門</param>
+		/// <param name="includeManageUnit">包含管理的組織</param>
+		/// <returns>單位清單</returns>
+		public IEnumerable<Unit> GetDeptUnitInfoByMemberID(string memberID, bool displayAll = false, bool includeManageUnit = false)
+		{
+			// 取得總公司所有部門的清單
+			var deptAllList = GetAllDeptUnits();
+
+			// 顯示所有部門清單
+			if (displayAll)
+			{
+				return deptAllList.Select(m => m.Info);
+			}
+			else
+			{
+				var result = new List<Unit>();
+				var unitDic = new Dictionary<Guid, Unit>();
+				// 取得各部門底下的所有組織 Key 組織 value 部門組織
+				deptAllList.ForEach(m =>
+				{
+					m.Info.GetChilds(true).ForEach(item =>
+					{
+						unitDic.AddOrUpdate(item.GUID, m.Info);
+					});
+				});
+
+				// 取得人員所在或管理的組織
+				var member = Member.Get(memberID);
+
+				var memberUnit = member.GetUnit().GetChilds(true);
+
+				// 判斷人員管理的組織和所在組織對應的部門清單
+				if (memberUnit.Any())
+				{
+					memberUnit.ForEach(m =>
+					{
+						if (unitDic.ContainsKey(m.GUID))
+						{
+							unitDic.TryGetValue(m.GUID, out Unit deptUnit);
+							result.Add(deptUnit);
+						}
+					});
+				}
+
+				if (includeManageUnit)
+				{
+					var managerUnits = member.GetManageUnits().SelectMany(m =>
+					{
+						return m.GetChilds(true);
+					});
+					if (managerUnits.Any())
+					{
+						managerUnits.ForEach(m =>
+						{
+							if (unitDic.ContainsKey(m.GUID))
+							{
+								unitDic.TryGetValue(m.GUID, out Unit deptUnit);
+								result.Add(deptUnit);
+							}
+						});
+					}
+				}
+
+				return result.GroupBy(m => m).Select(m => m.Key).OrderBy(m => m.Sort);
+			}
+		}
+
+		/// <summary>
+		/// 取得目前仍有效的部室組織清單
+		/// </summary>
+		/// <returns>目前仍有效的部室組織清單</returns>
+		private IEnumerable<UnitInfo> GetAllDeptUnits()
+		{
+			UnitService unitService = new UnitService();
+			var deptAllList = unitService.GetUnitInfoByOrganizationLevel("34_3").Where(m => !m.Info.DisabledDate.HasValue || (m.Info.DisabledDate.HasValue && m.Info.DisabledDate.Value > DateTime.Now)).OrderBy(m => m.Info.Sort);
+			return deptAllList;
+		}
+		#endregion
+
+	}
+}

@@ -1,0 +1,532 @@
+﻿
+@{
+    ViewBag.Title = ViewBag.Title ?? "CUSCRMTX001-立案";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+@model IEnumerable<CRMECaseContent>
+<link href="~/Areas/CUSCRM/Content/CUSCRMTX001.css?v=2023071201" rel="stylesheet" />
+@Html.AntiForgeryToken()
+<div class="row" name="step1">
+    <div class="col-md-1">
+        <label for="Category" class="form-label">類別</label>
+    </div>
+    <div class="col-md-2">
+        @Html.DropDownList("Category", CUSCRMHelper.GetCategoryList(), new { @class = "form-select" })
+    </div>
+</div>
+<div class="row" name="step1">
+    <div class="col-md-1">
+        <label for="CaseType" class="form-label">類型</label>
+    </div>
+    <div class="col-md-2">
+        @Html.DropDownList("CaseType", CUSCRMHelper.GetCaseTypeList(Category.Service), new { @class = "form-select" })
+    </div>
+</div>
+<div class="row" name="step2-3">
+    <div class="col-md-1">
+        <label for="PolicyNo" class="form-label">保單號碼</label>
+    </div>
+    <div class="col-md-2">
+        @Html.TextBox("PolicyNo", null, new { @class = "form-control" })
+    </div>
+    <div class="form-check col-md-2" name="step2">
+        <input class="form-check-input" type="checkbox" value="" id="NoPolicyNo">
+        <label class="form-check-label" for="NoPolicyNo">
+            無保單號碼
+        </label>
+    </div>
+</div>
+<div class="row" name="step2-3">
+    <div class="col-md-4">
+        <input type="button" id="btnQueryPolicy" value="確定" class="btn btn-default float-end" />
+    </div>
+</div>
+<div class="row none" name="step1-1">
+    <br>
+    <hr />
+    <div class="col-md-12 WarningTitle" id="WaitNotifyCount">
+        已立案未通知清單 共：0 筆
+    </div>
+    <table id="WaitNotify" class="CRMEtable">
+        <thead>
+            <tr>
+                <th>序號</th>
+                <th>類型</th>
+                <th>受理編號</th>
+                <th>建立人員</th>
+                <th>建立時間</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <hr />
+
+    <div class="col-md-12 WarningTitle" id="CCWaitNotifyCount">
+        CC已立案未通知申訴人清單 共：0 筆
+    </div>
+    <table id="CCWaitNotify" class="CRMEtable">
+        <thead>
+            <tr>
+                <th>序號</th>
+                <th>類型</th>
+                <th>受理編號</th>
+                <th>建立人員</th>
+                <th>建立時間</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <hr />
+</div>
+<div class="row none" name="step2-1">
+    <hr />
+    <table id="DuplicatePolicyNo" class="CRMEtable">
+        <thead>
+            <tr>
+                <th>勾選</th>
+                <th>保單號碼</th>
+                <th>保險公司</th>
+                <th>要保人</th>
+                <th>被保人</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <hr />
+    <div class="offset-md-10 col-md-1">
+        <input type="button" id="btnQueryOwner" value="確定" class="btn btn-default float-start" />
+        <input type="button" id="btnCancelQueryOwner" value="取消" class="btn btn-danger float-end" />
+    </div>
+</div>
+<div class="row none" name="step2-2">
+    <hr id="SelectPolicyNoDatasHr" class="none" />
+    <div class="col-md-12 InfoTitle none" id="SelectPolicyNoDatasTitle">
+        已勾選的保單清單(取消勾選視同刪除)
+    </div>
+    <table id="SelectPolicyNoDatas" name="SelectPolicyNoDatas" class="CRMEtable none">
+        <thead>
+            <tr>
+                <th>勾選</th>
+                <th>序號</th>
+                <th>保單號碼</th>
+                <th>保險公司</th>
+                <th>要保人</th>
+                <th>被保人</th>
+                <th>生效日</th>
+                <th>保單狀態</th>
+                <th>原幣別保費</th>
+                <th>繳別</th>
+                <th>實駐</th>
+                <th>原招攬人</th>
+                <th>接續服務人員</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <hr />
+    <div class="col-md-12 DefaultTitle">
+        有效件+休眠件
+        <div class="form-check form-check-inline">
+            @Html.CheckBox("SelectAllPolicy", new { @class = "form-check-input", @id = "SelectAllPolicy" }) @Html.Label("SelectAllPolicy", "全部勾選", new { @class = "form-check-label" })
+        </div>
+    </div>
+    <table id="ValidPolicyNoDatas" name="ValidPolicyNoDatas" class="CRMEtable">
+        <thead>
+            <tr>
+                <th>勾選</th>
+                <th>序號</th>
+                <th>保單號碼</th>
+                <th>保險公司</th>
+                <th>要保人</th>
+                <th>被保人</th>
+                <th>生效日</th>
+                <th>保單狀態</th>
+                <th>原幣別保費</th>
+                <th>繳別</th>
+                <th>實駐</th>
+                <th>原招攬人</th>
+                <th>接續服務人員</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <hr />
+    <div class="col-md-12 WarningTitle">
+        無效件+不列入
+    </div>
+    <table id="InvalidPolicyNoDatas" name="InvalidPolicyNoDatas" class="CRMEtable">
+        <thead>
+            <tr>
+                <th>勾選</th>
+                <th>序號</th>
+                <th>保單號碼</th>
+                <th>保險公司</th>
+                <th>要保人</th>
+                <th>被保人</th>
+                <th>生效日</th>
+                <th>保單狀態</th>
+                <th>原幣別保費</th>
+                <th>繳別</th>
+                <th>實駐</th>
+                <th>原招攬人</th>
+                <th>接續服務人員</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <hr />
+    <div class="offset-md-9 col-md-2">
+        <input type="button" id="btnAddPolicy" value="增加保單" class="btn btn-warning float-start" />
+        <input type="button" id="btnCaseContent" value="下一步" class="btn btn-default float-end" />
+    </div>
+</div>
+<div class="row none" name="step2-4">
+    <div class="col-md-2">
+        <label for="OwnerName" class="form-label">*要保人姓名／申訴人</label>
+    </div>
+    <div class="col-md-2">
+        @Html.TextBox("OwnerName", null, new { @class = "form-control", @maxlength = "48" })
+    </div>
+</div>
+<div class="row none" name="step2-4">
+    <div class="col-md-2">
+        <label for="InsuredName" class="form-label">被保險人姓名</label>
+    </div>
+    <div class="col-md-2">
+        @Html.TextBox("InsuredName", null, new { @class = "form-control", @maxlength = "48" })
+    </div>
+</div>
+<div class="row none" name="step2-4">
+    <div class="col-md-2">
+        <label for="PolicyNo2" class="form-label">保單號碼</label>
+    </div>
+    <div class="col-md-2">
+        @Html.TextBox("PolicyNo2", null, new { @class = "form-control", @maxlength = "50" })
+    </div>
+</div>
+<div class="row none" name="step2-4">
+    <div class="col-md-2">
+        <label for="IssDate" class="form-label">生效日</label>
+    </div>
+    <div class="col-md-2">
+        @Html.TextBox("IssDate", null, new { @class = "form-control", @oninput = "handleInput(event)", @onkeydown = "handleKeyDown(event)", @placeholder = "YYY/MM/DD(民國年)", @maxlength = "9" })
+    </div>
+</div>
+<div class="row none" name="step2-4">
+    <div class="col-md-2">
+        <label for="AgentCode" class="form-label">業務員代碼</label>
+    </div>
+    <div class="col-md-2">
+        @Html.TextBox("AgentCode", null, new { @class = "form-control", @placeholder = "12碼", @maxlength = "12" })
+    </div>
+</div>
+<div class="row none" name="step2-4">
+    <div class="col-md-1">
+        <input type="button" id="btnBackQueryPanel" value="上一步" class="btn btn-danger" />
+    </div>
+    <div class="col-md-3">
+        <input type="button" id="btnNoDataNext" value="下一步" class="btn btn-default float-end" />
+    </div>
+</div>
+<div class="card none" id="CSContent">
+    <div class="row">
+        <div class="col-md-1">
+            資料來源
+        </div>
+        <div class="col-md-10">
+            @foreach (var item in CUSCRMHelper.GetSourceList(DiscipTypeCode.CS))
+            {
+                <div class="form-check form-check-inline">
+                    @Html.RadioButton("CSSourceID", item.Value, new { @class = "form-check-input", @id = "CSSourceID" + item.Value.ToString(), @data_name = item.Text }) @Html.Label("CSSourceID" + item.Value.ToString(), item.Text, new { @class = "form-check-label" })
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row none" id="CSCompanyPanel">
+        <div class="col-md-1">
+            保險公司
+        </div>
+        <div class="col-md-2">
+            @Html.DropDownList("CSCompany", CUSCRMHelper.GetCompanyList(), new { @class = "form-select" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            來電者
+        </div>
+        <div class="col-md-10">
+            @foreach (var item in CUSCRMHelper.GetCallerList(DiscipTypeCode.CS))
+            {
+                var ischecked = item.Text == "保戶本人";
+                <div class="form-check form-check-inline">
+                    @Html.RadioButton("CSCallerID", item.Value, ischecked, new { @class = "form-check-input", @id = "CSCallerID" + item.Value.ToString(), @data_name = item.Text }) @Html.Label("CSCallerID" + item.Value.ToString(), item.Text, new { @class = "form-check-label" })
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            案件類別
+        </div>
+        <div class="col-md-10">
+            @foreach (var item in CUSCRMHelper.GetContentCaseTypeList(DiscipTypeCode.CS))
+            {
+                <div class="form-check form-check-inline">
+                    @Html.RadioButton("CSCaseTypeID", item.Value, new { @class = "form-check-input", @id = "CSCaseTypeID" + item.Value.ToString(), @data_name = item.Text }) @Html.Label("CSCaseTypeID" + item.Value.ToString(), item.Text, new { @class = "form-check-label" })
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            照會內容
+        </div>
+        <div class="col-md-10">
+            @Html.TextArea("CSCaseContent", new { @clas = "form-control", @rows = "8", @cols = "620" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="offset-md-1 col-md-1">
+            <input type="button" id="btnCSCancel" value="上一步" class="btn btn-danger float-start" />
+        </div>
+        <div class="offset-md-5 col-md-2">
+            <input type="button" id="btnCSNoNotify" value="立案不通知" class="btn btn-warning float-start" />
+            <input type="button" id="btnCSNotify" value="通知業務員" class="btn btn-default float-end" />
+        </div>
+    </div>
+</div>
+
+<div class="card none" id="SSContent">
+    <div class="row">
+        <div class="col-md-1">
+            資料來源
+        </div>
+        <div class="col-md-10">
+            @foreach (var item in CUSCRMHelper.GetSourceList(DiscipTypeCode.SS))
+            {
+                var ischecked = item.Text == "單位業連";
+                <div class="form-check form-check-inline">
+                    @Html.RadioButton("SSSourceID", item.Value, ischecked, new { @class = "form-check-input", @id = "SSSourceID" + item.Value.ToString(), @data_name = item.Text }) @Html.Label("SSSourceID" + item.Value.ToString(), item.Text, new { @class = "form-check-label" })
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            案件類別
+        </div>
+        <div class="col-md-10">
+            @foreach (var item in CUSCRMHelper.GetContentCaseTypeList(DiscipTypeCode.SS))
+            {
+                <div class="form-check form-check-inline">
+                    @Html.RadioButton("SSCaseTypeID", item.Value, new { @class = "form-check-input", @id = "SSCaseTypeID" + item.Value.ToString(), @data_name = item.Text }) @Html.Label("SSCaseTypeID" + item.Value.ToString(), item.Text, new { @class = "form-check-label" })
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            案件內容
+        </div>
+        <div class="col-md-10">
+            @Html.TextArea("SSCaseContent", new { @clas = "form-control", @rows = "8", @cols = "620" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="offset-md-1 col-md-1">
+            <input type="button" id="btnSSCancel" value="上一步" class="btn btn-danger float-start" />
+        </div>
+        <div class="offset-md-5 col-md-2">
+            <input type="button" id="btnSSNotify" value="確定" class="btn btn-default float-end" />
+        </div>
+    </div>
+</div>
+<div class="card none" id="CCContent">
+    <div class="row">
+        <div class="col-md-1">
+            移交日期
+        </div>
+        <div class="col-md-2">
+            @Html.TextBox("CCReceiveDateTime", null, new { @class = "form-control JQDate", @placeholder = "YYYY/MM/DD 西元年" })
+        </div>
+        <div class="offset-md-1 col-md-1 ">
+            回文期限
+        </div>
+        <div class="col-md-2">
+            @Html.TextBox("CCReplayDDLDateTime", null, new { @class = "form-control JQDate", @placeholder = "YYYY/MM/DD 西元年" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            資料來源
+        </div>
+        <div class="col-md-10">
+            @foreach (var item in CUSCRMHelper.GetSourceList(DiscipTypeCode.CC))
+            {
+                <div class="form-check form-check-inline">
+                    @Html.RadioButton("CCSourceID", item.Value, new { @class = "form-check-input", @id = "CCSourceID" + item.Value.ToString(), @data_name = item.Text }) @Html.Label("CCSourceID" + item.Value.ToString(), item.Text, new { @class = "form-check-label" })
+                </div>
+            }
+            <div class="none" id="CCSourceDescDiv">
+                <input type="text" class="form-control" id="CCSourceDesc" name="CCSourceDesc" maxlength="200" >
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            案件類型
+        </div>
+        <div class="col-md-10">
+            @foreach (var item in CUSCRMHelper.GetContentCategoryTypeList(DiscipTypeCode.CC))
+            {
+                <div class="form-check form-check-inline">
+                    @Html.RadioButton("CCCaseCategoryID", item.Value, new { @class = "form-check-input", @id = "CCCaseCategoryID" + item.Value.ToString(), @data_name = item.Text }) @Html.Label("CCCaseCategoryID" + item.Value.ToString(), item.Text, new { @class = "form-check-label" })
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            案件類別
+        </div>
+        <div class="col-md-10">
+            @foreach (var item in CUSCRMHelper.GetContentCaseTypeList(DiscipTypeCode.CC))
+            {
+                <div class="form-check form-check-inline">
+                    @Html.RadioButton("CCCaseTypeID", item.Value, new { @class = "form-check-input", @id = "CCCaseTypeID" + item.Value.ToString(), @data_name = item.Text }) @Html.Label("CCCaseTypeID" + item.Value.ToString(), item.Text, new { @class = "form-check-label" })
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            申訴人
+        </div>
+        <div class="col-md-10" id="CCComplainantsDiv">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            案件內容
+        </div>
+        <div class="col-md-10">
+            @Html.TextArea("CCCaseContent", new { @clas = "form-control", @rows = "8", @cols = "620" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            回覆方式
+        </div>
+        <div class="col-md-10">
+            <div class="form-check form-check-inline">
+                @Html.CheckBox("CCBizContract", new { @class = "form-check-input", @id = "CCBizContract" }) @Html.Label("CCBizContract", "業務連繫函", new { @class = "form-check-label" })
+            </div>
+            <div class="form-check form-check-inline">
+                @Html.CheckBox("CCSolicitingRpt", new { @class = "form-check-input", @id = "CCSolicitingRpt" }) @Html.Label("CCSolicitingRpt", "招攬服務報告書", new { @class = "form-check-label" })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="offset-md-1 col-md-1">
+            <input type="button" id="btnCCCancel" value="上一步" class="btn btn-danger float-start" />
+        </div>
+        <div class="offset-md-5 col-md-2">
+            <input type="button" id="btnCCNoNotify" value="立案不通知" class="btn btn-warning float-start" />
+            <input type="button" id="btnCCNotify" value="通知業務員" class="btn btn-default float-end" />
+        </div>
+    </div>
+</div>
+<div class="card none" id="SCContent">
+    <div class="row">
+        <div class="col-md-1">
+            收文日期
+        </div>
+        <div class="col-md-2">
+            @Html.TextBox("SCReceiveDateTime", null, new { @class = "form-control JQDate", @placeholder = "YYYY/MM/DD 西元年" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            資料來源
+        </div>
+        <div class="col-md-10">
+            @foreach (var item in CUSCRMHelper.GetSourceList(DiscipTypeCode.SC))
+            {
+                <div class="form-check form-check-inline">
+                    @Html.RadioButton("SCSourceID", item.Value, new { @class = "form-check-input", @id = "SCSourceID" + item.Value.ToString(), @data_name = item.Text }) @Html.Label("SCSourceID" + item.Value.ToString(), item.Text, new { @class = "form-check-label" })
+                </div>
+            }
+            <div class="none" id="SCSourceDescDiv">
+                <input type="text" class="form-control" id="SCSourceDesc" name="SCSourceDesc" maxlength="200">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            案件類別
+        </div>
+        <div class="col-md-10">
+            @foreach (var item in CUSCRMHelper.GetContentCaseTypeList(DiscipTypeCode.SC))
+            {
+                <div class="form-check form-check-inline">
+                    @Html.RadioButton("SCCaseTypeID", item.Value, new { @class = "form-check-input", @id = "SCCaseTypeID" + item.Value.ToString(), @data_name = item.Text }) @Html.Label("SCCaseTypeID" + item.Value.ToString(), item.Text, new { @class = "form-check-label" })
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            案件內容
+        </div>
+        <div class="col-md-10">
+            @Html.TextArea("SCCaseContent", new { @clas = "form-control", @rows = "8", @cols = "620" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            回覆方式
+        </div>
+        <div class="col-md-10">
+            <div class="form-check form-check-inline">
+                @Html.CheckBox("SCBizContract", new { @class = "form-check-input", @id = "SCBizContract" }) @Html.Label("SCBizContract", "業務連繫函", new { @class = "form-check-label" })
+            </div>
+            <div class="form-check form-check-inline">
+                @Html.CheckBox("SCSolicitingRpt", new { @class = "form-check-input", @id = "SCSolicitingRpt" }) @Html.Label("SCSolicitingRpt", "招攬服務報告書", new { @class = "form-check-label" })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="offset-md-1 col-md-1">
+            <input type="button" id="btnSCCancel" value="上一步" class="btn btn-danger float-start" />
+        </div>
+        <div class="offset-md-5 col-md-2">
+            <input type="button" id="btnSCNoNotify" value="立案不通知" class="btn btn-warning float-start" />
+            <input type="button" id="btnSCNotify" value="通知業務員" class="btn btn-default float-end" />
+        </div>
+    </div>
+</div>
+<div class="backdrop none"></div>
+<div class="confirm none">
+    <div class="text">
+        <h1 class='text-content'></h1>
+    </div>
+    <div class="btnpanel">
+        <button class="confirm-affirmative none">是</button>
+        <button class="confirm-negative none">否</button>
+        <button class="go-notify none">轉跳通知頁面</button>
+    </div>
+</div>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "__AjaxAntiForgeryForm" }))
+{
+    @Html.AntiForgeryToken()
+}
+<script src="~/Areas/CUSCRM/Scripts/CUSCRMTX001.js?v=2023071701"></script>
+

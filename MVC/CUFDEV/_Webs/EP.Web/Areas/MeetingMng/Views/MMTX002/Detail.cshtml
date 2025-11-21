@@ -1,0 +1,569 @@
+﻿@model EP.PSL.WorkResources.MeetingMng.Web.Areas.MeetingMng.Model.MeetingDetailModel
+
+@{
+    ViewBag.Title = EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.會議詳細資料;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    string imember = User.MemberInfo.ID;
+}
+<style>
+.nav-link{
+    background-color: #019846 !important; 
+    color: white;
+
+}
+
+</style>
+@if (MyPageStatus == PageStatus.View && Model.MTConvener == imember)
+{
+    if (Model.MTActive != 4 && Model.MTActive != 2)
+    {
+        <input id="btnDetailEdit" type="button" class="btn btn-default" value="@EP.PlatformResources.編輯" data-bind="click: EditClick" />
+    }
+    <input id="btnDetailDelete" type="button" class="btn btn-default" value="@EP.PlatformResources.刪除" data-bind="click: DeleteClick" />
+}
+<input id="btnDetailExit" style="margin-bottom:0.2rem" type="button" class="btn btn-default" value="@EP.PlatformResources.結束" data-bind="click: CloseClick" />
+
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active btn btn-default" id="nav-Detail-tab" data-bs-toggle="tab" data-bs-target="#nav-Detail" type="button" role="tab" aria-controls="nav-Detail" aria-selected="true">@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.會議詳細資料</button>
+        <button class="nav-link btn btn-default" id="nav-File-tab" data-bs-toggle="tab" data-bs-target="#nav-File" type="button" role="tab" aria-controls="nav-File" aria-selected="false">@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.相關檔案</button>
+        
+        @if (Model.MTActive == 2 || Model.MTActive == 4) //召開會議和歷史資料才會顯示
+        {
+            <button class="nav-link btn btn-default" id="nav-Job-tab" data-bs-toggle="tab" data-bs-target="#nav-Job" type="button" role="tab" aria-controls="nav-Job" aria-selected="false">@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.決議事項</button>
+        }
+    </div>
+</nav>
+
+
+<div class="tab-content" id="nav-tabContent">
+    @*詳細頁面*@
+    <div class="tab-pane fade show active" id="nav-Detail" role="tabpanel" aria-labelledby="nav-Detail-tab">
+        <div>
+            @Html.HiddenFor(model => model.MTID)
+        </div>
+        @using (Html.BeginForm("Delete", "MMTX002", null, FormMethod.Post, new { id = "MeetingDetailSubmit", area = "MeetingMng" }))
+        {
+        <div class="col-md-12 ">
+            @*召集人*@
+            <div class="col-md-12 detail-col">
+                <div class="col-md-3 detail-msg">
+                    <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />
+                    @Html.DisplayNameFor(model => model.MTConvenerName)
+                </div>
+                <div class="col-md-9">
+                    @Html.DisplayFor(model => model.MTConvenerName)
+                </div>
+            </div>
+            @*會議名稱*@
+            <div class="col-md-12 detail-col">
+                <div class="col-md-3 detail-msg">
+                    <img class="index-title-icon" src="~/Content/img/megaphone_g.png" />
+                    @Html.DisplayNameFor(model => model.MTName)
+                </div>
+                <div class="col-md-9">
+                    @Html.DisplayFor(model => model.MTName)
+                </div>
+            </div>
+            @*開始日期*@
+            <div class="col-md-12 detail-col">
+                <div class="col-md-3 detail-msg">
+                    <img class="index-title-icon" src="~/Content/img/calendar_g.png" />
+                    @Html.DisplayNameFor(model => model.MTStartDate)
+                </div>
+                <div class="col-md-9">
+                    @Html.DisplayFor(model => model.MTStartDate)
+                </div>
+            </div>
+            @*結束日期*@
+            <div class="col-md-12 detail-col">
+                <div class="col-md-3 detail-msg">
+                    <img class="index-title-icon" src="~/Content/img/calendar_g.png" />
+                    @Html.DisplayNameFor(model => model.MTEndDate)
+                </div>
+                <div class="col-md-9">
+                    @Html.DisplayFor(model => model.MTEndDate)
+                </div>
+            </div>
+            @*主席*@
+            <div class="col-md-12 detail-col">
+                <div class="col-md-3 detail-msg">
+                    <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />
+                    @Html.DisplayNameFor(model => model.MTChairmanName)
+                </div>
+                <div class="col-md-9">
+                    @Html.DisplayFor(model => model.MTChairmanName)
+                </div>
+            </div>
+            @*紀錄者*@
+            <div class="col-md-12 detail-col">
+                <div class="col-md-3 detail-msg">
+                    <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />
+                    @Html.DisplayNameFor(model => model.MTRecorderName)
+                </div>
+                <div class="col-md-9">
+                    @Html.DisplayFor(model => model.MTRecorderName)
+                </div>
+            </div>
+            @*會議地點*@
+            <div class="col-md-12 detail-col">
+                <div class="col-md-3 detail-msg">
+                    <img class="index-title-icon" src="~/Content/img/book_g.png" />
+                    @Html.DisplayNameFor(model => model.MTPlace)
+                </div>
+                <div class="col-md-9">
+                    @Html.DisplayFor(model => model.MTPlace)
+                </div>
+            </div>
+
+            @*會議說明*@
+            <div class="col-md-12 detail-col">
+                <div class="col-md-3 detail-msg">
+                    <img class="index-title-icon" src="~/Content/img/book_g.png" />
+                    @Html.DisplayNameFor(model => model.MTDesc)
+                </div>
+                <div class="col-md-9 detail-cell-content">
+                    @Html.Raw(Model.MTDesc)
+                </div>
+            </div>
+            @*會議檔案*@
+            <div class="col-md-12 detail-col">
+                <div class="col-md-3 detail-msg">
+                    <img class="index-title-icon" src="~/Content/img/folder_g.png" />
+                    @Html.DisplayNameFor(model => model.MFFileName)
+                </div>
+                <div class="col-md-9 detail-cell">
+                    @foreach (EP.PSL.WorkResources.MeetingMng.Web.Areas.MeetingMng.Model.MeetingFileModel kf in Model.File)
+                        {
+                    <text>
+                        <ul>
+                            <a href="#" id="@(kf.MFID)fileget">@kf.MFFileName</a>
+                        </ul>
+                        <div id="loading" class="load" style="display:none">
+                            <p>Downloading Data...</p>
+                        </div>
+                        <div id="DwMsg"></div>
+                        <script>
+                                    $(document).ready(function () {
+                                        $("#@(kf.MFID)fileget").click(function () {
+                                            AjaxDownFile("/MMTX002/GetMeetingFile","fid="+@kf.MFID);
+                                        });
+                                    });
+                        </script>
+                    </text>
+                        }
+                </div>
+            </div>
+            @*與會人員*@
+            @*<div class="col-md-12 detail-col">
+                    <div class="col-md-3 detail-msg">
+                        <img class="index-title-icon" src="~/Content/img/recipient_chat_g.png" />
+                        @Html.DisplayNameFor(model => model.Participants)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.DisplayFor(model => model.Participants)
+                    </div>
+                </div>*@
+            @*與會人員*@
+            <div class="col-md-12 detail-col" id="Participants-area">
+                <div class="col-md-3 detail-msg">
+                    <img class="index-title-icon" src="~/Content/img/recipient_chat_g.png" />
+                    @Html.LabelFor(m => m.Participants, new { @class = "detail-msg" })
+                    <span class="" id="outParticipants">＋</span>
+                </div>
+                <div class="col-md-12">
+                    <div class="detail-cell Participants-content">
+                        <ul id="Participants-ul"></ul>
+                    </div>
+                </div>
+            </div>
+
+            @*場地與設備*@
+            @*<div class="col-md-12 detail-col">
+                    <div class="col-md-3 detail-msg">
+                        <img class="index-title-icon" src="~/Content/img/folder_g.png" />
+                        @Html.DisplayNameFor(model => model.MDName)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.DisplayFor(model => model.MDName)
+                    </div>
+                </div>*@
+            @*已回覆參加人員*@
+            @*<div class="col-md-12 detail-col">
+                    <div class="col-md-3 detail-msg">
+                        <img class="index-title-icon" src="~/Content/img/recipient_chat_g.png" />
+                        @Html.DisplayNameFor(model => model.Participate)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.DisplayFor(model => model.Participate)
+                    </div>
+                </div>*@
+            @*已回覆不參加人員*@
+            @*<div class="col-md-12 detail-col">
+                    <div class="col-md-3 detail-msg">
+                        <img class="index-title-icon" src="~/Content/img/recipient_chat_g.png" />
+                        @Html.DisplayNameFor(model => model.NoParticipate)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.DisplayFor(model => model.NoParticipate)
+                    </div>
+                </div>*@
+            @*未回覆人員*@
+            @*<div class="col-md-12 detail-col">
+                    <div class="col-md-3 detail-msg">
+                        <img class="index-title-icon" src="~/Content/img/recipient_chat_g.png" />
+                        @Html.DisplayNameFor(model => model.NoReply)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.DisplayFor(model => model.NoReply)
+                    </div>
+                </div>*@
+
+            @{
+
+                    if (Model.MTActive == 1 && Model.MTReply != 3)
+                    {
+                <div class="col-md-12 detail-col">
+                    <div class="col-md-3 detail-msg">
+                        <img class="index-title-icon" src="~/Content/img/recipient_chat_g.png" />
+                        @Html.DisplayNameFor(model => model.MTReply)
+                    </div>
+                    <div class="col-md-9">
+                        @*@Html.RadioButtonFor(model => model.MTReply, 1, new { @id = "Reply0", @name = "Reply" })<span>參加</span>*@
+                        @*@Html.RadioButtonFor(model => model.MTReply, 2, new { @id = "Reply0", @name = "Reply" })<span>不參加</span>*@
+                        @if (Model.MTReply == 0)
+                                {
+                        <input type="radio" name="MTReply" value="1" /><span>參加</span>
+                        <input type="radio" name="MTReply" value="2" /><span>不參加</span>
+                                }
+                                else if (Model.MTReply == 1)
+                                {
+                        <input type="radio" name="MTReply" value="2" /><span>退出</span>
+                                }
+                                else if (Model.MTReply == 2)
+                                {
+                        <input type="radio" name="MTReply" value="1" /><span>參加</span>
+                                }
+
+                    </div>
+                </div>
+                    }
+                    else if (Model.MTActive == 1 && Model.MTReply == 3)
+                    {
+
+                    }
+                    if ((Model.MTActive == 2 || Model.MTActive == 3) && Model.MTConvener == imember)
+                    {
+                <div class="col-md-12 detail-col">
+                    <div class="col-md-3 detail-msg">
+                        @Html.DisplayNameFor(model => model.MTActive)
+                    </div>
+                    <div class="col-md-9">
+                        <input type="radio" name="MTActive" value="4" /><span>關閉此會議並將相關資料移至歷史資料</span>
+                    </div>
+                </div>
+                    }
+                    if (Model.MTActive != 4 )
+                    {
+                <div class="col-md-12">
+                    <input id="ReplyandActive" type="button" value="送出" class=" btn btn-default" />
+                </div>
+                    }
+            }
+        </div>
+        }
+    </div>
+
+    @*相關檔案*@
+    <div class="tab-pane fade" id="nav-File" role="tabpanel" aria-labelledby="nav-File-tab">
+        @using (Ajax.BeginForm("Query", "MMTX002", null, new AjaxOptions { OnSuccess = "bindResult" }, new { @id = "File", area = "MMTX002" }))
+        {
+        <div class="wall-title">
+            <img class="index-title-icon" src="~/Content/img/search.png" />@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.搜尋條件
+        </div>
+        <div id="ClearFile" class="row wall">
+            <div class="col-md-12 form-group detail-col">
+                <div class="col-md-12 hidden">
+                    <label class="control-label">ID</label>
+                    <input class="form-control" type="text" value="@Model.MTID" name="MTID" />
+                </div>
+                <div class="col-md-12">
+                    <label class="control-label">@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.附加檔案名稱</label>
+                    <input class="form-control" type="text" placeholder="@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.檔案名稱關鍵字" name="MFFileName" />
+                </div>
+                <div class="col-md-12">
+                    <label class="control-label">@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.說明</label>
+                    <input class="form-control" type="text" placeholder="@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.檔案說明關鍵字" name="MFDesc" />
+                </div>
+            </div>
+            @*<input id="searchfile" class="btnsearch btn btn-default" type="submit" value="相關檔案查詢(Q)" />*@
+            @*<input type="button" id="btnQuery" class="btn btn-default" value="@EP.PlatformResources.查詢" data-bind="hotkeydown: { 'alt+q': QueryFileClick }, click: QueryFileClick" />
+                <input type="button" class="btn btn-default" value="@EP.PlatformResources.清除" data-bind="hotkeydown: { 'alt+r': ClearFileClick }, click: ClearFileClick" />*@
+            @*@Html.ActionLink("新增相關檔案", "Create", "MMTX002", new { id = Model.MTID }, new { Class = "btn btn-default" })*@
+        </div>
+        <input type="button" id="btnQuery" class="btn btn-default" value="@EP.PlatformResources.查詢" data-bind="hotkeydown: { 'alt+q': QueryFileClick }, click: QueryFileClick" />
+        <input type="button" class="btn btn-default" value="@EP.PlatformResources.清除" data-bind="hotkeydown: { 'alt+r': ClearFileClick }, click: ClearFileClick" />
+ <!-- Button trigger modal -->
+            if (Model.MTActive != 4)
+            {
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModalLong">
+            新增相關檔案(W)
+        </button>
+            }
+        }
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">新增相關檔案</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @{Html.RenderPartial("~/Areas/MeetingMng/Views/MMTX002/CreateFile.cshtml");}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            @{Html.RenderPartial("~/Areas/MeetingMng/Views/MMTX002/MMFileGrid.cshtml", new GridViewInit("MMFileGrid")
+                {
+                    BindUrl = Url.Action("BindGrid", "MMTX002"),
+                    Pagging = true,
+                    MultiSelect = false
+                });
+            }
+
+
+        </div>
+    </div>
+    @*決議事項*@
+    @if (Model.MTActive == 2 || Model.MTActive == 4) //召開會議和歷史資料才會顯示
+    {
+     <div class="tab-pane fade" id="nav-Job" role="tabpanel" aria-labelledby="nav-Job-tab">
+        @using (Ajax.BeginForm("QueryJob", "MMTX002", null, new AjaxOptions { OnSuccess = "bindResultJob" }, new { @id = "Job", area = "MMTX002" }))
+            {
+        <div class="wall-title">
+            <img class="index-title-icon" src="~/Content/img/search.png" />@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.搜尋條件
+        </div>
+        <div id="Clearjob" class="row wall">
+            <div class="col-md-12 form-group detail-col">
+                <div class="col-md-12 hidden">
+                    <label class="control-label">ID</label>
+                    <input class="form-control" type="text" value="@Model.MTID" name="MTID" />
+                </div>
+                <div class="col-md-12">
+                    <label class="control-label">@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.標題</label>
+                    <input class="form-control" type="text" placeholder="@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.決議事項標題關鍵字" name="JBSubject" />
+                </div>
+                <div class="col-md-12">
+                    <label class="control-label">@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.說明</label>
+                    <input class="form-control" type="text" placeholder="@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.決議事項說明關鍵字" name="JBDesc" />
+                </div>
+            </div>
+            @*<input id="searchjob" class="btnsearch btn btn-default" type="submit" value="決議事項查詢(Q)" />*@
+
+            @*@Html.ActionLink("新增決議事項", "CreateJob", "MMTX002", new { MTID = Model.MTID }, new { Class = "btn btn-default" })*@
+        </div>
+        <input type="button" id="btnQuery" class="btn btn-default" value="@EP.PlatformResources.查詢" data-bind="hotkeydown: { 'alt+q': QueryJobClick }, click: QueryJobClick" />
+        <input type="button" id="btnClearJob" class="btn btn-default" value="@EP.PlatformResources.清除" data-bind="hotkeydown: { 'alt+r': ClearClick }, click: ClearClick" />
+ <!-- Button trigger modal -->
+                if (Model.MTActive != 4 && Model.MTActive != 1)
+                {
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#JobModalLong">
+            新增決議事項(W)
+        </button>
+                }
+            }
+        <!-- Modal -->
+        <div class="modal fade" id="JobModalLong" tabindex="-1" role="dialog" aria-labelledby="JobModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="JobModalLongTitle">新增決議事項</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @{Html.RenderPartial("~/Areas/MeetingMng/Views/MMTX002/CreateJob.cshtml");}
+                        @*@Html.Action("CreateJob","MMTX002");*@
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            @{Html.RenderPartial("~/Areas/MeetingMng/Views/MMTX002/MMJobGrid.cshtml", new GridViewInit("MMJobGrid")
+                    {
+                        BindUrl = Url.Action("BindJobGrid", "MMTX002"),
+                        Pagging = true,
+                        MultiSelect = false
+                    });
+            }
+        </div>
+    </div>
+    }
+</div>
+
+
+@section Scripts{
+    <script>
+        @*定義此頁面上的行為物件*@
+    var ViewModel = {
+        QueryFileClick : function () {
+            clearMessage();
+            $("#File").trigger("submit");
+        },
+        QueryJobClick : function () {
+            clearMessage();
+            $("#Job").trigger("submit");
+        },
+        EditClick: function () {
+            clearMessage();@*清除訊息*@
+            var id = $("input[name='MTID']").val();
+            var tabUniqueId = $("#tabUniqueId").val();
+            location.href = '@Html.Raw(Url.Action("Edit","MMTX001"))' + "?MTID="+id;
+        },
+        DeleteClick: function () {
+            if (confirm("@EP.PlatformResources.確定要刪除本筆資料")) {
+                clearMessage();@*清除訊息*@
+                $("#MeetingDetailSubmit").attr('action', '@Url.Action("Delete", "MMTX001", new { MTID = Model.MTID })');
+                $("#MeetingDetailSubmit").submit();
+
+              
+                
+            }
+        },
+        CloseClick: function () {
+            window.close();
+        },
+        ClearClick : function () {
+            clearMessage();@*清除訊息*@
+            $('#Clearjob input[type=text]').val('');
+            //$('#divQueryBlock input[type=radio]').attr('checked', false);
+        },
+        ClearFileClick : function () {
+            clearMessage();@*清除訊息*@
+            $('#ClearFile input[type=text]').val('');
+            //$('#divQueryBlock input[type=radio]').attr('checked', false);
+        }
+    };
+        $(function(){
+            $("#MeetingDetailSubmit").bind('ajax:complete', function() {
+                  location.href = '@Url.Action("Index", "MMQU001")'
+         
+            });
+        })
+
+    @*頁面的初始狀態*@
+    $(function () {
+        @*ko全域變數Model*@
+        ko.applyBindings(ViewModel);
+    });
+    @*初始頁面顯示*@
+    $(function () {
+        $('#myTab li:first-child a').tab('show')
+        //調整直接查詢
+        $("#File").trigger("submit");
+    })
+    @*相關檔案JQGRID*@
+    function bindResult() {
+        $("#MMFileGrid").bindGrid();
+    }
+    @*決議事項JQGRID*@
+    function bindResultJob() {
+        $("#MMJobGrid").bindGrid();
+    }
+    @*人員回覆和會議狀態修改*@
+    $( "#ReplyandActive" ).click(function() {
+        var id = $("input[name='MTID']").val();
+        //var MTReplyval = $('input[name=MTReply]').val();
+        var MTReplyval = $('input[name=MTReply]:checked').val();
+        var MTActiveval = $('input[name=MTActive]').val();
+        clearMessage();
+        //console.log(MTReplyval)
+
+
+        if (MTReplyval != null) {
+            //人員回覆處理
+            $.ajax({
+                type: 'POST',
+                url: '/MMTX002/CheckReply',
+                data: { MTID: id, MTReply: MTReplyval},
+                dataType: "text",success: function () {
+                    location.href = '@Html.Raw(Url.Action("Detail", "MMTX002"))' + "?id="+ id;
+                }
+            });
+        } else if ($('input[name=MTActive]').prop("checked")) {
+            //存放到歷史資料處理
+            $.ajax({
+                type: 'POST',
+                url: '/MMTX002/UpdateMTActive',
+                data: { MTID: id, MTActive: MTActiveval},
+                dataType: "text",success: function () {
+                    location.href = '@Html.Raw(Url.Action("Detail", "MMTX002"))' + "?id="+ id;
+                }
+            });
+        }
+        else {
+            appendMessage("@EP.PSL.WorkResources.MeetingMng.Models.MeetingMngResource.請回覆參加狀態或改變會議狀態再點擊送出");
+        }
+
+    });
+    @*人員顯示*@
+    //defaul Participants-content
+    $(".Participants-content").hide();
+    //toggle Participants-content
+    $("#Participants-area").on("click", function () {
+        if ($.trim($("#Participants-ul").text()) == "")
+        {
+            var id = $("input[name='MTID']").val();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetMeetingParticipantsByID", "MMTX002", new { area = "MeetingMng" })',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                cache: false,
+                data: {  id: id },
+                success: function (result, status) {
+                    //debugger;
+                    var rendertxt='';
+                    $.each(result, function(i,item){
+
+                        if (i % 4 == 0)
+                        {rendertxt= rendertxt+'<div class="row">';}
+                        rendertxt= rendertxt+'<div class="col-md-3">'+item+'</div>';
+                        if (i % 4 == 3) {rendertxt= rendertxt+ '</div>'; }
+                    });
+                    $("#Participants-ul").html(rendertxt);
+                },
+                error: function () {
+                    appendMessage("@EP.PlatformResources.系統發生錯誤");
+                }
+            });
+        }
+        $(".Participants-content").toggle('slow', function() {
+            if ($(this).is(':visible')) {
+                $("#outParticipants").html("－");
+            } else {
+                $("#outParticipants").html("＋");
+            }
+        });
+        
+    });
+
+    </script>
+}
+
+
+
+

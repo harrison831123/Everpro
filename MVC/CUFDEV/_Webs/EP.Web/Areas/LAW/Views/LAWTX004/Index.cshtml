@@ -1,0 +1,166 @@
+﻿@{
+    ViewBag.Title = LAWResource.相關費率設定;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+<div id="divQueryBlock">
+    @using (Ajax.BeginForm("Query", "LAWTX004", null, new AjaxOptions { OnSuccess = "bindGrid" }, new { id = "LAWQuery", area = "LAWTX004" }))
+    {
+        <div class="wall-title">
+            <img class="index-title-icon" src="~/Content/img/search.png" />(@EP.PlatformResources.搜尋條件)
+        </div>
+        <div class="row wall">
+            <div class="col-md-12 form-group detail-col">
+                <div class="col-md-12">
+                    <label class="control-label detail-msg">@LAWResource.選擇類別</label>
+                    <br />
+                    <select id="LirType" class="form-control" style="width:35%;" name="LirType">
+                        <option value="1">@LAWResource.利率</option>
+                        <option value="2">@LAWResource.律師服務費率</option>
+                    </select>
+                </div>
+            </div>
+            <input type="button" id="btnQuery" class="btn btn-default" value="@EP.PlatformResources.查詢" data-bind="click: QueryClick" />
+            <button class="btn btn-default group1" id="btnInsert" data-bind="click: InsertClick">@EP.PlatformResources.新增</button>
+        </div>             
+    }
+</div>
+<div class="row col-md-12">
+    <table id="datatable" class="table">
+        <thead>
+            <tr>
+                <th class="rate">@LAWResource.利率</th>
+                <th>@LAWResource.啟用狀態</th>
+                <th>@LAWResource.建檔人員</th>
+                <th>@LAWResource.建檔日期</th>
+                <th>@EP.PlatformResources.刪除</th>
+            </tr>
+        </thead>
+        <tbody id="datatbody">
+        </tbody>
+    </table>
+</div>
+<script>
+    var ViewModel = {
+        InsertClick: function () {
+            var LirType = $('#LirType').val();
+            location.href = '@Url.Action("Create", "LAWTX004", new { area = "LAW" })' + "?LirType=" + LirType;
+        },
+        QueryClick: function () {
+            //$("#LAWQuery").trigger("submit");
+            GetLawsys();
+        }
+    }
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+        GetLawsys();
+    });
+    $('#LirType').on('change', function () {
+        $("#btnQuery").click();
+    });
+    function GetLawsys() {
+        var LirType = $('#LirType').val();
+        console.log(LirType)
+         $.ajax({
+             method: "POST",
+             cache: false,
+             data: { LirType: LirType },
+             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+             url: '@Url.Action("Query", "LAWTX004", new { area = "LAW" })',
+             complete: function (data) {
+                        if (data.responseJSON === undefined) {
+                        } else {
+                            $(".remtr").remove();
+                            if (LirType == "1") {
+                                $(".rate").text("@LAWResource.利率");
+                                $.each(data.responseJSON, function () {
+                                    let str = "<tr class='remtr'><td>" + this.InterestRates + "%"  + "</td><td>"
+                                        + StatusTypeBTN(this.InterestRatesType, this.LawInterestRatesId, LirType) + "</td><td>"
+                                        + this.CreateName + "</td><td>"
+                                        + this.CreateDate + "</td><td>"
+                                        + '<button id="delBtn" class="btn btn-danger" onclick="ConfirmDelete(\'' + this.LawInterestRatesId + '\')">@EP.PlatformResources.刪除</button></td></tr>';
+                                    $("#datatbody").append(str);
+                                });
+                            }
+                            else {
+                                $(".rate").text("@LAWResource.律師服務費率");
+                                $.each(data.responseJSON, function () {
+                                    let str = "<tr class='remtr'><td>" + this.LawyerServiceRates + "%" + "</td><td>"
+                                        + StatusTypeBTN(this.LawyerServiceRatesType, this.LawLawyerServiceRatesId, LirType) + "</td><td>"
+                                        + this.CreateName + "</td><td>"
+                                        + this.CreateDate + "</td><td>"
+                                        + '<button id="delBtn" class="btn btn-danger" onclick="ConfirmDelete(\'' + this.LawLawyerServiceRatesId + '\',\'' + LirType + '\')">@EP.PlatformResources.刪除</button></td></tr>';
+                                    $("#datatbody").append(str);
+                                });
+                            }
+                        }
+             },
+             error: function (ex) {
+             if (ex.statusText == "OK") {
+             } else {
+                 appendMessage("@EP.PlatformResources.系統發生錯誤");
+                 }
+             }
+         });
+    }
+
+    function ConfirmDelete(ID, LirType) {
+        var result = confirm('@EP.PlatformResources.確定刪除?');
+            if (result) {
+                DeleteData(ID, LirType);
+            }
+    }
+    function StatusTypeBTN(StatusType, ID, LirType) {
+        if (StatusType == 0) {
+            return '<button id="StatusTypeBtn' + ID + '" class="btn btn-default"  onclick="ChangeStatusType(\'' + 1 + '\',\'' + ID + '\',\'' + LirType + '\')">@LAWResource.啟用</button>' + '<button id="StatusTypeStopBtn' + ID + '" class="btn btn-default" disabled="disabled" onclick="ChangeStatusType(\'' + 0 + '\',\'' + ID + '\',\'' + LirType + '\')">@LAWResource.停用</button>';
+        } else {
+            return '<button id="StatusTypeBtn' + ID + '" class="btn btn-default"  disabled="disabled" onclick="ChangeStatusType(\'' + 1 + '\',\'' + ID + '\',\'' + LirType + '\')">@LAWResource.啟用</button>' + '<button id="StatusTypeStopBtn' + ID + '" class="btn btn-default" onclick="ChangeStatusType(\'' + 0 + '\',\'' + ID + '\',\'' + LirType + '\')">@LAWResource.停用</button>';
+        }
+    }
+    function ChangeStatusType(StatusType, ID, LirType) {
+        var str;
+        if (StatusType == 0) {
+            str = '@LAWResource.是否確定停用';
+        }
+        else {
+            str = '@LAWResource.是否確定啟用';
+        }
+        var result = confirm(str);
+        if (result) {
+            if (StatusType == 0) {
+                $("#StatusTypeBtn" + ID).attr('disabled', false);
+                $("#StatusTypeStopBtn" + ID).attr('disabled', true);
+            } else {
+                $("#StatusTypeBtn" + ID).attr('disabled', true);
+                $("#StatusTypeStopBtn" + ID).attr('disabled', false);
+            }
+            $.ajax({
+                method: "POST",
+                cache: false,
+                data: { StatusType: StatusType, ID: ID, LirType: LirType },
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                url: '@Url.Action("ChangeStatusType", "LAWTX004", new { area = "LAW" })',
+                complete: function () {
+                }
+            });
+        }
+    }
+    function DeleteData(ID, LirType) {
+            $.ajax({
+                method: "POST",
+                cache: false,
+                url: '@Url.Action("Delete", "LAWTX004", new { area = "LAW" })',
+                data: { ID: ID, LirType: LirType},
+                complete: function (data) {
+                    GetLawsys();
+                },
+                error: function (ex) {
+                    if (ex.statusText == "OK") {
+                    } else {
+                        appendMessage("@EP.PlatformResources.系統發生錯誤");
+                    }
+                }
+            });
+    }
+
+</script>
+

@@ -1,0 +1,197 @@
+﻿@model  EP.SD.SalesSupport.LAW.Models.LawContentDetail
+@{
+    ViewBag.Title = LAWResource.維護作業;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    WebChannel<EP.SD.SalesSupport.LAW.Service.ILAWService> Service = new WebChannel<EP.SD.SalesSupport.LAW.Service.ILAWService>();
+    List<EP.H2OModels.LawDoUnit> lawDoUnits = new List<EP.H2OModels.LawDoUnit>();
+    Service.Use(s => lawDoUnits = s.GetLawDoUnitByEnable().ToList());
+}
+<style type='text/css'>
+    .link_class {
+        padding: 4px 12px 4px 12px;
+    }
+</style>
+@*查詢執行結果*@
+@using (Ajax.BeginForm("Query", "LAWTX009", null, new AjaxOptions { OnSuccess = "BindGrid" }, new { id = "LawQuery", area = "LAWTX009" }))
+{
+    <div class="wall-title">
+        <img class="index-title-icon" src="~/Content/img/search.png" />(@EP.PlatformResources.搜尋條件)
+    </div>
+    <div class="row wall">
+        <div class="col-md-12 form-group detail-col">
+            <div class="col-md-6">
+                <label class="control-label">@LAWResource.照會單號</label>
+                <input id="LawNoteNo" class="form-control" type="text" placeholder="@LAWResource.照會單號" name="LawNoteNo" />
+            </div>
+            <div class="col-md-6">
+                <label class="control-label">@LAWResource.姓名</label>
+                <input id="LawDueName" class="form-control" type="text" placeholder="@LAWResource.姓名" name="LawDueName" />
+            </div>
+        </div>
+        <div class="col-md-12 form-group detail-col">
+            <div class="col-md-6">
+                <label class="control-label">ID</label>
+                <input id="LawDueAgentId" class="form-control" type="text" placeholder="ID" name="LawDueAgentId" />
+            </div>
+            <div class="col-md-6">
+                <label class="control-label">@LAWResource.結欠金額</label>
+                <input id="LawDueMoney" class="form-control" type="text" placeholder="@LAWResource.結欠金額" name="LawDueMoney" />
+            </div>
+        </div>
+        <div class="col-md-12 form-group detail-col">
+            <div class="col-md-6">
+                <label class="control-label">@LAWResource.選擇類別</label>
+                <br />
+                <select id="LawStatusType" class="form-control" name="LawStatusType">
+                    <option value="1">@LAWResource.維護作業</option>
+                    <option value="2">@LAWResource.已結案件</option>
+                    <option value="3">@LAWResource.無實益案件維護作業</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="control-label">@LAWResource.承辦部室</label>
+                <select class="form-control" id="LawDoUnitName" name="LawDoUnitName">
+                    <option value="">@LAWResource.請選擇</option>
+                    @for (var i = 0; i < lawDoUnits.Count; i++)
+                    {
+                        <text>
+                            <option value="@lawDoUnits[i].UnitName">@lawDoUnits[i].UnitName</option>
+                        </text>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <input type="button" id="btnQuery" class="btn btn-default" value="@EP.PlatformResources.查詢" data-bind="hotkeydown: { 'alt+q': QueryClick }, click: QueryClick" />
+
+}
+@section GridActions {
+    <div class="jqGrid">
+        <table id="Result"></table>
+    </div>
+    <div id="ResultPagger"></div>
+}
+
+@section Scripts{
+
+    <script>
+        var ViewModel = {
+            QueryClick: function () {
+                clearMessage();
+                $("form#LawQuery").trigger("submit");
+            }
+        };
+        $(function () {
+            ko.applyBindings(ViewModel);
+            $("#btnQuery").click();
+        });
+
+        function BindGrid() {
+            if ($("#LawStatusType").val() != 2) {
+                $("#Result").GridUnload();
+                $("#Result").jqGrid({
+                    url: '@Url.Action("BindGrid", "LAWTX009", new { area = "LAW" })',
+                    datatype: "json",
+                    mtype: "POST",
+                    shrinkToFit: false,
+                    colNames: ["", "@LAWResource.照會編號", "@LAWResource.姓名", "ID", "@LAWResource.結欠金額", "@LAWResource.工作年月", "@LAWResource.承辦單位", "@LAWResource.案件狀態", "@LAWResource.個人資料", "@LAWResource.進度表", "@LAWResource.結欠金額表", "@LAWResource.照會單"],//"存證信函",
+                    colModel: [
+                        { name: "LawId", index: "LawId", hidden: true },
+                        { name: "LawNoteNo", index: "LawNoteNo"},
+                        { name: "LawDueName", index: "LawDueName" },
+                        { name: "LawDueAgentId", index: "LawDueAgentId" },
+                        { name: "LawDueMoney", index: "LawDueMoney" },
+                        { name: "LawProductionYM", index: "LawProductionYM" },
+                        { name: "LawDoUnitName", index: "LawDoUnitName" },
+                        { name: "LawNotCloseTypeName", index: "LawNotCloseTypeName" },
+                        { name: "", index: "LawNoteId", formatter: PersonalData, width: "70"},
+                        { name: "", index: "LawNoteId", formatter: Schedule, width: "70"},
+                        { name: "", index: "LawNoteId", formatter: DueMoneyList, width: "70"},
+                        //{ name: "", index: "LawNoteId", formatter: UpdateLawEvidence, width: "70"},
+                        { name: "", index: "LawNoteId", formatter: NoteNoList, width: "70" }
+                    ],
+                    jsonReader: {
+                        repeatitems: false,
+                        id: "0"
+                    },
+                    loadComplete: function () {
+                        $('#Result').jqGrid("setGridWidth", $('#resultDIV').width());
+                    },
+                    pager: "ResultPagger"
+                });
+                $("#Result").trigger("reloadGrid");
+            } else {
+                $("#Result").GridUnload();
+                $("#Result").jqGrid({
+                    url: '@Url.Action("BindGrid", "LAWTX009", new { area = "LAW" })',
+                    datatype: "json",
+                    mtype: "POST",
+                    autowidth: true,
+                    colNames: ["", "@LAWResource.照會編號", "@LAWResource.姓名", "ID", "@LAWResource.結欠金額", "@LAWResource.工作年月", "@LAWResource.承辦單位", "@LAWResource.案件狀態", "@LAWResource.結案日期", "@LAWResource.個人資料", "@LAWResource.進度表", "@LAWResource.結欠金額表", "@LAWResource.照會單"],//"存證信函",
+                    colModel: [
+                        { name: "LawId", index: "LawId", hidden: true},
+                        { name: "LawNoteNo", index: "LawNoteNo", width: "110" },
+                        { name: "LawDueName", index: "LawDueName", width: "70" },
+                        { name: "LawDueAgentId", index: "LawDueAgentId", width: "150" },
+                        { name: "LawDueMoney", index: "LawDueMoney", width: "130" },
+                        { name: "LawProductionYM", index: "LawProductionYM", width: "70" },
+                        { name: "LawDoUnitName", index: "LawDoUnitName", width: "70" },
+                        { name: "LawNotCloseTypeName", index: "LawNotCloseTypeName", width: "60" },
+                        { name: "LawCloseDate", index: "LawCloseDate", width: "100" },
+                        { name: "", index: "LawNoteId", formatter: PersonalData, width: "70" },
+                        { name: "", index: "LawNoteId", formatter: Schedule, width: "70" },
+                        { name: "", index: "LawNoteId", formatter: DueMoneyList, width: "70" },
+                        //{ name: "", index: "LawNoteId", formatter: UpdateLawEvidence, width: "70" },
+                        { name: "", index: "LawNoteId", formatter: NoteNoList, width: "70" }
+                    ],
+                    jsonReader: {
+                        repeatitems: false,
+                        id: "0"
+                    },
+                    loadComplete: function () {
+                        $('#Result').jqGrid("setGridWidth", $('#resultDIV').width());
+                    },
+                    pager: "ResultPagger"
+                });
+                $("#Result").trigger("reloadGrid");
+            }
+        };
+
+        function PersonalData(cellValue, options, rdata, action) {
+            var NoteNo = rdata.LawNoteNo;
+            var AgentID = rdata.LawDueAgentId;
+            var LawId = rdata.LawId;
+            var result = "<a class='btn btn-primary link_class' style='text-decoration: none;color:white;' href='" + '@Html.Raw(Url.Action("UpdatePersonalData", "LAWTX009"))' + "?AgentID=" + AgentID + "&NoteNo=" + NoteNo + "&LawId=" + LawId + "' >" + "@LAWResource.維護" + "</a>";
+            return result;
+        }
+        function Schedule(cellValue, options, rdata, action) {
+            var NoteNo = rdata.LawNoteNo;
+            var AgentID = rdata.LawDueAgentId;
+            var LawId = rdata.LawId;
+            var result = "<a class='btn btn-primary link_class' style='text-decoration: none;color:white;' href='" + '@Html.Raw(Url.Action("UpdateSchedule", "LAWTX009"))' + "?AgentID=" + AgentID + "&NoteNo=" + NoteNo + "&LawId=" + LawId + "' >" + "@LAWResource.維護" + "</a>";
+            return result;
+        }
+        function DueMoneyList(cellValue, options, rdata, action) {
+            var NoteNo = rdata.LawNoteNo;
+            var AgentID = rdata.LawDueAgentId;
+            var LawId = rdata.LawId;
+            var result = "<a class='btn btn-primary link_class' style='text-decoration: none;color:white;' href='" + '@Html.Raw(Url.Action("UpdateDueMoneyList", "LAWTX009"))' + "?AgentID=" + AgentID + "&NoteNo=" + NoteNo + "&LawId=" + LawId + "' >" + "@LAWResource.維護" + "</a>";
+            return result;
+        }
+        function UpdateLawEvidence(cellValue, options, rdata, action) {
+            var NoteNo = rdata.LawNoteNo;
+            var AgentID = rdata.LawDueAgentId;
+            var LawId = rdata.LawId;
+            var result = "<a class='btn btn-primary link_class' style='text-decoration: none;color:white;' href='" + '@Html.Raw(Url.Action("UpdateLawEvidence", "LAWTX009"))' + "?AgentID=" + AgentID + "&NoteNo=" + NoteNo + "&LawId=" + LawId + "' >" + "@LAWResource.維護" + "</a>";
+            return result;
+        }
+        function NoteNoList(cellValue, options, rdata, action) {
+            var NoteNo = rdata.LawNoteNo;
+            var AgentID = rdata.LawDueAgentId;
+            var LawId = rdata.LawId;
+            var result = "<a class='btn btn-primary link_class' style='text-decoration: none;color:white;' href='" + '@Html.Raw(Url.Action("UpdateNoteNoList", "LAWTX009"))' + "?AgentID=" + AgentID + "&NoteNo=" + NoteNo + "&LawId=" + LawId + "' >" + "@LAWResource.維護" + "</a>";
+            return result;
+        }
+    </script>
+}
+

@@ -1,0 +1,173 @@
+﻿@{
+    ViewBag.Title = (ViewBag.Title) ?? "CUSCRMQU002_查詢";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+@section LeftActions{
+    <input type="button" id="btnQuery" class="btn btn-default" value="@EP.PlatformResources.查詢" data-bind="click: QueryClick" />
+    <input type="button" id="btnClear" class="btn btn-default" value="@EP.PlatformResources.清除" data-bind="click: ClearClick" />
+}
+@model EP.SD.SalesSupport.CUSCRM.Service.QueryReportCondition
+<style>
+    /*.ui-state-hover {
+        background: #67b021 url("images/ui-bg_highlight-soft_25_67b021_1x100.png") 10% 90% repeat !important;
+    }
+
+    .ui-jqgrid {
+        font-size: 0.9rem
+    }
+
+        .ui-jqgrid tr.jqgrow td {
+            font-size: 0.9rem
+        }*/
+    /*標題大小*/
+    /*.ui-jqgrid-sortable {
+        font-size: 1.3rem;
+    }*/
+    /*    .ui-jqgrid tr.jqgrow td {
+        white-space: normal !important;
+    }*/
+</style>
+
+
+<div class="wall-title">
+    <img class="index-title-icon" src="~/Content/img/search.png" />(@EP.PlatformResources.搜尋條件)
+</div>
+@using (Ajax.BeginForm("QueryReport", "CUSCRMQU002", new AjaxOptions { OnSuccess = "" }, new { id = "QueryForm" }))
+{
+    <div class="row wall">
+
+        <div class="col-md-12 detail-col detail-msg">
+            @*類別*@
+            <div class="col-md-1 detail-msg">
+                @Html.LabelFor(m => m.category)
+            </div>
+            <div class="col-md-4 detail-msg">
+                <select name="category" id="categorylist" class="form-control">
+                    <option value="0">客服</option>
+                    <option value="1">申訴</option>
+                </select>
+            </div>
+            @*照會單號*@
+            <div class="col-md-1 detail-msg">
+                @Html.LabelFor(m => m.crm_no)
+            </div>
+            <div class="col-md-4 detail-msg">
+                @Html.TextBoxFor(m => m.crm_no, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-12 detail-col detail-msg">
+            @*類型*@
+            <div class="col-md-1 detail-msg">
+                @Html.LabelFor(m => m.code)
+            </div>
+            <div class="col-md-4 detail-msg">
+                <select id="codelist" name="code" class="form-control">
+                    <option value="CS" >CS(客戶服務件)</option>
+                    <option value="SS" >SS(業務員服務件)</option>
+                </select>
+            </div>
+            @*受理區間*@
+            <div class="col-md-1 detail-msg">
+                @Html.Label("受理區間")
+            </div>
+            <div class="col-md-4 detail-msg">
+                <div>@Html.TextBoxFor(m => m.startdate, new { @class = "form-control", @style = "width: 7.5em;display: inline;" })~ @Html.TextBoxFor(m => m.closedate, new { @class = "form-control", @style = "width: 7.5em;display: inline;" }) <input id="chkThisyear" type="checkbox"><label>今年</label></div>
+                <div></div>
+
+            </div>
+        </div>
+        <div class="col-md-12 detail-col detail-msg">
+            @*保單號碼*@
+            <div class="col-md-1 detail-msg">
+                @Html.LabelFor(m => m.PolicyNo)
+            </div>
+            <div class="col-md-4 detail-msg">
+                @Html.TextBoxFor(m => m.PolicyNo, new { @class = "form-control" })
+            </div>
+            @*要保人姓名*@
+            <div class="col-md-1 detail-msg">
+                @Html.LabelFor(m => m.owner)
+            </div>
+            <div class="col-md-4 detail-msg">
+                @Html.TextBoxFor(m => m.owner, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-12 detail-col detail-msg">
+            @*承辦人員*@
+            <div class="col-md-1 detail-msg">
+                @Html.LabelFor(m => m.worker)
+            </div>
+            <div class="col-md-4 detail-msg">
+                @Html.TextBoxFor(m => m.worker, new { @class = "form-control" })
+            </div>
+            @*要保人姓名*@
+            <div class="col-md-1 detail-msg">
+                @Html.LabelFor(m => m.close_status)
+            </div>
+            <div class="col-md-4 detail-msg">
+                <select name="close_status" id="codelist" class="form-control">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                    <option value="2" selected>全部</option>
+                </select>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@section Scripts{
+    <script>
+         var ViewModel = {
+            QueryClick: function () {
+                /* clearMessage();*/@*清除訊息*@
+                 /*$('#QueryForm').submit()*/
+                 console.log($("form#QueryForm").serializeFormJSON())
+                 EP.Common.AjaxDownFile('@Url.Action("QueryReport", "CUSCRMQU002")', $("form#QueryForm").serializeFormJSON())
+                 
+            },
+            ClearClick: function () {
+                clearMessage();@*清除訊息*@
+
+                $('#QueryForm input[type=text]').val('');
+            }
+        }
+
+        $(function () {
+            ko.applyBindings(ViewModel);
+            $("#startdate").datepicker({ dateFormat: 'yy/mm/dd' });
+            $("#closedate").datepicker({ dateFormat: 'yy/mm/dd' });
+            $("#chkThisyear").change((e) => {
+                console.log(e.target.checked)
+                let Now = new Date();
+                let options = {
+                    year: 'numeric', // 年份为4位数字
+                    month: '2-digit', // 月份为2位数字
+                    day: '2-digit' // 日期为2位数字
+                };
+                if (e.target.checked) {
+                    $("#startdate").val(Now.getFullYear().toString() + '/01/01')
+                    $("#closedate").val(Now.toLocaleDateString('ja-JP', options))
+                } else {
+                    $("#startdate").val('')
+                    $("#closedate").val('')
+                }               
+            })
+
+            //類型
+            $("#categorylist").change(() => {
+
+                $("#codelist").html('')
+                if ($("#categorylist :selected").val() == 0) {
+                    $("#codelist").html('<option value = "CS" name = "code" > CS(客戶服務件)</option><option value="SS" name="code">SS(業務員服務件)</option>')
+                } else {
+                    $("#codelist").html('<option value = "CC" name = "code" > CC(客戶申訴件)</option><option value="SC" name="code">SC(業務員)</option>')
+                }
+            })
+
+        })
+
+    </script>
+}

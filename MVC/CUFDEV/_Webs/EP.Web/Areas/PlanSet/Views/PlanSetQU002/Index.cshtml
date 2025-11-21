@@ -1,0 +1,487 @@
+﻿@*
+    202505 by Fion 20250527001_佣酬預估試算
+*@
+@using EP.SD.Collections.PlanSet.Models;
+@using EP.VBEPModels;
+@model Tuple<AgentRewardPolicyCondition, List<AgentRewardRange>>
+@{
+    ViewBag.Title = "佣酬預估試算";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    var agentRewardRanges = Model.Item2;
+    @* 202510 by Fion 20250901003_佣酬預估試算優化 - 新增預估合計 *@
+    var totalIncome = Model.Item1.AgentTotalIncome;
+}
+<link href="~/Areas/PlanSet/Content/PlanSetStyle.css" rel="stylesheet" />
+<style>
+</style>
+
+<div id="divQueryBlock">
+    <div class="DetailContent" id="divModify1" data-bind="multiAccordionWidget: { openActive: [0, 1] }">
+        <div class="DetailData line ">
+            <div class="detail-msg " style="text-align: center">
+                @Html.DisplayFor(m => m.Item1.AgentName, new { @class = "control-label" }) &nbsp;&nbsp;
+                @Html.DisplayFor(m => m.Item1.AgLevelName, new { @class = "control-label" }) &nbsp;&nbsp;
+                @Html.Label(@PlanSetResource.MDRT屆數 + "：")&nbsp;
+                @Html.DisplayFor(m => m.Item1.MDRT, new { @class = "control-label" })&nbsp;
+                @Html.Label(@PlanSetResource.屆)
+                @Html.HiddenFor(m => m.Item1.AgLevel)
+                @Html.HiddenFor(m => m.Item1.AgentCode,new { id = "AgentCode" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="DetailData line">
+                年度累計(執行業務+其他)：
+                <label class="label-value" for="" id="preTotalIncome"></label>
+            </div>
+        </div>
+        <div class="row">
+            @*202510 by Fion 20250901003_佣酬預估試算優化-隱藏舊下拉式年月*@
+            <div class="DetailData line" style="display:none">
+                <div class="col-md-12 detail-col" name="CalYM">
+                    @Html.DropDownListFor(m => m.Item1.CalYM, (IEnumerable<SelectListItem>)ViewBag.CalYMList,
+                    new
+                    {
+                        id = "CalYM",
+                        style = "width:30% "
+                    })
+                </div>
+            </div>
+            <div class="DetailData line">
+                <div class="detail-col" name="CalYM">
+                    @*202511 by Fion 20250901003_佣酬預估試算優化-手機不能輸入數字*@
+                    @Html.TextBoxFor(m => m.Item1.CalYmS, new { id = "CalYmS", style = "width:70px", inputmode = "numeric" })
+                    ~
+                    @Html.TextBoxFor(m => m.Item1.CalYmE, new { id = "CalYmE", style = "width:70px", inputmode = "numeric" })
+                    &nbsp;&nbsp;(依區間輸入顯示，未核實保單)&nbsp;&nbsp;
+                    <button id="btnQueryYm" type="button" class="btn btn-primary" data-bind="click: queryYmClick">查詢</button>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="display:none">
+            <div class="DetailData line">
+                <div class="col-md-12 detail-col" name="CalYM">
+                    @Html.Label(@PlanSetResource.請輸入目標FYC)
+                    @Html.TextBoxFor(m => m.Item1.TargetFYC, new { id = "TargetFYC", style = "width:22%", oninput = "formatNumberWithCommas(this)" })
+                    &emsp;
+                    @Html.Label(@PlanSetResource.差額 + "：")
+                    @Html.Label("-", new { id = "GapFYC", @class = "" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wall-PL">
+        <div class="row-PL">
+            <div class="cell-PL">
+                @Html.Label(@PlanSetResource.預估佣酬試算, new { @class = "label-title" })
+                @Html.Label("-", new { id = "preRewardFYC", @class = "label-value" })
+            </div>
+
+            <div class="cell-PL">
+                @Html.Label(@PlanSetResource.預估保險公司獎勵合計, new { @class = "label-title" })
+                @Html.Label("-", new { id = "preReward", @class = "label-value" })
+            </div>
+            <div class="cell-PL">
+                @*202510 by Fion 20250901003_佣酬預估試算優化-新增預估合計*@
+                @Html.Label(@PlanSetResource.預估合計, new { @class = "label-title" })
+                <label class="label-value" for="" id="preTotalAmt"></label>
+            </div>
+        </div>
+        <div class="row-PL">
+            <div class="cell-PL">
+                @Html.Label(@PlanSetResource.預收FYC合計, new { @class = "label-title" })
+                @Html.Label("-", new { id = "preFYC_1", @class = "label-normal-value" })
+            </div>
+            <div class="cell-PL">
+                @Html.Label(@PlanSetResource.預估計入競賽FYC合計, new { @class = "label-title" })
+                @Html.Label("-", new { id = "preWarptFYC", @class = "label-normal-value" })
+            </div>
+            <div class="cell-PL">
+            </div>
+        </div>
+    </div>
+    <div class="wall-PL">
+        <div class="row-PL">
+            @Html.Label(@PlanSetResource.預估試算明細, new { @class = "label-title" })
+        </div>
+        <div class="row-PL">
+            <div class="cell-PL">
+                @Html.Label(@PlanSetResource.初年度服務報酬, new { @class = "label-normal-value" })
+                @Html.Label("-", new { id = "preFYC_2", @class = "label-normal-value" })
+            </div>
+            <div class="cell-PL">
+                @Html.Label(@PlanSetResource.個人達成報酬, new { @class = "label-normal-value" })
+                @Html.Label("-", new { id = "preAgLevelFYC", @class = "label-normal-value" })
+            </div>
+            <div class="cell-PL">
+                @Html.Label(@PlanSetResource.個人年度績效報酬, new { @class = "label-normal-value" })
+                @Html.Label("-", new { id = "preYearFYC", @class = "label-normal-value" })
+            </div>
+
+        </div>
+        <div style="text-align: right;">
+            @Html.Label(@PlanSetResource.資料日期 + "：", new { @class = "" })
+            @Html.Label(DateTime.Now.ToString("yyyy/MM/dd"), new { @class = "" })
+        </div>
+    </div>
+
+</div>
+<div id="divResultBlock">
+    <div class="row" style="padding-left: 10px; padding-bottom: 10px;">
+        <button id="btnSelectAll" type="button" class="btn btn-primary" style="margin-right: 50px;" data-bind="click: SelectAllClick"><span class="glyphicon glyphicon-unchecked"></span>全選保單</button>
+        <button id="btnTransMIS" type="button" class="btn" style="display: block">競賽業績總覽</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12" style="padding-left: 10px;  padding-bottom: 10px;">
+        <button id="btnCal" type="button" class="btn btn-danger" style="display: block; width: 100%; border-radius: 999px; " data-bind="click: CalculateClick"><span class="glyphicon"></span>開始計算</button>
+    </div>
+</div>
+
+<div>
+    <div class="wall-PL">
+        <span style="color: red; font-size: 10pt; ">
+            1.本系統僅計算選擇月份有勾選之受理且未核實之保件合併計算預估，其佣酬核發均依核實狀況為主。
+            <br />
+            2.Half件之FYC已乘50%(四捨五入)，但保費為原台幣總保費。
+            <br />
+            3.外幣保單匯率，依受理日前端預估匯率換算。
+            <br />
+            4.年度績效報酬為年度統算，且發放時須在職。
+            <br />
+            5.個人達成報酬以核實月計算。
+            <br />
+            6.若為投資型商品時，因有目標/超額/躉繳/彈性繳的情形，故報酬率/獎金率僅供參考。
+            <br />
+            7.若報酬率/獎金率有特殊條件採保守計算。
+            <br />
+            8.因有工作月與日曆月差異，最後年度所得請以扣繳憑單為準。
+            <br />
+            9.一切以總公司權責部室解釋為主。
+        </span>
+    </div>
+</div>
+<div class="to-top" style="display: none;"><i>TOP</i></div>
+@section Scripts{
+    <script>
+        let
+            preRewardFYC = 0,
+            preReward = 0,
+            preFYC = 0,
+            preWarptFYC = 0,
+            preAgLevelFYC = 0,
+            preYearFYC = 0,
+            preTotalAmt = 0;
+
+        @*GoTop --S--*@
+        window.onscroll = function () { scrollFunction() };
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.querySelector('.to-top').style.display = "block";
+            } else {
+                document.querySelector('.to-top').style.display = "none";
+            }
+        }
+        function GoToTop() {
+            let item = document.querySelector('.to-top');
+            item.addEventListener('click', (e) => {
+                window.scrollTo({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+        @*GoTop --E--*@
+
+        var ViewModel = {
+            SelectAllClick : function () {
+            }
+        };
+
+	    var _iniall = true;
+
+        $(function () {
+	        _iniall = true;
+            queryClick();
+            ko.applyBindings(ViewModel);
+            scrollFunction();
+            GoToTop();
+            @*202510 by Fion 20250901003_佣酬預估試算優化*@
+            @*202511 by Fion 20250901003_佣酬預估試算優化-手機不能輸入數字*@
+            //$("#CalYmS,#CalYmE").inputmask("9999/99", { showMaskOnHover: true });
+            var agentIncome = @Html.Raw(totalIncome);
+            (agentIncome > 0) ? $('#preTotalIncome').text(agentIncome.toLocaleString()) : $('#preTotalIncome').text("-");
+        });
+
+        function queryYmClick() {
+            var calYmS = $("#CalYmS").val();
+            var calYmE = $("#CalYmE").val();
+            var nowY = new Date().getFullYear();
+            if (calYmS == "" || calYmE == "") {
+                alert("請輸入起迄年月資料!!");
+                return false;
+            }
+            if ((calYmS != "" && calYmS.substr(0, 4) != nowY) || (calYmE != "" && calYmE.substr(0, 4) != nowY)) {
+                @* 202511 by Fion 20250901003_佣酬預估試算優化-手機不能輸入數字 *@
+                alert("僅能查詢當年度資料，輸入格式為YYYYMM!!");
+                return false;
+            }
+            _iniall = true;
+            queryClick();
+        }
+        function queryClick() {
+            var conmodel = { AgentCode: $("#AgentCode").val(),CalYmS: $("#CalYmS").val(), CalYmE: $("#CalYmE").val()};
+            $.ajax({
+                url: "@Url.Action("QueryUnPaidRewardPolicyData", "PlanSetQU002")",
+                type: "POST",
+                data: JSON.stringify(conmodel),
+                cache: false,
+                contentType: "application/json; charset=utf-8",
+                processData: false,
+                dataType: "json",
+                complete: function (d) {
+                    initBlock("");
+                    $('#divResultBlock .wall-PL').remove();
+                    if (d.responseJSON != null) {
+                        for (var i = 0; i < d.responseJSON.length; i++) {
+                            rewardPolicy = d.responseJSON[i].AgentRewardPolicy;
+                            extraDataInfo = d.responseJSON[i].ExtraDataInfo;
+                            if (extraDataInfo.IsHalf == "Y") { extraDataInfo.IsHalf = "(Half)"; }
+                            const constPoData = `
+                                <div class="wall-PL" id="divPoData_${rewardPolicy.ID}">
+                                    <div class="row-PL-detail" style=" gap: 5px;">
+                                        <input id="cbPoData_${rewardPolicy.ID}" type="checkbox" class="CheckBox-PL" data-rid="${rewardPolicy.ID}">
+                                        <span class="label-title-plan"> ${extraDataInfo.CompanyName}-${extraDataInfo.INSName} </span>
+                                        <span style="font-size: 12px; color: red;">${extraDataInfo.IsHalf}</span>
+                                    </div>
+                                    <hr style="border: 1px solid #5bb85d;" />
+                                    <div class="row-PL-detail">
+                                            <label class="label-key label-normal-value">受理日：</label>
+                                            <label class="label-key label-normal-value">${rewardPolicy.PolicyDate}</label>
+                                        </div>
+                                        <div class="row-PL-detail">
+                                            <label class="label-key label-normal-value">要保日：</label>
+                                            <label class="label-key label-normal-value">${rewardPolicy.PolicyBeginDate}</label>
+                                        </div>
+                                        <div class="row-PL-detail">
+                                            <label class="label-key label-normal-value">保單號碼：</label>
+                                            <label class="label-key label-normal-value">${rewardPolicy.PolicyNo}</label>
+                                        </div>
+                                        <div class="row-PL-detail">
+                                            <label class="label-key label-normal-value">要／被保人：</label>
+                                            <label class="label-key label-normal-value">${rewardPolicy.ProposerName}／${rewardPolicy.InsuredName}</label>
+                                        </div>
+                                        <div class="row-PL-detail">
+                                            <label class="label-key label-normal-value">年期：</label>
+                                            <label class="label-key label-normal-value">${rewardPolicy.Annual}年期</label>
+                                        </div>
+                                        <div class="row-PL-detail">
+                                            <label class="label-key label-normal-value">台幣保費：</label>
+                                            <label class="label-key label-normal-value" id="ntPrem_${rewardPolicy.ID}">${rewardPolicy.NTTotalPREM.toLocaleString()}</label>
+                                        </div>
+                                        <div class="row-PL-detail">
+                                            <label class="label-key label-normal-value">預估FYC：</label>
+                                            <label class="label-key label-normal-value" id="fyc_${rewardPolicy.ID}">${rewardPolicy.TotalEstimateFYC.toLocaleString()}</label>
+                                        </div>
+                                        <div class="row-PL-detail">
+                                            <label class="label-key label-normal-value" style="color:red">計入競賽FYC：</label>
+                                            <label class="label-key label-normal-value" style="color:red" id="warptfyc_${rewardPolicy.ID}">${rewardPolicy.TotalWarptFYC.toLocaleString()}</label>
+                                        </div>
+                                        <div class="row-PL-detail">
+                                            <label class="label-key label-normal-value" style="color:red">保險公司獎勵(元)：</label>
+                                            <label class="label-key label-normal-value" style="color:red" id="rewardval_${rewardPolicy.ID}" >${rewardPolicy.TotalRewardValue.toLocaleString()}</label>
+                                        </div>
+                                        <div class="row-PL-detail">
+                                            <label class="label-key label-normal-value">保單狀態：</label>
+                                            <label class="label-key label-normal-value">${extraDataInfo.PolicyStatusDesc}</label>
+                                        </div>
+                                </div>
+                                `;
+                            $('#divResultBlock').append(constPoData);
+                            preFYC += rewardPolicy.TotalEstimateFYC;
+                            preReward += rewardPolicy.TotalRewardValue;
+                            preWarptFYC += rewardPolicy.TotalWarptFYC;
+                        }
+                        preAgLevelFYC = calPreAgLevelFYC(preFYC);
+                        preYearFYC = Math.round(preFYC * 0.1);
+                        preRewardFYC = preFYC + preAgLevelFYC + preYearFYC;
+                        (preRewardFYC > 0) ? $('#preRewardFYC').text(preRewardFYC.toLocaleString()) : $('#preRewardFYC').text("-");
+                        (preReward > 0) ? $('#preReward').text(preReward.toLocaleString()) : $('#preReward').text("-");
+                        (preFYC > 0) ? $('[id^="preFYC"]').text(preFYC.toLocaleString()) : $('[id^="preFYC"]').text("-");
+                        (preWarptFYC > 0) ? $('[id^="preWarptFYC"]').text(preWarptFYC.toLocaleString()) : $('[id^="preWarptFYC"]').text("-");
+                        (preAgLevelFYC > 0) ? $('#preAgLevelFYC').text(preAgLevelFYC.toLocaleString()) : $('#preAgLevelFYC').text("-");
+                        (preYearFYC > 0) ? $('#preYearFYC').text(preYearFYC.toLocaleString()) : $('#preYearFYC').text("-");
+                        @* 202510 by Fion 20250901003_佣酬預估試算優化 - 新增預估合計 *@
+                        preTotalAmt = preRewardFYC + preReward;
+                        (preTotalAmt > 0) ? $('#preTotalAmt').text(preTotalAmt.toLocaleString()) : $('#preTotalAmt').text("-");
+                        getGapFYC();
+			            if(_iniall){
+				            $('#btnSelectAll').trigger('click');
+				            _iniall = false;
+			            }
+                    } else {
+                        const constPoData = `
+                                <div class="wall-PL" id="divNoData">
+                                    <div class="detail-msg " style="text-align: center">
+                                        <label class="label-value" style="color:red">該月無未核實保單可計算</label>
+                                    </div>
+                                </div>
+                                `;
+                        $('#divResultBlock').append(constPoData);
+                    }
+                },
+                error: function (data, textStatus, jqXHR) {
+                    appendMessage('QueryUnPaidRewardPolicyData-Error' + ':' + textStatus);
+                },
+            });
+        }
+
+        $('input[id^="CalYm"]').on('focus', function () {
+            $(this).val("");
+        });
+
+        $('#CalYM').on('change', function () {
+  	        _iniall = true;
+            queryClick();
+        });
+        @* 202511 by Fion 20250901003_佣酬預估試算優化-手機不能輸入數字*@
+        $('input[id^="CalYm"]').on("blur", function () {
+            let v = $(this).val().replace(/\D/g, "");
+            if (v.length === 6) {
+                $(this).val(v.substring(0, 4) + "/" + v.substring(4, 6));
+            }
+        });
+
+        $('#TargetFYC').on('focus', function () {
+            $('#TargetFYC').val("");
+        });
+
+        $('#TargetFYC').on('blur', function () {
+            getGapFYC();
+        });
+
+        $('#btnSelectAll').on('click', function () {
+            var blcick = false;
+            if ($('#btnSelectAll span.glyphicon-unchecked').length > 0 && !blcick)
+            {
+                $('#btnSelectAll').removeClass('btn-primary').addClass('btn-warning');;
+                $('#btnSelectAll span').removeClass('glyphicon-unchecked').addClass('glyphicon-check');
+                $('input[id^="cbPoData"]').prop('checked', true);
+                blcick = true;
+            }
+            if ($('#btnSelectAll span.glyphicon-check').length > 0 && !blcick) {
+                $('#btnSelectAll').removeClass('btn-warning');
+                $('#btnSelectAll').addClass('btn-primary');
+                $('#btnSelectAll span').removeClass('glyphicon-check').addClass('glyphicon-unchecked');
+                $('input[id^="cbPoData"]').prop('checked', false);
+                blcick = true;
+            }
+        });
+
+        $('#btnTransMIS').on('click', function () {
+            window.open('../../Home/Xfer?p=MIS&subArea=MISF000495');
+        });
+
+        @* 載入保單資料前，格式初始化 *@
+        function initBlock(iType) {
+            @* btnSelectAll初始化 *@
+            if (iType == "" || iType == "0" ) {
+                $('#btnSelectAll').removeClass('btn-warning');
+                $('#btnSelectAll').addClass('btn-primary');
+                $('#btnSelectAll span').removeClass('glyphicon-check').addClass('glyphicon-unchecked');
+            }
+
+            @* 金額初始化 *@
+            if (iType == "" || iType == "1") {
+                preRewardFYC = 0;
+                preReward = 0;
+                preFYC = 0;
+                preWarptFYC = 0;
+                preAgLevelFYC = 0;
+                preYearFYC = 0,
+                preTotalAmt = 0;
+
+                preRewardFYC = preFYC + preAgLevelFYC + preYearFYC;
+                (preRewardFYC > 0) ? $('#preRewardFYC').text(preRewardFYC.toLocaleString()) : $('#preRewardFYC').text("-");
+                (preReward > 0) ? $('#preReward').text(preReward.toLocaleString()) : $('#preReward').text("-");
+                (preFYC > 0) ? $('[id^="preFYC"]').text(preFYC.toLocaleString()) : $('[id^="preFYC"]').text("-");
+                (preWarptFYC > 0) ? $('[id^="preWarptFYC"]').text(preWarptFYC.toLocaleString()) : $('[id^="preWarptFYC"]').text("-");
+                (preAgLevelFYC > 0) ? $('#preAgLevelFYC').text(preAgLevelFYC.toLocaleString()) : $('#preAgLevelFYC').text("-");
+                (preYearFYC > 0) ? $('#preYearFYC').text(preYearFYC.toLocaleString()) : $('#preYearFYC').text("-");
+                @* 202510 by Fion 20250901003_佣酬預估試算優化 - 新增預估合計 *@
+                preTotalAmt = preRewardFYC + preReward;
+                (preTotalAmt > 0) ? $('#preTotalAmt').text(preTotalAmt.toLocaleString()) : $('#preTotalAmt').text("-");
+                getGapFYC();
+            }
+        }
+
+        @*開始計算*@
+        function CalculateClick() {
+            let cbPoData = $('input[id^="cbPoData"]');
+            initBlock("1");
+            for (let i = 0; i < cbPoData.length; i++) {
+                let item = $(cbPoData[i]);
+                let rId = item.data("rid");
+                if (item.prop('checked')) {
+                    preFYC += parseMoney($('#fyc_' + rId).text());
+                    preReward += parseMoney($('#rewardval_' + rId).text());
+                    preWarptFYC += parseMoney($('#warptfyc_' + rId).text());
+                }
+            }
+            preAgLevelFYC = calPreAgLevelFYC(preFYC);
+            preYearFYC = Math.round(preFYC * 0.1);
+            preRewardFYC = preFYC + preAgLevelFYC + preYearFYC;
+            (preRewardFYC > 0) ? $('#preRewardFYC').text(preRewardFYC.toLocaleString()) : $('#preRewardFYC').text("-");
+            (preReward > 0) ? $('#preReward').text(preReward.toLocaleString()) : $('#preReward').text("-");
+            (preFYC > 0) ? $('[id^="preFYC"]').text(preFYC.toLocaleString()) : $('[id^="preFYC"]').text("-");
+            (preWarptFYC > 0) ? $('[id^="preWarptFYC"]').text(preWarptFYC.toLocaleString()) : $('[id^="preWarptFYC"]').text("-");
+            (preAgLevelFYC > 0) ? $('#preAgLevelFYC').text(preAgLevelFYC.toLocaleString()) : $('#preAgLevelFYC').text("-");
+            (preYearFYC > 0) ? $('#preYearFYC').text(preYearFYC.toLocaleString()) : $('#preYearFYC').text("-");
+            @* 202510 by Fion 20250901003_佣酬預估試算優化 - 新增預估合計 *@
+            preTotalAmt = preRewardFYC + preReward;
+            (preTotalAmt > 0) ? $('#preTotalAmt').text(preTotalAmt.toLocaleString()) : $('#preTotalAmt').text("-");
+            getGapFYC();
+            return true;
+        }
+
+        function getGapFYC() {
+            let rtn = parseMoney($('#TargetFYC').val()) - parseMoney($('#preFYC_1').text());
+            //(rtn > 0) ? $('#GapFYC').text(rtn.toLocaleString()) : $('#GapFYC').text("-");
+            $('#GapFYC').text(rtn.toLocaleString());
+        }
+
+        function parseMoney(str) {
+            let rtn = parseFloat(str.replace(/,/g, ""));
+            let val = (isNaN(Number(rtn))) ? "0" : rtn;
+            return val;
+        }
+
+        function calPreAgLevelFYC(fyc) {
+            var rewardRangeData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(agentRewardRanges));
+            if (rewardRangeData != null) {
+            for (var i = 0; i < rewardRangeData.length; i++) {
+                var rewardData = rewardRangeData[i];
+                if (fyc >= rewardData.AgtbKey1 && fyc <= rewardData.AgtbKey2) {
+                    return Math.round(fyc * rewardData.AgtbValue, 0);
+                    }
+                }
+            }
+            return 0;
+        }
+
+        @*轉換數字並加上千分號*@
+        function formatNumberWithCommas(input) {
+            @*移除所有非數字字元（只保留數字）*@
+            let value = input.value.replace(/,/g, '').replace(/\D/g, '');
+
+            if (value === "") {
+                input.value = "";
+                return;
+            }
+
+            input.value = Number(value).toLocaleString('en-US');
+        }
+    </script>
+}
+

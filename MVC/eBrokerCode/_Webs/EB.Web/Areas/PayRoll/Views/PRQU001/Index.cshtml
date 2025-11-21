@@ -1,0 +1,246 @@
+﻿@*
+    程式名稱：人工調帳
+    建立人員：Harrison
+    建立日期：202207
+    修改記錄：（[需求單號]、[修改內容]、日期、人員）
+    需求單號:20240122004-因現有VLIFE系統(核心系統)使用已長達20多年，架構老舊，已不敷使用，且為提升資訊安全等級，故計劃執行VLIFE系統改版(新核心系統:eBroker系統)。; 修改內容:上線; 修改日期:20240613; 修改人員:Harrison;
+    需求單號:20240807001-調整人工調帳系統產出之相關畫面及報表修改等功能。; 修改日期:20240807; 修改人員:Harrison;
+*@
+@model EB.SL.PayRoll.Models.AgentBonusAdjustViewModel
+@{
+    ViewBag.Title = "人工調帳報表";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    //取業績年月
+    WebChannel<EB.SL.PayRoll.Service.IPayRollService> Service = new WebChannel<EB.SL.PayRoll.Service.IPayRollService>();
+    //var productionYM = "";
+    var agym = new EB.VLifeModels.agym();
+    int yy = 0, yyint;
+    Service.Use(s => agym = s.GetYMData("", true).FirstOrDefault());
+    if (!string.IsNullOrEmpty(agym.ProductionYM))
+    {
+        yy = Convert.ToInt32(agym.ProductionYM.Split('/')[0]);
+    }
+}
+@if (TempData["message"] != null)
+{
+    <script type="text/javascript">
+        var message = @Html.Raw(Json.Encode(TempData["message"]));
+        alert(message);
+    </script>
+}
+@*查詢執行結果*@
+@using (Ajax.BeginForm("Query", "PRQU001", new { area = "PayRoll" }, new AjaxOptions { OnSuccess = "BindGrid" }, new { id = "QueryForm" }))
+{
+    <div id="resultDIV" class="ibox ibox-primary">
+        <div class="ibox-head">
+            <div class="ibox-title">資料查詢</div>
+        </div>
+        <div class="ibox-body">
+            <div class="form-group row">
+                <label class="col-md-1 col-form-label" for="productionY">年度</label>
+                <div class="col-md-2">
+                    <select class="form-select" id="productionY" name="productionY">
+                        <option value="">請選擇</option>
+                        <option value="@yy" selected>@yy</option>
+                        @for (var i = 1; i <= 5; i++)
+                        {
+                            yyint = yy + i;
+                            <text>
+                                <option value="@yyint">@yyint</option>
+                            </text>
+                        }
+                    </select>
+                </div>
+                <label class="col-md-1 col-form-label" for="ProductionYM">工作月</label>
+                <div class="col-md-2">
+                    <select class="form-select" id="productionYM" name="productionYM">
+                        <option value="">請選擇</option>
+                    </select>
+                </div>
+                <label class="col-md-1 col-form-label" for="SequenceStart">次薪起</label>
+                <div class="col-md-1">
+                    <input type="text" class="form-control" id="SequenceStart" name="SequenceStart" value="@agym.sequence" />
+                </div>
+                <label class="col-md-1 col-form-label" for="SequenceFinish">次薪迄</label>
+                <div class="col-md-1">
+                    <input type="text" class="form-control" id="SequenceFinish" name="SequenceFinish" value="@agym.sequence" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-1 col-form-label" for="nunit">部門別</label>
+                <div class="col-md-2">
+                    @if (User.HasPermission("EB.SL.PayRoll.PRTX002.Admin") || User.HasPermission("EB.SL.PayRoll.PRTX002.FIN"))
+                    {
+                        <text>
+                            @Html.DropDownListFor(m => m.CreateUnit, EB.SL.PayRoll.Web.Areas.PayRoll.Utilities.PayRollHelper.QueryMainnunitListItem(User.MemberInfo.ID, (EB.CUFModels.sc_unit m) => m.UnitName), new { @id = "nunit", @class = "form-select" })
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                            @Html.DropDownListFor(m => m.CreateUnit, EB.SL.PayRoll.Web.Areas.PayRoll.Utilities.PayRollHelper.QuerynunitListItem(User.MemberInfo.ID, (EB.CUFModels.sc_unit m) => m.UnitName), new { @id = "nunit", @class = "form-select" })
+                        </text>
+                    }
+                </div>
+                <label class="col-md-1 col-form-label" for="nmember">上傳者</label>
+                <div class="col-md-2">
+                    <input type="text" class="form-control" id="nmember" name="nmember" value="@Model.nmember" />
+                </div>
+                <label class="col-md-1 col-form-label" for="CompanyCode">保險公司代碼</label>
+                <div class="col-md-1">
+                    <input type="text" class="form-control" id="CompanyCode" name="CompanyCode" />
+                </div>
+                <label class="col-md-1 col-form-label" for="AdjType">型態</label>
+                <div class="col-md-1">
+                    <input type="text" class="form-control" id="AdjType" name="AdjType" />
+                </div>
+                <label class="col-md-1 col-form-label" for="ReasonCode">原因碼</label>
+                <div class="col-md-1">
+                    <input type="text" class="form-control" id="ReasonCode" name="ReasonCode" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <button class="btn btn-primary" id="btn" data-bind="click: QueryClick">查詢</button>
+                    <button class="btn btn-warning" id="btn" data-bind="click: ReportClick">匯出報表</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section GridActions {
+    <div class="jqGrid">
+        <table id="Result"></table>
+    </div>
+    <div id="ResultPagger"></div>
+}
+
+@section Scripts{
+    <script>
+        var ViewModel = {
+            QueryClick: function () {
+                clearMessage();
+                if (QueryCheck()) {
+                    $("form#QueryForm").trigger("submit");
+                }
+            },
+            ReportClick: function () {
+                clearMessage();
+                GetReport();
+            }
+        };
+        $(function () {
+            ko.applyBindings(ViewModel);
+            setTimeout(() => {
+                GetproductionYM($('#productionY option:selected').val());
+            }, 1000);
+
+            $('#productionY').change(function () {
+                GetproductionYM($('#productionY option:selected').val());
+            });
+        });
+        function BindGrid() {
+            $("#Result").GridUnload();
+            $("#Result").jqGrid({
+                url: '@Url.Action("BindGrid", "PRQU001", new { area = "PayRoll" })',
+                datatype: "json",
+                mtype: "POST",
+                autowidth: true,
+                shrinkToFit: false,
+                colNames: ["", "工作月", "型態","保險公司代碼", "姓名", "調整原因碼", "保單號碼", "繳別繳次", "金額", "FYC", "FYP",  "原因說明", "部門", "上傳者", "處理日"],
+                colModel: [
+                    { name: "", index: "Iden", hidden: true },
+                    { name: "ProductionYMSequence", index: "ProductionYMSequence" },
+                    { name: "AdjType", index: "AdjType" },
+                    { name: "CompanyCode", index: "CompanyCode" },
+                    { name: "AgentName", index: "AgentName" },
+                    { name: "ReasonCode", index: "ReasonCode" },
+                    { name: "PolicyNo2", index: "PolicyNo2" },
+                    { name: "ModxSequence", index: "ModxSequence" },
+                    { name: "AmountTS", index: "AmountTS" },
+                    { name: "FYCTS", index: "FYCTS" },
+                    { name: "FYPTS", index: "FYPTS" },
+                    { name: "DescContent", index: "DescContent" },
+                    { name: "CreateUnitName", index: "CreateUnitName" },
+                    { name: "nmember", index: "nmember" },
+                    { name: "CreateDatetimeString", index: "CreateDatetimeString" }
+                ],
+                jsonReader: {
+                    repeatitems: false,
+                    id: "0"
+                },
+                loadComplete: function () {
+                    $('#Result').jqGrid("setGridWidth", $('#resultDIV').width());
+                },
+                pager: "ResultPagger"
+            });
+            $("#Result").trigger("reloadGrid");
+        }
+        function GetproductionYM(productionY) {
+            if (productionY != "") {
+                $.ajax({
+                    method: "POST",
+                    cache: false,
+                    url: '@Url.Action("GetproductionYM", "PRQU001", new { area = "PayRoll" })',
+                    data: { productionY: productionY },
+                    async: false,
+                    complete: function (data) {
+                        $("#productionYM").html('');
+                        $("#productionYM").append("<option value=''>" + "請選擇" + "</option>");
+                        let lastElement = data.responseJSON[data.responseJSON.length - 1];
+                        for (let i = 0; i < data.responseJSON.length; i++) {
+                            if (data.responseJSON[i] == lastElement) {
+                                $("#productionYM").append("<option selected value='" + data.responseJSON[i] + "'>" + data.responseJSON[i] + "</option>");
+                            } else {
+                                $("#productionYM").append("<option value='" + data.responseJSON[i] + "'>" + data.responseJSON[i] + "</option>");
+                            }
+                        }
+                    },
+                    error: function (ex) {
+                        if (ex.statusText == "OK") {
+                        } else {
+                            appendMessage("系統發生錯誤");
+                        }
+                    }
+                });
+            } else {
+                $("#productionYM").html('');
+                $("#productionYM").append("<option value=''>" + "請選擇" + "</option>");
+            }
+        }
+        function QueryCheck() {
+            console.log($("#SequenceStart").val())
+            if ($("#SequenceStart").val() == "" || $("#SequenceFinish").val() == "") {
+                appendMessage("次薪起訖必填");
+                return false;
+            }
+            if ($("#SequenceStart").val() != "1" && $("#SequenceStart").val() != "2") {
+                appendMessage("次薪起訖必須是1或2");
+                return false;
+            }
+            if ($("#SequenceFinish").val() != "1" && $("#SequenceFinish").val() != "2") {
+                appendMessage("次薪起訖必須是1或2");
+                return false;
+            }
+
+            return true;
+        }
+        function GetReport() {
+            var url = "@Url.Action("GetAg078Report", "PRQU001", new { area = "PayRoll" })";
+            var dataJson = $("form#QueryForm").serializeArray();
+            $.extend(
+                {
+                    redirectPost: function (location, args) {
+                        var form = '';
+                        $.each(args, function (key, value) {
+                            form += '<input type="hidden" name="' + value.name + '" value="' + value.value + '">';
+                        });
+                        $('<form action="' + location + '" method="POST">' + form + '</form>').appendTo('body').submit();
+                    }
+                });
+
+            $.redirectPost(url, dataJson);
+
+        }
+    </script>
+}

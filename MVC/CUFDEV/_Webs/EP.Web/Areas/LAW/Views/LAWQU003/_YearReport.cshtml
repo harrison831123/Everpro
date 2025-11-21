@@ -1,0 +1,144 @@
+﻿@{ 
+    //int now = DateTime.Now.Year - 1911 - 1;
+}
+<form id="QueryCaseForm" action="/LAWQU003/CaseReport" method="post">
+    <div class="col-md-12" style="margin-top:10px">
+        <button class="btn btn-warning " id="btnInsertLog" onclick="GetCaseReport()">@LAWResource.匯出報表</button>
+    </div>
+</form>
+
+<div class="row col-md-12">
+    <table id="datatable" class="table">
+        <thead id="datahead">
+            <tr><td colspan=13 align=center><font color=blue size=3>@LAWResource.九五九八年度案件統計表</font></td></tr>
+        </thead>
+        <tbody id="datatbody">
+            <tr>
+                <td align=center>@LAWResource.月份</td>
+                @for (int i = 1; i <= 12; i++)
+                {
+                    <text>
+                                    <td align=center>@i @LAWResource.月</td>
+                    </text>
+                }
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        GetLawCaseYear();
+    });
+    function GetLawCaseYear() {
+
+         $.ajax({
+             method: "POST",
+             cache: false,
+             url: '@Url.Action("CaseQuery", "LAWQU003", new { area = "LAW" })',
+             complete: function (data) {
+                if (data.responseJSON === undefined) {
+                } else {
+                    var currentTime = new Date();
+                    var month = currentTime.getMonth();
+                    var str, str2, str3, str4, str5;
+                    var i = 0;
+                    var i2 = 0;
+                    var i3 = 0;
+                    var i4 = 0;
+                    var i5 = 0;
+                    str = "<tr><td align=center>@LAWResource.上月總累計未結案件</td>"
+                    $.each(data.responseJSON.Item1, function () {
+                        if (i > month) {
+                            str += "<td>&nbsp;</td>"
+                        } else {
+                            str += "<td align=center>" + data.responseJSON.Item1[i] + "</td>"
+                        }
+
+                        i++;
+                    });
+                    str += "</tr>"
+                    $("#datatbody").append(str);
+
+                    str2 = "<tr><td align=center>@LAWResource.本月結案</td>"
+                    $.each(data.responseJSON.Item1, function () {
+                        if (i2 > month) {
+                            str2 += "<td>&nbsp;</td>"
+                        } else {
+                            str2 += "<td align=center>" + data.responseJSON.Item2[i2] + "</td>"
+                        }
+
+                        i2++;
+                    });
+                    str2 += "</tr>"
+                    $("#datatbody").append(str2);
+
+                    str3 = "<tr><td align=center>@LAWResource.合計未結總數</td>"
+                    $.each(data.responseJSON.Item1, function () {
+                        if (i3 > month) {
+                            str3 += "<td>&nbsp;</td>"
+                        } else {
+                            str3 += "<td align=center>" + data.responseJSON.Item3[i3] + "</td>"
+                        }
+
+                        i3++;
+                    });
+                    str3 += "</tr>"
+                    $("#datatbody").append(str3);
+
+                    str4 = "<tr><td align=center>@LAWResource.委外案件數</td>"
+                    $.each(data.responseJSON.Item1, function () {
+                        if (i4 > month) {
+                            str4 += "<td>&nbsp;</td>"
+                        } else {
+                            str4 += "<td align=center>" + data.responseJSON.Item4[i4] + "</td>"
+                        }
+
+                        i4++;
+                    });
+                    str4 += "</tr>"
+                    $("#datatbody").append(str4);
+
+                    str5 = "<tr><td align=center>@LAWResource.自辦案件數</td>"
+                    $.each(data.responseJSON.Item1, function () {
+                        if (i5 > month) {
+                            str5 += "<td>&nbsp;</td>"
+                        } else {
+                            str5 += "<td align=center>" + data.responseJSON.Item5[i5] + "</td>"
+                        }
+
+                        i5++;
+                    });
+                    str5 += "</tr>"
+                    $("#datatbody").append(str5);
+
+                }
+             },
+             error: function (ex) {
+             if (ex.statusText == "OK") {
+             } else {
+                 appendMessage("@EP.PlatformResources.系統發生錯誤");
+                 }
+             }
+         });
+    }
+
+    function GetCaseReport() {
+
+        var url = $("form#QueryCaseForm").attr('action');
+
+        var dataJson = $("form#QueryCaseForm").serializeArray();
+        $.extend(
+            {
+                redirectPost: function (location, args) {
+                    var form = '';
+                    $.each(args, function (key, value) {
+                        form += '<input type="hidden" name="' + value.name + '" value="' + value.value + '">';
+                    });
+                    $('<form action="' + location + '" method="POST">' + form + '</form>').appendTo('body').submit();
+                }
+            });
+
+        $.redirectPost(url, dataJson);
+    }
+</script>

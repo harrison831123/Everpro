@@ -1,0 +1,114 @@
+﻿/*
+    202505 by Fion 20250527001_佣酬預估試算
+*/
+.wall-PL
+{
+    /*background-color: #6ab455;*/
+    /*opacity: 0.7;*/
+    border: 1px solid #019846;
+    padding: 5px;
+    margin: -6px 0px 10px 0px;
+    border-radius: 7px;
+}
+
+.row-PL {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.row-PL-detail {
+    display: flex;
+    margin-bottom: 3px;
+    align-items: center;
+}
+
+.cell-PL {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* 讓上下兩個 label 撐滿容器 */
+    padding: 5px;
+}
+
+.label-title {
+    color: #066a34;
+    font-weight: 900;
+    font-size: 16px;
+}
+
+.label-title-plan {
+    color: #066a34;
+    font-weight: 900;
+    font-size: 20px;
+}
+
+.label-key {
+    width: 150px; /* 固定左欄寬度 */
+    flex-shrink: 0;
+}
+
+.label-value {
+    color: red;
+    font-size: 16px;
+}
+
+.label-normal-value {
+    font-size: 14px;
+}
+
+.CheckBox-PL {
+    width: 20px;
+    height: 20px;
+    cursor: default !important;
+    align-self: center;
+}
+
+.spaced-label {
+    display: flex;
+    width: 100px;
+    justify-content: space-between;
+}
+
+    .spaced-label span {
+        flex: 1;
+        text-align: center;
+    }
+
+.select_top_button {
+    position: fixed;
+    z-index: 99;
+    right: 0px;
+    bottom: 100px;
+}
+
+.to-top {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    color: #FFF;
+    border: 2px solid #689180;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    z-index: 1001;
+    opacity: 1;
+    cursor: pointer;
+    display: none;
+}
+
+    .to-top i {
+        color: #689180;
+        font-size: 20px;
+        font-style: normal;
+    }
+
+    .to-top:hover {
+        background-color: #689180;
+    }
+
+        .to-top:hover i {
+            display: block;
+            color: #fff;
+        }

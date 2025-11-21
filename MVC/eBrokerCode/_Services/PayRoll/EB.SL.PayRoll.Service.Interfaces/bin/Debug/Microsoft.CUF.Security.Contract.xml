@@ -1,0 +1,2031 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.CUF.Security.Contract</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.CUF.Account">
+            <summary>帳號</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Account.#ctor">
+            <summary>
+            帳號類別建構子
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Account.#ctor(System.String)">
+            <param name="id">帳號ID</param>
+        </member>
+        <member name="P:Microsoft.CUF.Account.ID">
+            <summary>帳號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Account.AuthorizeType">
+            <summary>驗證方式</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Account.Password">
+            <summary>密碼</summary>
+            <remarks>只有DB驗證時才會用到</remarks>
+        </member>
+        <member name="P:Microsoft.CUF.Account.MemberID">
+            <summary>人員編號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Account.Member">
+            <summary>人員物件</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Account.LoginCount">
+            <summary>登入次數</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Account.LastPasswordChangeDate">
+            <summary>最後密碼變更時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Account.dlast_password_change">
+            <summary>最後密碼變更時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Account.EnabledDate">
+            <summary>啟用時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Account.denabled">
+            <summary>
+            啟用時間
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Account.DisabledDate">
+            <summary>停用時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Account.dexpire">
+            <summary>
+            停用時間
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Account.UnitRoles">
+            <summary> 單位角色 : 以 "," join, ex : "TTT-001,TTT-002"</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Account.CreatorID">
+            <summary>建立人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Account.CreateDate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Account.dcreate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Account.UpdaterID">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Account.UpdateDate">
+            <summary>更新日期，</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Account.Get(System.String)">
+            <summary>依帳號ID取得帳號資料。</summary>
+            <param name="accountID">取得帳號ID</param>
+            <returns>帳號物件資訊</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Account.GetByMember(System.String)">
+            <summary>依人員ID取得帳號資料。</summary>
+            <param name="memberID">取得人員ID</param>
+            <returns>帳號物件資訊</returns>
+        </member>
+        <member name="T:Microsoft.CUF.PermissionComparer">
+            <summary>
+            權限相等的邏輯實作
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.PermissionComparer.Equals(Microsoft.CUF.Permission,Microsoft.CUF.Permission)">
+            <summary>
+            權限相等的邏輯；guid相等
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.PermissionComparer.GetHashCode(Microsoft.CUF.Permission)">
+            <summary>
+            取得HashCode
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.RoleComparer">
+            <summary>
+            角色Role相等的邏輯實作
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.RoleComparer.Equals(Microsoft.CUF.Role,Microsoft.CUF.Role)">
+            <summary>
+            角色相等的邏輯；ID相等
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.RoleComparer.GetHashCode(Microsoft.CUF.Role)">
+            <summary>
+            取得HashCode
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.AccountComparer">
+            <summary>
+            帳號Account相等的邏輯實作
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.AccountComparer.Equals(Microsoft.CUF.Account,Microsoft.CUF.Account)">
+            <summary>
+            帳號相等的邏輯；ID相等
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.AccountComparer.GetHashCode(Microsoft.CUF.Account)">
+            <summary>
+            取得此物件的HashCode
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.AccountRoleRelation">
+            <summary>
+            帳號&amp;角色關聯
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.AccountRoleRelation.AccountID">
+            <summary>帳號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.AccountRoleRelation.RoleID">
+            <summary>角色代號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.AccountRoleRelation.BeginDateTime">
+            <summary>啟用時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.AccountRoleRelation.EndDateTime">
+            <summary>停用時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.AccountRoleRelation.icreate">
+            <summary>建立人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.AccountRoleRelation.dcreate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.AccountRoleRelation.iupdate">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.AccountRoleRelation.dupdate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="T:Microsoft.CUF.ChangePasswordPolicy">
+            <summary>變更密碼原則</summary>
+        </member>
+        <member name="M:Microsoft.CUF.ChangePasswordPolicy.#ctor">
+            <summary>
+            變更密碼原則-建構子
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.ChangePasswordPolicy.#ctor(System.String)">
+            <summary>
+            變更密碼原則-建構子
+            </summary>
+            <param name="accountId">帳號Id</param>
+        </member>
+        <member name="P:Microsoft.CUF.ChangePasswordPolicy.InterAccount">
+            <summary>帳號詳細資訊</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ChangePasswordPolicy.AccountInfo">
+            <summary>帳號詳細資訊</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ChangePasswordPolicy.IsEnabled">
+            <summary>是否啟用變更密碼原則</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ChangePasswordPolicy.LastChanged">
+            <summary>最近一次變更密碼日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ChangePasswordPolicy.PeridoDay">
+            <summary>變更密碼的天數設定</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ChangePasswordPolicy.ChangeBehavior">
+            <summary>密碼到期時，強制變更 or 提醒變更</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ChangePasswordPolicy.NotAllowedRepeats">
+            <summary>變更密碼時，不允許與前幾次重複</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ChangePasswordPolicy.PasswordHistory">
+            <summary>變更密碼的歷史記錄</summary>        
+        </member>
+        <member name="P:Microsoft.CUF.ChangePasswordPolicy.IsFirstLogon">
+            <summary>是否首次登入</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ChangePasswordPolicy.IsMustBeChange">
+            <summary>是否須要變更密碼</summary>
+        </member>
+        <member name="T:Microsoft.CUF.LoginPasswordPolicy">
+            <summary>登入時的密碼原則</summary>
+        </member>
+        <member name="M:Microsoft.CUF.LoginPasswordPolicy.#ctor(System.String)">
+            <summary>
+            登入時的密碼原則-建構子
+            </summary>
+            <param name="accountID">指定帳號</param>
+        </member>
+        <member name="P:Microsoft.CUF.LoginPasswordPolicy.InterAccount">
+            <summary>帳號詳細資訊</summary>
+        </member>
+        <member name="P:Microsoft.CUF.LoginPasswordPolicy.AccountInfo">
+            <summary>帳號詳細資訊</summary>
+        </member>
+        <member name="P:Microsoft.CUF.LoginPasswordPolicy.IsEnabled">
+            <summary>是否啟用變更密碼原則</summary>
+        </member>
+        <member name="P:Microsoft.CUF.LoginPasswordPolicy.AllowErrorTimes">
+            <summary>允許密碼輸入錯誤次數</summary>
+        </member>
+        <member name="P:Microsoft.CUF.LoginPasswordPolicy.ErrorWaitMinute">
+            <summary>已達輸入錯誤次數，等候多久時間, 可再嘗試登入</summary>
+        </member>
+        <member name="T:Microsoft.CUF.LoginInvalidProfile">
+            <summary>記錄登入錯誤資訊</summary>
+        </member>
+        <member name="P:Microsoft.CUF.LoginInvalidProfile.AccountId">
+            <summary>登入時的帳號 Id </summary>
+        </member>
+        <member name="P:Microsoft.CUF.LoginInvalidProfile.ErrorTimes">
+            <summary>登入連續錯誤次數</summary>
+        </member>
+        <member name="P:Microsoft.CUF.LoginInvalidProfile.LockloginTime">
+            <summary>嘗試登入錯誤開始鎖定時間</summary>
+        </member>
+        <member name="T:Microsoft.CUF.PasswordStrengthPolicy">
+            <summary>密碼強度原則</summary>
+        </member>
+        <member name="P:Microsoft.CUF.PasswordStrengthPolicy.IsEnabled">
+            <summary>是否啟用密碼驗證原則</summary>
+        </member>
+        <member name="P:Microsoft.CUF.PasswordStrengthPolicy.MinLength">
+            <summary>最低可接受密碼長度</summary>
+        </member>
+        <member name="P:Microsoft.CUF.PasswordStrengthPolicy.MaxLength">
+            <summary>最大可接受密碼長度</summary>
+        </member>
+        <member name="P:Microsoft.CUF.PasswordStrengthPolicy.NumsLength">
+            <summary>密碼中包含數值最低可接受長度</summary>
+        </member>
+        <member name="P:Microsoft.CUF.PasswordStrengthPolicy.UpperLength">
+            <summary>密碼中包含大寫字母最低可接受長度</summary>
+        </member>
+        <member name="P:Microsoft.CUF.PasswordStrengthPolicy.LowerLength">
+            <summary>密碼中包含小寫字母最低可接受長度</summary>
+        </member>
+        <member name="P:Microsoft.CUF.PasswordStrengthPolicy.SpecialLength">
+            <summary>密碼中包含特殊字元最低可接受長度</summary>
+        </member>
+        <member name="P:Microsoft.CUF.PasswordStrengthPolicy.SpecialChars">
+            <summary>密碼中可輸入的特殊字元</summary>
+        </member>
+        <member name="T:Microsoft.CUF.SkipVerifyPolicy">
+            <summary>略過驗證原則</summary>
+        </member>
+        <member name="P:Microsoft.CUF.SkipVerifyPolicy.PasswordSkip">
+            <summary>是否跳過密碼驗證</summary>
+        </member>
+        <member name="P:Microsoft.CUF.SkipVerifyPolicy.ImageSkip">
+            <summary>是否跳過圖形驗證</summary>
+        </member>
+        <member name="T:Microsoft.CUF.UnitRoleRelation">
+            <summary>
+            定義組織單位所允許的角色
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.UnitRoleRelation.RoleID">
+            <summary>角色代號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.UnitRoleRelation.UnitGUID">
+            <summary>單位GUID</summary>
+        </member>
+        <member name="P:Microsoft.CUF.UnitRoleRelation.icreate">
+            <summary>建立人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.UnitRoleRelation.dcreate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.UnitRoleRelation.iupdate">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.UnitRoleRelation.dupdate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="T:Microsoft.CUF.AuditStatus">
+            <summary>
+            審核狀態
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.AuditStatus.Null">
+            <summary>未定義</summary>
+        </member>
+        <member name="F:Microsoft.CUF.AuditStatus.Pending">
+            <summary>審核中</summary>
+        </member>
+        <member name="F:Microsoft.CUF.AuditStatus.Effective">
+            <summary>生效</summary>
+        </member>
+        <member name="F:Microsoft.CUF.AuditStatus.Rejected">
+            <summary>拒絕</summary>
+        </member>
+        <member name="T:Microsoft.CUF.RoleApplyUse">
+            <summary>申請的角色區分</summary>
+            <remarks>安控審核-角色申請-用</remarks>
+        </member>
+        <member name="F:Microsoft.CUF.RoleApplyUse.Original">
+            <summary>原有的角色</summary>
+        </member>
+        <member name="F:Microsoft.CUF.RoleApplyUse.New">
+            <summary>新申請的角色</summary>
+        </member>
+        <member name="T:Microsoft.CUF.ChangePasswordBehavior">
+            <summary>密碼到期時, 預設變更行為</summary>
+        </member>
+        <member name="F:Microsoft.CUF.ChangePasswordBehavior.Force">
+            <summary>強制變更</summary>
+        </member>
+        <member name="F:Microsoft.CUF.ChangePasswordBehavior.Notice">
+            <summary>提醒變更</summary>
+        </member>
+        <member name="T:Microsoft.CUF.Mutex">
+            <summary>
+            角色互斥下的屬性值
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Mutex.#ctor">
+            <summary>
+            角色互斥下的屬性值-建構子
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Mutex.RoleIds">
+            <summary>
+            角色互斥下的角色代號集合
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.PermissionManager">
+            <summary>
+            權限管理人
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.PermissionManager.upermission">
+            <summary>權限GUID</summary>
+        </member>
+        <member name="P:Microsoft.CUF.PermissionManager.PermissionGuid">
+            <summary>權限GUID</summary>
+        </member>
+        <member name="P:Microsoft.CUF.PermissionManager.ManagerId">
+            <summary>管理人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.PermissionManager.uunit">
+            <summary>管理人所屬單位</summary>
+        </member>
+        <member name="P:Microsoft.CUF.PermissionManager.UnitGuid">
+            <summary>管理人所屬單位</summary>
+        </member>
+        <member name="T:Microsoft.CUF.RolePermissionRelation">
+            <summary>
+            權限與角色的關聯
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.RolePermissionRelation.RoleID">
+            <summary>角色代號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RolePermissionRelation.upermission">
+            <summary>權限GUID</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RolePermissionRelation.PermissionGUID">
+            <summary>權限GUID</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RolePermissionRelation.icreate">
+            <summary>建立人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RolePermissionRelation.dcreate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RolePermissionRelation.iupdate">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RolePermissionRelation.dupdate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="T:Microsoft.CUF.RoleCondition">
+            <summary>
+            角色查詢條件(註:架構完成)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.RoleCondition.RoleId">
+            <summary>角色代號</summary>
+            <remarks>加上%表示模糊查詢</remarks>
+        </member>
+        <member name="P:Microsoft.CUF.RoleCondition.RoleName">
+            <summary>角色名稱</summary>
+            <remarks>加上%表示模糊查詢</remarks>
+        </member>
+        <member name="P:Microsoft.CUF.RoleCondition.BusinessUnit">
+            <summary>管理人所屬單位</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RoleCondition.PageSelectUnitList">
+            <summary>頁面的業管單位資料源</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RoleCondition.AllowMemberTypes">
+            <summary>適用身份別</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RoleCondition.SupervisorMemberID">
+            <summary>管理人編號。null表示無管理者，通常是系統角色。</summary>
+        </member>
+        <member name="T:Microsoft.CUF.SecurityAccountExtensions">
+            <summary>帳號延伸應用</summary>
+        </member>
+        <member name="M:Microsoft.CUF.SecurityAccountExtensions.GetMember(Microsoft.CUF.Account)">
+            <summary>取得帳號對應的人員</summary>
+            <param name="account">帳號</param>
+            <returns>單筆人員</returns>
+        </member>
+        <member name="M:Microsoft.CUF.SecurityAccountExtensions.GetRoles(Microsoft.CUF.Account,System.Boolean)">
+            <summary>取得帳號擁有的角色</summary>
+            <param name="account"></param>
+            <param name="containSysRole">包括系統角色(預設=true)</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.AuthorizeType">
+            <summary>驗證方式</summary>
+        </member>
+        <member name="F:Microsoft.CUF.AuthorizeType.DataBase">
+            <summary>資料庫</summary>
+        </member>
+        <member name="F:Microsoft.CUF.AuthorizeType.ActiveDirectory">
+            <summary>AD驗証</summary>
+        </member>
+        <member name="T:Microsoft.CUF.ISecurityModifier">
+             <summary>
+             提供安控資訊的Service Interface
+             </summary>
+             <example>
+             <code>
+             //透過Interface取得服務
+             var service = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+             /*
+             註：此寫法
+             用Web呼叫時需於Web.Config加上 
+                 &lt;system.serviceModel&gt;
+                &lt;client&gt;
+                   &lt;endpoint address=&quot;http://localhost:XXXX/Microsoft.CUF.ISecurityModifier.svc&quot; binding=&quot;basicHttpBinding&quot; bindingConfiguration=&quot;BasicHttpBinding&quot; contract=&quot;Microsoft.CUF.ISecurityModifier&quot; name=&quot;Microsoft.CUF.ISecurityModifier&quot; behaviorConfiguration=&quot;CommonEndpointBehavior&quot; /&gt;
+                &lt;/client&gt;
+              &lt;/system.serviceModel&gt;
+            &lt;/configuration&gt;
+             以「元件方式」呼叫時需於Web.Config加上
+             &lt;configuration&gt;
+              &lt;configSections&gt;
+                &lt;section name=&quot;unity&quot; type=&quot;Microsoft.Practices.Unity.Configuration.UnityConfigurationSection, Microsoft.Practices.Unity.Configuration&quot;/&gt;
+              &lt;/configSections&gt;
+            &lt;unity xmlns=&quot;http://schemas.microsoft.com/practices/2010/unity&quot;&gt;
+                &lt;sectionExtension type=&quot;Microsoft.CUF.Framework.Service.UnityWcfConfigExtension, Microsoft.CUF.Framework&quot; /&gt;
+                &lt;container&gt;
+                  &lt;register type=&quot;Microsoft.CUF.ISecurityModifier,Microsoft.CUF.Security.Contract&quot; mapTo=&quot;Microsoft.CUF.SecurityModifier,Microsoft.CUF.Security.Service&quot;/&gt;      
+                &lt;/container&gt;
+              &lt;/unity&gt;
+            &lt;/configuration&gt;
+            */
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.InsertAccounts(System.Collections.Generic.IEnumerable{Microsoft.CUF.Account})">
+             <summary>新增帳號資料</summary>
+             <param name="accounts">帳號資料</param>
+             <example>
+             <code> 
+             public void InsertAccountsTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                Account account = new Account();
+                account.AuthorizeType = AuthorizeType.DataBase;
+                account.ID = &quot;bbba&quot;;
+                account.Password = &quot;aaaa&quot;;
+                account.MemberID = &quot;1001&quot;;
+                target.InsertAccounts(new[] { account });
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.DeleteAccounts(System.Collections.Generic.IEnumerable{Microsoft.CUF.Account})">
+             <summary>刪除帳號資料</summary>
+             <param name="accounts">帳號資料</param>
+             <example>
+             <code>
+              public void DeleteAccountsTest1()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;(); 
+                IEnumerable&lt;Account&gt; accounts = new Account[] { new Account { ID = &quot;aaa&quot;, MemberID = &quot;900072&quot;, AuthorizeType = AuthorizeType.DataBase } }; 
+                target.DeleteAccounts(accounts);//測OK
+            } 
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.UpdateAccount(Microsoft.CUF.Account,System.String)">
+             <summary>異動帳號資料</summary>
+             <param name="account">新帳號資料</param>
+             <param name="accountID">原帳號ID</param>
+             <example>
+             <code>
+              public void UpdateAccountsTest2()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;(); 
+                var account = Account.Get(&quot;900072&quot;);
+                account.DisabledDate = DateTime.Now.AddDays(3);
+                 target.UpdateAccount(account, account.ID);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.UpdateAccountPassword(System.String,System.String)">
+             <summary>異動帳號的密碼資料</summary>
+             <param name="accountID">欲異動的帳號</param>
+             <param name="newPassword">新密碼(已加密過)</param>
+             <example>
+             <code>
+             public void UpdateAccountPasswordTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                string accountID = &quot;706665&quot;;
+                string newPassword = &quot;1234&quot;;
+                target.UpdateAccountPassword(accountID, newPassword);
+                //
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.QueryAccounts(Microsoft.CUF.MemberCondition)">
+             <summary>查詢所有的帳號資訊</summary>
+             <param name="condition">人員查詢條件</param>
+             <returns>查詢帳號資訊</returns>
+             <example>
+             <code>
+             public void QueryAccountsTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                MemberCondition condition = null;
+                IEnumerable&lt;Tuple&lt;Account, Member, Unit&gt;&gt; actual;
+                actual = target.QueryAccounts(condition);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.QueryManageAccounts(System.Collections.Generic.IEnumerable{System.Guid},Microsoft.CUF.MemberCondition)">
+             <summary>查詢所管理單位下的帳號</summary>
+             <param name="unitGUIDs">所管理的單位GUID</param>
+             <param name="condition">人員查詢條件</param>
+             <returns>查詢帳號資訊</returns>
+             <example>
+             <code> 
+             public void QueryManageAccountsTest()
+            {
+                //查詢單位等顧管理單位
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                IEnumerable&lt;Guid&gt; unitGUIDs = new Guid[] { Guid.Parse(&quot;497bc2ca-bbe6-4a88-9402-0f3eb52c175e&quot;) };
+                MemberCondition condition = new MemberCondition { uunit = &quot;497bc2ca-bbe6-4a88-9402-0f3eb52c175e&quot; };
+                IEnumerable&lt;Tuple&lt;Account, Member, Unit&gt;&gt; expected = null;
+                IEnumerable&lt;Tuple&lt;Account, Member, Unit&gt;&gt; actual;
+                actual = target.QueryManageAccounts(unitGUIDs, condition);//測Ok
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.InsertAccountLoginCount(System.String)">
+             <summary>登入次數加一</summary>
+             <param name="accountID">登入帳號</param>
+             <example>
+             <code>
+             public void InsertAccountLoginCountTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                var accountID = &quot;900072&quot;;
+                target.InsertAccountLoginCount(accountID);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.GetRolesByCondition(Microsoft.CUF.RoleCondition)">
+             <summary>
+             依條件取得角色資料值
+             </summary>
+             <param name="condition">角色查詢條件</param>
+             <returns>依條件取得角色資料值</returns>
+             <example>
+             <code>
+              public void GetRolesByConditionTest1()
+            {
+                var condition = new RoleCondition();
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;(); 
+                var result = target.GetRolesByCondition(condition);
+                var count = result.Count();
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.GetAllRoleManageUnits">
+             <summary>取得角色資料庫的所有管理單位資訊</summary>
+             <returns>取得角色資料庫的所有管理單位資訊</returns>
+             <example>
+             <code>
+               public void GetAllRoleManageUnitsTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;(); 
+                IEnumerable&lt;Unit&gt; actual;
+                actual = target.GetAllRoleManageUnits();
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.InsertRoles(System.Collections.Generic.IEnumerable{Microsoft.CUF.Role})">
+             <summary>新增角色資料</summary>
+             <param name="roles">角色資料</param>
+             <example>
+             <code> 
+             public void InsertRolesTest()
+            {
+                var target = ServiceHelper.Create&amp;lt;ISecurityModifier&amp;gt;();
+                IEnumerable&amp;lt;Role&amp;gt; roles = new Role[] {
+                    new Role{ ID=&amp;quot;AAA&amp;quot;, Name=&amp;quot;AAA&amp;quot;,  AllowMemberTypes=new MemberType[]{MemberType.Member}.ToList() },
+                    new Role{ ID=&amp;quot;AAA2&amp;quot;, Name=&amp;quot;AAA2&amp;quot;,  AllowMemberTypes=new MemberType[]{MemberType.Member}.ToList() },
+                    new Role{ ID=&amp;quot;AAA3&amp;quot;, Name=&amp;quot;AAA3&amp;quot;,  AllowMemberTypes=new MemberType[]{MemberType.Member}.ToList() },
+                    new Role{ ID=&amp;quot;AAA4&amp;quot;, Name=&amp;quot;&amp;quot; }
+                };
+                target.InsertRoles(roles);//測OK 1.多筆新增+驗証
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.DeleteRoles(System.Collections.Generic.IEnumerable{Microsoft.CUF.Role})">
+             <summary>刪除角色資料</summary>
+             <param name="roles">角色資料</param>
+             <example>
+             <code>
+               public void DeleteRolesTest1()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                IEnumerable&lt;Role&gt; roles = new Role[] { new Role { ID = &quot;AAA7&quot;, Name = &quot;AAA7&quot;, SupervisorMemberID = &quot;000093&quot;, AllowMemberTypes = new MemberType[] { MemberType.Member }.ToList() } };
+                target.DeleteRoles(roles);//測OK
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.UpdateRole(Microsoft.CUF.Role)">
+             <summary>異動角色資料</summary>
+             <param name="role">角色資料</param>
+             <example>
+             <code>
+             public void UpdateRoleTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                //將SupervisorMemberID = &quot;000062&quot;=&gt;&quot;000110&quot;
+                //則relation : 刪除 000062 , 新增 000110
+                Role role = new Role { ID = &quot;AAA3&quot;, Name = &quot;AAA3&quot;, SupervisorMemberID = &quot;000110&quot;, AllowMemberTypes = new MemberType[] { MemberType.Member }.ToList() };
+                target.UpdateRole(role);//測OK
+                //將SupervisorMemberID = &quot;XXXX&quot;=&gt;&quot;&quot; (清空)
+                //則 relation 將 : 判斷XXXX，再決定刪除之
+                role = new Role { ID = &quot;AAA3&quot;, Name = &quot;AAA3&quot;, SupervisorMemberID = &quot;&quot;, AllowMemberTypes = new MemberType[] { MemberType.Member }.ToList() };
+                target.UpdateRole(role);//測OK
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.InsertPermissions(System.Collections.Generic.IEnumerable{Microsoft.CUF.Permission})">
+             <summary>新增權限資料</summary>
+             <param name="permissions">權限資料</param>
+             <example>
+             <code>
+             public void InsertPermissions()
+            {
+                /* 1.測權限新增/更新
+                 * 2.測管理員新增/刪除
+                 */
+                var datas = new List&lt;Permission&gt;();
+                var p1 = new Permission { GUID = Guid.Parse(&quot;155d3a37-3ae6-4cf7-984b-2d70a5cb5da6&quot;), ID = &quot;TTT&quot; };
+                datas.Add(p1);
+                var p2 = new Permission { ParentGUID = Guid.Parse(&quot;155d3a37-3ae6-4cf7-984b-2d70a5cb5da6&quot;), ID = &quot;TTT.Car&quot;, GUID = Guid.NewGuid() };
+                datas.Add(p2);
+                p2.Managers = new PermissionManager[] { 
+                    new PermissionManager { ManagerId = &quot;900072&quot;, PermissionGuid = p2.GUID, UnitGuid = Guid.Parse(&quot;155d3a37-3ae6-4cf7-984b-2d70a5cb5da6&quot;) },
+                    new PermissionManager { ManagerId = &quot;900082&quot;, PermissionGuid = p2.GUID, UnitGuid = Guid.Parse(&quot;155d3a37-3ae6-4cf7-984b-2d70a5cb5da6&quot;) }
+                };
+                var service = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                service.InsertPermissions(datas);//測新增OK
+                p2.Managers = new PermissionManager[] { };
+                service.UpdatePermission(p2); //測刪OK
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.DeletePermissions(System.Collections.Generic.IEnumerable{Microsoft.CUF.Permission})">
+             <summary>刪除權限資料</summary>
+             <param name="permissions">權限資料</param>
+             <example>
+             <code>
+             public void DeletePermissions()
+            {
+                var datas = new List&lt;Permission&gt;();
+                datas.Add(new Permission { GUID = Guid.Parse(&quot;c283e136-6150-4b38-b10b-5cfb765f6d11&quot;) });
+                var service = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                service.DeletePermissions(datas);    //OK        
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.UpdatePermission(Microsoft.CUF.Permission)">
+             <summary>異動權限資料</summary>
+             <param name="permission">權限資料</param>
+             <example>
+             <code>
+             public void InsertPermissions()
+            {
+                /* 1.測權限新增/更新
+                 * 2.測管理員新增/刪除
+                 */
+                var datas = new List&lt;Permission&gt;();
+                var p1 = new Permission { GUID = Guid.Parse(&quot;155d3a37-3ae6-4cf7-984b-2d70a5cb5da6&quot;), ID = &quot;TTT&quot; };
+                datas.Add(p1);
+                var p2 = new Permission { ParentGUID = Guid.Parse(&quot;155d3a37-3ae6-4cf7-984b-2d70a5cb5da6&quot;), ID = &quot;TTT.Car&quot;, GUID = Guid.NewGuid() };
+                datas.Add(p2);
+                p2.Managers = new PermissionManager[] { 
+                    new PermissionManager { ManagerId = &quot;900072&quot;, PermissionGuid = p2.GUID, UnitGuid = Guid.Parse(&quot;155d3a37-3ae6-4cf7-984b-2d70a5cb5da6&quot;) },
+                    new PermissionManager { ManagerId = &quot;900082&quot;, PermissionGuid = p2.GUID, UnitGuid = Guid.Parse(&quot;155d3a37-3ae6-4cf7-984b-2d70a5cb5da6&quot;) }
+                };
+                var service = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                service.InsertPermissions(datas);//測新增OK
+                p2.Managers = new PermissionManager[] { };
+                service.UpdatePermission(p2); //測刪OK
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.GetManagePermission(System.String)">
+             <summary>依人員取得所管理的權限(為葉子節點的，且會回傳其Parent Node)</summary>
+             <remarks>因為維護使用故定義於Modifier下</remarks>
+             <param name="memberID">人員ID</param>
+             <returns>依人員取得所管理的權限</returns>
+             <example>
+             <code>
+              public void GetManagePermission()
+            {
+                var service = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                var permissions = service.GetManagePermission(&quot;950132&quot;);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.GetManagePermissionExcludeRole(System.String,System.String)">
+             <summary>取得所管理的權限並排除該角色所具有的權限</summary>
+             <param name="memberID">管理人ID</param>
+             <param name="roleID">角色ID</param>
+             <returns>取得所管理的權限並排除該角色所具有的權限</returns>
+             <example>
+             <code>
+              public void GetManagePermissionExcludeRoleTest()
+            {
+                var service = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                var permissions = service.GetManagePermissionExcludeRole(&quot;950132&quot;,&quot;TTT-001&quot;);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.GetSecretPermissions(System.Boolean)">
+            <summary>取得可代理或不可代理的權限資料</summary>
+            <remarks>false代表非機密(可代理)，true代表機密(不可代理)</remarks>
+            <param name="isSecret">是否可代理；false=可代理、true=不可代理</param>
+            <returns>取得可代理或不可代理的權限資料</returns>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.InsertRoleMutexs(System.Collections.Generic.IEnumerable{Microsoft.CUF.RoleMutex})">
+             <summary>新增角色互斥資料</summary>
+             <param name="mutexs">角色互斥資料</param>
+             <example>
+             <code>
+              public void InsertRoleMutexs()
+            {
+                var service = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                var model = new RoleMutex()
+                {
+                    GUID = Guid.NewGuid(),
+                    Name = &quot;我的互斥&quot;,
+                    Description = &quot;MyDescription&quot;,
+                    icreate = &quot;900072&quot;,
+                    dcreate = DateTime.Now,
+                    iupdate = &quot;900072&quot;,
+                    dupdate = DateTime.Now
+                };
+                service.InsertRoleMutexs(new RoleMutex[] { model });
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.DeleteRoleMutexs(System.Collections.Generic.IEnumerable{Microsoft.CUF.RoleMutex})">
+             <summary>刪除角色互斥資料</summary>
+             <param name="mutexs">角色互斥資料</param>
+             <example>
+             <code>
+               public void DeleteRoleMutexs()
+            {
+                var service = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                var provider = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                IEnumerable&lt;string&gt; mutexIDs = new string[]{
+                    &quot;155d3a37-3ae6-4cf7-984b-2d70a5cb5da6&quot;,
+                    &quot;bce601e7-4161-4955-8ae3-bb0a764a381a&quot;};
+                var models = provider.GetRoleMutexs(mutexIDs);
+                service.DeleteRoleMutexs(models);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.UpdateRoleMutex(Microsoft.CUF.RoleMutex,System.String)">
+             <summary>異動角色互斥資料</summary>
+             <param name="mutex">新角色互斥資料</param>
+             <param name="umutex">原角色互斥GUID</param>
+             <example>
+             <code>
+               public void UpdateRoleMutex()
+            {
+                var service = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                var umutex = &quot;155d3a37-3ae6-4cf7-984b-2d70a5cb5da6&quot;;
+                var model = RoleMutex.Get(umutex);
+                model.Name = &quot;new我的互斥&quot;;
+                model.Description = &quot;New description&quot;;
+                model.iupdate = &quot;900072&quot;;
+                service.UpdateRoleMutex(model, umutex);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.InsertRolePermissionRelation(System.Collections.Generic.IEnumerable{Microsoft.CUF.RolePermissionRelation})">
+             <summary>新增角色權限關聯(若已存在則直接更新)</summary>
+             <param name="relations">角色權限關聯</param>
+             <example>
+             <code>
+              public void InsertRolePermissionRelation()
+            {
+                var service = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                var model = new RolePermissionRelation
+                {
+                    RoleID = &quot;TTT-001&quot;,
+                    PermissionGUID = Guid.Parse(&quot;c283e136-6150-4b38-b10b-5cfb765f6d11&quot;),
+                    icreate = &quot;900072&quot;,
+                    dcreate = DateTime.Now,
+                    iupdate = &quot;900072&quot;,
+                    dupdate = DateTime.Now
+                };
+                service.InsertRolePermissionRelation(new RolePermissionRelation[] { model});
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.DeleteRolePermissionRelation(System.Collections.Generic.IEnumerable{Microsoft.CUF.RolePermissionRelation})">
+             <summary>刪除角色權限關聯</summary>
+             <param name="relations">角色權限關聯</param>
+             <example>
+             <code>
+              public void DeleteRolePermissionRelation()
+            {
+                var service = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                var model = new RolePermissionRelation
+                {
+                    RoleID = &quot;TTT-001&quot;,
+                    PermissionGUID = Guid.Parse(&quot;c283e136-6150-4b38-b10b-5cfb765f6d11&quot;),
+                    icreate = &quot;900072&quot;,
+                    dcreate = DateTime.Now,
+                    iupdate = &quot;900072&quot;,
+                    dupdate = DateTime.Now
+                };
+                service.DeleteRolePermissionRelation(new RolePermissionRelation[] { model });
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.GetRolePermissionRelation(Microsoft.CUF.RolePermissionRelation)">
+             <summary>取得角色權限關聯(因只有維護需要故寫在這)</summary>
+             <param name="relation">角色權限關聯</param>
+             <returns>取得角色權限關聯</returns>
+             <example>
+             <code>
+              public void GetRolePermissionRelationTest()
+            {
+                var service = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                var model = new RolePermissionRelation
+                {
+                    RoleID = &quot;TTT-001&quot;,
+                    PermissionGUID = Guid.Parse(&quot;c283e136-6150-4b38-b10b-5cfb765f6d11&quot;)
+                };
+                service.GetRolePermissionRelation(model);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.QueryRoleRelationByPermission(System.Collections.Generic.IEnumerable{System.Guid},System.String)">
+             <summary>取得該權限下指定單位的角色列表</summary>
+             <param name="unitGuids">指定單位</param>
+             <param name="permissionID">權限ID</param>
+             <returns>取得該權限下指定單位的角色列表</returns>
+             <example>
+             <code>
+             public void QueryRoleRelationByPermissionTest()
+            {
+                var service = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                var unitGuids = new List&lt;Guid&gt;() { Guid.Parse(&quot;c283e136-6150-4b38-b10b-5cfb765f6d11&quot;) };
+                var permissionID = &quot;155d3a37-3ae6-4cf7-984b-2d70a5cb5da6&quot;;
+                var result = service.QueryRoleRelationByPermission(unitGuids, permissionID);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.QueryRoleNotExistInPermissionRelation(System.Collections.Generic.IEnumerable{System.Guid},System.String,Microsoft.CUF.RoleCondition)">
+             <summary>取得尚未擁有該權限的角色列表</summary>
+             <param name="unitGuids">所屬單位</param>
+             <param name="permissionID">權限</param>
+             <param name="condition">其它查詢條件</param>
+             <returns>取得尚未擁有該權限的角色列表</returns>
+             <example>
+             <code>
+              public void QueryRoleNotExistInPermissionRelationTest()
+            {
+                var service = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                var unitGuids = new List&lt;Guid&gt;() { Guid.Parse(&quot;c283e136-6150-4b38-b10b-5cfb765f6d11&quot;) };
+                var permissionID = &quot;155d3a37-3ae6-4cf7-984b-2d70a5cb5da6&quot;;
+                var condition = new RoleCondition();
+                var result = service.QueryRoleNotExistInPermissionRelation(unitGuids, permissionID, condition);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.QueryRoleByUnit(System.Collections.Generic.IEnumerable{System.Guid},Microsoft.CUF.RoleCondition)">
+             <summary>取得角色列表 by 單位</summary>
+             <param name="unitGuids">單位列表</param>
+             <param name="condition">其它查詢條件</param>
+             <returns>取得角色列表 by 單位</returns>
+             <example>
+             <code>
+             public void QueryRoleByUnitTest()
+            {
+                var service = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                var unitGuids = new List&lt;Guid&gt;() { Guid.Parse(&quot;c283e136-6150-4b38-b10b-5cfb765f6d11&quot;) };
+                var condition = new RoleCondition();
+                var result = service.QueryRoleByUnit(unitGuids, condition);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.QueryPermissionByRole(System.String,System.String)">
+             <summary>取得該角色下擁有管理者所管理的權限列表(權限的父節點也一併取得)</summary>
+             <param name="RoleID">角色ID</param>
+             <param name="MemberId">管理者ID</param>
+             <returns>取得該角色下擁有管理者所管理的權限列表</returns>
+             <example>
+             <code>
+              public void QueryPermissionByRoleTest()
+            {
+                var service = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                var RoleID = &quot;TTT-001&quot;;
+                var MemberId = &quot;900072&quot;;
+                var result = service.QueryPermissionByRole(RoleID, MemberId);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.InsertAccountRoleRelationSingle(Microsoft.CUF.AccountRoleRelation)">
+             <summary>新增帳號與角色關聯(單筆直接新增)</summary>
+             <param name="relations">帳號與角色關聯</param>
+             <example>
+             <code>
+             public void InsertAccountRoleRelationSingleTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                var model = new AccountRoleRelation
+                {
+                    AccountID = &quot;910064&quot;,
+                    RoleID = &quot;TTT-010&quot;,
+                    icreate = &quot;900072&quot;,
+                    dcreate = DateTime.Now,
+                    iupdate = &quot;900072&quot;,
+                    dupdate = DateTime.Now
+                };
+                target.InsertAccountRoleRelationSingle(model);//OK！
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.InsertAccountRoleRelation(System.Collections.Generic.IEnumerable{Microsoft.CUF.AccountRoleRelation})">
+             <summary>新增帳號與角色關聯(若已存在則直接更新)</summary>
+             <param name="relations">帳號與角色關聯</param>
+             <example>
+             <code>
+              public void InsertAccountRoleRelationTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;(); 
+                IEnumerable&lt;AccountRoleRelation&gt; relations = new AccountRoleRelation[]{
+                new AccountRoleRelation{ AccountID=&quot;910064&quot;,RoleID=&quot;TTT-010&quot;},
+                new AccountRoleRelation{ AccountID=&quot;910064&quot;,RoleID=&quot;TTT-001&quot;},
+                new AccountRoleRelation{ AccountID=&quot;910064&quot;,RoleID=&quot;TTT-002&quot;}
+                }; 
+                target.InsertAccountRoleRelation(relations);//OK！
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.UpdateAccountRoleRelation(System.Collections.Generic.IEnumerable{Microsoft.CUF.AccountRoleRelation})">
+             <summary>更新帳號與角色關聯</summary>
+             <param name="relations">帳號與角色關聯</param>
+             <example>
+             <code>
+              public void UpdateAccountRoleRelationTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                IEnumerable&lt;AccountRoleRelation&gt; relations = new AccountRoleRelation[]{
+                new AccountRoleRelation{ AccountID=&quot;910064&quot;,RoleID=&quot;TTT-010&quot;},
+                new AccountRoleRelation{ AccountID=&quot;910064&quot;,RoleID=&quot;TTT-001&quot;},
+                new AccountRoleRelation{ AccountID=&quot;910064&quot;,RoleID=&quot;TTT-002&quot;}
+                };
+                target.UpdateAccountRoleRelation(relations);//OK！
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.DeleteAccountRoleRelation(System.Collections.Generic.IEnumerable{Microsoft.CUF.AccountRoleRelation})">
+             <summary>刪除帳號與角色關聯</summary>
+             <param name="relations">帳號與角色關聯</param>
+             <example>
+             <code>
+               public void DeleteAccountRoleRelationTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                IEnumerable&lt;AccountRoleRelation&gt; relations = new AccountRoleRelation[]{
+                new AccountRoleRelation{ AccountID=&quot;910064&quot;,RoleID=&quot;TTT-010&quot;},
+                new AccountRoleRelation{ AccountID=&quot;910064&quot;,RoleID=&quot;TTT-001&quot;},
+                new AccountRoleRelation{ AccountID=&quot;910064&quot;,RoleID=&quot;TTT-002&quot;}
+                };
+                target.DeleteAccountRoleRelation(relations);//OK！
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.GetAccountRoleRelation(Microsoft.CUF.AccountRoleRelation)">
+             <summary>取得帳號與角色關聯</summary>
+             <remarks>(因只有維護需要故寫在這)</remarks>
+             <param name="relation">帳號與角色關聯></param>
+             <returns>取得帳號與角色關聯</returns>
+             <example>
+             <code>
+              public void GetAccountRoleRelationTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                var model = new AccountRoleRelation
+                {
+                    AccountID = &quot;910064&quot;,
+                    RoleID = &quot;TTT-010&quot;,
+                    icreate = &quot;900072&quot;,
+                    dcreate = DateTime.Now,
+                    iupdate = &quot;900072&quot;,
+                    dupdate = DateTime.Now
+                };
+                target.GetAccountRoleRelation(model);//OK！
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.GetRoleRelationByAccountAndRoleIds(System.String,System.String[])">
+             <summary>依帳號ID及傳入的RoleIds取得其帳號角色關聯資訊</summary>
+             <param name="accountID">帳號ID</param>
+             <param name="roleIds">RoleIds</param>
+             <returns>取得其帳號角色關聯資訊</returns>
+             <example>
+             <code>
+              public void GetRoleRelationByAccountAndRoleIdsTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                string accountID = &quot;900072&quot;;
+                string[] roleIds = new string[] { &quot;TTT-001&quot;};
+                var result = target.GetRoleRelationByAccountAndRoleIds(accountID, roleIds);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.GetRoleRelationByAccount(System.String)">
+             <summary>依帳號ID取得其帳號角色關聯資訊</summary>
+             <param name="accountID">帳號ID</param>
+             <returns>取得其帳號角色關聯資訊</returns>
+             <example>
+             <code>
+            public void GetRoleRelationByAccountTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                string accountID = &quot;900072&quot;;
+                var result = target.GetRoleRelationByAccount(accountID);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.QueryMemberByRole(System.String,Microsoft.CUF.MemberCondition)">
+            <summary>取得該角色下的人員資訊，並加上人員過濾條件</summary>
+            <remarks>(因只有維護需要故寫在這)</remarks>
+            <param name="roleID">角色ID</param>
+            <param name="condition">人員過濾條件</param>
+            <returns>取得該角色下的人員資訊</returns>
+            <example>
+            <code>
+            </code>
+            </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.QueryRoleRelationByRole(System.String,Microsoft.CUF.MemberCondition)">
+             <summary>依角色取得其角色帳號關係</summary>
+             <param name="roleID">角色ID</param>
+             <param name="condition">人員查詢條件</param>
+             <returns>依角色取得其角色帳號關係</returns>
+             <example>
+             <code>
+              public void QueryMemberByRoleTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                string roleID = &quot;TTT-001&quot;;
+                MemberCondition condition = new MemberCondition { uunit = &quot;497bc2ca-bbe6-4a88-9402-0f3eb52c175e&quot; };
+                IEnumerable&lt;Member&gt; actual;
+                actual = target.QueryMemberByRole(roleID, condition);//測Ok
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.QueryRoleRelationByAccount(System.String,Microsoft.CUF.RoleCondition)">
+             <summary>依帳號取得其角色帳號關係</summary>
+             <param name="accountID">帳號ID</param>
+             <param name="condition">角色查詢條件</param>
+             <returns>依帳號取得其角色帳號關係</returns>
+             <example>
+             <code>
+             public void QueryRoleRelationByAccountTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                string accountID = &quot;900072&quot;;
+                RoleCondition condition = null;
+                IEnumerable&lt;Tuple&lt;AccountRoleRelation, Role&gt;&gt; actual;
+                actual = target.QueryRoleRelationByAccount(accountID, condition);//測OK
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.QueryMemberNotExistInRoleRelation(System.String,Microsoft.CUF.MemberCondition)">
+             <summary>取得所有的人員，且人員並不存在該角色關聯下的</summary>
+             <remarks>1.查詢所有的帳號 2.排除已存在此角色的帳號 3.同角色身份別的帳號</remarks>
+             <param name="roleID">指定的角色ID</param>
+             <param name="condition">人員的查詢條件</param>
+             <returns>取得所有的人員，且人員並不存在該角色關聯下的</returns>
+             <example>
+             <code> 
+             public void QueryMemberByRelationNotExistTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                string roleID = "TTT-002";
+                MemberCondition condition = new MemberCondition();
+                condition.MemberName = "王%";
+                var actual = target.QueryMemberNotExistInRoleRelation(roleID, condition);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.QueryRoleNotExistInRoleRelation(System.String,System.String,Microsoft.CUF.RoleCondition)">
+             <summary>查詢所管理的角色列表但不存在於指定的帳號關聯下的，且角色身份別相符的</summary>
+             <param name="managerID">管理人員ID</param>
+             <param name="accountID">指定的帳號</param>
+             <param name="condition">角色的查詢條件</param>
+             <returns>查詢所管理的角色列表但不存在於指定的帳號關聯下的角色</returns>
+             <example>
+             <code>
+              public void QueryRoleNotExistInRoleRelationTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                string managerID = &quot;900072&quot;;
+                string accountID = &quot;010092&quot;;
+                RoleCondition condition = null;
+                IEnumerable&lt;Role&gt; expected = null;
+                IEnumerable&lt;Role&gt; actual;
+                actual = target.QueryRoleNotExistInRoleRelation(managerID, accountID, condition);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.InsertUnitRoleRelation(System.Collections.Generic.IEnumerable{Microsoft.CUF.UnitRoleRelation})">
+             <summary>新增單位角色關聯</summary>
+             <param name="relations">單位角色關聯</param>
+             <example>
+             <code>
+              public void InsertUnitRoleRelationTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;(); // TODO: Initialize to an appropriate value
+                IEnumerable&lt;UnitRoleRelation&gt; relations = new UnitRoleRelation[] { 
+                    new UnitRoleRelation{ RoleID=&quot;TTT-001&quot;, UnitGUID= Guid.Parse(&quot;27a624f5-b6a2-4db9-8108-0c48cd0bd657&quot;), dcreate=DateTime.Now,dupdate = DateTime.Now},
+                    new UnitRoleRelation{ RoleID=&quot;TTT-002&quot;, UnitGUID= Guid.Parse(&quot;27a624f5-b6a2-4db9-8108-0c48cd0bd657&quot;), dcreate=DateTime.Now,dupdate = DateTime.Now},
+                    new UnitRoleRelation{ RoleID=&quot;TTT-010&quot;, UnitGUID= Guid.Parse(&quot;27a624f5-b6a2-4db9-8108-0c48cd0bd657&quot;), dcreate=DateTime.Now,dupdate = DateTime.Now},
+                };
+                target.InsertUnitRoleRelation(relations);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.DeleteUnitRoleRelation(System.Collections.Generic.IEnumerable{Microsoft.CUF.UnitRoleRelation})">
+             <summary>刪除單位角色關聯</summary>
+             <param name="relations">單位角色關聯</param>
+             <example>
+             <code>
+                public void DeleteUnitRoleRelationTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;();
+                IEnumerable&lt;UnitRoleRelation&gt; relations = new UnitRoleRelation[] { 
+                    new UnitRoleRelation{ RoleID=&quot;TTT-001&quot;, UnitGUID= Guid.Parse(&quot;27a624f5-b6a2-4db9-8108-0c48cd0bd657&quot;)},
+                    new UnitRoleRelation{ RoleID=&quot;TTT-002&quot;, UnitGUID= Guid.Parse(&quot;27a624f5-b6a2-4db9-8108-0c48cd0bd657&quot;)},
+                    new UnitRoleRelation{ RoleID=&quot;TTT-010&quot;, UnitGUID= Guid.Parse(&quot;27a624f5-b6a2-4db9-8108-0c48cd0bd657&quot;)},
+                };
+                target.DeleteUnitRoleRelation(relations);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.GetUnitRoleRelationByUnit(System.Guid)">
+             <summary>依單位GUID取得其允許的角色資訊</summary>
+             <remarks>會遞迴往上找，找到有角色設定為止</remarks>
+             <param name="unitGuid">該單位的GUID</param>
+             <returns>關聯設定的單位及關聯設定的角色值</returns>
+             <example>
+             <code>
+              public void GetUnitRoleRelationByUnitTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;(); 
+                Guid unitGuid = Guid.Parse(&quot;ea90c60e-2ab9-4b06-9c50-a3cce980efb0&quot;); 
+                Tuple&lt;Unit, IEnumerable&lt;Role&gt;&gt; actual;
+                actual = target.GetUnitRoleRelationByUnit(unitGuid);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityModifier.QueryUnitRoleRelationByUnit(System.String,Microsoft.CUF.RoleCondition)">
+             <summary>依單位取得其單位角色關係</summary>
+             <param name="unitGuid">單位Guid</param>
+             <param name="condition">角色查詢條件</param>
+             <returns>取得其單位角色關係</returns>
+             <example>
+             <code>
+               public void QueryUnitRoleRelationByUnitTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityModifier&gt;(); 
+                string unitGuid = &quot;91ad0f6a-59bf-4fe4-a6c4-77ce6b22f4cf&quot;; 
+                RoleCondition condition = null; 
+                IEnumerable&lt;Tuple&lt;UnitRoleRelation, Role&gt;&gt; actual;
+                actual = target.QueryUnitRoleRelationByUnit(unitGuid, condition);
+            }
+             </code>
+             </example>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Microsoft.CUF.ISecurityModifier.QueryRoleNotExistInUnitRelation(System.String,System.String,Microsoft.CUF.RoleCondition)" -->
+        <member name="T:Microsoft.CUF.ISecurityProvider">
+             <summary>提供安控資訊的Service Interface</summary>
+             <example>
+             <code>
+             //透過Interface取得服務
+             var service = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+             /*
+             註：此寫法
+             用Web呼叫時需於Web.Config加上 
+                 &lt;system.serviceModel&gt;
+                &lt;client&gt;
+                   &lt;endpoint address=&quot;http://localhost:XXXX/Microsoft.CUF.SecurityProvider.svc&quot; binding=&quot;basicHttpBinding&quot; bindingConfiguration=&quot;BasicHttpBinding&quot; contract=&quot;Microsoft.CUF.ISecurityProvider&quot; name=&quot;Microsoft.CUF.ISecurityProvider&quot; behaviorConfiguration=&quot;CommonEndpointBehavior&quot; /&gt;
+                &lt;/client&gt;
+              &lt;/system.serviceModel&gt;
+            &lt;/configuration&gt;
+             以「元件方式」呼叫時需於Web.Config加上
+             &lt;configuration&gt;
+              &lt;configSections&gt;
+                &lt;section name=&quot;unity&quot; type=&quot;Microsoft.Practices.Unity.Configuration.UnityConfigurationSection, Microsoft.Practices.Unity.Configuration&quot;/&gt;
+              &lt;/configSections&gt;
+            &lt;unity xmlns=&quot;http://schemas.microsoft.com/practices/2010/unity&quot;&gt;
+                &lt;sectionExtension type=&quot;Microsoft.CUF.Framework.Service.UnityWcfConfigExtension, Microsoft.CUF.Framework&quot; /&gt;
+                &lt;container&gt;
+                  &lt;register type=&quot;Microsoft.CUF.ISecurityProvider,Microsoft.CUF.Security.Contract&quot; mapTo=&quot;Microsoft.CUF.SecurityProvider,Microsoft.CUF.Security.Service&quot;/&gt;      
+                &lt;/container&gt;
+              &lt;/unity&gt;
+            &lt;/configuration&gt;
+            */
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.Authorize(System.String,System.String)">
+            <summary>帳號認證</summary>
+            <param name="accountID">帳號</param>
+            <param name="password">密碼</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetAccounts(System.Collections.Generic.IEnumerable{System.String})">
+             <summary>依帳號ID取得帳號資料。</summary>
+             <param name="accountIDs">帳號ID列表</param>
+             <returns>帳號物件資訊</returns>
+             <example>
+             <code>
+               public void GetAccounts()
+            {
+                var service = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                var result = service.GetAccounts(new string[] { &quot;666666&quot; });
+            }
+             </code>
+             </example>        
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetMembersByAccount(System.Collections.Generic.IEnumerable{System.String})">
+             <summary>依帳號取得人員資訊</summary>
+             <param name="accountIDs">帳號ID列表</param>
+             <returns>人員資訊</returns>
+             <example>
+             <code>
+            public void GetMembersByAccount()
+            {
+                var service = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                var result = service.GetMembersByAccount(new string[] { &quot;666666&quot;});
+            }
+             </code>
+             </example>        
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetAccountsByRole(System.Collections.Generic.IEnumerable{System.String})">
+             <summary>依角色Id取得帳號資料。</summary>
+             <remarks>一個角色會有0到多個帳號。</remarks>
+             <param name="roleIDs">角色ID列表</param>
+             <returns>帳號資料</returns>
+             <example>
+             <code>
+            public void GetAccountsByRole()
+            {
+                 var service = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                 var roleIDs = new string[] { &quot;XXXX&quot; };
+                 var result = service.GetAccountsByRole(roleIDs);
+            }
+             </code>
+             </example>        
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetAccountsByMember(System.Collections.Generic.IEnumerable{System.String})">
+             <summary>依人員Id取得帳號資料。</summary>
+             <remarks>一個人員會有0到多個帳號。</remarks>
+             <param name="memberIDs">人員Id</param>
+             <returns>取得帳號資料</returns>
+             <example>
+             <code>
+             public void GetAccountsByMember()
+            {
+                var service = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                var result = service.GetAccountsByMember(new string[] { &quot;501044&quot; });
+            }
+             </code>
+             </example>        
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetRole(System.String)">
+             <summary>取得角色</summary>
+             <param name="roleID">角色ID</param>
+             <returns>角色資訊</returns>
+             <example>
+             <code>
+            public void GetRole()
+            {
+                var service = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                var roleID = &quot;XXXXX&quot;;
+                var result = service.GetRole(roleID);
+            }
+             </code>
+             </example>        
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetRoles(System.Collections.Generic.IEnumerable{System.String})">
+             <summary>依照角色ID取得角色資料</summary>
+             <param name="roleIDs">角色ID</param>
+             <returns>角色資料</returns>
+             <example>
+             <code>
+            public void GetRoles()
+            {
+                var service = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                var roleIDs = new string[]{&quot;XXXXX&quot;};
+                var result = service.GetRoles(roleIDs);
+            }
+             </code>
+             </example>        
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetRolesByAccount(System.Collections.Generic.IEnumerable{System.String},System.Boolean)">
+            <summary>依帳號ID取得角色資料</summary>
+            <remarks>一個帳號會有0到多個角色。</remarks>
+            <param name="accountIDs"></param>
+            <param name="containSysRole">包括系統角色(預設=true)</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetRolesByAccount2(System.Collections.Generic.IEnumerable{System.String})">
+             <summary>依帳號ID取得角色資料</summary>
+             <remarks>一個帳號會有0到多個角色, 但是排除 1.停用的角色 2.系統自動給予的預設系統角色</remarks>
+             <param name="accountIDs">帳號ID列表</param>
+             <returns>取得角色資料</returns>
+             <example>
+             <code> 
+             public void GetRoles()
+            {
+                var service = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                var roleIDs = new string[]{&quot;XXXXX&quot;};
+                var result = service.GetRoles(roleIDs);
+            }
+             </code>
+             </example>        
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetRolesByPermission(System.Collections.Generic.IEnumerable{System.Guid})">
+             <summary>依權限Guid取得角色資料</summary>
+             <remarks>一個權限會同時列於多個角色。</remarks>
+             <param name="permissionGUIDs">權限Guid</param>
+             <returns>取得角色資料</returns>
+             <example>
+             <code>  
+             public void GetRolesByPermissionTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                IEnumerable&lt;Guid&gt; permissionGUIDs = new Guid[] { Guid.Parse(&quot;07c33594-a8b8-49c7-8cab-a9a8c9cc32ab&quot;), Guid.Parse(&quot;2247582d-0aec-4056-83d3-58a664a949fd&quot;), Guid.Parse(&quot;82579ba9-92b1-4b5d-a1df-97e230a3c95e&quot;) };
+                var actual = target.GetRolesByPermission(permissionGUIDs);
+            }
+             </code>
+             </example>        
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetRolesByPermission(System.Collections.Generic.IEnumerable{System.String})">
+             <summary>依權限Guid取得角色資料</summary>
+             <remarks>一個權限會同時列於多個角色。</remarks>
+             <param name="permissionStrings">完整的權限字串。例如:Car.Policy.Audit.Corp。</param>
+             <returns>取得角色資料</returns>
+             <example>
+             <code>
+             public void GetRolesByPermissionTest1()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                IEnumerable&lt;string&gt; permissionStrings = new string[] { &quot;Common.XXX.Query&quot;, &quot;Common.XXX.Underwriter&quot; };
+                var actual = target.GetRolesByPermission(permissionStrings);            
+            }
+             </code>
+             </example>        
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetRolesByMutex(System.Collections.Generic.IEnumerable{System.String})">
+             <summary>依互斥ID取得角色資料</summary>
+             <param name="mutexIDs">角色互斥ID。</param>
+             <returns>取得角色資料</returns>
+             <example>
+             <code> 
+             public void GetRolesByMutex()
+            {
+                var service = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                var guidStrings = new string[]{
+                    &quot;155d3a37-3ae6-4cf7-984b-2d70a5cb5da6&quot;,
+                    &quot;bce601e7-4161-4955-8ae3-bb0a764a381a&quot;};
+                var result = service.GetRolesByMutex(guidStrings);
+            }
+             </code>
+             </example>        
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetRoleMutexs(System.Collections.Generic.IEnumerable{System.String})">
+             <summary>依互斥ID取得其互斥資料 </summary>
+             <param name="mutexIDs">互斥ID</param>
+             <returns>取得其互斥資料</returns>
+             <example>
+             <code>  
+             public void GetRoleMutexsTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                IEnumerable&lt;string&gt; mutexIDs = new string[]{
+                    &quot;155d3a37-3ae6-4cf7-984b-2d70a5cb5da6&quot;,
+                    &quot;bce601e7-4161-4955-8ae3-bb0a764a381a&quot;};
+                var actual = target.GetRoleMutexs(mutexIDs);
+            }
+             </code>
+             </example>        
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetRoleMutexsByRole(System.String)">
+             <summary>
+             依角色取得與其互斥的互斥資訊(包括角色資訊)
+             </summary>
+             <param name="roleID">角色ID</param>
+             <returns>取得與其互斥的互斥資訊(包括角色資訊)</returns>
+             <example>
+             <code>
+            public void GetRoleMutexsByRoleTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                var roleID = &quot;XXXX&quot;;
+                var actual = target.GetRoleMutexsByRole(roleID);
+            }
+             </code>
+             </example>        
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetAllRoleMutexs">
+             <summary>取得互斥的所有資訊</summary>
+             <returns>取得互斥的所有資訊</returns>
+             <example>
+             <code>
+            public void GetAllRoleMutexsTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                var actual = target.GetAllRoleMutexs();
+            }
+             </code>
+             </example>        
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetRoleByAccountButNotYetHave(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,Microsoft.CUF.RoleCondition}})">
+            <summary>取得尚未擁有的角色</summary>
+            <remarks>取得所有角色列表, 但是排除該帳號已經有的</remarks>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetAllPermissions">
+            <summary>取得所有的權限</summary>
+            <returns>取得所有的權限</returns>
+            <example>
+            <code>
+            public void GetAllPermissions()
+            {
+                var service = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                var result = service.GetAllPermissions();
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetPermission(System.Guid)">
+             <summary>取得單筆的權限</summary>
+             <param name="permissionGuid">權限GUID</param>
+             <returns>單筆的權限</returns>
+             <example>
+             <code>
+            public void GetPermissionTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                Guid permissionGuid = Guid.Parse(&quot;6051e0db-6f35-4b78-9fe4-828e0ccf6a3c&quot;);
+                var actual = target.GetPermission(permissionGuid);
+            }
+             </code>
+             </example>        
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetPermissions(System.Collections.Generic.IEnumerable{System.Guid})">
+             <summary>依照權限Guid取得權限資料</summary>
+             <param name="permissionGUIDs">權限Guid列表</param>
+             <returns>取得權限資料</returns>
+             <example>
+             <code>
+            public void GetPermissionsTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                IEnumerable&lt;Guid&gt; permissionGUIDs = new Guid[] { Guid.Parse(&quot;6051e0db-6f35-4b78-9fe4-828e0ccf6a3c&quot;), Guid.Parse(&quot;6051e0db-6f35-4b78-9fe4-828e0ccf6a3c&quot;) };
+                var actual = target.GetPermissions(permissionGUIDs);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetPermissions(System.Collections.Generic.IEnumerable{System.String})">
+             <summary>依照權限字串取得權限資料</summary>
+             <param name="permissionStrings">完整的權限字串。例如:Car.Policy.Audit.Corp。</param>
+             <returns>取得權限資料</returns>
+             <example>
+             <code>
+            public void GetPermissionsTest1()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                IEnumerable&lt;string&gt; permissionStrings = new string[] { &quot;Common.XXXX.Query&quot;, &quot;Common.XXXX.Underwriter&quot; };
+                var actual = target.GetPermissions(permissionStrings);
+            }
+             </code>
+             </example>        
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetSubPermissions(System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>依照權限Guid取得子權限資料(取一層)</summary>
+            <param name="permissionGUIDs">權限Guid</param>
+            <returns>取得子權限資料(取一層)</returns>
+            <example>
+            <code> 
+            public void GetSubPermissionsByGUIDs()
+            {
+               var guids = new Guid[] { 
+                   Guid.Parse(&quot;bce601e7-4161-4955-8ae3-bb0a764a381a&quot;),
+                   Guid.Parse(&quot;6f9a94da-5746-4323-ae86-2166c87e3ae7&quot;)
+               } as IEnumerable&lt;Guid&gt;;
+               var service = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+               var result = service.GetSubPermissions(guids);
+            }
+            </code>
+            </example>        
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetSubPermissions(System.Collections.Generic.IEnumerable{System.String})">
+             <summary>依照權限字串取得子權限資料(取一層)</summary>
+             <param name="permissionStrings">完整的權限字串。例如:Car.Policy.Audit.Corp。</param>
+             <returns>取得子權限資料(取一層)</returns>
+             <example>
+             <code>
+            public void GetSubPermissionsTest1()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                IEnumerable&lt;string&gt; permissionStrings = new string[] { 
+                    &quot;Common.XXXX.Query&quot;, 
+                    &quot;Common.XXXX.Underwriter&quot; };
+                var actual = target.GetSubPermissions(permissionStrings);
+            }
+             </code>
+             </example>        
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetPermissionsByRole(System.Collections.Generic.IEnumerable{System.String})">
+             <summary>依照角色ID取得權限資料</summary>
+             <param name="roleIDs">角色ID</param>
+             <returns>取得權限資料</returns>
+             <example>
+             <code>
+            public void GetPermissionsByRoleTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                IEnumerable&lt;string&gt; roleIDs = new string []{&quot;XXXX&quot;,&quot;XXX&quot;};
+                var actual = target.GetPermissionsByRole(roleIDs);
+            }
+             </code>
+             </example>        
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetParentPermissions(System.Collections.Generic.IEnumerable{Microsoft.CUF.Permission},System.Collections.Generic.IEnumerable{Microsoft.CUF.Permission})">
+             <summary>
+             依傳入的Permission取得其Parent的資料(不包括自已;已過濾其重覆的Parent)
+             </summary>
+             <param name="permissions">欲取得其父節點的節點</param>
+             <param name="nowPermissions">記錄目前取得的權限值(以防重覆);第1次呼叫時不用傳入(為null)</param>
+             <returns>取得其Parent的資料</returns>   
+             <example>
+             <code>  
+             public void GetParentPermissionsTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                IEnumerable&lt;Permission&gt; permissions = target.GetPermissions(new Guid[] { Guid.Parse(&quot;07c33594-a8b8-49c7-8cab-a9a8c9cc32ab&quot;), Guid.Parse(&quot;2247582d-0aec-4056-83d3-58a664a949fd&quot;), Guid.Parse(&quot;82579ba9-92b1-4b5d-a1df-97e230a3c95e&quot;) });
+                IEnumerable&lt;Permission&gt; parents = Enumerable.Empty&lt;Permission&gt;();
+                parents = target.GetParentPermissions(permissions);
+                var result = parents.ToList();
+                Assert.AreEqual(parents.Count(), 5);
+                //再取得其完整的描述文字-測試
+                var allPermission = parents.Concat(permissions);
+                var result2 = target.GetPermissionFullDescriptions(allPermission);
+                var list2 = result2.ToList();
+            }
+             </code>
+             </example>     
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetPermissionFullDescriptions(System.Collections.Generic.IEnumerable{Microsoft.CUF.Permission})">
+             <summary>
+             取得權限其完整的呈現字串；ex: Marine =&gt;新系統&gt;&gt;水險
+             </summary>
+             <remarks>return Dictionary為key:GUID, value:Tuple(權限ID,完整的描述)</remarks>
+             <param name="permissions">需包含完整的父節點資訊</param>
+             <returns>權限GUID:權限ID與權限完整描述之對應值</returns>
+             <example>
+             <code>  
+             public void GetParentPermissionsTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                IEnumerable&lt;Permission&gt; permissions = target.GetPermissions(new Guid[] { Guid.Parse(&quot;07c33594-a8b8-49c7-8cab-a9a8c9cc32ab&quot;), Guid.Parse(&quot;2247582d-0aec-4056-83d3-58a664a949fd&quot;), Guid.Parse(&quot;82579ba9-92b1-4b5d-a1df-97e230a3c95e&quot;) });
+                IEnumerable&lt;Permission&gt; parents = Enumerable.Empty&lt;Permission&gt;();
+                parents = target.GetParentPermissions(permissions);
+                var result = parents.ToList();
+                Assert.AreEqual(parents.Count(), 5);
+                //再取得其完整的描述文字-測試
+                var allPermission = parents.Concat(permissions);
+                var result2 = target.GetPermissionFullDescriptions(allPermission);
+                var list2 = result2.ToList();
+            }
+             </code>
+             </example> 
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetPermissionFullDescriptions(System.Collections.Generic.IEnumerable{System.String})">
+             <summary>依權限代碼取得權限的完整描述</summary>
+             <param name="permissions">權限ID字串列;ex:Marine</param>
+             <returns>key:權限ID,value:完整名稱</returns>
+             <example>
+             <code>
+             public void GetPermissionFullDescriptionsTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityProvider&gt;();
+                IEnumerable&lt;string&gt; permissions = new string[] { &quot;XXX.RelationQuery.Query&quot;, &quot;XXX.RelationQuery.Underwriter&quot;, &quot;XXX&quot; };
+                var result = target.GetPermissionFullDescriptions(permissions);
+                var str = Newtonsoft.Json.JsonConvert.SerializeObject(result);
+            }
+             </code>
+             </example>     
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetPermissionFullDescriptions(System.Collections.Generic.IEnumerable{System.Guid})">
+             <summary>依權限Guid取得權限的完整描述</summary>
+             <param name="permissions">權限Guid列;</param>
+             <returns>key:權限Guid,value:完整名稱</returns>
+             <example>
+             <code> 
+             public void GetPermissionFullDescriptionsTest1()
+            {
+                SecurityProvider target = new SecurityProvider();
+                IEnumerable&lt;Guid&gt; permissions = new Guid[] { Guid.Parse(&quot;6d121189-249c-4ef4-900f-025706926782&quot;), Guid.Parse(&quot;51e4eb3e-b818-4378-b43c-bc53c234d29c&quot;), Guid.Parse(&quot;907c7d3c-f179-4855-bc61-c9164894c10b&quot;) };
+                var actual = target.GetPermissionFullDescriptions(permissions);
+            }
+             </code>
+             </example>     
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetPermissionAndFullDescriptions(System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>依權限Guid取得權限物件及完整描述</summary>
+            <param name="permissions">權限Guid</param>
+            <returns>key:權限物件,value:完整名稱</returns>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetLoginPasswordPolicy(System.String)">
+            <summary>取得登入時的密碼原則</summary>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetChangePasswordPolicy(System.String)">
+            <summary>取得變更密碼原則</summary>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetPasswordStrengthPolicy">
+            <summary>取得密碼強度驗證原則</summary>
+        </member>
+        <member name="M:Microsoft.CUF.ISecurityProvider.GetSkipVerifyPolicy">
+            <summary>取得略過驗證原則</summary>
+        </member>
+        <member name="T:Microsoft.CUF.Permission">
+            <summary>權限</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Permission.#ctor">
+            <summary>
+            權限-建構子
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Permission.GUID">
+            <summary>權限GUID</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Permission.ParentGUID">
+            <summary>上層權限的Guid。null表示此為權限為權限的最上層權限。</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Permission.ID">
+            <summary>權限代號</summary>
+            <remarks>在權限的兄弟權限中需確保ID不可重複。(這裡指兄弟意指同一個parent，並非指同級的意思)</remarks>
+        </member>
+        <member name="P:Microsoft.CUF.Permission.Description">
+            <summary>描述說明。</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Permission.AllowAgent">
+            <summary>是否可代理。預設為可代理</summary>
+            <remarks>true代表非機密(可代理)(fsecret=0)，false代表機密(不可代理)(fsecret=1)</remarks>
+        </member>
+        <member name="P:Microsoft.CUF.Permission.icreate">
+            <summary>建立人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Permission.dcreate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Permission.dcreateDisplay">
+            <summary>建立日期呈現</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Permission.iupdate">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Permission.dupdate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Permission.dupdateDisplay">
+            <summary>更新日期呈現</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Permission.Get(System.Guid)">
+            <summary>取得權限</summary>
+            <param name="GUID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Permission.Get(System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>依ID取得權限樹</summary>
+            <param name="GUIDs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Permission.Get(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>依ID取得權限樹</summary>
+            <param name="GUIDs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Permission.GetAll">
+            <summary>取得所有的權限</summary>
+            <returns></returns>
+        </member>
+        <member name="P:Microsoft.CUF.Permission.NodeKey">
+            <summary>該樹狀節點的Key值</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Permission.ParentNodeKey">
+            <summary>該樹狀父節點的Key值，null表示無父節點</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Permission.NodeName">
+            <summary>該樹狀節點的名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Permission.Childs">
+            <summary>放子節點的資訊</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Permission.OrderByValue">
+            <summary>節點的排序</summary>
+            <remarks>權限依ID排序，依字串給權重</remarks>
+        </member>
+        <member name="M:Microsoft.CUF.Permission.AddChild(Microsoft.CUF.ITreeNode)">
+            <summary>新增子節點</summary>
+            <param name="node">子節點</param>
+        </member>
+        <member name="M:Microsoft.CUF.Permission.AddChilds(Microsoft.CUF.ITreeNode[])">
+            <summary>新增子節點(多筆)</summary>
+            <param name="nodes">子節點</param>
+            <returns>此節點</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Permission.AddChilds(System.Collections.Generic.IEnumerable{Microsoft.CUF.ITreeNode})">
+            <summary>新增子節點(多筆)</summary>
+            <param name="nodes">子節點</param>
+            <returns>此節點</returns>
+        </member>
+        <member name="T:Microsoft.CUF.SecurityMemberExtensions">
+            <summary>人員延伸應用</summary>
+        </member>
+        <member name="M:Microsoft.CUF.SecurityMemberExtensions.GetAccounts(Microsoft.CUF.Member)">
+            <summary>取得人員對應的帳號</summary>
+            <param name="member">人員</param>
+            <returns>多筆帳號</returns>
+        </member>
+        <member name="T:Microsoft.CUF.SecurityPermissionExtensions">
+            <summary>權限延伸應用</summary>
+        </member>
+        <member name="M:Microsoft.CUF.SecurityPermissionExtensions.GetRoles(Microsoft.CUF.Permission)">
+            <summary>取得有設定這權限的角色</summary>
+            <param name="permission"></param>
+            <returns>多筆角色</returns>
+        </member>
+        <member name="M:Microsoft.CUF.SecurityPermissionExtensions.GetParent(Microsoft.CUF.Permission)">
+            <summary>取得上層權限節點(取一層)</summary>
+            <param name="permission"></param>
+            <returns>單一筆權限</returns>
+        </member>
+        <member name="M:Microsoft.CUF.SecurityPermissionExtensions.GetFullParents(System.Collections.Generic.IEnumerable{Microsoft.CUF.Permission})">
+            <summary>依傳入的權限取得其Parent的權限資料(不包括自已;已過濾其重覆的Parent)</summary>
+            <param name="permissions">傳入的權限</param>
+            <returns>取得其Parent的權限資料</returns>
+        </member>
+        <member name="M:Microsoft.CUF.SecurityPermissionExtensions.GetSub(Microsoft.CUF.Permission)">
+            <summary>取得子權限節點(取一層)</summary>
+            <param name="permission"></param>
+            <returns>多筆權限</returns>
+        </member>
+        <member name="M:Microsoft.CUF.SecurityPermissionExtensions.GetDescendant(Microsoft.CUF.Permission,System.Boolean)">
+            <summary>取得後代權限節點(其下所有層)</summary>
+            <param name="permission"></param>
+            <param name="containSelf">是否包含自己</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.SecurityPermissionExtensions.GetFullDescriptions(Microsoft.CUF.Permission,System.Func{Microsoft.CUF.Permission,System.String,System.String})">
+            <summary>取得權限其完整的呈現字串；ex: MIS.Marine =>新系統>>水險</summary>
+            <param name="permission"></param>
+            <param name="diplayFormatFunc">針對結果的呈現方式可自行定義：func(p,str) = func(權限物件,完整描述字串)</param>
+            <returns>權限其完整的呈現字串</returns>
+        </member>
+        <member name="M:Microsoft.CUF.SecurityPermissionExtensions.GetFullDescriptions(System.Collections.Generic.IEnumerable{Microsoft.CUF.Permission},System.Func{Microsoft.CUF.Permission,System.String,System.String})">
+            <summary>取得權限其完整的呈現字串；ex: MIS.Marine =>新系統>>水險</summary>
+            <param name="permissions">權限物件列</param>
+            <param name="diplayFormatFunc">針對結果的呈現方式可自行定義：func(p,str) = func(權限物件,完整描述字串)</param>
+            <returns>權限其完整的呈現字串</returns>
+        </member>
+        <member name="T:Microsoft.CUF.SecurityRoleExtensions">
+            <summary>角色延伸應用</summary>
+        </member>
+        <member name="M:Microsoft.CUF.SecurityRoleExtensions.GetAccounts(Microsoft.CUF.Role)">
+            <summary>取得擁有這角色的帳號</summary>
+            <param name="role"></param>
+            <returns>多筆帳號</returns>
+        </member>
+        <member name="M:Microsoft.CUF.SecurityRoleExtensions.GetPermissions(Microsoft.CUF.Role)">
+            <summary>取得這角色所設定的權限</summary>
+            <param name="role"></param>
+            <returns>多筆權限</returns>
+        </member>
+        <member name="M:Microsoft.CUF.SecurityRoleExtensions.GetPermissions(System.Collections.Generic.IEnumerable{Microsoft.CUF.Role})">
+            <summary>取得這群角色所設定的權限(且排除重覆權限)</summary>
+            <param name="roleList"></param>
+            <returns>多筆權限</returns>
+        </member>
+        <member name="M:Microsoft.CUF.SecurityRoleExtensions.GetMutexRoles(Microsoft.CUF.Role)">
+            <summary>取得這角色所互斥的角色</summary>
+            <param name="role"></param>
+            <returns>多筆角色</returns>
+        </member>
+        <member name="M:Microsoft.CUF.SecurityRoleExtensions.GetRoleMutexsInfo(Microsoft.CUF.Role)">
+            <summary>
+            依角色取得與其互斥的互斥資訊(包括角色資訊)
+            </summary>
+            <param name="role"></param>
+            <returns>多筆角色互斥及角色</returns>
+        </member>
+        <member name="M:Microsoft.CUF.SecurityRoleExtensions.GetMutexRoles(Microsoft.CUF.RoleMutex)">
+            <summary>取得這互斥角色的互斥角色資訊</summary>
+            <param name="rolemutex"></param>
+            <returns>多筆角色</returns>
+        </member>
+        <member name="T:Microsoft.CUF.Role">
+            <summary>角色</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Role.ID">
+            <summary>角色代號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Role.Name">
+            <summary>角色名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Role.imember_type_list">
+            <summary>適用身份別</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Role.AllowMemberTypes">
+            <summary>適用身份別</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Role.SupervisorMemberID">
+            <summary>管理人編號。null表示無管理者，通常是系統角色。</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Role.uunit">
+            <summary>管理人所屬單位</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Role.SupervisorMemberUnit">
+            <summary>管理人所屬單位</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Role.Description">
+            <summary>描述說明。</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Role.dexpire">
+            <summary>停用時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Role.icreate">
+            <summary>建立人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Role.dcreate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Role.iupdate">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Role.dupdate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Role.Get(System.String)">
+            <summary>
+             取得單筆角色
+            </summary>
+            <param name="roleID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Role.Get(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            取得多筆角色
+            </summary>
+            <param name="roleIDs"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.RoleMutex">
+            <summary>角色互斥</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RoleMutex.umutex">
+            <summary>角色互斥GUID</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RoleMutex.GUID">
+            <summary>互斥</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RoleMutex.Name">
+            <summary>互斥名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RoleMutex.fmutex_role">
+            <summary>互斥角色</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RoleMutex.Mutex">
+            <summary>互斥角色</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RoleMutex.Description">
+            <summary>描述說明</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RoleMutex.icreate">
+            <summary>建立人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RoleMutex.dcreate">
+            <summary>建立日期</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RoleMutex.iupdate">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RoleMutex.dupdate">
+            <summary>更新日期</summary>
+        </member>
+        <member name="M:Microsoft.CUF.RoleMutex.GetAll">
+            <summary>取得互斥的所有資訊</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.RoleMutex.Get(System.String)">
+            <summary>取得單筆互斥的資訊</summary>
+            <param name="mutexID">互斥ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.RoleMutex.Get(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>取得單筆互斥的資訊</summary>
+            <param name="mutexIDs">互斥ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.RoleMutex.GetMutexRoles(System.String)">
+            <summary>依互斥ID取得角色資料</summary>
+            <param name="mutexIDs">互斥ID</param>
+            <returns>角色資料</returns>
+        </member>
+        <member name="T:Microsoft.CUF.RolePermissionPassingParam">
+            <summary>權限與角色的關聯, 維護作業用來傳遞參數</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RolePermissionPassingParam.RoleID">
+            <summary>角色代號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.RolePermissionPassingParam.PermissionGUID">
+            <summary>權限GUID</summary>
+        </member>
+    </members>
+</doc>

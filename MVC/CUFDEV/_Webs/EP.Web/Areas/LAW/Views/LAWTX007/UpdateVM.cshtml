@@ -1,0 +1,98 @@
+﻿@model EP.SD.SalesSupport.LAW.Web.Areas.LAW.Model.LawDetailModel
+@{
+    ViewBag.Title = LAWResource.區塊排序設定;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+@section LeftActions{
+    <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.更新" data-bind="click: SaveClick" />
+    @Html.ActionLink(EP.PlatformResources.返回, "Index", "LAWTX007", new { Class = "btn btn-default" })
+}
+@using (Html.BeginForm("UpdateVM", "LAWTX007", null, FormMethod.Post, new { id = "UpdateSubmit" }))
+{
+    @Html.HiddenFor(model => model.yy)
+    <div class="row col-md-12">
+        <table id="datatable" class="table">
+            <thead>
+                <tr>
+                    <th>@LAWResource.年度</th>
+                    <th>@LAWResource.排序</th>
+                    <th>@LAWResource.團隊名稱</th>
+                </tr>
+            </thead>
+            <tbody id="datatbody">
+            </tbody>
+        </table>
+    </div>
+}
+<script>
+    var ViewModel = {
+        SaveClick: function () {
+            clearMessage();@*清除訊息*@
+            UpdateLawsys();
+            GetLawsys();
+        }
+    };
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+        GetLawsys();
+    });
+    function UpdateLawsys() {
+        $("input[name='SortVm']").each(function (index, element) {
+            var SortVmName = element.id;
+            var SortVm = element.value;
+            var yy = "@Model.yy";
+
+            $.ajax({
+                method: "POST",
+                cache: false,
+                async: false,
+                data: { SortVmName: SortVmName, SortVm: SortVm, yy : yy},
+                url: '@Url.Action("UpdateVM", "LAWTX007", new { area = "LAW" })',
+                complete: function (data) {
+
+                },
+                error: function (ex) {
+                    if (ex.statusText == "OK") {
+                    } else {
+                        appendMessage("@EP.PlatformResources.系統發生錯誤");
+                    }
+                }
+            });
+        });
+        appendMessage("@EP.PlatformResources.更新成功");
+    }
+    function GetLawsys() {
+         $.ajax({
+             method: "POST",
+             cache: false,
+             data: { SortYear: @Model.yy},
+             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+             url: '@Url.Action("VMData", "LAWTX007", new { area = "LAW" })',
+             complete: function (data) {
+                        if (data.responseJSON === undefined) {
+                        } else {
+                            $(".remtr").remove();
+                            $.each(data.responseJSON, function () {
+                                let str = "<tr class='remtr'><td>" + this.SortYear + "</td><td>"
+                                    + SortVmBTN(this.SortVm, this.SortVmName) + "</td><td>"
+                                    + this.SortVmName + "</td></tr>"
+                                $("#datatbody").append(str);
+                            });
+                        }
+             },
+             error: function (ex) {
+             if (ex.statusText == "OK") {
+             } else {
+                 appendMessage("@EP.PlatformResources.系統發生錯誤");
+                 }
+             }
+         });
+    }
+    function SortVmBTN(SortVm, SortVmName) {
+        if (SortVm == 0) {
+            SortVm = '';
+        }
+        return '<input type="text" id="' + SortVmName + '" class="SortVm" name="SortVm" value="' + SortVm + '">';
+    }
+
+</script>

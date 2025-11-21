@@ -1,0 +1,318 @@
+﻿@model EB.SL.MerSal.Models.MerSalCheckSPruleViewModel
+@{
+    ViewBag.Title = "檢核特殊資料";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    WebChannel<EB.SL.MerSal.Service.IMerSalService> MerSalService = new WebChannel<EB.SL.MerSal.Service.IMerSalService>();
+    //保公
+    var companylist = new List<TermVal>();
+    MerSalService.Use(s => companylist = s.GetALLCompanyCode());
+    //目前工作月
+    string ProductionYM = string.Empty;
+    MerSalService.Use(s => ProductionYM = s.GetNotYetAgbcInd());
+    ProductionYM = !String.IsNullOrEmpty(ProductionYM) ? ProductionYM : string.Empty;
+    // 佣酬類別
+    List<EB.SL.MerSal.Models.Trmval> AmountTypeList = new List<EB.SL.MerSal.Models.Trmval>();
+    MerSalService.Use(s => AmountTypeList = s.GetAmountType());
+    // 檢核特殊資料類別
+    List<EB.SL.MerSal.Models.Trmval> ChkCodeActTypeList = new List<EB.SL.MerSal.Models.Trmval>();
+    MerSalService.Use(s => ChkCodeActTypeList = s.GetChkCodeActType());
+
+}
+<style>
+    .prompt p {
+        padding: 10px 10px 10px 0px;
+        color: red;
+    }
+
+</style>
+<div id="divQueryBlock">
+    <div class="ibox ibox-primary">
+        <div class="ibox-head">
+            <div class="ibox-title">查詢</div>
+            <div class="ibox-tools">
+                <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
+                <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
+            </div>
+        </div>
+        @using (Ajax.BeginForm("Query", "MerSalTX003", new { area = "MerSal" }, new AjaxOptions { OnSuccess = "BindGrid" }, new { id = "QueryForm" }))
+        {
+    <div class="ibox-body">
+        <div class="prompt">
+            <p>目前業績未關檔年月: @ProductionYM</p>
+        </div>
+        @Html.HiddenFor(m => m.YmClose)
+        @Html.HiddenFor(m => m.SeqClose)
+        <div class="form-group row">
+            <div class="col-md-1" style="padding-right: 0px">
+                @Html.LabelFor(m => m.ProductionYmS, new { @class = "col-form-label" })
+            </div>
+            <div class="col-md-2">
+                @Html.TextBoxFor(m => m.ProductionYmS, new { @class = "form-control", placeholder = "Ex：" + ProductionYM })
+            </div>
+            <div class="col-md-1">
+                @Html.LabelFor(m => m.ProductionYmE, new { @class = "col-form-label" })
+            </div>
+            <div class="col-md-2">
+                @Html.TextBoxFor(m => m.ProductionYmE, new { @class = "form-control", placeholder = "Ex：9999/12-2" })
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-1 col-form-label" style="padding-right: 0px" for="CompanyCode">保險公司</label>
+            <div class="col-md-2">
+                <select class="form-select" id="CompanyCode" name="CompanyCode">
+                    <option value="">請選擇</option>
+                    @foreach (var item in companylist)
+                    {
+                        <option value="@item.TermCode">@item.TermMeaning</option>
+                    }
+                </select>
+            </div>
+            <label class="col-md-1 col-form-label" style="padding-right: 0px" for="FileSeq">保公序號</label>
+            <div class="col-md-2">
+                <select class="form-select" id="FileSeq" name="FileSeq">
+                    <option value="">請選擇</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-1 col-form-label" style="padding-right: 0px" for="AmountType">佣酬類別</label>
+            <div class="col-md-2">
+                <select class="form-select" id="AmountType" name="AmountType">
+                    <option value="">請選擇</option>
+                    @foreach (var item in AmountTypeList)
+                    {
+                        <option value="@item.TermCode">@item.TermMeaning</option>
+                    }
+                </select>
+            </div>
+            <label class="col-md-1 col-form-label" style="padding-right: 0px" for="ChkCodeActType">檢核類型</label>
+            <div class="col-md-2">
+                <select class="form-select" id="ChkCodeActType" name="ChkCodeActType">
+                    <option value="">請選擇</option>
+                    @foreach (var item in ChkCodeActTypeList)
+                    {
+                        <option value="@item.TermCode">@item.TermMeaning</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-1" style="padding-right: 0px">
+                @Html.LabelFor(m => m.Rule01, new { @class = "col-form-label" })
+            </div>
+            <div class="col-md-2">
+                @Html.TextBoxFor(m => m.Rule01, new { @class = "form-control" })
+            </div>
+            <div class="col-md-1">
+                @Html.LabelFor(m => m.Rule02, new { @class = "col-form-label" })
+            </div>
+            <div class="col-md-2">
+                @Html.TextBoxFor(m => m.Rule02, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-1" style="padding-right: 0px">
+                @Html.LabelFor(m => m.Rule03, new { @class = "col-form-label" })
+            </div>
+            <div class="col-md-2">
+                @Html.TextBoxFor(m => m.Rule03, new { @class = "form-control" })
+            </div>
+            <div class="col-md-1" style="padding-right: 0px">
+                @Html.LabelFor(m => m.Rule04, new { @class = "col-form-label" })
+            </div>
+            <div class="col-md-2">
+                @Html.TextBoxFor(m => m.Rule04, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-1 col-form-label" style="padding-right: 0px" for="IsDelete">停用狀態</label>
+            <div class="col-md-2">
+                <select class="form-select" id="IsDelete" name="IsDelete">
+                    <option value="">請選擇</option>
+                    <option value="Y">停用</option>
+                    <option value="N">執行</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-12">
+                <button class="btn btn-primary" id="btnQuery" data-bind="click: QueryClick">查詢</button>
+                <button class="btn btn-warning" id="btnReport" data-bind="click: ReportClick">轉出Excel報表</button>
+                <button class="btn btn-primary" id="btnSave" data-bind="click: SaveClick">新增</button>
+            </div>
+        </div>
+    </div>
+        }
+    </div>
+
+    @section GridActions {
+        <div id="batchDIVQuery" class="ibox ibox-primary" style="display:none;">
+            <div class="ibox-body">
+                <div class="jqGrid">
+                    <table id="Result"></table>
+                </div>
+                <div id="ResultPagger"></div>
+            </div>
+        </div>
+    }
+</div>
+@section Scripts{
+    <script>
+        var ViewModel = {
+            QueryClick: function () {
+                $("form#QueryForm").trigger("submit");
+                $("#batchDIVQuery").show();
+            },
+            SaveClick: function () {
+                window.open('@Url.Action("Create", "MerSalTX003", new { area = "MerSal" })');
+            },
+            //轉出Excel報表
+            ReportClick: function () {
+                var formData = new FormData();
+                formData.append('ProductionYmS', $('#ProductionYmS').val());
+                formData.append('ProductionYmE', $('#ProductionYmE').val());
+                formData.append('CompanyCode', $('#CompanyCode option:selected').val());
+                formData.append('FileSeq', $('#FileSeq option:selected').val());
+                formData.append('AmountType', $('#AmountType option:selected').val());
+                formData.append('ChkCodeActType', $('#ChkCodeActType option:selected').val());
+                formData.append('Rule01', $('#Rule01').val());
+                formData.append('Rule02', $('#Rule02').val());
+                formData.append('Rule03', $('#Rule03').val());
+                formData.append('Rule04', $('#Rule04').val());
+                formData.append('CreateUserName', $('#CreateUserName').val());
+                formData.append('UpdateUserName', $('#UpdateUserName').val());
+                formData.append('IsDelete', $('#IsDelete option:selected').val());
+
+                $.ajax({
+                    method: "POST",
+                    cache: false,
+                    url: '@Url.Action("GetMerSalCheckSPruleReport", "MerSalTX003", new { area = "MerSal" })',
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function (data) {
+                        if (data != "Error") {
+                            window.location = '/MerSal/MerSalTX003/Download?fileGuid=' + data.FileGuid
+                                + '&filename=' + data.FileName;
+                        } else {
+
+                        }
+                    },
+                    error: function () {
+                        appendMessage("系統發生錯誤");
+                    }
+                });
+            }
+        };
+
+        $(function () {
+            ko.applyBindings(ViewModel);
+            //$('#btnQuery').click();
+        });
+
+        function BindGrid(datas) {
+            $("#Result").GridUnload();
+            $("#Result").jqGrid({
+                url: '@Url.Action("BindGrid", "MerSalTX003", new { area = "MerSal" })',
+                datatype: "local",
+                mtype: "POST",
+                colNames: ["", "工作月+</br>序號起", "工作月+</br>序號迄"
+                    , "保險</br>公司", "保公</br>序號", "佣酬類別"
+                    , "特殊檢核設定類別"
+                    , "特殊檢核顯示中文"
+                    , "規則01", "規則02", "規則03", "規則04"
+                    , "備註"
+                    , "建檔時間", "建檔</br>人員"
+                    , "更新時間", "更新</br>人員", "狀態"],
+                colModel: [
+                    { name: "iden", index: "iden", hidden: true },
+                    { name: "ProductionYmS", index: "ProductionYmS", width: 100  },
+                    { name: "ProductionYmE", index: "ProductionYmE", width: 100  },
+                    { name: "CompanyCode", index: "CompanyCode", width: 50 ,align: "center"},
+                    { name: "FileSeq", index: "FileSeq", width: 50 ,align: "center" },
+                    { name: "AmountTypeName", index: "AmountTypeName", width: 125 },
+                    { name: "ChkCodeName", index: "ChkCodeName", width: 150},
+                    { name: "ActName", index: "ActName", width: 150 },
+                    { name: "Rule01", index: "Rule01" },
+                    { name: "Rule02", index: "Rule02" },
+                    { name: "Rule03", index: "Rule03" },
+                    { name: "Rule04", index: "Rule04" },
+                    { name: "Remark", index: "Remark" },
+                    { name: "CreateDatetime", index: "CreateDatetime", width: 100  },
+                    { name: "CreateUserName", index: "CreateUserName", width: 90  },
+                    { name: "UpdateDatetime", index: "UpdateDatetime", width:100 },
+                    { name: "UpdateUserName", index: "UpdateUserName", width: 90 },
+                    { name: "IsDelete", index: "IsDelete", width: 90, formatter: IsDeleteButton }
+                ],
+                jsonReader: {
+                    repeatitems: false,
+                    id: "0"
+                },
+                loadComplete: function () {
+                    $('#Result').jqGrid("setGridWidth", $('#resultDIV').width());
+                },
+                pager: "ResultPagger"
+            });
+            $("#Result").jqGrid('setGridParam', { data: datas });
+            $("#Result").trigger("reloadGrid");
+        }
+        @if (User.HasPermission("EB.SL.MerSal.MerSalTX003.Admin"))
+        {
+            <text>
+
+            function IsDeleteButton(cellValue, options, rdata, action) {
+                var IsDelete = rdata.IsDelete;
+                var Iden = rdata.iden;
+                var ProductionYmE = rdata.ProductionYmE;
+                var result = "";
+                if (IsDelete == "N") {
+                    result = '<button  type="button" class="btn btn-danger" style="padding: 4px 15px 4px 15px;" onclick="ClickIsDelete(\'' + Iden + '\',\'' + ProductionYmE + '\')" >' + '執行</button>'
+                } else {
+                    result = "<button  type='button' class='btn btn-danger' style='padding: 4px 15px 4px 15px;' disabled >停用</button >"
+                }
+                return result;
+            }
+            function ClickIsDelete(Iden, ProductionYmE) {
+                let YmClose = $("#YmClose").val();
+                let SeqClose = $("#SeqClose").val();
+                if (confirm('是否停用此規則?')) {
+                    $.ajax({
+                        method: "POST",
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        async: false,
+                        url: '@Url.Action("UpdateMerSalCheckSPruleIsDelete", "MerSalTX003", new { area = "MerSal" })',
+                        data: JSON.stringify({ ProductionYmE: ProductionYmE, Iden: Iden, YmClose: YmClose, SeqClose: SeqClose }),
+                        complete: function (check) {
+                            if (check.responseText == 1) {
+                                alert("更新成功");
+                                $('#btnQuery').click();
+                            } else {
+                                alert("更新失敗");
+                            }
+                        }
+                    });
+                }
+            }
+            </text>
+	    }
+	    else
+	    {
+             <text>
+                function IsDeleteButton(cellValue, options, rdata, action) {
+                    var IsDelete = rdata.IsDelete;
+                    var result = "";
+                    if (IsDelete == "N") {
+                        result = '<p>執行</p>'
+                    } else {
+                        result = "<p>停用</p>"
+                    }
+                    return result;
+                }
+            </text>
+	    }
+    </script>
+}

@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MailRpt>
+	<RptInfo
+		   vaild_flag ="Y"
+		   execute_type ="D"
+		   execute_day = ""
+		   execute_time ="07"
+		   func_id ="usp_NoticeRpt_Daily"
+		   title ="{0}【每日照會報表】{1}"
+		   content1 = ""
+		   file_type="xls"
+		   file_name="{0}_每日照會報表_{1}.xls"
+		   zip_name="{0}_每日照會報表_{1}.zip"
+		   zip_pw="12684149"
+		   db_conn="VISUALBANCAS_EP"
+		   sqlstring="
+              EXEC dbo.usp_NoticeRpt_Daily @NoticeRptDate=''
+            "
+    	   rpt_key="rpt_title,email_add"
+            >
+			<RptDetail
+				rpt_seq = "0"
+				rpt_name = "MailList"
+			>
+			</RptDetail>
+			<RptDetail
+				rpt_seq = "1"
+				rpt_name = "照會明細"
+			>
+			</RptDetail>
+			<RptDetail
+				rpt_seq = "2"
+				rpt_name = "照會期限前二日"
+			>
+			</RptDetail>		
+			<RptDetail
+				rpt_seq = "3"
+				rpt_name = "照會逾期"
+			>
+			</RptDetail>
+
+	</RptInfo>
+	<RptInfo
+		   vaild_flag ="Y"
+		   execute_type ="D"
+		   execute_day = ""
+		   execute_time ="07"
+		   func_id ="usp_NewPolicyDailyReport_Process"
+		   title ="{0}【每日新契約整合報表】{1}"
+		   content1 = ""
+		   file_type="xls"
+		   file_name="{0}每日新契約整合報表_{1}.xls"
+		   zip_name="{0}每日新契約整合報表_{1}.zip"
+		   zip_pw="12684149"
+		   db_conn="VISUALBANCAS_EP"
+		   sqlstring="
+              EXEC dbo.usp_NewPolicyDailyReport_Process @QDate=''
+            "
+    	   rpt_key="rpt_title,email_add"
+            >
+		<RptDetail
+			rpt_seq = "0"
+			rpt_name = "MailList"
+				>
+		</RptDetail>
+		<RptDetail
+			rpt_seq = "1"
+			rpt_name = "新契約檢核報表明細"
+				>
+		</RptDetail>
+		<RptDetail
+			rpt_seq = "2"
+			rpt_name = "三個月解約、借款"
+					>
+		</RptDetail>
+		<RptDetail
+			rpt_seq = "3"
+			rpt_name = "保單狀態追蹤表"
+					>
+		</RptDetail>
+		<RptDetail
+			rpt_seq = "4"
+			rpt_name = "受理產險資料"
+					>
+		</RptDetail>	
+		<RptDetail
+			rpt_seq = "5"
+			rpt_name = "行動投保簽署回傳報表"
+					>
+		</RptDetail>			
+	</RptInfo>	
+	<RptInfo
+		   vaild_flag ="Y"
+		   execute_type ="D"
+		   execute_day = ""
+		   execute_time ="07"
+		   func_id ="assist_sign_report"
+		   title ="{0}【客戶簽收回條管理日報表】{1}"
+		   content1 = ""
+		   file_type="xls"
+		   file_name="{0}客戶簽收回條管理日報表_{1}.xls"
+		   zip_name="{0}客戶簽收回條管理日報表_{1}.zip"
+		   zip_pw="12684149"
+		   db_conn="VISUALBANCAS_EP"
+		   sqlstring="
+              EXEC dbo.usp_AssistSignReport
+            "
+    	   rpt_key="rpt_title,email_add"
+            >
+			<RptDetail
+				rpt_seq = "0"
+				rpt_name = "MailList"
+			>
+			</RptDetail>
+			<RptDetail
+				rpt_seq = "1"
+				rpt_name = "業務員已簽收但未簽回追蹤日報表"
+			>
+			</RptDetail>
+			<RptDetail
+				rpt_seq = "2"
+				rpt_name = "簽收回條已簽回日報表"
+			>
+			</RptDetail>
+	</RptInfo>
+  <RptInfo
+		   vaild_flag ="Y"
+		   execute_type ="D"
+		   execute_day = ""
+		   execute_time ="21"
+		   func_id ="ssc_scanType03_report"
+		   title ="{0}【防制洗錢作業及防範保險業務員挪用、侵占保戶款項控管作業(代送保全件)查核表】{1}"
+		   content1 = ""
+		   file_type="xls"
+		   file_name="{0}防制洗錢作業及防範保險業務員挪用、侵占保戶款項控管作業(代送保全件)查核表_{1}.xls"
+		   zip_name="{0}防制洗錢作業及防範保險業務員挪用、侵占保戶款項控管作業(代送保全件)查核表_{1}.zip"
+		   zip_pw="12684149"
+		   db_conn="VISUALBANCAS_EP"
+		   sqlstring="
+              EXEC dbo.usp_PolicyAmendment
+            "
+    	   rpt_key="rpt_title,email_add"
+            >
+    <RptDetail
+      rpt_seq = "0"
+      rpt_name = "MailList"
+			>
+    </RptDetail>
+    <RptDetail
+      rpt_seq = "1"
+      rpt_name = "防制洗錢作業及防範保險業務員挪用、侵占保戶款項控管"
+			>
+    </RptDetail>
+    <RptDetail
+      rpt_seq = "2"
+      rpt_name = "前三個月有投保新契約明細"
+			>
+    </RptDetail>
+  </RptInfo>
+</MailRpt>

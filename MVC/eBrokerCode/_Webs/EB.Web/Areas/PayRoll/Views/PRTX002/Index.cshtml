@@ -1,0 +1,673 @@
+﻿@*
+    程式名稱：人工調帳
+    建立人員：Harrison
+    建立日期：202207
+    修改記錄：（[需求單號]、[修改內容]、日期、人員）
+    需求單號:20240122004-因現有VLIFE系統(核心系統)使用已長達20多年，架構老舊，已不敷使用，且為提升資訊安全等級，故計劃執行VLIFE系統改版(新核心系統:eBroker系統)。; 修改內容:上線; 修改日期:20240613; 修改人員:Harrison;
+    需求單號:20240807001-調整人工調帳系統產出之相關畫面及報表修改等功能。; 修改日期:20240807; 修改人員:Harrison;
+*@
+@model EB.SL.PayRoll.Models.AgentBonusAdjustViewModel
+@{
+    ViewBag.Title = "單筆人工調帳";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+
+    //取業績年月
+    WebChannel<EB.SL.PayRoll.Service.IPayRollService> Service = new WebChannel<EB.SL.PayRoll.Service.IPayRollService>();
+    //var productionYM = "";
+    var agym = new EB.VLifeModels.agym();
+    Service.Use(s => agym = s.GetYMData("", true).FirstOrDefault());
+    var agbcind = agym.AgbcInd ?? "";
+    var agymind = agym.AgymInd ?? "";
+    //取日期&判斷日期比較
+    EB.EBrokerModels.OpCalendar calendar = new EB.EBrokerModels.OpCalendar();
+    calendar.ProductionYM = agym.ProductionYM;
+    calendar.Sequence = agym.sequence.ToString();
+    Service.Use(s => calendar = s.QueryOpCalendar(calendar));
+    bool adjFlag = false;
+    DateTime sTime = DateTime.Now;
+    DateTime eTime = DateTime.Now;
+    var c = 1;
+    var c1 = 0;
+    if (calendar != null)
+    {
+        adjFlag = true;
+        sTime = Convert.ToDateTime(calendar.AdjDateTimeStr);
+        eTime = Convert.ToDateTime(calendar.AdjDateTimeEnd);
+        c = DateTime.Compare(sTime, DateTime.Now);
+        c1 = DateTime.Compare(eTime, DateTime.Now);
+    }
+}
+
+@*@if ((c > 0 || c1 < 0) && User.RoleList.Where(x => x.ID.Contains("CNEP5210")).Any() == false)
+    {
+        <text>
+            非调整时间
+        </text>
+    }
+    else
+    {*@
+@*人工調整起迄設定*@
+<div id="divQueryBlock">
+    <div class="ibox ibox-success">
+        <div class="ibox-head">
+            <div class="ibox-title">單筆人工調帳 查詢 </div>
+            <div class="ibox-tools">
+                <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
+                <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
+            </div>
+        </div>
+        @using (Html.BeginForm("Index", "PRTX002", new { area = "PayRoll" }, FormMethod.Post, new { id = "QueryForm" }))
+        {
+            @Html.HiddenFor(m => m.AgentBonusDescGuid, new { @class = "user-input-field", @readonly = true })
+            <div class="ibox-body">
+                <div class="form-group row">
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.ProductionYM, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.ProductionYM, new { @class = "form-control datepickerToM", @Value = agym.ProductionYM })
+                    </div>
+                    <div class="col-md-1">
+                        @Html.LabelFor(m => m.Sequence, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.Sequence, new { @class = "form-control", @Value = agym.sequence })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.AdjType, new { @class = "col-form-label" })
+                        @*@Html.TextBoxFor(m => m.AdjType, new { @class = "form-control user-input-field", @readonly = true })*@
+                        <select class="form-select user-input-field" id="AdjType" name="AdjType">
+                            <option value="">請選擇</option>
+                            <option value="4">4</option>
+                            <option value="6">6</option>
+                            <option value="8">8</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.ReasonCode, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.ReasonCode, new { @class = "form-control user-input-field" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.CompanyCode, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.CompanyCode, new { @class = "form-control user-input-field" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.AgentCode, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.AgentCode, new { @class = "form-control user-input-field" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.AgentName, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.AgentName, new { @class = "form-control user-input-field", @readonly = true })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.Amount, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.Amount, new { @class = "form-control user-input-field" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.PolicyNo2, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.PolicyNo2, new { @class = "form-control user-input-field" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.FYC, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.FYC, new { @class = "form-control user-input-field" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.FYP, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.FYP, new { @class = "form-control user-input-field" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-11">
+                        @Html.LabelFor(m => m.DescContent, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.DescContent, new { @class = "form-control user-input-field" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        @Html.LabelFor(m => m.PlanCode, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.PlanCode, new { @class = "form-control user-input-field" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.CollectYear, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.CollectYear, new { @class = "form-control user-input-field" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.ModxSequence, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.ModxSequence, new { @class = "form-control user-input-field" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @if (User.HasPermission("EB.SL.PayRoll.PRTX002.Admin"))
+                    {
+                        if ((adjFlag == false) || (c > 0 || agbcind == "1" || agymind == "0"))
+                        {
+                            <div class="col-md-3">
+                                <button class="btn btn-success group1" id="btnQuery" data-bind="click: QueryClick">查詢</button>
+                                <button class="btn btn-primary group1" id="btnInsert" data-bind="click: InsertClick" disabled="disabled">新增</button>
+                                <button class="btn btn-danger" id="btnDeleteAll" data-bind="click: DeleteAllClick" disabled="disabled">多筆刪除</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-3">
+                                <button class="btn btn-success group1" id="btnQuery" data-bind="click: QueryClick">查詢</button>
+                                <button class="btn btn-primary group1" id="btnInsert" data-bind="click: InsertClick">新增</button>
+                                <button class="btn btn-danger" id="btnDeleteAll" data-bind="click: DeleteAllClick">多筆刪除</button>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        if ((adjFlag == false) || (c > 0 || c1 < 0) || agymind == "0")
+                        {
+                            <div class="col-md-3">
+                                <button class="btn btn-success group1" id="btnQuery" data-bind="click: QueryClick">查詢</button>
+                                <button class="btn btn-primary group1" id="btnInsert" data-bind="click: InsertClick" disabled="disabled">新增</button>
+                                <button class="btn btn-danger" id="btnDeleteAll" data-bind="click: DeleteAllClick" disabled="disabled">多筆刪除</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-3">
+                                <button class="btn btn-success group1" id="btnQuery" data-bind="click: QueryClick">查詢</button>
+                                <button class="btn btn-primary group1" id="btnInsert" data-bind="click: InsertClick">新增</button>
+                                <button class="btn btn-danger" id="btnDeleteAll" data-bind="click: DeleteAllClick">多筆刪除</button>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div class="deletedata" style="display:none;color:red;">
+    <span class="deletedatashow"></span>
+</div>
+@section GridActions {
+    <div class="form-group row col-md-12">
+        <div class="jqGrid">
+            <table id="QueryResult"></table>
+        </div>
+        <div id="QueryResultPagger"></div>
+    </div>
+}
+@*}*@
+
+
+@section Scripts{
+    <script>
+        var DETAILURL = "@Url.Action("Update", "PRTX002", new { area = "PayRoll" })";
+        var c = @c;
+        var c1 = @c1;
+        var agbcind = @agbcind;
+        var agymind = @agymind;
+        var lastSelection;
+        var ViewModel = {
+            QueryClick: function (p) {
+                if (CheckFieldValue()) {
+                    var model = $('#QueryForm').serialize();
+                    if (p != "updateSource") {
+                        clearMessage();
+                    }
+                    $(".deletedatashow").remove();
+                    $.ajax({
+                        method: "POST",
+                        cache: false,
+                        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                        url: '@Url.Action("Query", "PRTX002", new { area = "PayRoll" })',
+                        data: model,
+                        complete: function () {
+                            BindLogGrid();
+
+                            @if (User.HasPermission("EB.SL.PayRoll.PRTX002.Admin"))
+                            {
+                                <text>
+                            if ((c > 0 || agbcind == 1 || agymind == "0")) {
+                                $('#btnDeleteAll').attr("disabled", true);
+                            } else {
+                                if ($("#ProductionYM").val() != "" || $("#Sequence").val() != "") {
+                                    if (EDbtnControl($('#ProductionYM').val(), $('#Sequence').val())) {
+                                        //$('#btnDeleteAll').show();
+                                        $('#btnDeleteAll').attr("disabled", false);
+                                    }
+                                    else {
+                                        //$('#btnDeleteAll').hide();
+                                        $('#btnDeleteAll').attr("disabled", true);
+                                    }
+                                }
+                            }
+                                </text>
+	                        }
+	                        else
+	                        {
+                                <text>
+                            if ((c > 0 || c1 < 0 || agymind == "0")) {
+                                $('#btnDeleteAll').attr("disabled", true);
+                            } else {
+                                if ($("#ProductionYM").val() != "" || $("#Sequence").val() != "") {
+                                    if (EDbtnControl($('#ProductionYM').val(), $('#Sequence').val())) {
+                                        //$('#btnDeleteAll').show();
+                                        $('#btnDeleteAll').attr("disabled", false);
+                                    }
+                                    else {
+                                        //$('#btnDeleteAll').hide();
+                                        $('#btnDeleteAll').attr("disabled", true);
+                                    }
+                                }
+                            }
+                                </text>
+	                        }
+                        },
+                        error: function (ex) {
+                            if (ex.statusText == "OK") {
+                            } else {
+                                appendMessage("系統發生錯誤");
+                            }
+                        }
+                    });
+                }
+            },
+            InsertClick: function () {
+                window.open('@Url.Action("Create", "PRTX002", new { area = "PayRoll" })');
+            },
+            ClearClick: function () {
+                clearMessage();
+                $(".user-input-field").each(function () {
+                    $(this).val('');
+                });
+            },
+            UpdateClick: function () {
+                clearMessage();
+                var model = $('#QueryForm').serialize();
+                $.ajax({
+                    method: "POST",
+                    cache: false,
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                    url: '@Url.Action("Update", "PRTX002", new { area = "PayRoll" })',
+                    data: model,
+                    complete: function (check) {
+                        ViewModel.QueryClick('updateSource');
+                    },
+                    error: function (ex) {
+                        if (ex.statusText == "OK") {
+                        } else {
+                            appendMessage("系統發生錯誤");
+                        }
+                    }
+                });
+                $(".group2").hide();
+                $(".group1").show();
+            },
+            CancelClick: function () {
+                clearMessage();
+                ViewModel.ClearClick();
+                $(".group2").hide();
+                $(".group1").show();
+            },
+            DeleteAllClick: function () {
+                var chk_value = [];//定義checkbox陣列
+                $('input[name="Abdgck"]:checked').each(function () {
+                    chk_value.push($(this).val());
+                });
+                var result = confirm('確定刪除?');
+                if (result) {
+                    var flag = true;
+                    if (chk_value.length <= 0) {
+                        alert("請勾選需要刪除的資料");
+                    } else {
+                        for (var j = 0; j < chk_value.length; j++) {
+                            var strAry = chk_value[j].split('|');
+                            if ('@User.AccountInfo.ID' == strAry[1]) {
+
+                            } else {
+                                flag = false;
+                                appendMessage("僅能刪除本人調整資料");
+                            }
+                        }
+                        if (flag) {
+                            for (var i = 0; i < chk_value.length; i++) {
+                                var strAry2 = chk_value[i].split('|');
+                                 $.ajax({
+                                    method: "POST",
+                                    cache: false,
+                                    async: false,
+                                    url: '@Url.Action("Delete", "PRTX002", new { area = "PayRoll" })',
+                                    data: { agentBonusDescGuid: strAry2[0] },
+                                    complete: function (data) {
+                                        //$("#QueryResult").GridUnload();
+
+                                    },
+                                    error: function (ex) {
+                                        if (ex.statusText == "OK") {
+                                        } else {
+                                            appendMessage("系統發生錯誤");
+                                        }
+                                    }
+                                });
+                            }
+                            $("#btnQuery").click();
+                            $(".deletedata").show();
+                            $(".deletedatashow").remove();
+                            $(".deletedata").append('<span class="deletedatashow">刪除共' + i + '筆資料</span>');
+                            //$("#checkboxall").prop('checked', false);
+                            //$(".deletedatashow").append(i);
+                        }
+                    }
+                }
+            }
+        }
+
+        $(function () {
+            ko.applyBindings(ViewModel);
+            $(".group2").hide();
+            $(".datepickerToM").datepicker({
+                format: "yyyy/mm",
+                viewMode: "months",
+                orientation: "bottom auto",
+                minViewMode: "months"
+            }).on("changeDate", function (e) {
+                $(this).datepicker('hide');
+            });
+
+            $("#AgentCode").focusout(function () {
+                if ($("#AgentCode").val() != "") {
+                    clearMessage();
+                    CheckAgentCode();
+                } else {
+                    $("#AgentName").val('');
+                }
+            })
+
+            $("#ReasonCode").focusout(function () {
+                if ($("#ReasonCode").val() != "") {
+                    clearMessage();
+                    let ReasonCode = $("#ReasonCode").val();
+                    //R2、N4及NB
+                    if (ReasonCode == "R2" || ReasonCode == "N4" || ReasonCode == "NB") {
+                        appendMessage("此原因碼不可人工調整");
+                    }
+                    else {
+                        $.ajax({
+                            method: "POST",
+                            cache: false,
+                            url: '@Url.Action("GetTypeByReasonCode", "PRTX002", new { area = "PayRoll" })',
+                            data: { reasonCode: $("#ReasonCode").val() },
+                            complete: function (check) {
+                                if (check.responseText != "") {
+                                    //$("#AdjType").val(check.responseText);
+                                } else {
+                                    //$("#AdjType").val('');
+                                    appendMessage("原因碼不存在");
+                                }
+                            },
+                            error: function (ex) {
+                                if (ex.statusText == "OK") {
+                                } else {
+                                    appendMessage("系統發生錯誤");
+                                }
+                            }
+                        });
+                    }
+                }
+                else {
+                    $("#AdjType").val('');
+                }
+            })
+        });
+
+        function BindLogGrid() {
+            $("#QueryResult").GridUnload();
+            $("#QueryResult").jqGrid({
+                url: '@Url.Action("BindLogGrid", "PRTX002", new { area = "PayRoll" })',
+                datatype: "json",
+                mtype: "POST",
+                autowidth: true,
+                shrinkToFit: false,
+                colNames: ["<input type='checkbox' id='checkboxall' style='margin-left:3px' onclick='checkBox(event)' ></input>","", "", "型態", "保險公司代碼", "業務員代碼", "業務員姓名",
+                    "原因碼", "保單號碼", "險種", "年期", "繳別繳次", "金額", "FYC", "FYP",
+                    "說明內容",
+                    "編輯","單筆刪除"],
+                colModel: [
+                    { name: "", index: "", align: "center", width: "20", formatter: displayButtonsFn },
+                    { name: "Iden", index: "Iden", hidden: true },
+                    { name: "AgentBonusDescGuid", index: "AgentBonusDescGuid", hidden: true },
+                    { name: "AdjType", index: "AdjType", width: 70 },
+                    { name: "CompanyCode", index: "CompanyCode" },
+                    { name: "AgentCode", index: "AgentCode" },
+                    { name: "AgentName", index: "AgentName"},
+                    { name: "ReasonCode", index: "ReasonCode", width: 64 },
+                    { name: "PolicyNo2", index: "PolicyNo2" },
+                    { name: "PlanCode", index: "PlanCode", width: 80 },
+                    { name: "CollectYear", index: "CollectYear", formatter: CollectYear, width: 64 },
+                    { name: "ModxSequence", index: "ModxSequence", width: 70 },
+                    { name: "AmountTS", index: "AmountTS", width: 64 },
+                    { name: "FYCTS", index: "FYCTS", width: 64 },
+                    { name: "FYPTS", index: "FYPTS", width: 64 },
+                    { name: "DescContent", index: "DescContent", width: 240 },
+                    /*{ name: "Sequence", index: "Sequence", width: 64 },*/
+                    { name: "AgentBonusDescGuid", index: "AgentBonusDescGuid", formatter: EditButton, width: 64 },
+                    { name: "AgentBonusDescGuid", index: "AgentBonusDescGuid", formatter: DelButton, width: 90 }
+                ],
+                jsonReader: {
+                    repeatitems: false,
+                    id: "0"
+                },
+                onSelectRow: function (id) {
+                    if (id) {
+                        var myGrid = $(this);
+                        var selRowId = myGrid.jqGrid('getGridParam', 'selrow'); @* 取得那一個row no *@
+                        var selRow = myGrid.getRowData(selRowId); @* 取得該row資料 *@
+                        //PopupWindow(selRow);
+                    }
+                },
+                loadComplete: function () {
+                    $('#QueryResult').jqGrid("setGridWidth", $('#QueryForm').width());
+                },
+                pager: "QueryResultPagger"
+            });
+            $("#QueryResult").trigger("reloadGrid");
+        }
+
+        function EditButton(cellvalue, options, rdata, rowObject) {
+            var userid = rdata.CreateUserCode;
+            var AdjType = rdata.AdjType;
+            @if (User.HasPermission("EB.SL.PayRoll.PRTX002.Admin"))
+	        {
+            <text>
+                if ((c > 0 || agbcind == 1 || agymind == "0")) {
+                    return "<input type='button' id='btnEdit' style='white-space: pre-wrap;' disabled = 'disabled' class='btn btn-sm btn-warning group1' value='編輯'>";
+                } else {
+                    if ('@User.AccountInfo.ID' == userid && EDbtnControl($('#ProductionYM').val(), $('#Sequence').val())) {
+                        return "<input type='button' id='btnEdit' style='white-space: pre-wrap;' class='btn btn-sm btn-warning group1' onclick='PopupWindow(" + rdata.Iden + ")' value='編輯'>";
+                    } else {
+                        return "<input type='button' id='btnEdit' style='white-space: pre-wrap;' disabled = 'disabled' class='btn btn-sm btn-warning group1' value='編輯'>";
+                    }
+                }
+            </text>
+            }
+            else
+            {
+            <text>
+                if ((c > 0 || c1 < 0 || agymind == "0")) {
+                    return "<input type='button' id='btnEdit' style='white-space: pre-wrap;' disabled = 'disabled' class='btn btn-sm btn-warning group1' value='編輯'>";
+                } else {
+                    if ('@User.AccountInfo.ID' == userid && EDbtnControl($('#ProductionYM').val(), $('#Sequence').val())) {
+                        return "<input type='button' id='btnEdit' style='white-space: pre-wrap;' class='btn btn-sm btn-warning group1' onclick='PopupWindow(" + rdata.Iden + ")' value='編輯'>";
+                    } else {
+                        return "<input type='button' id='btnEdit' style='white-space: pre-wrap;' disabled = 'disabled' class='btn btn-sm btn-warning group1' value='編輯'>";
+                    }
+                }
+             </text>
+	        }
+        }
+
+        function DelButton(cellvalue, options, rdata, rowObject) {
+            var userid = rdata.CreateUserCode;
+            @if (User.HasPermission("EB.SL.PayRoll.PRTX002.Admin"))
+	        {
+            <text>
+                if ((c > 0 || agbcind == 1 || agymind == "0")) {
+                    return "<input type='button' id='btnDelete' style='white-space: pre-wrap;' disabled = 'disabled' class='btn btn-sm btn-danger group1 deleteall' value='單筆刪除'>";
+                } else {
+                    if ('@User.AccountInfo.ID' == userid && EDbtnControl($('#ProductionYM').val(), $('#Sequence').val())) {
+                        return "<input type='button' id='btnDelete' style='white-space: pre-wrap;' class='btn btn-sm btn-danger group1 deleteall' data-guid='" + cellvalue + "' onclick='ConfirmDelete(this)' value='單筆刪除'>";
+                    } else {
+                        return "<input type='button' id='btnDelete' style='white-space: pre-wrap;' disabled = 'disabled' class='btn btn-sm btn-danger group1 deleteall' value='單筆刪除'>";
+                    }
+                }
+            </text>
+            }
+            else
+            {
+            <text>
+                if ((c > 0 || c1 < 0 || agymind == "0")) {
+                    return "<input type='button' id='btnDelete' style='white-space: pre-wrap;' disabled = 'disabled' class='btn btn-sm btn-danger group1 deleteall' value='單筆刪除'>";
+                } else {
+                    if ('@User.AccountInfo.ID' == userid && EDbtnControl($('#ProductionYM').val(), $('#Sequence').val())) {
+                        return "<input type='button' id='btnDelete' style='white-space: pre-wrap;' class='btn btn-sm btn-danger group1 deleteall' data-guid='" + cellvalue + "' onclick='ConfirmDelete(this)' value='單筆刪除'>";
+                    } else {
+                        return "<input type='button' id='btnDelete' style='white-space: pre-wrap;' disabled = 'disabled' class='btn btn-sm btn-danger group1 deleteall' value='單筆刪除'>";
+                    }
+                }
+             </text>
+	        }
+        }
+        function ConfirmDelete(btnData) {
+            var result = confirm('確定刪除?');
+            if (result) {
+                DeleteData(btnData.dataset.guid);
+            }
+        }
+        function CollectYear(cellvalue, options, rdata, rowObject) {
+            var CollectYear = rdata.CollectYear;
+            var ReasonCode = rdata.ReasonCode;
+            if (ReasonCode == "01" || ReasonCode == "02" || ReasonCode == "03" || ReasonCode == "05" || ReasonCode == "06"
+                || ReasonCode == "0A" || ReasonCode == "0B" || ReasonCode == "0G") {
+
+            }
+            else  {
+                CollectYear =  "";
+            }
+
+            return CollectYear;
+        }
+        function DeleteData(AgentBonusDescGuid) {
+            $.ajax({
+                method: "POST",
+                cache: false,
+                url: '@Url.Action("Delete", "PRTX002", new { area = "PayRoll" })',
+                data: { agentBonusDescGuid: AgentBonusDescGuid },
+                complete: function (data) {
+                    //$("#QueryResult").GridUnload();
+                    $("#btnQuery").click();
+                },
+                error: function (ex) {
+                    if (ex.statusText == "OK") {
+                    } else {
+                        appendMessage("系統發生錯誤");
+                    }
+                }
+            });
+        }
+        function DeleteAllData() {
+            //var cbox = document.querySelectorAll(".Abdgck");
+            //console.log(cbox)
+            var chk_value = [];//定義checkbox陣列
+
+            $('input[name="Abdgck"]:checked').each(function () {
+                chk_value.push($(this).val());
+            });
+        }
+        function SetUpdateData(rowId) {
+            var editRow = $('#QueryResult').jqGrid('getRowData', rowId);
+            $("#AdjType").val(editRow.AdjType);
+            var editGuid = editRow.AgentBonusDescGuid.substring(editRow.AgentBonusDescGuid.lastIndexOf('data-guid'), editRow.AgentBonusDescGuid.lastIndexOf('onclick'))
+            $("#AgentBonusDescGuid").val(editGuid.substr(11, 36));
+            $("#AgentCode").val(editRow.AgentCode);
+            $("#AgentName").val(editRow.AgentName);
+            $("#Amount").val(editRow.Amount);
+            $("#CollectYear").val(editRow.CollectYear);
+            //$("#CommModePrem").val(editRow.CommModePrem);
+            $("#CompanyCode").val(editRow.CompanyCode);
+            $("#DescContent").val(editRow.DescContent);
+            $("#FYC").val(editRow.FYC);
+            $("#FYP").val(editRow.FYP);
+            $("#ModxSequence").val(editRow.ModxSequence);
+            $("#PlanCode").val(editRow.PlanCode);
+            $("#PolicyNo2").val(editRow.PolicyNo2);
+            $("#ReasonCode").val(editRow.ReasonCode);
+            $("#Sequence").val(editRow.Sequence);
+            $(".group1").hide();
+            $(".group2").show();
+        }
+
+        function PopupWindow(rdata) {
+            var format = DETAILURL + "?" + "tid={0}";
+            //var url = $.validator.format(format, rdata.Iden);
+            var url = $.validator.format(format, rdata);
+            var openName = "Update" + rdata;
+            window.open(url, openName);
+        }
+        function CheckAgentCode() {
+            $.ajax({
+                method: "POST",
+                cache: false,
+                url: '@Url.Action("CheckAginb", "PRTX002", new { area = "PayRoll" })',
+                data: { productionYM: $("#ProductionYM").val(), agentCode: $("#AgentCode").val() },
+                complete: function (check) {
+                    if (check.responseText != "") {
+                        $("#AgentName").val(check.responseText);
+                    } else {
+                        $("#AgentName").val('');
+                        appendMessage("業務員不存在月備份組織");
+                    }
+                },
+                error: function (ex) {
+                    if (ex.statusText == "OK") {
+                    } else {
+                        appendMessage("系統發生錯誤");
+                    }
+                }
+            });
+        }
+        function displayButtonsFn(cellValue, options, rdata, action) {
+            var Abdg = rdata.AgentBonusDescGuid;
+            var CreateUserCode = rdata.CreateUserCode;
+            var usercheckbox = "<input type='checkbox'  name='Abdgck'  class='Abdgck'  value='" + Abdg + "|" + CreateUserCode + "'  ></input>";
+            var displaycheckboxs = usercheckbox;
+            return displaycheckboxs;
+        }
+        function checkBox(e) {
+            e = e || event;/* get IE event ( not passed )讓jqgrid的checkbox能正常 */
+            e.stopPropagation ? e.stopPropagation() : e.cancelBubble = true;
+
+            var check = document.getElementById('checkboxall');
+            var checkboxs = document.getElementsByName('Abdgck');
+            for (var i = 0; i < checkboxs.length; i++) { checkboxs[i].checked = check.checked }
+            }
+        function EDbtnControl(p, s) {
+            var ProductionYM = '@agym.ProductionYM';
+            var Sequence = '@agym.sequence.ToString()';
+
+            if (ProductionYM == p && Sequence == s) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        function CheckFieldValue() {
+            if ($("#ProductionYM").val() == "" || $("#Sequence").val() == "") {
+                appendMessage("業績年月或序號；不可空白");
+                return false;
+            }
+            return true;
+        }
+    </script>
+}

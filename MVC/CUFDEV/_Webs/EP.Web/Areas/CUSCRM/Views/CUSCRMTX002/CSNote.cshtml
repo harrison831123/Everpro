@@ -1,0 +1,494 @@
+﻿@model EP.SD.SalesSupport.CUSCRM.NotifyReportModel
+@{
+    ViewBag.Title = "照會單";
+}
+
+<STYLE>
+    DIV.crystalstyle DIV {
+        POSITION: absolute;
+        Z-INDEX: 25
+    }
+
+    DIV.crystalstyle A {
+        TEXT-DECORATION: none
+    }
+
+        DIV.crystalstyle A IMG {
+            BORDER-TOP: 0px;
+            BORDER-RIGHT: 0px;
+            BORDER-BOTTOM: 0px;
+            BORDER-LEFT: 0px
+        }
+
+    /*    DIV.crystalstyle DIV.tbg {
+        BACKGROUND: url(../../aspnet_client/system_web/4_0_30319/crystalreportviewers13/js/dhtmllib/images/transp.gif) repeat-y
+    }
+
+    .drill_cursor {
+        CURSOR: url("../../aspnet_client/system_web/4_0_30319/crystalreportviewers13/js/crviewer/images/drill_cursor.cur"), default
+    }*/
+
+    .Title {
+        FONT-SIZE: 20pt;
+        FONT-FAMILY: "標楷體";
+        FONT-WEIGHT: normal;
+        COLOR: #000000
+    }
+
+    .GeneralText {
+        FONT-SIZE: 10pt;
+        FONT-FAMILY: "標楷體";
+        FONT-WEIGHT: normal;
+        COLOR: #000000
+    }
+
+    .Recipient {
+        FONT-SIZE: 12pt;
+        FONT-FAMILY: "標楷體";
+        FONT-WEIGHT: bold;
+        COLOR: #000000
+    }
+
+    .Please {
+        FONT-SIZE: 11pt;
+        FONT-FAMILY: "標楷體";
+        FONT-WEIGHT: normal;
+        COLOR: #000000
+    }
+
+    .Content {
+        FONT-SIZE: 9pt;
+        FONT-FAMILY: "標楷體";
+        FONT-WEIGHT: normal;
+        COLOR: #000000
+    }
+
+    .TWDate {
+        FONT-SIZE: 10pt;
+        TEXT-DECORATION: underline !important;
+        FONT-FAMILY: "標楷體";
+        FONT-WEIGHT: normal;
+        COLOR: #000000
+    }
+
+    .fc442e5a1e-9614-41ef-8625-9d8d4e55b8f0-7 {
+        FONT-SIZE: 8pt;
+        FONT-FAMILY: "標楷體";
+        FONT-WEIGHT: normal;
+        COLOR: #000000
+    }
+
+    .Othertext {
+        BORDER-LEFT-WIDTH: 0px;
+        BORDER-RIGHT-WIDTH: 0px;
+        BORDER-TOP-COLOR: #000000;
+        BORDER-BOTTOM-WIDTH: 0px;
+        BORDER-LEFT-COLOR: #000000;
+        BORDER-BOTTOM-COLOR: #000000;
+        BORDER-RIGHT-COLOR: #000000;
+        BORDER-TOP-WIDTH: 0px
+    }
+
+    .FrameBox {
+        BORDER-TOP: #000000 2px solid;
+        BORDER-RIGHT: #000000 2px solid;
+        BORDER-BOTTOM: #000000 2px solid;
+        BORDER-LEFT: #000000 2px solid
+    }
+
+    .datatable {
+        border-collapse: collapse;
+    }
+
+    .datahead td {
+        border: 1px solid black;
+        FONT-SIZE: 10pt;
+        max-width: 100px;
+        max-height: 50px;
+        text-align: center;
+        FONT-FAMILY: "標楷體";
+    }
+
+    .databody tr td {
+        border: 1px solid black;
+        FONT-SIZE: 10pt;
+        max-width: 100px;
+        max-height: 50px;
+        text-align: center;
+        FONT-FAMILY: "標楷體";
+        word-break: break-all;
+    }
+
+    @@page {
+        size: A4;
+        margin: 0;
+    }
+</STYLE>
+
+<DIV id="Notebody" class=crystalstyle style="HEIGHT: 100%; WIDTH: 100%" name="CrystalReportViewer1$ctl01">
+    <DIV class=crystalstyle style="HEIGHT: 297mm; WIDTH: 210mm; LEFT: 0px; MARGIN: 24px; TOP: 0px ">
+        @*<DIV id=Box1 class=FrameBox style="HEIGHT: 822px; WIDTH: 716px; LEFT: 24px; Z-INDEX: 10; TOP: 193px"></DIV>*@
+        @*<DIV id=Line9 style="BORDER-TOP: #000000 2px solid; BORDER-RIGHT: #000000 0px solid; WIDTH: 720px; BORDER-BOTTOM: #000000 0px solid; LEFT: 24px; BORDER-LEFT: #000000 0px solid; Z-INDEX: 15; TOP: 500px"></DIV>*@
+        <DIV id=Section1 style="HEIGHT: 63px; WIDTH: 746px; LEFT: 0px; Z-INDEX: 3; TOP: 0px"></DIV>
+        <DIV id=Text4 class="tbg Othertext" style="HEIGHT: 33px; WIDTH: 383px; LEFT: 138px; TOP: 0px">
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px" align=center><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 32px"><SPAN class=Title>永達客戶服務&nbsp;照會單</SPAN></SPAN></P>
+        </DIV>
+        <DIV id=Text5 class="tbg Othertext" style="HEIGHT: 16px; WIDTH: 40px; LEFT: 48px; TOP: 32px">
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 16px"><SPAN class=GeneralText>照會單：</SPAN></SPAN></P>
+        </DIV>
+        <DIV id=Text2 class="tbg Othertext" style="HEIGHT: 22px; WIDTH: 72px; LEFT: 472px; TOP: 32px">
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 16px"><SPAN class=GeneralText>照會日期：</SPAN></SPAN></P>
+        </DIV>
+        <DIV id=crmno1 class="tbg Othertext" style="HEIGHT: 14px; WIDTH: 171px; LEFT: 88px; TOP: 32px">
+            <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+                <TBODY>
+                    <TR>
+                        <TD>
+                            <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+                                <TBODY>
+                                    <TR>
+                                        <TD style="VERTICAL-ALIGN: top" noWrap><SPAN class=GeneralText style="padding-left:20px">@Model.No</SPAN></TD>
+                                    </TR>
+                                </TBODY>
+                            </TABLE>
+                        </TD>
+                    </TR>
+                </TBODY>
+            </TABLE>
+        </DIV>
+        <DIV id=cdate1 class="tbg Othertext" style="HEIGHT: 16px; WIDTH: 112px; LEFT: 544px; TOP: 32px">
+            <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+                <TBODY>
+                    <TR>
+                        <TD>
+                            <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+                                <TBODY>
+                                    <TR>
+                                        <TD style="VERTICAL-ALIGN: top" noWrap><SPAN class=GeneralText>@Model.CreateTime</SPAN></TD>
+                                    </TR>
+                                </TBODY>
+                            </TABLE>
+                        </TD>
+                    </TR>
+                </TBODY>
+            </TABLE>
+        </DIV>
+        <DIV id=PageHeaderSection2 style="HEIGHT: 48px; WIDTH: 746px; LEFT: 0px; Z-INDEX: 3; TOP: 63px"></DIV>
+        <DIV id=Text3 class="tbg Othertext" style="HEIGHT: 16px; WIDTH: 80px; LEFT: 32px; TOP: 71px">
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 19px"><SPAN class=Recipient>受文者：</SPAN></SPAN></P>
+        </DIV>
+        <DIV id=Text6 class="tbg Othertext" style="HEIGHT: 16px; WIDTH: 80px; LEFT: 32px; TOP: 95px">
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 19px"><SPAN class=Recipient>副&nbsp;&nbsp;本：</SPAN></SPAN></P>
+        </DIV>
+        <DIV id=note21 class="tbg Othertext" style="HEIGHT: 16px; LEFT: 120px; TOP: 71px;">
+            <SPAN class=GeneralText>
+                @{
+                    string To = string.Empty;
+                    for (int i = 0; i < Model.To.Count; i++)
+                    {
+                        if (i == 0)
+                        {
+                            To = @Model.To[i];
+                        }
+                        else
+                        {
+                            To = To + "、" + @Model.To[i];
+                        }
+
+                    }
+                    <text>
+                        @To
+                    </text>
+                }
+            </SPAN>
+        </DIV>
+        <DIV id=note221 class="tbg Othertext" style="HEIGHT: 16px; LEFT: 120px; TOP: 95px">
+            <SPAN class=GeneralText>
+                @{
+                    string CC = string.Empty;
+                    for (int i = 0; i < Model.CC.Count; i++)
+                    {
+                        if (i == 0)
+                        {
+                            CC = @Model.CC[i];
+                        }
+                        else
+                        {
+                            CC = CC + "、" + @Model.CC[i];
+                        }
+
+                    }
+                    for (int i = 0; i < Model.OM.Count; i++)
+                    {
+                        CC = !String.IsNullOrEmpty(CC) ? CC + "、" + Model.OM[i] : Model.OM[i];
+                    }
+                    <text>
+                        @CC
+                    </text>
+                }
+            </SPAN>
+        </DIV>
+        <DIV id=Section2 style="HEIGHT: 200px; WIDTH: 746px; LEFT: 0px; Z-INDEX: 3; TOP: 111px"></DIV>
+        <DIV id=Text7 class="tbg Othertext" style="HEIGHT: 14px; WIDTH: 64px; LEFT: 24px; TOP: 121px">
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 16px"><SPAN class=GeneralText>受理來源： </SPAN></SPAN></P>
+        </DIV>
+        <DIV id=Text8 class="tbg Othertext" style="HEIGHT: 14px; WIDTH: 272px; LEFT: 24px; TOP: 145px">
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 18px"><SPAN class=Please>敬請&nbsp;台端儘速處理本照會事項，並請於(</SPAN></SPAN></P>
+        </DIV>
+        <DIV id=Text9 class="tbg Othertext" style="HEIGHT: 14px; WIDTH: 240px; LEFT: 480px; TOP: 145px">
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 18px"><SPAN class=Please>以維持服務品質，謝謝您的配合！</SPAN></SPAN></P>
+        </DIV>
+        @*<DIV id=Text11 class="tbg Othertext" style="HEIGHT: 14px; WIDTH: 16px; LEFT: 32px; TOP: 231px">
+                <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 17px"><SPAN class=GeneralText>【</SPAN></SPAN></P>
+            </DIV>*@
+        @*<DIV id=Text12 class="tbg Othertext" style="HEIGHT: 14px; WIDTH: 40px; LEFT: 152px; TOP: 231px">
+                <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 16px"><SPAN class=GeneralText>內容】</SPAN></SPAN></P>
+            </DIV>*@
+        <DIV id=Text1 class="tbg Othertext" style="HEIGHT: 14px; WIDTH: 72px; LEFT: 416px; TOP: 145px">
+            <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 18px"><SPAN class=Please>)前回覆，</SPAN></SPAN></P>
+        </DIV>
+        <DIV id=datedo1 class="tbg Othertext" style="HEIGHT: 16px; WIDTH: 120px; TEXT-ALIGN: center; LEFT: 296px; TOP: 145px">
+            <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+                <TBODY>
+                    <TR>
+                        <TD>
+                            <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+                                <TBODY>
+                                    <TR>
+                                        <TD style="VERTICAL-ALIGN: top" noWrap align=center><SPAN class=TWDate>@Model.CreateFiveTime</SPAN></TD>
+                                    </TR>
+                                </TBODY>
+                            </TABLE>
+                        </TD>
+                    </TR>
+                </TBODY>
+            </TABLE>
+        </DIV>
+        <DIV id=disciptypename1 class="tbg Othertext" style="HEIGHT: 14px; WIDTH: 104px; TEXT-ALIGN: center; LEFT: 48px; TOP: 201px">
+            <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+                <TBODY>
+                    <TR>
+                        <TD>
+                            <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+                                <TBODY>
+                                    <TR>
+                                        <TD style="VERTICAL-ALIGN: top" noWrap align=center><SPAN class=GeneralText>【保險公司CSR  內容】</SPAN></TD>
+                                    </TR>
+                                </TBODY>
+                            </TABLE>
+                        </TD>
+                    </TR>
+                </TBODY>
+            </TABLE>
+        </DIV>
+        <DIV id=disciptypename2 class="tbg Othertext" style="HEIGHT: 14px; WIDTH: 171px; LEFT: 88px; TOP: 121px">
+            <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+                <TBODY>
+                    <TR>
+                        <TD>
+                            <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+                                <TBODY>
+                                    <TR>
+                                        <TD style="VERTICAL-ALIGN: top" noWrap><SPAN class=GeneralText>保險公司CSR</SPAN></TD>
+                                    </TR>
+                                </TBODY>
+                            </TABLE>
+                        </TD>
+                    </TR>
+                </TBODY>
+            </TABLE>
+        </DIV>
+        <div id="table-container" style="HEIGHT: 14px; LEFT: 50px;width:680px ;TOP: 225px;">
+            <table id="datatable" class="datatable">
+                <thead>
+                    @*<tr id="datahead" class="datahead">
+                        <td>序號</td>
+                        <td>保險公司</td>
+                        <td>保單號碼</td>
+                        <td>保險公司<br />保單號碼</td>
+                        <td>要保人</td>
+                        <td>被保人</td>
+                        <td>生效日</td>
+                        <td>保單<br />狀態</td>
+                        <td>幣別</td>
+                        <td>原幣別<br />保費</td>
+                        <td>繳別</td>
+                        <td>原招攬人</td>
+                        <td>接續服<br />務人員</td>
+                    </tr>*@
+                </thead>
+                <tbody id="databody" class="databody">
+                    <tr id="datahead" class="datahead">
+                        <td>序號</td>
+                        <td>保險公司</td>
+                        <td>保單號碼</td>
+                        <td>保險公司<br />保單號碼</td>
+                        <td>要保人</td>
+                        <td>被保人</td>
+                        <td>生效日</td>
+                        <td>保單<br />狀態</td>
+                        <td>幣別</td>
+                        <td>原幣別<br />保費</td>
+                        <td>繳別</td>
+                        <td>原招攬人</td>
+                        <td>接續服<br />務人員</td>
+                    </tr>
+                    @{
+                        int j = 1;
+                        for (int i = 0; i < Model.NotifyInsuranceViews.Count; i++)
+                        {
+
+                            <text>
+                                <tr>
+                                    <td>@j</td>
+                                    <td>@Model.NotifyInsuranceViews[i].CompanyName</td>
+                                    <td>@Model.NotifyInsuranceViews[i].PolicyNo</td>
+                                    <td>@Model.NotifyInsuranceViews[i].CoPolicyNo</td>
+                                    <td>@Model.NotifyInsuranceViews[i].Owner</td>
+                                    <td>@Model.NotifyInsuranceViews[i].Insured</td>
+                                    <td>@Model.NotifyInsuranceViews[i].IssDate</td>
+                                    <td>@Model.NotifyInsuranceViews[i].StatusName</td>
+                                    <td>@Model.NotifyInsuranceViews[i].MoneyType</td>
+                                    <td>@Model.NotifyInsuranceViews[i].ModPrem</td>
+                                    <td>@Model.NotifyInsuranceViews[i].ModxName</td>
+                                    <td>@Model.NotifyInsuranceViews[i].AgentName</td>
+                                    <td>@Model.NotifyInsuranceViews[i].SUAgentName</td>
+                                </tr>
+                            </text>
+                            j++;
+                        }
+
+                    }
+                </tbody>
+            </table>
+        </div>
+        @*<DIV id=Section4 style="HEIGHT: 152px; WIDTH: 746px; LEFT: 0px; Z-INDEX: 3; TOP: 340px"></DIV>*@
+        @*<DIV id=crmcontent1 class="tbg Othertext" style="HEIGHT: 144px; WIDTH: 649px; LEFT: 32px; TOP: 348px;">
+                <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 16px"><SPAN class=GeneralText>一、112/04/21接獲保誠人壽通知如下：</SPAN></SPAN></P>
+                <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 16px"><SPAN class=GeneralText>1、保戶表示4/19已請業務員林博彥協助處理保單解約事宜，因續期保費應繳日為112/04/21，保戶已收到信用</SPAN></SPAN><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 16px"><SPAN class=GeneralText>卡扣款通知故來電080諮詢。</SPAN></SPAN></P>
+                <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 16px"><SPAN class=GeneralText>2、經查詢保誠系統尚無受理送件紀錄，客服專員已說明解約作業及未到期保費退費事宜，保戶表示不確定是</SPAN></SPAN><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 16px"><SPAN class=GeneralText>辦理解約作業或僅變更繳費管道，須請業務員回電協助說明及後續處理。</SPAN></SPAN></P>
+                <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 16px"><SPAN class=GeneralText>二、保戶電話：0910-197697</SPAN></SPAN></P>
+                <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 16px"><SPAN class=GeneralText>三、請　台端儘速與保戶聯絡，並於回覆欄回覆以下2點，以利結案。謝謝!</SPAN></SPAN></P>
+                <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 16px"><SPAN class=GeneralText>1、與保戶聯繫日期、時間</SPAN></SPAN></P>
+                <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 16px"><SPAN class=GeneralText>2、請詳述本案處理結果</SPAN></SPAN></P>
+            </DIV>*@
+        @*<DIV id=ReportFooterSection5 style="HEIGHT: 32px; WIDTH: 746px; LEFT: 0px; Z-INDEX: 3; TOP: 492px"></DIV>*@
+        @*<DIV id=Text24 class="tbg Othertext" style="HEIGHT: 16px; WIDTH: 148px; LEFT: 32px; TOP: 508px">
+                    <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 16px"><SPAN class=GeneralText>【經手人回覆欄】</SPAN></SPAN></P>
+            </DIV>*@
+        <DIV id=ReportFooterSection1 style="HEIGHT: 96px; WIDTH: 746px; LEFT: 0px; Z-INDEX: 3; TOP: 494px"></DIV>
+        <DIV id=ReportFooterSection2 style="HEIGHT: 121px; WIDTH: 746px; LEFT: 0px; Z-INDEX: 3; TOP: 924px"></DIV>
+        @*<DIV id=Text25 class="tbg Othertext" style="HEIGHT: 14px; WIDTH: 656px; LEFT: 32px; TOP: 996px">
+                <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 16px"><SPAN class=GeneralText>【經手人簽名：】＿＿＿＿＿＿＿　　　　　【填寫日期：】＿＿＿＿＿＿＿＿</SPAN></SPAN></P>
+            </DIV>*@
+        @*<DIV id=Text26 class="tbg Othertext" style="HEIGHT: 14px; WIDTH: 248px; LEFT: 24px; TOP: 1028px">
+                <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; margin-bottom: 30px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 17px"><SPAN class=GeneralText>若有任何疑問，請&nbsp;台端與客服部服務科&nbsp;&nbsp;@Model.DoUserName&nbsp;&nbsp;&nbsp;&nbsp;聯絡。&nbsp;&nbsp;電話：2521-2019#&nbsp;@Model.DoUserTelExt&nbsp;&nbsp;傳真：2531-9969</SPAN></SPAN></P>
+            </DIV>*@
+        @*<DIV id=Text27 class="tbg Othertext" style="HEIGHT: 14px; WIDTH: 168px; LEFT: 368px; TOP: 1028px">
+                <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 16px"><SPAN class=GeneralText>聯絡。&nbsp;&nbsp;電話：2521-2019#</SPAN></SPAN></P>
+            </DIV>*@
+        @*<DIV id=Text28 class="tbg Othertext" style="HEIGHT: 14px; WIDTH: 112px; LEFT: 584px; TOP: 1028px">
+                <P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 17px"><SPAN class=GeneralText>傳真：2531-9969</SPAN></SPAN></P>
+            </DIV>*@
+        @*<DIV id=snote201 class="tbg Othertext" style="HEIGHT: 14px; WIDTH: 96px; LEFT: 272px; TOP: 1028px">
+                <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+                    <TBODY>
+                        <TR>
+                            <TD>
+                                <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+                                    <TBODY>
+                                        <TR>
+                                            <TD style="VERTICAL-ALIGN: top" noWrap><SPAN class=GeneralText>@Model.DoUserName</SPAN></TD>
+                                        </TR>
+                                    </TBODY>
+                                </TABLE>
+                            </TD>
+                        </TR>
+                    </TBODY>
+                </TABLE>
+            </DIV>*@
+        @*<DIV id=note211 class="tbg Othertext" style="HEIGHT: 16px; WIDTH: 45px; LEFT: 537px; TOP: 1028px">
+                <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+                    <TBODY>
+                        <TR>
+                            <TD>
+                                <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+                                    <TBODY>
+                                        <TR>
+                                            <TD style="VERTICAL-ALIGN: top" noWrap><SPAN class=GeneralText>@Model.DoUserTelExt</SPAN></TD>
+                                        </TR>
+                                    </TBODY>
+                                </TABLE>
+                            </TD>
+                        </TR>
+                    </TBODY>
+                </TABLE>
+            </DIV>*@
+    </DIV>
+</DIV>
+
+@section Scripts{
+
+    <script>
+        $(document).ready(function () {
+            GetLawsys();
+        });
+
+        function GetLawsys() {
+            var element = document.getElementById('databody');
+            //表格高度
+            var height = element.offsetHeight;
+            let height1 = 308 + height ;
+            let GeneralTextstr = '<DIV id=crmcontent1 class="tbg Othertext" style="HEIGHT: 85px; WIDTH: 649px; LEFT: 50px; TOP: ' + height1 + 'px;">';
+            let content = `@Model.Content`;
+            GeneralTextstr += '<P id = "elementtext" style=" white-space: pre-line;POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 16px"><SPAN class=GeneralText>' + content +'</SPAN></SPAN></P>';
+            GeneralTextstr += "</DIV>";
+            $("#Notebody").append(GeneralTextstr);
+
+            //照會內容高度
+            var elementtext = document.getElementById('elementtext');
+            var texth = elementtext.offsetHeight;
+
+            //經手人回覆欄
+            let height2 = 325 + height + texth;
+            let handledstr = '<DIV id=Text24 class="tbg Othertext" style="HEIGHT: 16px; WIDTH: 148px; LEFT: 50px; TOP: ' + height2 + 'px">';
+            handledstr += '<P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 16px"><SPAN class=GeneralText>【經手人回覆欄】</SPAN></SPAN></P>';
+            handledstr += "</DIV>";
+            $("#Notebody").append(handledstr);
+            //經手人回覆欄分隔線線
+            let height3 = 318 + height + texth;
+            let boderstr = '<DIV id=Line9 style="BORDER-TOP: #000000 2px solid; BORDER-RIGHT: #000000 0px solid; WIDTH: 720px; BORDER-BOTTOM: #000000 0px solid; LEFT: 45px; BORDER-LEFT: #000000 0px solid; Z-INDEX: 15; TOP: ' + height3 + 'px"></DIV>'
+            $("#Notebody").append(boderstr);
+
+            if (height < 300) {
+                //線外框
+                let height4 = 822;
+                let boderstr = '<DIV id=Box1 class=FrameBox style="HEIGHT: ' + height4 + 'px; WIDTH: 716px; LEFT: 45px; Z-INDEX: 10; TOP: 215px"></DIV>'
+                $("#Notebody").append(boderstr);
+
+                let height5 = 1020;
+                let sign = '<DIV id=Text25 class="tbg Othertext" style="HEIGHT: 14px; WIDTH: 656px; LEFT: 53px; TOP: ' + height5 + 'px"><P style = "WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px" > <SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 16px"><SPAN class=GeneralText>【經手人簽名：】＿＿＿＿＿＿＿　　　　　【填寫日期：】＿＿＿＿＿＿＿＿</SPAN></SPAN></P></DIV>'
+                $("#Notebody").append(sign);
+
+                let height6 = 1035;
+                let footerphone = '<DIV id=Text26 class="tbg Othertext" style="HEIGHT: 14px; WIDTH: 248px; LEFT: 45px; TOP: ' + height6 + 'px"><P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; padding-bottom: 20px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 17px"><SPAN class=GeneralText>若有任何疑問，請&nbsp;台端與客服部服務科&nbsp;&nbsp;@Model.DoUserName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;聯絡。&nbsp;&nbsp;電話：2521-2019#&nbsp;@Model.DoUserTelExt&nbsp;&nbsp;傳真：2531-9969</SPAN></SPAN></P></DIV>'
+                $("#Notebody").append(footerphone);
+
+            } else{
+                //線外框
+                let height4 = 822 + height - 300;
+                let boderstr = '<DIV id=Box1 class=FrameBox style="HEIGHT:' + height4 + 'px; WIDTH: 716px; LEFT: 45px; Z-INDEX: 10; TOP: 215px"></DIV>'
+                $("#Notebody").append(boderstr);
+
+                let height5 = 1020 + height - 300;
+                let sign = '<DIV id=Text25 class="tbg Othertext" style="HEIGHT: 14px; WIDTH: 656px; LEFT: 53px; TOP: ' + height5 + 'px"><P style = "WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; MARGIN: 0px" > <SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 16px"><SPAN class=GeneralText>【經手人簽名：】＿＿＿＿＿＿＿　　　　　【填寫日期：】＿＿＿＿＿＿＿＿</SPAN></SPAN></P></DIV>'
+                $("#Notebody").append(sign);
+
+                let height6 = 1035 + height - 300 ;
+                let footerphone = '<DIV id=Text26 class="tbg Othertext" style="HEIGHT: 14px; WIDTH: 248px; LEFT: 45px; TOP: ' + height6 + 'px"><P style="WHITE-SPACE: nowrap; POSITION: relative; PADDING-LEFT: 1px; padding-bottom: 20px"><SPAN style="POSITION: relative; DISPLAY: block; LINE-HEIGHT: 17px"><SPAN class=GeneralText>若有任何疑問，請&nbsp;台端與客服部服務科&nbsp;&nbsp;@Model.DoUserName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;聯絡。&nbsp;&nbsp;電話：2521-2019#&nbsp;@Model.DoUserTelExt&nbsp;&nbsp;傳真：2531-9969</SPAN></SPAN></P></DIV>'
+                $("#Notebody").append(footerphone);
+            }
+        }
+
+    </script>
+}

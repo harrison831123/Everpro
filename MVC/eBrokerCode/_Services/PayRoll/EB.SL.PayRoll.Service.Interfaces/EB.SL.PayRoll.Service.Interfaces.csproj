@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E2420BB0-DA47-49B3-BC59-01B4EC4DC4FC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EB.SL.PayRoll.Service</RootNamespace>
+    <AssemblyName>EB.SL.PayRoll.Service.Interfaces</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CUF.Framework">
+      <HintPath>..\..\..\packages\Microsoft.CUF\Microsoft.CUF.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Contracts\AgentBonusAdjustCondition.cs" />
+    <Compile Include="Contracts\Enumerations.cs" />
+    <Compile Include="Contracts\QueryAgentBonusCondition.cs" />
+    <Compile Include="IPayRollService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\_Utilities\EB.CUFModels\EB.CUFModels.csproj">
+      <Project>{71025140-1f14-4122-82f8-1c3bad424363}</Project>
+      <Name>EB.CUFModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\_Utilities\EB.EBrokerModels\EB.EBrokerModels.csproj">
+      <Project>{a9d86414-45f5-4171-b7d8-a37b18f54698}</Project>
+      <Name>EB.EBrokerModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\_Utilities\EB.VLifeModels\EB.VLifeModels.csproj">
+      <Project>{e60bda2c-d54d-4ae2-9edf-61d75410c734}</Project>
+      <Name>EB.VLifeModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EB.SL.PayRoll.Models\EB.SL.PayRoll.Models.csproj">
+      <Project>{0d7d4b7c-77b5-4571-81ba-a7279b5d06f0}</Project>
+      <Name>EB.SL.PayRoll.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

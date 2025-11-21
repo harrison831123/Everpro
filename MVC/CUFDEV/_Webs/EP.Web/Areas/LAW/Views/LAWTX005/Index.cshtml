@@ -1,0 +1,139 @@
+﻿
+@{
+    ViewBag.Title = LAWResource.結案狀態列表;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+<font color="blue">@LAWResource.說明<br>
+@LAWResource.結欠計算方式會影響</font><font color="red"><b><u>@LAWResource.追回本金金額</u></b></font><font color="blue">@LAWResource.之計算設定前請先確認<br>
+2.</font><font color="red"><b><u>@LAWResource.結案狀態一旦有案件參考後</u></b></font><font color="blue">@LAWResource.避免影響案件結案狀態之完整性</font>
+<div class="form-group row" style="margin-top:5px;">
+    <div class="col-md-3">
+        <button class="btn btn-default group1" id="btnInsert" data-bind="click: InsertClick">@EP.PlatformResources.新增</button>
+    </div>
+</div>
+<div class="row col-md-12">
+    <table id="datatable" class="table">
+        <thead>
+            <tr>
+                <th>@LAWResource.狀態名稱</th>
+                <th>@LAWResource.啟用狀態</th>
+                <th>@LAWResource.結欠計算方式</th>
+                <th>@LAWResource.建檔人員</th>
+                <th>@LAWResource.建檔日期</th>
+                <th>@EP.PlatformResources.刪除</th>
+            </tr>
+        </thead>
+        <tbody id="datatbody">
+        </tbody>
+    </table>
+</div>
+
+<script>
+    var ViewModel = {
+        InsertClick: function () {
+            location.href = '@Url.Action("Create", "LAWTX005", new { area = "LAW" })';
+        },
+    }
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+        GetLawsys();
+    });
+    function GetLawsys() {
+         $.ajax({
+             method: "POST",
+             cache: false,
+             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+             url: '@Url.Action("Query", "LAWTX005", new { area = "LAW" })',
+             complete: function (data) {
+                        console.log(data.responseJSON);
+                        if (data.responseJSON === undefined) {
+                        } else {
+                            $(".remtr").remove();
+                            $.each(data.responseJSON, function () {
+                                let updateurl = '@Html.Raw(Url.Action("Update", "LAWTX005"))' + "?id=" + this.CloseTypeId;
+                                let str = "<tr class='remtr'><td>" + "<a href='" + updateurl + "' >" + this.CloseTypeName + "</a>"+"</td><td>"
+                                    + StatusTypeBTN(this.StatusType, this.CloseTypeId) + "</td><td>"
+                                    + CountTypeBTN(this.CountType) + "</td><td>"
+                                    + this.CreateName + "</td><td>"
+                                    + this.CreateDate + "</td><td>"
+                                    + '<button id="delBtn" class="btn btn-danger" onclick="ConfirmDelete(\'' + this.CloseTypeId + '\')">@EP.PlatformResources.刪除</button></td></tr>';
+                                $("#datatbody").append(str);
+                            });
+                        }
+             },
+             error: function (ex) {
+             if (ex.statusText == "OK") {
+             } else {
+                 appendMessage("@EP.PlatformResources.系統發生錯誤");
+                 }
+             }
+         });
+    }
+
+    function ConfirmDelete(ID) {
+            var result = confirm('@EP.PlatformResources.確定刪除?');
+            if (result) {
+                DeleteData(ID);
+            }
+    }
+    function StatusTypeBTN(StatusType, ID) {
+        if (StatusType == 0) {
+            return '<button id="StatusTypeBtn' + ID + '" class="btn btn-default"  onclick="ChangeStatusType(\'' + 1 + '\',\'' + ID + '\')">@LAWResource.啟用</button>' + '<button id="StatusTypeStopBtn' + ID + '" class="btn btn-default" disabled="disabled" onclick="ChangeStatusType(\'' + 0 + '\',\'' + ID + '\')">@LAWResource.停用</button>';
+        } else {
+            return '<button id="StatusTypeBtn' + ID + '" class="btn btn-default"  disabled="disabled" onclick="ChangeStatusType(\'' + 1 + '\',\'' + ID + '\')">@LAWResource.啟用</button>' + '<button id="StatusTypeStopBtn' + ID + '" class="btn btn-default" onclick="ChangeStatusType(\'' + 0 + '\',\'' + ID + '\')">@LAWResource.停用</button>';
+        }
+    }
+    function CountTypeBTN(CountType) {
+        if (CountType == 1) {
+            return "<font color=darkred>@LAWResource.變動</font>"
+        }
+        else {
+            return "<font color=darkred>@LAWResource.不變動2</font>"
+        }
+    }
+    function ChangeStatusType(StatusType, ID) {
+        var str;
+        if (StatusType == 0) {
+            str = '@LAWResource.是否確定停用?';
+        }
+        else {
+            str = '@LAWResource.是否確定啟用?';
+        }
+        var result = confirm(str);
+        if (result) {
+            if (StatusType == 0) {
+                $("#StatusTypeBtn" + ID).attr('disabled', false);
+                $("#StatusTypeStopBtn" + ID).attr('disabled', true);
+            } else {
+                $("#StatusTypeBtn" + ID).attr('disabled', true);
+                $("#StatusTypeStopBtn" + ID).attr('disabled', false);
+            }
+            $.ajax({
+                method: "POST",
+                cache: false,
+                data: { StatusType: StatusType, ID: ID },
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                url: '@Url.Action("ChangeStatusType", "LAWTX005", new { area = "LAW" })',
+                complete: function () {
+                }
+            });
+        }
+    }
+    function DeleteData(ID) {
+            $.ajax({
+                method: "POST",
+                cache: false,
+                url: '@Url.Action("Delete", "LAWTX005", new { area = "LAW" })',
+                data: { ID: ID },
+                complete: function (data) {
+                    GetLawsys();
+                },
+                error: function (ex) {
+                    if (ex.statusText == "OK") {
+                    } else {
+                        appendMessage("@EP.PlatformResources.系統發生錯誤");
+                    }
+                }
+            });
+    }
+</script>

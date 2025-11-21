@@ -1,0 +1,419 @@
+﻿@{
+    ViewBag.Title = (ViewBag.Title) ?? "CUSCRMQU001_歷史查詢";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+@section LeftActions{
+    <input type="button" id="btnQuery" class="btn btn-default" value="@EP.PlatformResources.查詢" data-bind="click: QueryClick" />
+    <input type="button" id="btnClear" class="btn btn-default" value="@EP.PlatformResources.清除" data-bind="click: ClearClick" />
+}
+@model EP.SD.SalesSupport.CUSCRM.Service.HistoryQueryCondition
+<style>
+    .ui-state-hover {
+        background: #67b021 url("images/ui-bg_highlight-soft_25_67b021_1x100.png") 10% 90% repeat !important;
+    }
+    .ui-jqgrid {
+        font-size: 0.9rem
+    }
+    .ui-jqgrid tr.jqgrow td {
+        font-size: 0.9rem
+    }
+    /*標題大小*/
+    .ui-jqgrid-sortable {
+        font-size:1.3rem;
+    }
+/*    .ui-jqgrid tr.jqgrow td {
+        white-space: normal !important;
+    }*/
+</style>
+
+
+<div class="wall-title">
+    <img class="index-title-icon" src="~/Content/img/search.png" />(@EP.PlatformResources.搜尋條件)
+</div>
+@using (Ajax.BeginForm("QueryHistoryCSGridDatas", "CUSCRMQU001", new AjaxOptions { OnSuccess = "bindGrid" }, new { id = "QueryForm" }))
+{
+    <div class="row wall">
+        <div class="col-md-12 detail-col detail-msg">
+            <div class="col-md-1 detail-msg">
+                <span style="color:red">*</span>@Html.LabelFor(m => m.crmtype)
+            </div>
+            <input type="radio" name="crmtype" value="31" required /><label for="crmtype">SS【單位服務】</label>
+            <input type="radio" name="crmtype" value="32" required /><label for="crmtype">CS【客戶服務】</label>
+            <input type="radio" name="crmtype" value="6" required /><label for="crmtype">CC【客戶申訴】</label>
+        </div>
+        <div class="col-md-12 detail-col detail-msg">
+            <div class="col-md-1 detail-msg">
+                <span style="color:red">*</span>@Html.LabelFor(m => m.close_status)
+            </div>
+            <input type="radio" name="close_status" value="0" required /><label for="close_status">未結案  </label>
+            <input type="radio" name="close_status" value="1" required /><label for="close_status">結案  </label>
+        </div>
+        <div class="col-md-12 detail-col detail-msg">
+            <div class="col-md-1 detail-msg">
+                <span style="color:red">*</span><label>受理區間</label>
+            </div>
+            <div class="col-md-4 detail-msg">
+                @Html.TextBoxFor(m => m.startdate, new { @class = "form-control datepicker", @Placeholder = EP.IBResources.開始日期, @maxlength = "10", @required = "required" })
+            </div>
+            
+            <div class="col-md-4 detail-msg">
+                @Html.TextBoxFor(m => m.closedate, new { @class = "form-control datepicker", @Placeholder = EP.IBResources.結束日期, @maxlength = "10", @required = "required" })
+            </div>
+        </div>
+        @*保單生效年度*@
+        <div class="col-md-12 detail-col detail-msg">
+            <div class="col-md-1 detail-msg">
+                @Html.LabelFor(m => m.issdate)
+
+            </div>
+            <div class="col-md-4 detail-msg">
+                @*@Html.DropDownList("issdate")*@
+                <select class="form-control" name="issdate" style="max-width:250px">
+                    <option selected value="">請選擇</option>
+                    @{
+                        for (var i = 112; i >= 84; i--)
+                        {
+                            @:<option value="@i.ToString().PadLeft(4,'0')">@i 年</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        @*保險公司*@
+        <div class="col-md-12 detail-col detail-msg">
+            <div class="col-md-1 detail-msg">
+                @Html.LabelFor(m => m.company_code)
+
+            </div>
+            <div class="col-md-4 detail-msg">
+                <select name="company_code">
+                    <option value="003">保誠</option>
+                    <option value="005">中國</option>
+                    <option value="007">國華</option>
+                    <option value="009">富邦</option>
+                    <option value="010">國泰(原國寶)</option>
+                    <option value="012">南山(原朝陽)</option>
+                    <option value="017">宏泰</option>
+                    <option value="054">台灣(原中信)</option>
+                    <option value="056">安達</option>
+                    <option value="057">友邦</option>
+                    <option value="061">元大</option>
+                    <option value="064">全球</option>
+                    <option value="065">遠雄</option>
+                    <option value="118">新光</option>
+                </select>
+            </div>
+        </div>
+        @*申訴、服務來源*@
+        <div class="col-md-12 detail-col detail-msg">
+            <div class="col-md-1 detail-msg">
+                @Html.LabelFor(m => m.source)
+            </div>
+            <div class="col-md-10 detail-msg" id=sourcebox>
+                
+            </div>
+        </div>
+        @*受理類別*@
+        <div class="col-md-12 detail-col detail-msg">
+            <div class="col-md-1 detail-msg">
+                @Html.LabelFor(m => m.do_type)
+            </div>
+            <div class="col-md-10 detail-msg" id="do_typebox">
+                
+            </div>
+        </div>
+
+        <div class="col-md-12 detail-col detail-msg">
+            @*受理編號*@
+            <div class="col-md-1 detail-msg">
+                @Html.LabelFor(m => m.crm_no)
+            </div>
+            <div class="col-md-4 detail-msg">
+                @Html.TextBoxFor(m => m.crm_no, new { @class = "form-control" })
+            </div>
+            @*保單號碼*@
+            <div class="col-md-1 detail-msg">
+                @Html.LabelFor(m => m.policy_no2)
+            </div>
+            <div class="col-md-4 detail-msg">
+                @Html.TextBoxFor(m => m.policy_no2, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-12 detail-col detail-msg">
+            @*保戶姓名*@
+            <div class="col-md-1 detail-msg">
+                @Html.LabelFor(m => m.owner)
+            </div>
+            <div class="col-md-4 detail-msg">
+                @Html.TextBoxFor(m => m.owner, new { @class = "form-control" })
+            </div>
+            @*業務員姓名*@
+            <div class="col-md-1 detail-msg">
+                @Html.LabelFor(m => m.agent_name)
+            </div>
+            <div class="col-md-4 detail-msg">
+                @Html.TextBoxFor(m => m.agent_name, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-12 detail-col detail-msg">
+            @*處經理姓名*@
+            <div class="col-md-1 detail-msg">
+                @Html.LabelFor(m => m.center_manager)
+            </div>
+            <div class="col-md-4 detail-msg">
+                @Html.TextBoxFor(m => m.center_manager, new { @class = "form-control" })
+            </div>
+            @*承辦人員*@
+            <div class="col-md-1 detail-msg">
+                @Html.LabelFor(m => m.worker)
+            </div>
+            <div class="col-md-4 detail-msg">
+                @Html.TextBoxFor(m => m.worker, new { @class = "form-control" })
+            </div>
+        </div>
+
+    </div>
+}
+
+
+
+
+@section GridActions{
+    <div id="GridView">
+        <div id="HistoryCRM31C" class="HistoryCRM">
+            @{Html.RenderPartial("~/Areas/CUSCRM/Views/CUSCRMQU001/HistoryCRM31C.cshtml", new GridViewInit("HistoryCRM31CGridView")
+                {
+                    BindUrl = @Url.Action("BindHistoryCSGridDatas", "CUSCRMQU001"),
+                    OnSelectRow = "PopupWindow",
+                    Pagging = true,
+                    MultiSelect = false
+
+                });
+            }
+        </div>
+        <div id="HistoryCRM31UC" class="HistoryCRM">
+            @{Html.RenderPartial("~/Areas/CUSCRM/Views/CUSCRMQU001/HistoryCRM31UC.cshtml", new GridViewInit("HistoryCRM31UCGridView")
+                {
+                    BindUrl = @Url.Action("BindHistoryCSGridDatas", "CUSCRMQU001"),
+                    OnSelectRow = "PopupWindow",
+                    Pagging = true,
+                    MultiSelect = false
+
+                });
+            }
+        </div>
+        <div id="HistoryCRM32C" class="HistoryCRM">
+            @{Html.RenderPartial("~/Areas/CUSCRM/Views/CUSCRMQU001/HistoryCRM32C.cshtml", new GridViewInit("HistoryCRM32CGridView")
+                {
+                    BindUrl = @Url.Action("BindHistoryCSGridDatas", "CUSCRMQU001"),
+                    OnSelectRow = "PopupWindow",
+                    Pagging = true,
+                    MultiSelect = false
+
+                });
+            }
+        </div>
+        <div id="HistoryCRM32UC" class="HistoryCRM">
+            @{Html.RenderPartial("~/Areas/CUSCRM/Views/CUSCRMQU001/HistoryCRM32UC.cshtml", new GridViewInit("HistoryCRM32UCGridView")
+                {
+                    BindUrl = @Url.Action("BindHistoryCSGridDatas", "CUSCRMQU001"),
+                    OnSelectRow = "PopupWindow",
+                    Pagging = true,
+                    MultiSelect = false
+
+                });
+            }
+        </div>
+        <div id="HistoryCRM6C" class="HistoryCRM">
+            @{Html.RenderPartial("~/Areas/CUSCRM/Views/CUSCRMQU001/HistoryCRM6C.cshtml", new GridViewInit("HistoryCRM6CGridView")
+                {
+                    BindUrl = @Url.Action("BindHistoryCSGridDatas", "CUSCRMQU001"),
+                    OnSelectRow = "PopupWindow",
+                    Pagging = true,
+                    MultiSelect = false
+
+                });
+            }
+        </div>
+        <div id="HistoryCRM6UC" class="HistoryCRM">
+            @{Html.RenderPartial("~/Areas/CUSCRM/Views/CUSCRMQU001/HistoryCRM6UC.cshtml", new GridViewInit("HistoryCRM6UCGridView")
+                {
+                    BindUrl = @Url.Action("BindHistoryCSGridDatas", "CUSCRMQU001"),
+                    OnSelectRow = "PopupWindow",
+                    Pagging = true,
+                    MultiSelect = false
+
+                });
+            }
+        </div>
+    </div>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+@section Scripts{
+    <script>
+        var type = "";
+         var ViewModel = {
+            QueryClick: function () {
+                 clearMessage();@*清除訊息*@
+                 $('#QueryForm').submit()
+            },
+            ClearClick: function () {
+                clearMessage();@*清除訊息*@
+                $('#QueryForm input[type=text]').val('');
+            }
+        }
+
+        $(function () {
+            ko.applyBindings(ViewModel);
+            $("#startdate").datepicker({ dateFormat: 'yy/mm/dd' });
+            $("#closedate").datepicker({ dateFormat: 'yy/mm/dd' });
+
+
+            $("input[type=radio][name='crmtype']").change((e) => { SetType(); SetRadioBtn(e);})
+            $("input[type=radio][name='close_status']").change(() => { SetType() })
+
+        })
+        function SetType(e) {
+
+            let crmtype=$("input[name='crmtype']:checked").val()
+            let close_status = $("input[name='close_status']:checked").val()
+
+            type = crmtype.toString()
+            if (close_status == 0)//未結案
+                type+="UC"
+            else
+                type += "C"
+
+        }
+
+        function SetRadioBtn(e) {
+            if ($("input[type=radio][name='crmtype']:checked").val() == 31 || $("input[type=radio][name='crmtype']:checked").val() == 32) {
+                $("#sourcebox").html(
+                    "<input type=radio value=34 name=source>單位業連"+
+                    "<input type=radio value=60 name=source>保戶親電"+
+                    "<input type=radio value=61 name=source>公司網站"+
+                    "<input type=radio value=67 name=source>傳真"+
+                    "<input type=radio value=68 name=source>保戶家屬來電"+
+                    "<input type=radio value=70 name=source>保戶郵寄"+
+                    "<input type=radio value=71 name=source>單位來電"+
+                    "<input type=radio value=74 name=source>其他"+
+                    "<input type=radio value=81 name=source>保險公司CSR"+
+                    "<input type=radio value=82 name=source>保險公司來電"
+                )
+
+                $("#do_typebox").html(
+                    "<input type=radio value=35 name=do_type>契撤"+
+                    "<input type=radio value=36 name=do_type>自始契變"+
+                    "<input type=radio value=37 name=do_type>年期轉換"+
+                    "<input type=radio value=38 name=do_type>更換業代"+
+                    "<input type=radio value=39 name=do_type>解約"+
+                    "<input type=radio value=40 name=do_type>一般"+
+                    "<input type=radio value=41 name=do_type>抱怨"+
+                    "<input type=radio value=42 name=do_type>融通契變"+
+                    "<input type=radio value=43 name=do_type>試算"+
+                    "<input type=radio value=49 name=do_type>其他"+
+                    "<input type=radio value=54 name=do_type>保費"+
+                    "<input type=radio value=55 name=do_type>理賠"+
+                    "<input type=radio value=56 name=do_type>恢復效力"+
+                    "<input type=radio value=57 name=do_type>降額繳清展期"+
+                    "<input type=radio value=87 name=do_type>契變")
+            } else {
+
+                $("#sourcebox").html(
+                "<input type=radio value=13 name=source>保險公司照會"+
+                "<input type=radio value=14 name=source>申訴函"+
+                "<input type=radio value=15 name=source>保險局"+
+                "<input type=radio value=30 name=source>立法院"+
+                "<input type=radio value=75 name=source>單位來函"+
+                "<input type=radio value=76 name=source>公司網站"+
+                "<input type=radio value=84 name=source>金評中心系統照會"+
+                "<input type=radio value=85 name=source>其他"
+                )
+
+                $("#do_typebox").html(
+                    "<input type=radio value=8 nam =do_type> 服務品質"+
+                    "<input type=radio value=9 name=do_type> 銷售爭議"+
+                    "<input type=radio value=10 name=do_type> 簽名爭議"+
+                    "<input type=radio value=11 name=do_type> 理賠爭議"+
+                    "<input type=radio value=12 name=do_type> 銷售 & 簽名爭議"+
+                    "<input type=radio value=72 name=do_type> 挪用保費"+
+                    "<input type=radio value=86 name=do_type> 適合度(KYC)"
+                )
+            }
+        }
+
+
+        function bindGrid() {
+            $("#GridView").show()
+            $.each($(".HistoryCRM"), function (index, element) {
+                $("#" + this.id).hide()
+            })
+
+            switch (type) {
+                case "31C":
+                    $("#HistoryCRM31C").show()
+                    $("#HistoryCRM31CGridView").bindGrid();
+                    break
+                case "31UC":
+                    $("#HistoryCRM31UC").show()
+                    $("#HistoryCRM31UCGridView").bindGrid();
+                    break
+                case "32C":
+                    $("#HistoryCRM32C").show()
+                    $("#HistoryCRM32CGridView").bindGrid();
+                    break
+                case "32UC":
+                    $("#HistoryCRM32UC").show()
+                    $("#HistoryCRM32UCGridView").bindGrid();
+                    break
+                case "6C":
+                    $("#HistoryCRM6C").show()
+                    $("#HistoryCRM6CGridView").bindGrid();
+                    break
+                case "6UC":
+                    $("#HistoryCRM6UC").show()
+                    $("#HistoryCRM6UCGridView").bindGrid();
+                    break
+            }
+        }
+
+        //跳轉維護/結案頁面
+        function getedit(id) {
+            if (id != "") {
+                var strLoc = "@Url.Action("Maintain")" +"?crm_no="+ id;
+                window.open(strLoc)
+            }
+            return true;
+        }
+        function get_crm_doc(id) //匯出處理單
+        {
+            if (id != "") {
+                var strLoc = "@PlatformHelper.GetVarConfig("CUSCRM_BPM_ExportUrl")"+"?crmno=" + id;
+                window.open(strLoc)
+            }
+            return true;
+        }
+        //稽催頁面
+        function getadd(id) {
+
+            if (id != "") {
+                var strLoc = "getdo_edit.asp?id=" + id;
+                window.open(strLoc)
+            }
+        }
+  
+    </script>
+}

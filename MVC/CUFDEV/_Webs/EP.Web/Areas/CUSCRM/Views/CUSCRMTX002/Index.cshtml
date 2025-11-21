@@ -1,0 +1,459 @@
+﻿
+@{
+    ViewBag.Title = "通知作業";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    var CategoryList = CUSCRMHelper.GetCategoryList();
+    //var thisGroupType = AccountGroupType.System;
+
+}
+<style>
+    .form-control {
+        display: inline;
+    }
+
+
+    .col-md-2 {
+        margin-top: 1rem;
+    }
+</style>
+
+@*查詢執行結果*@
+@using (Ajax.BeginForm("Query", "CUSCRMTX002", null, new AjaxOptions { OnSuccess = "BindGrid" }, new { id = "CUSCRMQuery", area = "CUSCRMTX002" }))
+{
+    if (User.HasPermission("EP.SD.SalesSupport.CUSCRM.CUSCRMTX002.Admin") || User.HasPermission("EP.SD.SalesSupport.CUSCRM.CUSCRMTX002.Employee"))
+    {
+        <text>
+            <div class="wall-title">
+                <img class="index-title-icon" src="~/Content/img/search.png" />(搜尋條件)
+            </div>
+            <div class="row wall">
+                <div class="col-md-12 form-group detail-col">
+                    <div class="col-md-6">
+                        <label class="control-label">類別</label>
+                        <br />
+                        <select id="Category" class="form-control" name="Category" onchange="changeType();">
+                            <option value="">請選擇</option>
+                            @for (var i = 0; i < CategoryList.Count; i++)
+                            {
+                                <text>
+                                    <option value="@CategoryList[i].Value">@CategoryList[i].Text</option>
+                                </text>
+                            }
+
+
+
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-12 form-group detail-col">
+                    <div class="col-md-6">
+                        <label class="control-label">類型</label>
+                        <br />
+                        <select id="Type" class="form-control" name="Type">
+                            <option value="">請選擇</option>
+                        </select>
+                    </div>
+                </div>
+                @if (User.HasPermission("EP.SD.SalesSupport.CUSCRM.CUSCRMTX002.Admin"))
+                {
+                    <text>
+                        <div class="col-md-12 form-group detail-col">
+                            <div class="col-md-6">
+                                <label class="control-label">結案</label>
+                                <br />
+                                <select id="Status" class="form-control" name="Status">
+                                    <option value="0">否</option>
+                                    <option value="1">是</option>
+                                </select>
+                            </div>
+                        </div>
+                    </text>
+                }
+            </div>
+            <input type="button" id="btnQuery" class="btn btn-default" value="查詢" data-bind="click: QueryClick" />
+        </text>
+    }
+    else
+    {
+        <text>
+            <input type="button" id="btnQuery" style="display:none;" class="btn btn-default" value="查詢" data-bind="click: QueryClick" />
+        </text>
+    }
+
+    <div class="modal fade" id="JobModalLong" tabindex="-1" role="dialog" aria-labelledby="JobModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @{Html.RenderPartial("~/Areas/CUSCRM/Views/CUSCRMTX002/_CreateMessage.cshtml");}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="AllMemberIDModalLong" tabindex="-1" role="dialog" aria-labelledby="AllMemberIDModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div id="AllMemberIDbody" class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="CFIDModalLong" tabindex="-1" role="dialog" aria-labelledby="CFIDModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div id="CFIDbody" class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section GridActions {
+    <div class="jqGrid">
+        <table id="Result"></table>
+    </div>
+    <div id="ResultPagger"></div>
+}
+
+@section Scripts{
+
+    <script>
+        var ViewModel = {
+            QueryClick: function () {
+                clearMessage();
+                $("form#CUSCRMQuery").trigger("submit");
+            }
+        };
+        $(function () {
+            ko.applyBindings(ViewModel);
+            $("#btnQuery").click();
+            $("#AccountGroupSelectorPopButton").hide();
+            if ($("#RecipientToJson").val() != '') {
+                recipientSelectShow($("#RecipientToJson").val());
+            }
+        });
+
+
+        //@*人員視窗選擇結果處理*@
+        function onDialogSelected() {
+            //取得它的選擇資訊(JSON格式)
+            var hiddenValue = $("#AccountGroupSelector").getHiddens()[0];
+            recipientSelectShow(hiddenValue);
+        }
+        function recipientSelectShow(jsonValue) {
+            var $select = $('#RecipientToShow');
+            $select.attr('style', "height:200px;overflow:auto;").html('');
+            if (jsonValue == undefined) return;
+            var jsonItems = JSON.parse(jsonValue);
+            $("#RecipientToJson").val(jsonValue);
+
+            $.each(jsonItems, function (idx, obj) {
+                var unit = '';
+                //$select.append($('<option>').text(obj.Unit+" "+obj.Text).attr('value', obj.Key).prop("selected", true));
+
+                $select.append('<ul>' + obj.Unit + " " + obj.Text + '</ul>');
+            });
+        }
+        @if (User.HasPermission("EP.SD.SalesSupport.CUSCRM.CUSCRMTX002.Admin"))
+        {
+            <text>
+            function BindGrid(datas) {
+                $("#Result").GridUnload();
+                $("#Result").jqGrid({
+                    url: '@Url.Action("BindGrid", "CUSCRMTX002", new { area = "CUSCRM" })',
+                    datatype: "local",
+                    mtype: "POST",
+                    colNames: ["","", "", "","序號","照會單號", "照會日期", "客戶姓名", "業務人員", "照會內容", "上傳附件", "催辦", "稽催", "通知對象", "已留言對象"],
+                    colModel: [
+                        { name: "CaseGuid", index: "CaseGuid", hidden: true },
+                        { name: "DoSCreateTime", index: "DoSCreateTime", hidden: true },
+                        { name: "AuditCreateTime", index: "AuditCreateTime", hidden: true },
+                        { name: "Type", index: "Type", hidden: true },
+                        { name: "ViewID", index: "ViewID", width:35 },
+                        { name: "No", index: "No" },
+                        { name: "CreateTime", index: "CreateTime" },
+                        { name: "Owner", index: "Owner" },
+                        { name: "ToMemberID", index: "ToMemberID" },
+                        { name: "", index: "No", formatter: Note },
+                        { name: "", index: "CFID", formatter: File, width: 80, align: "center" },
+                        { name: "", index: "DoSCreateTime", formatter: DoS },
+                        { name: "", index: "AuditCreateTime", formatter: Audit },
+                        { name: "", index: "No", formatter: Message, width: 80, align: "center"},
+                        { name: "AllToMemberID", index: "AllToMemberID", formatter: AllMemberID, width: 80, align: "center" }
+                    ],
+                    jsonReader: {
+                        repeatitems: false,
+                        id: "0"
+                    },
+                    loadComplete: function () {
+                        $('#Result').jqGrid("setGridWidth", $('#resultDIV').width());
+                    },
+                    pager: "ResultPagger"
+                });
+                $("#Result").jqGrid('setGridParam', { data: datas });
+                $("#Result").trigger("reloadGrid");
+            }
+            </text>
+	    }
+        else if (User.HasPermission("EP.SD.SalesSupport.CUSCRM.CUSCRMTX002.Employee"))
+        {
+            <text>
+            function BindGrid(datas) {
+                $("#Result").GridUnload();
+                $("#Result").jqGrid({
+                    url: '@Url.Action("BindGrid", "CUSCRMTX002", new { area = "CUSCRM" })',
+                    datatype: "local",
+                    mtype: "POST",
+                    colNames: ["", "", "", "","序號","照會單號", "照會日期", "客戶姓名", "業務人員", "照會內容", "上傳附件", "催辦", "稽催"],
+                    colModel: [
+                        { name: "CaseGuid", index: "CaseGuid", hidden: true },
+                        { name: "DoSCreateTime", index: "DoSCreateTime", hidden: true },
+                        { name: "AuditCreateTime", index: "AuditCreateTime", hidden: true },
+                        { name: "Type", index: "Type", hidden: true },
+                        { name: "ViewID", index: "ViewID", width:35 },
+                        { name: "No", index: "No" },
+                        { name: "CreateTime", index: "CreateTime" },
+                        { name: "Owner", index: "Owner" },
+                        { name: "ToMemberID", index: "ToMemberID" },
+                        { name: "", index: "No", formatter: Note },
+                        { name: "", index: "CFID", formatter: File, width: 80, align: "center" },
+                        { name: "DoSCreateTime", index: "DoSCreateTime", formatter: DoS },
+                        { name: "AuditCreateTime", index: "AuditCreateTime", formatter: Audit },
+                    ],
+                    jsonReader: {
+                        repeatitems: false,
+                        id: "0"
+                    },
+                    loadComplete: function () {
+                        $('#Result').jqGrid("setGridWidth", $('#resultDIV').width());
+                    },
+                    pager: "ResultPagger"
+                });
+                $("#Result").jqGrid('setGridParam', { data: datas });
+                $("#Result").trigger("reloadGrid");
+            }
+            </text>
+        }
+        else if (User.HasPermission("EP.SD.SalesSupport.CUSCRM.CUSCRMTX002.User"))
+        {
+            <text>
+            function BindGrid(datas) {
+                $("#Result").GridUnload();
+                $("#Result").jqGrid({
+                    url: '@Url.Action("BindGrid", "CUSCRMTX002", new { area = "CUSCRM" })',
+                    datatype: "local",
+                    mtype: "POST",
+                    colNames: ["","", "", "", "","序號","照會單號", "照會日期", "客戶姓名", "業務人員", "上傳附件", "進度", "下載照會單"],
+                    colModel: [
+                        { name: "State", index: "State", hidden: true },
+                        { name: "CaseGuid", index: "CaseGuid", hidden: true },
+                        { name: "DoSCreateTime", index: "DoSCreateTime", hidden: true },
+                        { name: "AuditCreateTime", index: "AuditCreateTime", hidden: true },
+                        { name: "Type", index: "Type", hidden: true },
+                        { name: "ViewID", index: "ViewID", width: 35 },
+                        { name: "No", index: "No", width: 85 },
+                        { name: "CreateTime", index: "CreateTime", width: 85 },
+                        { name: "Owner", index: "Owner" },
+                        { name: "ToMemberID", index: "ToMemberID" },
+                        { name: "", index: "CFID", formatter: File, width: 70, align: "center"},
+                        { name: "Seq", index: "Seq" },
+                        { name: "", index: "CreateTime", formatter: NoteUser, align: "center" },
+                    ],
+                    jsonReader: {
+                        repeatitems: false,
+                        id: "0"
+                    },
+                    loadComplete: function () {
+                        $('#Result').jqGrid("setGridWidth", $('#resultDIV').width());
+                    },
+                    pager: "ResultPagger"
+                });
+                $("#Result").jqGrid('setGridParam', { data: datas });
+                $("#Result").trigger("reloadGrid");
+            }
+            </text>
+	    }
+        function Note(cellValue, options, rdata, action) {
+            var result = '';
+            let CaseGuid = rdata.CaseGuid;
+            let Type = rdata.Type;
+            let CreateTime = rdata.CreateTime;
+            switch (Type) {
+                case 'CC':
+                    result = "<a class='link_class' target='_blank'  href='" + '@Html.Raw(Url.Action("CCNote", "CUSCRMTX002"))' + "?CaseGuid=" + CaseGuid + "' >" + CreateTime + "<img src='" + '@Url.Content("~/Content/Free-file-icons/32px/pdf.png")' + "' />" + "</a>";
+                    break;
+                case 'SC':
+                    result = "<a class='link_class' target='_blank'  href='" + '@Html.Raw(Url.Action("SCNote", "CUSCRMTX002"))' + "?CaseGuid=" + CaseGuid + "' >" + CreateTime + "<img src='" + '@Url.Content("~/Content/Free-file-icons/32px/pdf.png")' + "' />" + "</a>";
+                    break;
+                case 'CS':
+                    result = "<a class='link_class' target='_blank'  href='" + '@Html.Raw(Url.Action("CSNote", "CUSCRMTX002"))' + "?CaseGuid=" + CaseGuid + "' >" + CreateTime + "<img src='" + '@Url.Content("~/Content/Free-file-icons/32px/pdf.png")' + "' />" + "</a>";
+                    break;
+                default:
+                    break;
+            }
+            return result;
+        }
+        function DoS(cellValue, options, rdata, action) {
+            console.log(rdata.DoSCreateTime)
+            if (rdata.DoSCreateTime == "N") {
+                return "";
+            } else {
+                let CaseGuid = rdata.CaseGuid;
+                let CreateTime = rdata.DoSCreateTime;
+                var result = "<a class='link_class' target='_blank'  href='" + '@Html.Raw(Url.Action("DoSNote", "CUSCRMTX002"))' + "?CaseGuid=" + CaseGuid + "' >" + CreateTime + "<img src='" + '@Url.Content("~/Content/Free-file-icons/32px/pdf.png")' + "' />" + "</a>";
+                return result;
+            }
+            return "";
+        }
+        function Audit(cellValue, options, rdata, action) {
+            console.log(rdata.AuditCreateTime)
+            if (rdata.AuditCreateTime == "N") {
+                return "";
+            } else {
+                let CreateTime = rdata.AuditCreateTime;
+                let CaseGuid = rdata.CaseGuid;
+                var result = "<a class='link_class' target='_blank'  href='" + '@Html.Raw(Url.Action("AuditNote", "CUSCRMTX002"))' + "?CaseGuid=" + CaseGuid + "' >" + CreateTime + "<img src='" + '@Url.Content("~/Content/Free-file-icons/32px/pdf.png")' + "' />" + "</a>";
+                return result;
+            }
+            return "";
+        }
+        function NoteUser(cellValue, options, rdata, action) {
+            var result = '';
+            let CaseGuid = rdata.CaseGuid;
+            let Type = rdata.Type;
+            let CreateTime = rdata.CreateTime;
+            let seq = rdata.Seq;
+            let State = rdata.State;
+            if (seq == "照會") {
+                switch (Type) {
+                    case 'CC':
+                        result = "<a class='link_class' target='_blank'  href='" + '@Html.Raw(Url.Action("CCNote", "CUSCRMTX002"))' + "?CaseGuid=" + CaseGuid + "' >" + "<img src='" + '@Url.Content("~/Content/Free-file-icons/32px/pdf.png")' + "' />" + "</a>";
+                        break;
+                    case 'SC':
+                        result = "<a class='link_class' target='_blank'  href='" + '@Html.Raw(Url.Action("SCNote", "CUSCRMTX002"))' + "?CaseGuid=" + CaseGuid + "' >" + "<img src='" + '@Url.Content("~/Content/Free-file-icons/32px/pdf.png")' + "' />" + "</a>";
+                        break;
+                    case 'CS':
+                        result = "<a class='link_class' target='_blank'  href='" + '@Html.Raw(Url.Action("CSNote", "CUSCRMTX002"))' + "?CaseGuid=" + CaseGuid + "' >" + "<img src='" + '@Url.Content("~/Content/Free-file-icons/32px/pdf.png")' + "' />" + "</a>";
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                if (State == "催辦") {
+                    result = "<a class='link_class' target='_blank'  href='" + '@Html.Raw(Url.Action("DoSNote", "CUSCRMTX002"))' + "?CaseGuid=" + CaseGuid + "' >" + "<img src='" + '@Url.Content("~/Content/Free-file-icons/32px/pdf.png")' + "' />" + "</a>";
+                } else if (State == "稽催") {
+                    result = "<a class='link_class' target='_blank'  href='" + '@Html.Raw(Url.Action("AuditNote", "CUSCRMTX002"))' + "?CaseGuid=" + CaseGuid + "' >" + "<img src='" + '@Url.Content("~/Content/Free-file-icons/32px/pdf.png")' + "' />" + "</a>";
+                }
+            }
+
+            return result;
+        }
+        function Message(cellValue, options, rdata, action) {
+            let no = rdata.No;
+            let button = '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#JobModalLong" onclick="createNo(\'' + no + '\');" >通知 </button>';
+            var result = button;
+            return result;
+        }
+        function AllMemberID(cellValue, options, rdata, action) {
+            let AllMemberID = rdata.AllToMemberID;
+            let button = '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AllMemberIDModalLong" onclick="createAllMemberID(\'' + AllMemberID + '\');">明細</button>';
+            var result = button;
+            return result;
+        }
+        function File(cellValue, options, rdata, action) {
+            let CFID = rdata.CFID;
+            let result = "";
+            if (CFID != '') {
+                result = '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#CFIDModalLong" onclick="createCFModal(\'' + CFID + '\');">明細</button>';
+            } else {
+                result = '';
+            }
+
+            return result;
+        }
+        $(document).on('click', '.CFID', function () {
+
+            var CFID = $(this).attr('id');
+
+            AjaxDownFile("/CUSCRMTX002/GetCRMEFile", "fid=" + CFID);
+
+        });
+        function changeType() {
+            var Category = $('#Category option:selected').val()
+            if (Category != "") {
+                $.ajax({
+                    method: "POST",
+                    cache: false,
+                    url: '@Url.Action("GetType", "CUSCRMTX002", new { area = "CUSCRM" })',
+                    data: { Category: Category },
+                    async: false,
+                    complete: function (data) {
+                        $("#Type").html('');
+                        $("#Type").append("<option value=''>" + "請選擇" + "</option>");
+                        for (let i = 0; i < data.responseJSON.length; i++) {
+                            $("#Type").append("<option value='" + data.responseJSON[i].Value + "'>" + data.responseJSON[i].Text + "</option>");
+                        }
+                    },
+                    error: function (ex) {
+                        if (ex.statusText == "OK") {
+                        } else {
+                            appendMessage("系統發生錯誤");
+                        }
+                    }
+                });
+            } else {
+                $("#Type").html('');
+                $("#Type").append("<option value=''>" + "請選擇" + "</option>");
+            }
+        }
+        function createNo(no) {
+            $(".no").remove();
+            $(".nobox").append("<input style='display:none' class='no' name = 'no' value='" + no + "'></input>");
+        }
+        function createAllMemberID(AllMemberID) {
+            $("#AllMember").remove();
+            $("#AllMemberIDbody").append("<p id='AllMember' >" + AllMemberID + "</p>");
+        }
+        function createCFModal(CFID) {
+            $(".CFID").remove();
+            //$("#CFIDbody").append("<p id='CFID' >" + CFID + "</p>");
+            if (CFID != '') {
+                $.ajax({
+                    method: "POST",
+                    cache: false,
+                    url: '@Url.Action("GetFileName", "CUSCRMTX002", new { area = "CUSCRM" })',
+                    data: { ID: CFID },
+                    async: false,
+                    complete: function (data) {
+                        for (let i = 0; i < data.responseJSON.length; i++) {
+                            let FID = data.responseJSON[i].ID;
+                            let FileName = data.responseJSON[i].FileName;
+                            let userBtn = "<a href='#' class='CFID' id=" + FID + " >" + FileName + "</a><br />";
+                            $("#CFIDbody").append(userBtn);
+                        }
+                    },
+                    error: function (ex) {
+                        if (ex.statusText == "OK") {
+                        } else {
+                            appendMessage("系統發生錯誤");
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+}

@@ -1,0 +1,113 @@
+﻿@model EP.H2OModels.LawDoUser
+@{
+    ViewBag.Title = LAWResource.修改經辦人員;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+@section LeftActions{
+    <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.更新" data-bind="click: SaveClick" />
+    @Html.ActionLink(EP.PlatformResources.返回, "Index", "LAWTX002", new { Class = "btn btn-default" })
+}
+
+@using (Html.BeginForm("Update", "LAWTX002", null, FormMethod.Post, new { id = "UpdateSubmit" }))
+{
+    @Html.HiddenFor(model => model.LawDouserId)
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.DouserName, new { @class = "detail-msg" })
+        <div class="col-md-offset-1">
+            @Html.DisplayFor(model => model.DouserName, new { @class = "control-label col-md-2" })
+        </div>
+    </div>
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.DouserPhoneExt, new { @class = "detail-msg" })
+        <div class="col-md-offset-1">
+            @Html.TextBoxFor(m => m.DouserPhoneExt, new { @id = "DouserPhoneExt", style = "width:15%", @maxlength = "250", @class = "form-control detail-cell", @placeholder = LAWResource.請輸入數字 })
+        </div>
+    </div>
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.DouserSort, new { @class = "detail-msg" })
+        <div class="col-md-offset-1">
+            @Html.TextBoxFor(m => m.DouserSort, new { @id = "DouserSort", style = "width:15%", @maxlength = "250", @class = "form-control detail-cell", @placeholder = LAWResource.請輸入數字 })
+        </div>
+    </div>
+}
+<script>
+    var ViewModel = {
+        SaveClick: function () {
+            if (saveValidator()) {
+                clearMessage();@*清除訊息*@
+                var tabUniqueId = $("#tabUniqueId").val();
+                $("#UpdateSubmit").attr('action', '@Url.Action("Update", "LAWTX002")');
+                $("#UpdateSubmit").submit();
+            }
+        },
+        CancelClick: function () {
+            clearMessage();@*清除訊息*@
+            window.close();
+        }
+    };
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+
+    });
+    //$("#DouserSort").focusout(function () {
+    //    if ($("#DouserSort").val() != "") {
+    //        clearMessage();
+    //        CheckDouserSort();
+    //    }
+    //})
+    function CheckDouserSort() {
+        var flag = false;
+        $.ajax({
+            method: "POST",
+            cache: false,
+            async: false,
+            url: '@Url.Action("CheckDouserSortByID", "LAWTX002", new { area = "LAW" })',
+            data: { DouserSort: $("#DouserSort").val(), LawDouserId: $("#LawDouserId").val()},
+            complete: function (check) {
+                 if (check.responseText == "OK") {
+                     flag = true;
+                     clearMessage(); @* 清除訊息 *@
+                 } else {
+                     $("#DouserSort").val('');
+                     appendMessage("@LAWResource.此順位已有設定");
+                     flag = false;
+                 }
+            },
+            error: function (ex) {
+                    if (ex.statusText == "OK") {
+                    } else {
+                        flag = false;
+                        appendMessage("@LAWResource.系統發生錯誤");
+                    }
+            }
+        });
+        return flag;
+    }
+    function saveValidator() {
+        if ($("#DouserPhoneExt").val() == "") {
+            appendMessage("@( LAWResource.分機號碼 + EP.PlatformResources.必填)");
+            return false;
+        }
+        if ($("#DouserSort").val() == "") {
+            appendMessage("@( LAWResource.排序 + EP.PlatformResources.必填)");
+            return false;
+        }
+        var pattern = /\d/;
+        var DouserPhoneExt = $("#DouserPhoneExt").val();
+        var DouserSort = $("#DouserSort").val();
+
+        if (pattern.test(DouserPhoneExt) == false) {
+            appendMessage("@LAWResource.分機號碼格式錯誤");
+            return false;
+        }
+        if (pattern.test(DouserSort) == false) {
+            appendMessage("@LAWResource.排序錯誤");
+            return false;
+        }
+        if (CheckDouserSort() == false) {
+            return false;
+        }
+        return true;
+    }
+</script>

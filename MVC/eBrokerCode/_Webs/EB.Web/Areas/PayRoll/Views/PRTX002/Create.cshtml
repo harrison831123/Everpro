@@ -1,0 +1,995 @@
+﻿@model EB.SL.PayRoll.Models.AgentBonusAdjustViewModel
+
+@{
+    ViewBag.Title = "單筆人工調帳";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+
+    WebChannel<EB.SL.PayRoll.Service.IPayRollService> Service = new WebChannel<EB.SL.PayRoll.Service.IPayRollService>();
+    //var productionYM = "";
+    var agym = new EB.VLifeModels.agym();
+    Service.Use(s => agym = s.GetYMData("", true).FirstOrDefault());
+
+    EB.EBrokerModels.OpCalendar calendar = new EB.EBrokerModels.OpCalendar();
+    calendar.ProductionYM = agym.ProductionYM;
+    calendar.Sequence = agym.sequence.ToString();
+    Service.Use(s => calendar = s.QueryOpCalendar(calendar));
+    DateTime sTime = DateTime.Now;
+    DateTime eTime = DateTime.Now;
+    var c = 1;
+    var c1 = 0;
+    var agbcind = agym.AgbcInd;
+    var agymind = agym.AgymInd;
+    if (calendar != null)
+    {
+        sTime = Convert.ToDateTime(calendar.AdjDateTimeStr);
+        eTime = Convert.ToDateTime(calendar.AdjDateTimeEnd);
+        c = DateTime.Compare(sTime, DateTime.Now);
+        c1 = DateTime.Compare(eTime, DateTime.Now);
+    }
+}
+<style>
+    th, td {
+        border: 1px solid black;
+        text-align: center;
+        padding: 3px;
+    }
+
+    th {
+        background-color: #ACD6FF;
+    }
+
+    td {
+        background-color: #D2E9FF;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        color: black;
+    }
+
+    #datatable {
+        display: none;
+    }
+
+    .group2 {
+        display: none;
+    }
+
+    .AD2 {
+        display: none;
+    }
+
+    .AG2 {
+        display: none;
+    }
+</style>
+
+@*@if ((c > 0 || c1 < 0) && User.RoleList.Where(x => x.ID.Contains("CNEP5210")).Any() == false)
+    {
+        <text>
+            非调整时间
+        </text>
+    }
+    else
+    {*@
+@*人工調整起迄設定*@
+<div id="divQueryBlock">
+    <div class="ibox ibox-primary">
+        <div class="ibox-head">
+            <div class="ibox-title">單筆人工調帳  新增</div>
+            <div class="ibox-tools">
+                <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
+                <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
+            </div>
+        </div>
+        @using (Html.BeginForm("Index", "PRTX002", new { area = "PayRoll" }, FormMethod.Post, new { id = "CreateForm" }))
+        {
+            @Html.HiddenFor(m => m.AgentBonusDescGuid, new { @class = "user-input-field", @readonly = true })
+            <div class="ibox-body">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        @Html.LabelFor(m => m.ProductionYM, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.ProductionYM, new { @class = "form-control", @Value = agym.ProductionYM, @readonly = true })
+                    </div>
+                    <div class="col-md-1">
+                        @Html.LabelFor(m => m.Sequence, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.Sequence, new { @class = "form-control", @Value = agym.sequence, @readonly = true })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.AdjType, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.AdjType, new { @class = "form-control user-input-field AD1", @readonly = true })
+                        <div class="AD2">
+                            <select class="form-select" id="AdjType6" name="AdjType6">
+                                <option value="4">4</option>
+                                <option value="6" selected="selected">6</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.ReasonCode, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.ReasonCode, new { @class = "form-control user-input-field" })
+                    </div>
+                    <div class="col-md-2 Adjgroup">
+                        @Html.LabelFor(m => m.CompanyCode, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.CompanyCode, new { @class = "form-control user-input-field " })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-2 Adjgroup">
+                        @Html.LabelFor(m => m.PolicyNo2, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.PolicyNo2, new { @class = "form-control user-input-field " })
+                    </div>
+                    <div class="col-md-2 Adjgroup">
+                        @Html.LabelFor(m => m.FYC, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.FYC, new { @class = "form-control user-input-field ", Value = 0 })
+                    </div>
+                    <div class="col-md-2 Adjgroup">
+                        @Html.LabelFor(m => m.FYP, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.FYP, new { @class = "form-control user-input-field " })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.AgentCode, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.AgentCode, new { @class = "form-control user-input-field AG1" })
+                        <div class="AG2">
+                            <select class="form-select user-input-field" id="AgentCode6" name="AgentCode6" disabled="disabled">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.AgentName, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.AgentName, new { @class = "form-control user-input-field", @readonly = true })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.LabelFor(m => m.Amount, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.Amount, new { @class = "form-control user-input-field", Value = 0 })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-11">
+                        @Html.LabelFor(m => m.DescContent, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.DescContent, new { @class = "form-control user-input-field" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3 Adjgroup">
+                        @Html.LabelFor(m => m.PlanCode, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.PlanCode, new { @class = "form-control user-input-field" })
+                    </div>
+                    <div class="col-md-2 Adjgroup">
+                        @Html.LabelFor(m => m.CollectYear, new { @class = "col-form-label" })
+                        @Html.TextBoxFor(m => m.CollectYear, new { @class = "form-control user-input-field ", Value = 0 })
+                    </div>
+                    <div class="col-md-2 Adjgroup">
+                        @Html.LabelFor(m => m.ModxSequence, new { @class = "col-form-label" })
+                        @*@Html.TextBoxFor(m => m.ModxSequence, new { @class = "form-control user-input-field " })*@
+                        @Html.TextBoxFor(m => m.ModxSequence, new { @class = "form-control user-input-field " })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+
+                    @if (User.HasPermission("EB.SL.PayRoll.PRTX002.Admin"))
+                    {
+                        if (c > 0 || agbcind == "1" || agymind == "0")
+                        {
+                            <div class="group1 col-md-3">
+                                <button class="btn btn-primary" id="btnInsert" data-bind="click: InsertClick" disabled="disabled">執行</button>
+                                <button class="btn btn-primary" id="btnClear" data-bind="click: ClearClick" disabled="disabled">取消</button>
+                                <button class="btn btn-primary" id="btnCancel" data-bind="click: CancelClick">關閉</button>
+                            </div>
+                            <div class="group2 col-md-3">
+                                <button class="btn btn-warning" id="btnUpdate" data-bind="click: UpdateClick" disabled="disabled">儲存修改</button>
+                                <button class="btn btn-warning" id="btnClear" data-bind="click: ClearClick" disabled="disabled">取消</button>
+                                <button class="btn btn-primary" id="btnCancel" data-bind="click: CancelClick">關閉</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="group1 col-md-3">
+                                <button class="btn btn-primary" id="btnInsert" data-bind="click: InsertClick">執行</button>
+                                <button class="btn btn-primary" id="btnClear" data-bind="click: ClearClick">取消</button>
+                                <button class="btn btn-primary" id="btnCancel" data-bind="click: CancelClick">關閉</button>
+                            </div>
+                            <div class="group2 col-md-3">
+                                <button class="btn btn-warning" id="btnUpdate" data-bind="click: UpdateClick">儲存修改</button>
+                                <button class="btn btn-warning" id="btnClear" data-bind="click: ClearClick">取消</button>
+                                <button class="btn btn-primary" id="btnCancel" data-bind="click: CancelClick">關閉</button>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        if (c > 0 || c1 < 0 || agymind == "0")
+                        {
+                            <div class="group1 col-md-3">
+                                <button class="btn btn-primary" id="btnInsert" data-bind="click: InsertClick" disabled="disabled">執行</button>
+                                <button class="btn btn-primary" id="btnClear" data-bind="click: ClearClick" disabled="disabled">取消</button>
+                                <button class="btn btn-primary" id="btnCancel" data-bind="click: CancelClick">關閉</button>
+                            </div>
+                            <div class="group2 col-md-3">
+                                <button class="btn btn-warning" id="btnUpdate" data-bind="click: UpdateClick" disabled="disabled">儲存修改</button>
+                                <button class="btn btn-warning" id="btnClear" data-bind="click: ClearClick" disabled="disabled">取消</button>
+                                <button class="btn btn-primary" id="btnCancel" data-bind="click: CancelClick">關閉</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="group1 col-md-3">
+                                <button class="btn btn-primary" id="btnInsert" data-bind="click: InsertClick">執行</button>
+                                <button class="btn btn-primary" id="btnClear" data-bind="click: ClearClick">取消</button>
+                                <button class="btn btn-primary" id="btnCancel" data-bind="click: CancelClick">關閉</button>
+                            </div>
+                            <div class="group2 col-md-3">
+                                <button class="btn btn-warning" id="btnUpdate" data-bind="click: UpdateClick">儲存修改</button>
+                                <button class="btn btn-warning" id="btnClear" data-bind="click: ClearClick">取消</button>
+                                <button class="btn btn-primary" id="btnCancel" data-bind="click: CancelClick">關閉</button>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div class="row col-md-12">
+    <table id="datatable">
+        <thead>
+            <tr>
+                <th>型態</th>
+                <th>公司碼</th>
+                <th>業務員代碼</th>
+                <th>業務員姓名</th>
+                <th>調整原因碼</th>
+                <th>保單號碼</th>
+                <th>險種</th>
+                <th>年期</th>
+                <th>繳別繳次</th>
+                <th>金額</th>
+                <th>FYC</th>
+                <th>保費</th>
+                <th>說明內容</th>
+                <th>序號</th>
+                <th>編輯</th>
+                <th>刪除</th>
+            </tr>
+        </thead>
+        <tbody id="datatbody">
+        </tbody>
+    </table>
+</div>
+
+@*}*@
+
+@section Scripts
+{
+    <script>
+
+        var reasonCodeCheck = "";
+        var AdjTypeCheck = true;
+    var ViewModel = {
+        InsertClick: function () {
+            if (CheckFieldValue()) {
+                var formData = new FormData();
+                var ProductionYM = $("#ProductionYM").val();
+                var Sequence = $('#Sequence').val();
+                formData.append('ProductionYM', $("#ProductionYM").val());
+                formData.append('CompanyCode', $('#CompanyCode').val());
+                formData.append('ReasonCode', $('#ReasonCode').val());
+                formData.append('Amount', $('#Amount').val());
+                formData.append('PolicyNo2', $('#PolicyNo2').val());
+                formData.append('FYC', $('#FYC').val());
+                formData.append('FYP', $('#FYP').val());
+                formData.append('DescContent', $('#DescContent').val());
+                formData.append('PlanCode', $('#PlanCode').val());
+                formData.append('CollectYear', $('#CollectYear').val());
+                formData.append('ModxSequence', $('#ModxSequence').val());
+                formData.append('sequence', $('#Sequence').val());
+                formData.append('AgentName', $("#AgentName").val());
+                if ($("#ReasonCode").val() == "01" || $("#ReasonCode").val() == "05") {
+                    let AdjType6 = $("#AdjType6 option:selected").val();
+                    formData.append('AdjType', AdjType6);
+                    if (AdjType6 == "6") {
+                        formData.append('AgentCode', $('#AgentCode6 option:selected').text());
+                    } else {
+                        formData.append('AgentCode', $('#AgentCode').val());
+                    }
+                } else {
+                    formData.append('AdjType', $('#AdjType').val());
+                    formData.append('AgentCode', $('#AgentCode').val());
+                }
+                $.ajax({
+                    method: "POST",
+                    cache: false,
+                    url: '@Url.Action("Index", "PRTX002", new { area = "PayRoll" })',
+                    contentType: false,
+                    processData: false,
+                    data: formData,
+                    complete: function (data) {
+
+                        if (data.responseJSON === undefined) {
+                        } else {
+                            var ReasonCode = data.responseJSON.Item1[0].ReasonCode
+
+                            if (ReasonCode == "01" || ReasonCode == "02" || ReasonCode == "03" || ReasonCode == "05" || ReasonCode == "06"
+                                || ReasonCode == "0A" || ReasonCode == "0B" || ReasonCode == "0G") {
+
+                            }
+                            else {
+                                data.responseJSON.Item1[0].CollectYear = "" ;
+                            }
+                            //查詢列表
+                            let str = "<tr class=" + data.responseJSON.Item1[0].AgentBonusDescGuid + "><td>" + data.responseJSON.Item1[0].AdjType + "</td><td>" + $('#CompanyCode').val() + "</td><td>" + data.responseJSON.Item1[0].AgentCode + "</td><td>"
+                                + data.responseJSON.Item1[0].AgentName + "</td><td>" + data.responseJSON.Item1[0].ReasonCode + "</td><td>" + data.responseJSON.Item1[0].PolicyNo2 + "</td><td>"
+                                + data.responseJSON.Item1[0].PlanCode + "</td><td>" + data.responseJSON.Item1[0].CollectYear + "</td><td>" + data.responseJSON.Item1[0].ModxSequence + "</td><td>"
+                                + data.responseJSON.Item1[0].Amount + "</td><td>" + data.responseJSON.Item1[0].FYC + "</td><td>"
+                                + data.responseJSON.Item1[0].FYP + "</td><td>" + $('#DescContent').val() + "</td><td>"
+                                + data.responseJSON.Item1[0].Sequence + "</td><td>"
+                                + '<button id="editBtn" class="btn btn-warning" onclick="SetUpdateData(\'' + data.responseJSON.Item1[0].AgentBonusDescGuid + '\')">編輯</button> </td><td>'
+                                + '<button id="delBtn" class="btn btn-danger" onclick="ConfirmDelete(\'' + data.responseJSON.Item1[0].AgentBonusDescGuid + '\')">刪除</button></td></tr >';
+                            $("#datatbody").append(str);
+                            $("#datatable").css('display', 'block');
+                            clearMessage();
+                            $('#CreateForm input[type=text]').val('');
+                            $("#ProductionYM").val(ProductionYM)
+                            $('#Sequence').val(Sequence)
+                            $(".Adjgroup").show();
+                            CheckADAGHide("");
+                            ChangeADHide();
+                            $(".user-input-field").each(function () {
+                                $(this).val('');
+                            });
+
+                            if (data.responseJSON.Item2.length != 0) {
+                                let ContorErrorlist = "警示訊息:" + "\n";
+                                for (let i = 0; i < data.responseJSON.Item2.length; i++) {
+                                    ContorErrorlist += data.responseJSON.Item2[i] + "\n";
+                                }
+                                //if (confirm("是否查詢警示訊息?")) {
+                                //    alert(ContorErrorlist);
+                                //}
+                                alert(ContorErrorlist);
+                            }
+                            SetFormVal()
+                            $(window.opener.document.getElementById('btnQuery')).trigger('click');
+                        }
+                    },
+                    error: function (ex) {
+                        if (ex.statusText == "OK") {
+                        } else {
+                            appendMessage("系統發生錯誤");
+                        }
+                    }
+                });
+            }
+        },
+        UpdateClick: function () {
+                clearMessage();
+            if (CheckFieldValue()) {
+                var ProductionYM = $("#ProductionYM").val();
+                var Sequence = $('#Sequence').val();
+                var AdjType = "";
+                var CompanyCode = $('#CompanyCode').val();
+                var AgentCode = "";
+                var ReasonCode = $('#ReasonCode').val();
+                var Amount = $('#Amount').val();
+                var PolicyNo2 = $('#PolicyNo2').val();
+                var FYC = $('#FYC').val();
+                var FYP = $('#FYP').val();
+                var DescContent = $('#DescContent').val();
+                var PlanCode = $('#PlanCode').val();
+                var CollectYear = $('#CollectYear').val();
+                var ModxSequence = $('#ModxSequence').val();
+                var Sequence = $('#Sequence').val();
+                var AgentName = $("#AgentName").val();
+                var AgentBonusDescGuid = $("#AgentBonusDescGuid").val();
+                if ($("#ReasonCode").val() == "01" || $("#ReasonCode").val() == "05") {
+                    let AdjType6 = $("#AdjType6 option:selected").val();
+                    AdjType = AdjType6;
+                    $('#AdjType').val(AdjType6)
+                    if (AdjType6 == "6") {
+                        AgentCode = $('#AgentCode6 option:selected').text();
+                        $('#AgentCode').val(AgentCode)
+                    } else {
+                        AgentCode = $('#AgentCode').val();
+                    }
+                } else {
+                    AdjType = $('#AdjType').val();
+                    AgentCode = $('#AgentCode').val();
+                }
+                var model = $('#CreateForm').serialize();
+                $.ajax({
+                    method: "POST",
+                    cache: false,
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                    url: '@Url.Action("Update", "PRTX002", new { area = "PayRoll" })',
+                    data: model,
+                    complete: function (data) {
+                        console.log(data)
+                        if (data.responseJSON === undefined) {
+                        } else if (data.responseJSON.Item2 == "ERROR") {
+
+                        }
+                        else {
+                            $("." + AgentBonusDescGuid).remove();
+                            var ReasonCode = data.responseJSON.Item1[0].ReasonCode
+
+                            if (ReasonCode == "01" || ReasonCode == "02" || ReasonCode == "03" || ReasonCode == "05" || ReasonCode == "06"
+                                || ReasonCode == "0A" || ReasonCode == "0B" || ReasonCode == "0G") {
+
+                            }
+                            else {
+                                data.responseJSON.Item1[0].CollectYear = "";
+                            }
+                            //查詢列表
+                            let str = "<tr class=" + data.responseJSON.Item1[0].AgentBonusDescGuid + "><td>" + data.responseJSON.Item1[0].AdjType + "</td><td>" + $('#CompanyCode').val() + "</td><td>" + data.responseJSON.Item1[0].AgentCode + "</td><td>"
+                                + data.responseJSON.Item1[0].AgentName + "</td><td>" + data.responseJSON.Item1[0].ReasonCode + "</td><td>" + data.responseJSON.Item1[0].PolicyNo2 + "</td><td>"
+                                + data.responseJSON.Item1[0].PlanCode + "</td><td>" + data.responseJSON.Item1[0].CollectYear + "</td><td>" + data.responseJSON.Item1[0].ModxSequence + "</td><td>"
+                                + data.responseJSON.Item1[0].Amount + "</td><td>" + data.responseJSON.Item1[0].FYC + "</td><td>"
+                                + data.responseJSON.Item1[0].FYP + "</td><td>" + $('#DescContent').val() + "</td><td>"
+                                + data.responseJSON.Item1[0].Sequence + "</td><td>"
+                                + '<button id="editBtn" class="btn btn-warning" onclick="SetUpdateData(\'' + data.responseJSON.Item1[0].AgentBonusDescGuid + '\')">編輯</button> </td><td>'
+                                + '<button id="delBtn" class="btn btn-danger" onclick="ConfirmDelete(\'' + data.responseJSON.Item1[0].AgentBonusDescGuid + '\')">刪除</button></td></tr >';
+                            $("#datatbody").append(str);
+                            $("#datatable").css('display', 'block');
+                            $('#CreateForm input[type=text]').val('');
+                            $("#ProductionYM").val(ProductionYM)
+                            $('#Sequence').val(Sequence)
+                            $(".Adjgroup").show();
+                            $(".user-input-field").each(function () {
+                                $(this).val('');
+                            });
+
+                            if (data.responseJSON.Item2.length != 0) {
+                                let ContorErrorlist = "警示訊息:" + "\n";
+                                for (let i = 0; i < data.responseJSON.Item2.length; i++) {
+                                    ContorErrorlist += data.responseJSON.Item2[i] + "\n";
+                                }
+
+                                alert(ContorErrorlist);
+                            }
+                            SetFormVal()
+                            $(".group1").show();
+                            $(".group2").hide();
+                            $(window.opener.document.getElementById('btnQuery')).trigger('click');
+                        }
+                    },
+                    error: function (ex) {
+                        if (ex.statusText == "OK") {
+                        } else {
+                            appendMessage("系統發生錯誤");
+                        }
+                    }
+                });
+
+            }
+        },
+        ClearClick: function () {
+            clearMessage();
+            ClearData()
+        },
+        CancelClick: function () {
+            window.close();
+        }
+    }
+        $(function () {
+            ko.applyBindings(ViewModel);
+
+            $("#AgentCode").focusout(function () {
+                if ($("#AgentCode").val() != "") {
+                    clearMessage();
+                    CheckAgentCode();
+                } else {
+                    $("#AgentName").val("");
+                }
+            })
+
+            $("#ReasonCode").change(function () {
+                this.value = this.value.toUpperCase();
+                if ($("#ReasonCode").val() != "") {
+                    clearMessage();
+                    let ReasonCode = $("#ReasonCode").val();
+                    let AdjType6 = $("#AdjType6 option:selected").val();
+                    $("#AgentName").val('');
+                    $("#AgentCode").val('');
+                     if ($("#ReasonCode").val() == "01" || $("#ReasonCode").val() == "05") {
+                        ChangeADHide();
+                        $(".Adjgroup").show();
+                        CheckADAGHide(AdjType6);
+                        //CheckGroupMappingTOZeroFour();
+                        AdjTypeCheck = true;
+                    }
+                    else {
+                        $.ajax({
+                            method: "POST",
+                            cache: false,
+                            url: '@Url.Action("GetTypeByReasonCode", "PRTX002", new { area = "PayRoll" })',
+                            data: { reasonCode: $("#ReasonCode").val() },
+                            complete: function (check) {
+                                if (check.responseText != "") {
+                                    @if (!User.HasPermission("EB.SL.PayRoll.PRTX002.Admin"))
+                                    {
+                                        <text>
+                                        if (check.responseText == "4") {
+                                            appendMessage("錯誤訊息:無權限執行型態4及型態6");
+                                        }
+                                        </text>
+                                    }
+                                    $("#AdjType").val(check.responseText);
+                                    AdjTypeCheck = true;
+                                    if (check.responseText == "8") {
+                                        $(".Adjgroup").hide();
+                                    }
+                                    else {
+                                        $(".Adjgroup").show();
+                                    }
+                                } else {
+                                    $("#AdjType").val('');
+                                    $(".Adjgroup").show();
+                                    AdjTypeCheck = false;
+                                    appendMessage("錯誤訊息:原因碼不存在");
+                                }
+                            },
+                            error: function (ex) {
+                                if (ex.statusText == "OK") {
+                                } else {
+                                    appendMessage("系統發生錯誤");
+                                }
+                            }
+                        });
+                        //CheckGroupMappingTOZeroFour();
+                        ChangeADHide()
+                        ChangeAGHide();
+                    }
+
+                    GetAgentNameByPoag();
+                    @if (!User.HasPermission("EB.SL.PayRoll.PRTX002.Admin"))
+                    {
+                        <text>
+                        if ($("#ReasonCode").val() == "01" || $("#ReasonCode").val() == "05") {
+                            appendMessage("錯誤訊息:無權限執行型態4及型態6");
+                        }
+                        </text>
+                    }
+                }
+            })
+        });
+
+        $("#CompanyCode").focusout(function () {
+            if ($("#CompanyCode").val() != "") {
+                clearMessage();
+                CheckCompanyCode();
+            }
+        })
+        $("#PolicyNo2").focusout(function () {
+            GetAgentNameByPoag();
+        })
+
+        $("#FYC").change(function () {
+            if (this.value != "") {
+                let e = parseFloat($("#FYC").val().replace(/,/g, ''));
+                $("#FYC").val(e);
+            }
+        })
+        $("#FYP").change(function () {
+            if (this.value != "") {
+                let e = parseFloat($("#FYP").val().replace(/,/g, ''))
+                $("#FYP").val(e);
+            }
+        })
+        $("#Amount").change(function () {
+            if (this.value != "") {
+                let e = parseFloat($("#Amount").val().replace(/,/g, ''))
+                $("#Amount").val(e);
+            }
+        })
+
+        $("#AgentCode6").change(function () {
+            $("#AgentName").val(this.value);
+
+        })
+        $("#AdjType6").change(function () {
+            let AdjType6 = $("#AdjType6 option:selected").val();
+            CheckADAGHide(AdjType6);
+
+            if ($("#AgentCode").val() == "" && AdjType6 == 4) {
+                $("#AgentName").val("");
+            }
+
+        })
+        function CheckADAGHide(AdjType6) {
+            if (AdjType6 == "6" && ($("#ReasonCode").val() == "01" || $("#ReasonCode").val() == "05")) {
+                $(".AG1").hide();
+                $(".AG2").show();
+                //ClearAG();
+                GetAgentNameByPoag();
+            } else {
+                ChangeAGHide();
+            }
+        }
+        function ChangeADHide() {
+            if ($("#ReasonCode").val() == "01" || $("#ReasonCode").val() == "05") {
+                $(".AD1").hide();
+                $(".AD2").show();
+            } else {
+                $(".AD1").show();
+                $(".AD2").hide();
+            }
+        }
+        function ChangeAGHide() {
+            //ClearAG();
+            $(".AG1").show();
+            $(".AG2").hide();
+        }
+
+        function CheckAgentCode() {
+            $.ajax({
+                method: "POST",
+                cache: false,
+                async: false,
+                url: '@Url.Action("CheckAginb", "PRTX002", new { area = "PayRoll" })',
+                data: { productionYM: $("#ProductionYM").val(), agentCode: $("#AgentCode").val() },
+                complete: function (check) {
+                    if (check.responseText != "") {
+                        $("#AgentName").val(check.responseText);
+                    } else {
+                        $("#AgentName").val('');
+                        appendMessage("錯誤訊息:業務員不存在月備份組織");
+                    }
+                }
+            });
+        }
+
+        function CheckCompanyCode() {
+           $.ajax({
+                method: "POST",
+                cache: false,
+                url: '@Url.Action("CheckCompanyCode", "PRTX002", new { area = "PayRoll" })',
+                data: { CompanyCode: $("#CompanyCode").val() },
+                complete: function (check) {
+                    if (check.responseText != "") {
+                        $("#CompanyCode").val(check.responseText);
+                    } else {
+                        $("#CompanyCode").val('');
+                        appendMessage("錯誤訊息:保險公司代碼不存在");
+                    }
+                },
+                error: function (ex) {
+                    if (ex.statusText == "OK") {
+                    } else {
+                        appendMessage("系統發生錯誤");
+                    }
+                }
+            });
+        }
+        //預設欄位值
+        function SetFormVal() {
+            $("#Amount").val("0")
+            $("#FYC").val("0")
+            $("#FYP").val("0")
+            $("#CollectYear").val("0")
+            //$("#CommModePrem").val("0")
+        }
+        function ConfirmDelete(AgentBonusDescGuid) {
+            var result = confirm('確定刪除?');
+            if (result) {
+                DeleteData(AgentBonusDescGuid);
+            }
+        }
+        function GetAgentNameByPoag() {
+            clearMessage();
+            if (($("#ReasonCode").val() == "01" || $("#ReasonCode").val() == "05") && $("#PolicyNo2").val() != "" && $("#AdjType6 option:selected").val() == 6) {
+                $("#AgentName").val("");
+                $("#AgentCode6 option").each(function () {
+                    $(this).remove();
+                });
+                $.ajax({
+                    method: "POST",
+                    cache: false,
+                    async: false,
+                    url: '@Url.Action("GetAgentNameByPoag", "PRTX002", new { area = "PayRoll" })',
+                    data: { PolicyNo2: $("#PolicyNo2").val() },
+                    complete: function (data) {
+                        if (data.responseJSON == "Error") {
+                            appendMessage("錯誤訊息:查無此保單號碼");
+                            $("#PolicyNo2").val('');
+                            $("#AgentName").val('');
+                        } else {
+
+                            for (var i = 0; i < data.responseJSON.length; i++) {
+                                let split = data.responseJSON[i].split('|')
+                                let o = '<option value=' + split[1] + '>' + split[0] + '</option>'
+                                $('#AgentCode6').append(o);
+                            }
+                            let sp = data.responseJSON[0].split('|')
+                            $("#AgentName").val(sp[1]);
+                        }
+                    },
+                    error: function (ex) {
+                        if (ex.statusText == "OK") {
+                        } else {
+                            appendMessage("系統發生錯誤");
+                        }
+                    }
+                });
+            } else if (($("#ReasonCode").val() == "01" || $("#ReasonCode").val() == "05") && $("#PolicyNo2").val() == "" && $("#AdjType6 option:selected").val() == 6) {
+                $("#AgentName").val("");
+                $("#AgentCode6 option").each(function () {
+                    $(this).remove();
+                });
+            }
+            ChangeAgentCode6();
+
+        }
+        function ChangeAgentCode6() {
+            let AdjType6 = $("#AdjType6 option:selected").val();
+            if (AdjType6 == 6) {
+                if ($("#PolicyNo2").val() == "") {
+                    $('#AgentCode6').prop('disabled', true);
+                } else {
+                    $('#AgentCode6').prop('disabled', false);
+                }
+            }
+        }
+        function DeleteData(AgentBonusDescGuid) {
+            $.ajax({
+                method: "POST",
+                cache: false,
+                url: '@Url.Action("Delete", "PRTX002", new { area = "PayRoll" })',
+                data: { agentBonusDescGuid: AgentBonusDescGuid },
+                complete: function (data) {
+                    //$("#QueryResult").GridUnload();
+                    $("." + AgentBonusDescGuid).remove();
+                    ClearData()
+                },
+                error: function (ex) {
+                    if (ex.statusText == "OK") {
+                    } else {
+                        appendMessage("系統發生錯誤");
+                    }
+                }
+            });
+        }
+        function SetUpdateData(AgentBonusDescGuid) {
+            $("#CompanyCode").val($("."+ AgentBonusDescGuid + " td")[1].innerText);
+            $("#AgentName").val($("."+ AgentBonusDescGuid + " td")[3].innerText);
+            $("#ReasonCode").val($("."+ AgentBonusDescGuid + " td")[4].innerText);
+            $("#PolicyNo2").val($("." + AgentBonusDescGuid + " td")[5].innerText);
+            $("#PlanCode").val($("." + AgentBonusDescGuid + " td")[6].innerText);
+            $("#CollectYear").val($("." + AgentBonusDescGuid + " td")[7].innerText);
+            $("#ModxSequence").val($("." + AgentBonusDescGuid + " td")[8].innerText);
+            $("#Amount").val($("."+ AgentBonusDescGuid + " td")[9].innerText);
+            $("#FYC").val($("."+ AgentBonusDescGuid + " td")[10].innerText);
+            $("#FYP").val($("."+ AgentBonusDescGuid + " td")[11].innerText);
+            $("#DescContent").val($("." + AgentBonusDescGuid + " td")[12].innerText);
+            $("#Sequence").val($("."+ AgentBonusDescGuid + " td")[13].innerText);
+
+            $("#AgentBonusDescGuid").val(AgentBonusDescGuid);
+            if ($("#ReasonCode").val() == "01" || $("#ReasonCode").val() == "05") {
+                $("#AdjType6").val($("." + AgentBonusDescGuid + " td")[0].innerText);
+                $("#AgentName").val($("." + AgentBonusDescGuid + " td")[3].innerText);
+                CheckADAGHide($("." + AgentBonusDescGuid + " td")[0].innerText)
+                ChangeADHide();
+                if ($("#AdjType6 option:selected").val() == 6) {
+                    let aa = $.trim($("." + AgentBonusDescGuid + " td")[3].innerText)
+                    $("#AgentName").val($("." + AgentBonusDescGuid + " td")[3].innerText);
+                    $(`#AgentCode6 option[value='${aa}']`).prop('selected', true);
+                } else {
+                    $("#AgentCode").val($("." + AgentBonusDescGuid + " td")[2].innerText);
+                }
+            } else {
+                $("#AdjType").val($("." + AgentBonusDescGuid + " td")[0].innerText);
+                $("#AgentCode").val($("." + AgentBonusDescGuid + " td")[2].innerText);
+            }
+
+            $(".group1").hide();
+            $(".group2").show();
+            if ($("#AdjType").val() == "8") {
+                $(".Adjgroup").hide();
+            }
+            else {
+                $(".Adjgroup").show();
+            }
+        }
+
+        function ClearData() {
+            $(".Adjgroup").show();
+            $("#AgentCode6 option").each(function () {
+                $(this).remove();
+            });
+            $(".group1").show();
+            $(".group2").hide();
+            $(".user-input-field").each(function () {
+                $(this).val('');
+            });
+            ChangeADHide();
+            ChangeAGHide();
+            SetFormVal();
+        }
+
+        function CheckFieldValue() {
+            var flag = true;
+            clearMessage();
+            let ReasonCode = $("#ReasonCode").val();
+            if (ReasonCode == "") {
+                appendMessage("錯誤訊息:原因碼；不可空白");
+                flag = false;
+                return false;
+            }
+            if (!AdjTypeCheck) {
+                appendMessage("錯誤訊息:原因碼錯誤");
+                flag = false;
+                return false;
+            }
+            @if (!User.HasPermission("EB.SL.PayRoll.PRTX002.Admin"))
+            {
+                <text>
+                if ($("#AdjType").val() == 4 || $("#ReasonCode").val() == "01" || $("#ReasonCode").val() == "05") {
+                    appendMessage("錯誤訊息:無權限執行型態4及型態6");
+                    flag = false;
+                    return false;
+                }
+                </text>
+            }
+            if (ReasonCode == "01" || ReasonCode == "02" || ReasonCode == "03" || ReasonCode == "05" || ReasonCode == "06"
+                || ReasonCode == "0A" || ReasonCode == "0B" || ReasonCode == "0G") {
+                if ($("#CollectYear").val() == "") {
+                    appendMessage("錯誤訊息:繳費年期；不可空白");
+                    flag = false;
+                    return false;
+                }
+            }
+            if (ReasonCode == "01" || ReasonCode == "02" || ReasonCode == "03" || ReasonCode == "04") {
+                if ($("#FYC").val() == "") {
+                    appendMessage("錯誤訊息:FYC；不可空白");
+                    flag = false;
+                    return false;
+                }
+            }
+            if (ReasonCode == "01" || ReasonCode == "02" || ReasonCode == "03" || ReasonCode == "04" || ReasonCode == "05" || ReasonCode == "06" || ReasonCode == "07"
+                || ReasonCode == "0A" || ReasonCode == "0B" || ReasonCode == "0C" || ReasonCode == "0D" || ReasonCode == "0G") {
+                if ($("#FYP").val() == "") {
+                    appendMessage("錯誤訊息:保費；不可空白");
+                    flag = false;
+                    return false;
+                }
+            }
+            if (ReasonCode == "01" || ReasonCode == "02" || ReasonCode == "03" || ReasonCode == "05" || ReasonCode == "06" || ReasonCode == "0A" || ReasonCode == "0B" || ReasonCode == "0G") {
+                if ($("#PlanCode").val() == "") {
+                    appendMessage("錯誤訊息:險種代碼；不可空白");
+                    flag = false;
+                    return false;
+                }
+            }
+            ///原因碼01&05
+            if ($("#ReasonCode").val() == "01" || $("#ReasonCode").val() == "05") {
+
+                var AdjType6 = document.getElementById("AdjType6");
+                var AdjType6Value = AdjType6.value;
+
+                if (AdjType6Value === "") {
+                    appendMessage("錯誤訊息:型態；不可空白");
+                    flag = false;
+                    return false;
+                }
+                if ($("#AdjType6 option:selected").val() == "") {
+                    appendMessage("錯誤訊息:調整類別；不可空白");
+                    flag = false;
+                    return false;
+                }
+                if ($("#AdjType6 option:selected").val() == 4 || $("#AdjType6 option:selected").val() == 6) {
+                    if ($("#CompanyCode").val() == "") {
+                        appendMessage("錯誤訊息:保險公司代碼；不可空白");
+                        flag = false;
+                        return false;
+                    }
+                    if ($("#PolicyNo2").val() == "" && $("#AdjType6 option:selected").val() == 6) {
+                        appendMessage("錯誤訊息:保單號碼；不可空白");
+                        flag = false;
+                        return false;
+                    }
+
+                }
+                var AgentCode6 = document.getElementById("AgentCode6");
+                var AgentCode6Value = AgentCode6.value;
+
+                if (AgentCode6Value === "" && $("#AdjType6 option:selected").val() == 6) {
+                    appendMessage("錯誤訊息:業務員代碼；不可空白");
+                    flag = false;
+                    return false;
+                }
+                if ($("#AgentName").val() == "") {
+                    appendMessage("錯誤訊息:業務員姓名；不可空白");
+                    flag = false;
+                    return false;
+                }
+                if ($("#Amount").val() == "") {
+                    appendMessage("錯誤訊息:金額；不可空白");
+                    flag = false;
+                    return false;
+                }
+                if ($("#AdjType6 option:selected").val() == 4 || $("#AdjType6 option:selected").val() == 6) {
+                    if ($("#ModxSequence").val() != "") {
+                        if ($("#ModxSequence").val().length != 5) {
+                            appendMessage("錯誤訊息:繳別繳次；格式錯誤");
+                            flag = false;
+                            return false;
+                        }
+                        let pattern = /\d{4}[M|Q|S|Y|D]/;
+                        let ModxSequence = $("#ModxSequence").val();
+                        //繳別繳次前4碼為數字，第5碼為M|Q|S|Y|D
+                        if (pattern.test(ModxSequence) == false) {
+                            appendMessage("錯誤訊息:繳別繳次；格式錯誤");
+                            flag = false;
+                            return false;
+                        }
+                    }
+                }
+            } else {///型態4&8
+
+                if ($("#AdjType").val() == "") {
+                    appendMessage("錯誤訊息:型態；不可空白");
+                    flag = false;
+                    return false;
+                }
+                if ($("#AgentCode").val() == "") {
+                    appendMessage("錯誤訊息:業務員代碼；不可空白");
+                    flag = false;
+                    return false;
+                }
+                if ($("#AgentName").val() == "") {
+                    appendMessage("錯誤訊息:業務員姓名；不可空白");
+                    flag = false;
+                    return false;
+                }
+                if ($("#Amount").val() == "") {
+                    appendMessage("錯誤訊息:金額；不可空白");
+                    flag = false;
+                    return false;
+                }
+                if ($("#AdjType").val() == 4) {
+                    if ($("#CompanyCode").val() == "") {
+                        appendMessage("錯誤訊息:保險公司代碼；不可空白");
+                        flag = false;
+                        return false;
+                    }
+
+                }
+
+                if ($("#AdjType").val() == 4) {
+                    if ($("#ModxSequence").val() != "") {
+                        if ($("#ModxSequence").val().length != 5) {
+                            appendMessage("錯誤訊息:繳別繳次；格式錯誤");
+                            flag = false;
+                            return false;
+                        }
+                        let pattern = /\d{4}[M|Q|S|Y|D]/;
+                        let ModxSequence = $("#ModxSequence").val();
+                        //繳別繳次前4碼為數字，第5碼為M|Q|S|Y|D
+                        if (pattern.test(ModxSequence) == false) {
+                            appendMessage("錯誤訊息:繳別繳次；格式錯誤");
+                            flag = false;
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            if (flag == false) {
+                return false;
+            }
+
+            return true;
+        }
+
+    </script>
+}

@@ -1,0 +1,119 @@
+﻿
+@{
+    ViewBag.Title = ViewBag.Title ?? "CUSCRMTX004-資料設定";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+@model QueryDiscipTypeCondition
+
+@section LeftActions{
+    <input type="button" id="btnQuery" class="btn btn-default" value="查詢" data-bind="hotkeydown: { 'alt+q': QueryClick }, click: QueryClick" />
+    <input type="button" id="btnCreate" class="btn btn-default" value="新增" data-bind="hotkeydown: { 'alt+w': CreateClick }, click: CreateClick" />
+    <input type="button" id="btnClear" class="btn btn-default" value="清除" data-bind="hotkeydown: { 'alt+r': ClearClick }, click: ClearClick" />
+}
+
+<div id="divQueryBlock">
+    @using (Ajax.BeginForm("QueryDiscipTypeGridDatas", "CUSCRMTX004", new AjaxOptions { OnSuccess = "bindResult" }, new { id = "formQuery" }))
+    {
+    <div class="row">
+        <div class="form-group col-md-12 detail-col">
+            <div class="col-md-3 detail-msg">
+                @Html.LabelFor(m => m.Code, new { @class = "control-label" })
+                @Html.EnumDropDownListFor(m => m.Code, "全部", new { @class = "form-control" })
+            </div>
+            <div class="col-md-3 detail-msg">
+                @Html.LabelFor(m => m.Name, new { @class = "control-label" })
+                @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="col-md-3 detail-msg">
+                @Html.LabelFor(m => m.Kind, new { @class = "control-label" })
+                @Html.EnumDropDownListFor(m => m.Kind, "全部", new { @class = "form-control" })
+            </div>
+            <div class="col-md-3 detail-msg">
+                @Html.LabelFor(m => m.Status, new { @class = "control-label" })
+                @Html.EnumDropDownListFor(m => m.Status, "全部", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+    }
+</div>
+@section GridActions{
+    <hr />
+    <div class="jqGrid">
+        <table id="QueryResult"></table>
+    </div>
+    <div id="QueryResultPagger"></div>
+}
+
+@section Scripts {
+    <script>
+    var CREATEURL = "@Url.Action("Create")";
+    var DETAILURL = "@Url.Action("Detail")";
+    @*定義此頁面所用的KO*@
+    function ViewModel() {
+        var self = this;
+        self.QueryClick = function () {
+            clearMessage();
+            $("form#formQuery").trigger("submit");
+        };
+        self.CreateClick = function () {
+            var url = CREATEURL;
+            window.open(url, "Detail");
+        };
+        self.ClearClick = function () {
+            clearMessage();@*清除訊息*@
+            $('#divQueryBlock input[type=text]').val('');
+        };
+        self.CloseClick = function () {
+            window.close();
+        };
+    }
+
+    var vm = new ViewModel();
+    $(document).ready(function () {
+        ko.applyBindings(vm);
+    });
+
+    function bindResult() {
+        $("#QueryResult").jqGrid({
+            url: '@Url.Action("BindDiscipTypeDatas")',
+            datatype: "json",
+            mtype: "POST",
+            colNames: ["", "代碼", "類別", "名稱", "狀態"],
+            colModel: [
+                { name: "ID", hidden: true },@* 指定它是unique row no *@
+                { name: "Code", index: "Code" },
+                { name: "Kind", index: "Kind" },
+                { name: "Name", index: "Name" },
+                { name: "Status", index: "Status" }
+            ],
+            shrinkToFit: true,  @*//默認值為true,若true設置了width值，則每列寬度會根據width成比例縮放*@
+
+            jsonReader: {       @*//讀JSON格式資料*@
+                repeatitems: false,
+                id: "0"
+            },
+            //點選該筆處理
+            onSelectRow: function (id) {
+                if (id) {
+                    var myGrid = $(this);
+                    var selRowId = myGrid.jqGrid('getGridParam', 'selrow'); @* 取得那一個row no *@
+                        var selRow = myGrid.getRowData(selRowId); @* 取得該row資料 *@
+                    PopupWindow(selRow);
+                }
+            },
+            pager: "QueryResultPagger"
+        });
+            $("#QueryResult").jqGrid("navGrid", "#QueryResultPagger", { add: false, edit: false, del: false, search: false, refresh: false });
+            $("#QueryResult").trigger("reloadGrid");
+
+    }
+    function PopupWindow(rdata) {
+        var format = DETAILURL + "?" + "id={0}";
+        var url = $.validator.format(format, rdata.ID);
+        var openName = "Detail" + rdata.ID;
+        window.open(url, openName);
+    }
+
+    </script>
+}

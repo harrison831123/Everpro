@@ -1,0 +1,79 @@
+﻿
+@model EP.SD.SalesSupport.LAW.Web.Areas.LAW.Model.LawDetailModel
+@{
+    ViewBag.Title = LAWResource.新增契撤變原因;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+@section LeftActions{
+    <input id="btnSave" type="button" class="btn btn-default" value="@EP.PlatformResources.儲存" data-bind="click: SaveClick" />
+    @Html.ActionLink("返回", "Index", "LAWTX006", new { Class = "btn btn-default" })
+}
+<font color="blue">@LAWResource.不提供刪除功能<br>　　　@LAWResource.請勿設定其他</font>
+@using (Html.BeginForm("Create", "LAWTX006", null, FormMethod.Post, new { id = "CreateSubmit", style = "margin-top:10px;" }))
+{
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.EvidTypeName, new { @class = "detail-msg" })
+        <div class="col-md-offset-1">
+            @Html.TextBoxFor(m => m.EvidTypeName, new { @id = "EvidTypeName", style = "width:50%", @maxlength = "250", @class = "form-control detail-cell" })
+        </div>
+    </div>
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />@Html.LabelFor(m => m.EvidStatusType, new { @class = "detail-msg" })
+        <div class="col-md-offset-1 " style="width:50%;">
+            <input type="radio" name="EvidStatusType" value="1" checked><span style="margin-right:5px;">@LAWResource.啟用</span><input type="radio" name="EvidStatusType" value="0"><span>@LAWResource.停用</span>
+        </div>
+    </div>
+}
+<script>
+    var ViewModel = {
+        SaveClick: function () {
+            if (saveValidator()) {
+                clearMessage();@*清除訊息*@
+                var tabUniqueId = $("#tabUniqueId").val();
+                $("#CreateSubmit").attr('action', '@Url.Action("Create", "LAWTX006")');
+                $("#CreateSubmit").submit();
+            }
+        }
+    };
+    $(document).ready(function () {
+        ko.applyBindings(ViewModel);
+    });
+    function chkEvidTypeNameRepeat() {
+        $.ajax({
+            method: "POST",
+            cache: false,
+            async: false,
+            data: { EvidTypeName: $("#EvidTypeName").val() },
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            url: '@Url.Action("Query", "LAWTX006", new { area = "LAW" })',
+            complete: function (check) {
+                if (check.responseText == "OK") {
+                    return true;
+                } else {
+                    $("#EvidTypeName").val('');
+                    appendMessage("@LAWResource.已有重覆之名稱");
+                    return false;
+                }
+            }
+        });
+
+    }
+
+    function saveValidator() {
+        if ($("#EvidTypeName").val() == "") {
+            appendMessage("@( LAWResource.契撤變原因 + EP.PlatformResources.必填)");
+            return false;
+        }
+        if ($("#EvidTypeName").val() == "其他" || $("#EvidTypeName").val() == "其它") {
+            appendMessage("@LAWResource.請勿設定其他");
+            return false;
+        }
+        if (chkEvidTypeNameRepeat == false) {
+            return false;
+        }
+
+        return true;
+    }
+</script>
+

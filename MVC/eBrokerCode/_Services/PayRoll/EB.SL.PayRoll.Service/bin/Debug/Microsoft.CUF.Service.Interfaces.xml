@@ -1,0 +1,2393 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.CUF.Service.Interfaces</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.CUF.Service.AgentHelper">
+            <summary>代理機制的相關函式處理</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.AgentHelper.#ctor">
+            <summary>
+            代理機制的相關函式處理的建構子
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.AgentHelper.#ctor(Microsoft.CUF.Account)">
+            <summary>代理機制建構子</summary>
+            <param name="operatorAccount">操作人員</param>
+        </member>
+        <member name="F:Microsoft.CUF.Service.AgentHelper.operatorAccount">
+            <summary>操作者的帳號資訊(=代理人)</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.AgentHelper._EffectAgentList">
+            <summary>被代理者的Agent資訊</summary>
+            <remarks>Cache至此Helper物件下</remarks>
+        </member>
+        <member name="F:Microsoft.CUF.Service.AgentHelper._AgentSettingList">
+            <summary>其代理者的agent資訊</summary>
+            <remarks>Cache至此Helper物件下</remarks>
+        </member>
+        <member name="M:Microsoft.CUF.Service.AgentHelper.HasAgent">
+            <summary>此期間是否有生效的【被代理人】設定資訊</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.AgentHelper.BeAgentInfo">
+            <summary>取得操作者此期間有生效的【被代理人】設定資訊列表</summary>
+            <returns>[被代理人id / 被代理人生效區間]</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.AgentHelper.AgentSettingInfo">
+            <summary>取得'未來'有那些【代理人】可以代理【操作者】的設定資訊列表</summary>
+            <returns>[代理人id / 代理人生效區間]</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.AgentHelper.GetBeAgentList(System.String)">
+            <summary>取得該【被代理人】的代理設定資訊</summary>
+            <param name="beAgentMemberId">被代理人人員ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.AgentHelper.getEffectAgentList">
+            <summary>取得有效的代理設定資訊</summary>
+            <param name="operatorMemberId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.AgentHelper.getAgentSettingList">
+            <summary>取得此操作者的代理設定資訊</summary>
+            <remarks>為了呈現有誰可以代理此操作者</remarks>
+            <returns>此操作者的代理設定資訊</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.AgentHelper.agentGroupFunc(System.Collections.Generic.IEnumerable{Microsoft.CUF.sc_agent},System.Func{Microsoft.CUF.sc_agent,System.String})">
+            <summary>處理代理資訊的呈現函式，組成為memberid,日期其間的格式</summary>
+            <param name="agentList"></param>
+            <param name="groupByFilter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.AgentHelper.IsFullAgent(System.Collections.Generic.IEnumerable{Microsoft.CUF.sc_agent})">
+            <summary>代理設定中是否有全權代理的設定值</summary>
+            <param name="settings"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.AgentHelper.GetRoles(System.Collections.Generic.IEnumerable{Microsoft.CUF.sc_agent})">
+            <summary>依代理設定取得角色資訊</summary>
+            <param name="settings">代理設定值</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.AgentHelper.GetPermissions(System.Collections.Generic.IEnumerable{Microsoft.CUF.sc_agent})">
+            <summary>依代理設定取得權限資訊</summary>
+            <param name="settings">代理設定值</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.Service.FlowDBAction">
+            <summary>Flow的資料庫動作</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.FlowDBAction.Insert">
+            <summary>新增</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.FlowDBAction.Update">
+            <summary>更新</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.FlowDBAction.Delete">
+            <summary>刪除</summary>
+        </member>
+        <member name="T:Microsoft.CUF.Service.FlowAgentParallel">
+            <summary>平行代理類別</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.FlowAgentParallel.Yes">
+            <summary>被代理人與代理人皆可處理</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.FlowAgentParallel.No">
+            <summary>只有代理人可以處理</summary>
+        </member>
+        <member name="T:Microsoft.CUF.Service.FlowAgentModel">
+            <summary>Flow的代理物件</summary>
+            <remarks>註：若多個Flow流程圖則要多筆FlowAgentModel</remarks>
+        </member>
+        <member name="F:Microsoft.CUF.Service.FlowAgentModel._flow_agent_fulldesc_default_symbol">
+            <summary>指定流程，""表示全部流程代理</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.FlowAgentModel.#ctor">
+            <summary>建構子</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.FlowAgentModel.#ctor(Microsoft.CUF.sc_agent,System.String)">
+            <summary>建構子(針對sc_agent做轉換)</summary>
+            <param name="model"></param>
+            <param name="flowDescription">"*"表示全部流程代理</param>
+            <remarks>註：若多個Flow流程圖則要多筆FlowAgentModel</remarks>
+        </member>
+        <member name="P:Microsoft.CUF.Service.FlowAgentModel.BeAgentId">
+            <summary>被代理者ID</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.FlowAgentModel.AgentId">
+            <summary>代理者ID</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.FlowAgentModel.FlowDescription">
+            <summary>指定流程，""表示全部流程代理</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.FlowAgentModel.StartDateTime">
+            <summary>代理起始時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.FlowAgentModel.EndDateTime">
+            <summary>代理結束時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.FlowAgentModel.parAgent">
+            <summary>平行代理(Y:被代理人與代理人皆可處理  N:只有代理人可以處理)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.FlowAgentModel.Remark">
+            <summary>備註</summary>
+        </member>
+        <member name="T:Microsoft.CUF.Service.ICoreUseFlow">
+            <summary>MIS核心Core所使用的FLOW項目</summary>
+            <remarks>外部需實作，而於Config的Unity區段指定</remarks>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ICoreUseFlow.GetFlowAgent(System.String,System.String,System.String)">
+            <summary>取得代理資訊</summary>
+            <param name="beAgentId">被代理者ID</param>
+            <param name="agentId">代理者ID，""表示忽略此條件</param>
+            <param name="flowDescription">指定流程，""表示忽略此條件，"*"表示全部流程代理</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ICoreUseFlow.UpdateFlowAgent(Microsoft.CUF.Service.FlowDBAction,Microsoft.CUF.Service.FlowAgentModel)">
+            <summary>新增/更新/刪除流程代理的項目資訊</summary>
+            <param name="flowDBAction">流程代理的執行行為</param>
+            <param name="model">流程代理的資料</param>
+            <returns>是否執行成功</returns>
+        </member>
+        <member name="T:Microsoft.CUF.Service.Flow.ISysDBToFlowDBService">
+            <summary>
+            sysdb 轉到 flowdb
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.Flow.ISysDBToFlowDBService.SysDBToFlowDB(System.String)">
+            <summary>
+            sysdb 的組織匯到 flowdb 組織
+            </summary>
+            <param name="executor">執行此 method 者, *** 注意 : maxlength = 20 ***</param>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBoardService.GetBoard(Microsoft.CUF.Service.BoardSearchModel)">
+            <summary>
+            公佈欄編輯-取得查詢資料
+            </summary>
+            <param name="org_cat">組織別</param>
+            <param name="deffect">生效起日</param>
+            <param name="dexpire">生效迄日</param>
+            <param name="content">公佈內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBoardService.Board_Get(Microsoft.CUF.cm_board)">
+            <summary>
+            公佈欄編輯-取得單筆資料
+            </summary>
+            <param name="Model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBoardService.Board_Create(Microsoft.CUF.cm_board)">
+            <summary>
+            公佈欄編輯-建立資料
+            </summary>
+            <param name="Model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBoardService.Board_Update(Microsoft.CUF.cm_board)">
+            <summary>
+            公佈欄編輯-更新資料
+            </summary>
+            <param name="Model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBoardService.Board_Delete(Microsoft.CUF.cm_board)">
+            <summary>
+            公佈欄編輯-刪除資料
+            </summary>
+            <param name="Model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IDownloadService.GetFileDownload(Microsoft.CUF.Service.FileDownloadSearchModel)">
+            <summary>
+            下載專區編輯-取得查詢資料
+            </summary>
+            <param name="searchModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IDownloadService.FileDownload_Get(Microsoft.CUF.cm_filedownload)">
+            <summary>
+            下載專區編輯-取得單筆資料
+            </summary>
+            <param name="Model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IDownloadService.FileDownload_Create(Microsoft.CUF.cm_filedownload)">
+            <summary>
+            下載專區編輯-建立資料
+            </summary>
+            <param name="Model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IDownloadService.FileDownload_Update(Microsoft.CUF.cm_filedownload)">
+            <summary>
+            下載專區編輯-更新資料
+            </summary>
+            <param name="Model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IDownloadService.FileDownload_Delete(Microsoft.CUF.cm_filedownload)">
+            <summary>
+            下載專區編輯-刪除資料
+            </summary>
+            <param name="Model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IFileService.GetFiles(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            取得檔案(不含實体 FileBytes)
+            </summary>
+            <param name="ufiles">檔案Guid = cm_file_upload.ufile</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IFileService.GetFilesWithFileBytes(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            取得檔案及實体 FileBytes
+            </summary>
+            <param name="ufiles">檔案Guid = cm_file_upload.ufile</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IFileService.InsertFiles(System.Collections.Generic.IEnumerable{Microsoft.CUF.cm_file_upload})">
+            <summary>
+            Insert Files
+            files[i] 以下欄位為 required :
+            [nfile]
+            [isize]
+            [ndesc]
+            [CreatorID]
+            [UpdaterID]
+            [fileBytes]
+            
+            傳回 cm_file_upload.ufile 的集合
+            </summary>
+            <param name="files"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IFileService.DeleteFiles(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            刪除檔案DB及實体
+            </summary>
+            <param name="ufiles">檔案Guid = cm_file_upload.ufile</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.Service.ISecurityService">
+            <summary>安控之MIS層級服務</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ISecurityService.GetAccountProfiles(System.String)">
+             <summary>取得該人員的AccountProfile</summary>
+             <param name="accountID">該帳號ID</param>
+             <returns>該帳號的Profile資料</returns>
+             <example>
+             <code>
+              public void GetAccountProfilesTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityService&gt;();
+                string accountID =&quot;900072&quot;;  
+                IEnumerable&lt;sc_account_profile&gt; actual;
+                actual = target.GetAccountProfiles(accountID);
+            }
+             </code>
+             </example>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Microsoft.CUF.Service.ISecurityService.GetAccountProfile(System.String,System.String)" -->
+        <member name="M:Microsoft.CUF.Service.ISecurityService.DeleteAccountProfile(System.String,System.String)">
+            <summary>刪除該人員指定的AccountProfile</summary>
+            <param name="accountID"></param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ISecurityService.SetAccountProfiles(System.Collections.Generic.IEnumerable{Microsoft.CUF.sc_account_profile})">
+             <summary>設定Profile資訊</summary>
+             <remarks>只提供Insert/Update判斷，不做Delete判斷處理</remarks>
+             <param name="profiles">設定的Profile資料</param>
+             <example>
+             <code>
+              public void SetAccountProfilesTest()
+            {
+                var target = ServiceHelper.Create&lt;ISecurityService&gt;();
+                IEnumerable&lt;sc_account_profile&gt; profiles = new sc_account_profile[]{
+                    new sc_account_profile{ iaccount=&quot;900072&quot;, ikey=&quot;myKey&quot;,fvalue=&quot;myValue&quot;}};
+                target.SetAccountProfiles(profiles);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ISecurityService.SetApplyRoles(System.Collections.Generic.IEnumerable{Microsoft.CUF.sc_roleapply})">
+            <summary>申請角色</summary>        
+            <param name="ApplyItems">儲存申請的多筆角色與舊有角色如何處理, 供後續flow流程處理</param>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ISecurityService.GetApplyRoles(System.String)">
+            <summary>取得申請角色資料</summary>
+            <param name="serial">資料序號</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ISecurityService.UpdateApplyNewRoles(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Nullable{System.DateTime}})">
+            <summary>更新申請的角色</summary>
+            <param name="datas"></param>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ISecurityService.ChangeApplyRolesKeyNumber(System.String)">
+            <summary>將申請角色資料編號, 更新成流水號</summary>
+            <param name="orignalSerial"></param>
+            <remarks>
+            因為怕存檔失敗, 流水號會跳號, 所以資料剛存進 table 時, table 的 key 值 iserial 用 GUID 編號
+            確定存檔成功後, 把 GUID 換成真正的流水號
+            </remarks>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ISecurityService.DeleteApplyRoles(System.String)">
+            <summary>刪除申請單</summary>        
+            <param name="iserial"></param>
+            <remarks>申請角色資料變更為流水號失敗時, 視同申請單送出失敗, 要將申請單刪除</remarks>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ISecurityService.RoleAccountReport_batch(System.String)">
+            <summary>角色授予帳號查詢_批次使用</summary>
+            <param name="jsonParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ISecurityService.RoleAccountReport(Microsoft.CUF.Service.RoleAccountReportSearchModel)">
+            <summary>角色授予帳號查詢</summary>
+            <param name="searchModel">查詢條件</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ISecurityService.PermissionRoleReport_batch(System.String)">
+            <summary>權限授予角色查詢_batch</summary>
+            <param name="jsonParams">查詢條件</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ISecurityService.PermissionRoleReport(Microsoft.CUF.Service.PermissionRoleReportSearchModel)">
+            <summary>權限授予角色查詢</summary>
+            <param name="searchModel">查詢條件</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ISecurityService.AccountPermissionReport_batch(System.String)">
+            <summary>帳號權限查詢_batch</summary>
+            <param name="jsonParams">查詢條件</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ISecurityService.AccountPermissionReport(Microsoft.CUF.Service.AccountPermissionReportSearchModel)">
+            <summary>帳號權限查詢</summary>
+            <param name="searchModel">查詢條件</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ISecurityService.ValidateUser(System.String,System.String)">
+            <summary>   檢核使用者登入帳密是否正確. </summary>
+            <param name="accountId">   登入帳號</param>
+            <param name="password">     登入密碼 </param>
+            <returns>   成功/失敗，執行結果訊息</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IServicePersonService.GetServicePerson(Microsoft.CUF.Service.ServicePersonSearchModel)">
+            <summary>
+            服務窗口編輯-取得查詢資料
+            </summary>
+            <param name="org_cat">組織別</param>
+            <param name="deffect">生效起日</param>
+            <param name="dexpire">生效迄日</param>
+            <param name="content">公佈內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IServicePersonService.ServicePerson_Get(Microsoft.CUF.cm_serviceperson)">
+            <summary>
+            服務窗口編輯-取得單筆資料
+            </summary>
+            <param name="Model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IServicePersonService.ServicePerson_Create(Microsoft.CUF.cm_serviceperson)">
+            <summary>
+            服務窗口編輯-建立資料
+            </summary>
+            <param name="Model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IServicePersonService.ServicePerson_Update(Microsoft.CUF.cm_serviceperson)">
+            <summary>
+            服務窗口編輯-更新資料
+            </summary>
+            <param name="Model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IServicePersonService.ServicePerson_Delete(Microsoft.CUF.cm_serviceperson)">
+            <summary>
+            服務窗口編輯-刪除資料
+            </summary>
+            <param name="Model"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Microsoft.CUF.Service.IUserProperty.LoginId">
+            <summary>登入帳號id</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.IUserProperty.OperatorInfo">
+            <summary>Operator帳號資訊(代理人帳號)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.IUserProperty.AccountInfo">
+            <summary>User帳號資訊(被代理人帳號)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.IUserProperty.MemberInfo">
+            <summary>User人員資訊(已為最終的被代理人資訊)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.IUserProperty.OperatorMemberInfo">
+            <summary>User人員資訊(已為最終的代理人資訊)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.IUserProperty.UnitInfo">
+            <summary>所屬單位資訊(已為最終的被代理人資訊)</summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:Microsoft.CUF.Service.IUserProperty.ManageUnits" -->
+        <member name="M:Microsoft.CUF.Service.IUserProperty.AssistantUnits(Microsoft.CUF.ConditionInsureType)">
+            <summary>可檢視的單位資訊</summary>
+            <param name="insureType">險別</param>
+            <returns></returns>
+        </member>
+        <member name="P:Microsoft.CUF.Service.IUserProperty.RoleList">
+            <summary>User的角色資訊(已為最終的被代理人資訊)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.IUserProperty.PermissionList">
+            <summary>User的權限資訊(已為最終的被代理人資訊)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.IUserProperty.IsInAgent">
+            <summary>是否在代理狀態(即Account!=Operator時且在於代理期間內)</summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Microsoft.CUF.Service.IUserProperty.HasPermission(System.String)" -->
+        <member name="M:Microsoft.CUF.Service.IUserProperty.GetPermission(System.String)">
+            <summary>滿足的權限列表(已為最終的被代理人資訊)</summary>
+            <param name="AllowExpression"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.Service.PermissionHelper">
+            <summary>權限的Helper資訊</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.PermissionHelper.validateNotAllowAgentPermissionsTime">
+            <summary>記錄不可代理的權限資訊</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.PermissionHelper.validateNotAllowAgentPermissionsTimeSpan">
+            <summary>驗証不可代理的權限的時間間格設定</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ProfileExtensions.GetProfile(Microsoft.CUF.Account,System.String)">
+            <summary>取得帳號的Profile設定(字串型式)</summary>
+            <param name="account"></param>
+            <param name="key">帳號的Profile Key</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ProfileExtensions.SetProfile(Microsoft.CUF.Account,System.String,System.String)">
+            <summary>設定帳號的Profile設定(字串型式)</summary>
+            <param name="account"></param>
+            <param name="key">帳號的Profile Key</param>
+            <param name="value">帳號的Profile Value</param>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ProfileExtensions.GetProfile``1(Microsoft.CUF.Account,System.String)">
+            <summary>取得該帳號指定的Profile設定</summary>
+            <remarks>使用物件</remarks>
+            <param name="account">帳號</param>
+            <param name="key">Profile Key</param>
+            <returns>Profile的設定檔</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ProfileExtensions.SetProfile``1(Microsoft.CUF.Account,System.String,``0)">
+            <summary>設定該帳號指定的Profile資料</summary>
+            <remarks>使用物件</remarks>
+            <param name="account">該帳號</param>
+            <param name="key">Profile Key</param>
+            <param name="values">Profile的設定檔</param>
+        </member>
+        <member name="T:Microsoft.CUF.Service.ProgramHelper">
+            <summary>提供Program服務</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ProgramHelper.GetProfileValue(System.String,System.String)">
+            <summary>取得指定的Program Profile值</summary>
+            <param name="iprogram">Program ID</param>
+            <param name="key">指定Key</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ProgramHelper.SetProfileValue(System.String,System.String,System.String)">
+            <summary>設定Profile的值</summary>
+            <param name="iprogram">Program ID</param>
+            <param name="key">指定Key</param>
+            <param name="value"></param>
+        </member>
+        <member name="T:Microsoft.CUF.Service.SecurityExtensions">
+            <summary>針對安控相關的屬性做擴充</summary>    
+        </member>
+        <member name="T:Microsoft.CUF.Service.ServiceFactory">
+            <summary>此dll提供的Service服務</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.ServiceFactory.SecurityService">
+            <summary>單位的外部人員設定</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.ServiceFactory.ProgramService">
+            <summary>程式服務</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.ServiceFactory.AgentService">
+            <summary>代理服務</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.ServiceFactory.OrganizationProvider">
+            <summary>組織服務</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.ServiceFactory.UnitExternalMemberService">
+            <summary>單位的外部人員設定服務</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.UserProperty.GetUniqueLoginKey(System.String)">
+            <summary>登入者依此Key來將UserProperty存入Cache</summary>
+            <param name="loginID"></param>
+            <returns></returns>
+        </member>
+        <member name="F:Microsoft.CUF.Service.UserProperty.FinalKeepDic">
+            <summary>記錄此USER的最終資訊</summary>
+            <remarks>使用public是因為AppFabic預設對Public Member 序列化;故用public / 用Protected不行</remarks>
+        </member>
+        <member name="P:Microsoft.CUF.Service.UserProperty.IsModelModify">
+            <summary>此物件屬性是否有被異動</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.UserProperty.isflow">
+            <summary>是否為Flow狀態</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.UserProperty.flowUniqueKeyDic">
+            <summary>Flow同一個執行緒識別ID</summary>
+            <remarks>一般存tabUniqueId,非FlowId</remarks>
+        </member>
+        <member name="F:Microsoft.CUF.Service.UserProperty.flowEntryParams">
+            <summary>Flow進入的初始參數</summary>
+            <remarks>供Flow使用</remarks>
+        </member>
+        <member name="P:Microsoft.CUF.Service.UserProperty.FlowEntryParams">
+            <summary>Flow進入的初始參數</summary>
+            <remarks>供Flow使用</remarks>
+        </member>
+        <member name="F:Microsoft.CUF.Service.UserProperty.agentHelper">
+            <summary>代理Helper的資訊</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.UserProperty.orgUseAgentList">
+            <summary>代理期間所用的設定值</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.UserProperty.validateRoleTime">
+            <summary>上次驗証具有角色的時間</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.UserProperty.validateRoleTimeSpan">
+            <summary>驗証具有角色的時間間格設定</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.UserProperty.validatePermissionTime">
+            <summary>上次驗証具有權限的時間</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.UserProperty.validatePermissioinTimeSpan">
+            <summary>驗証具有權限的時間間格設定</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.UserProperty.validateManageUnitTime">
+            <summary>上次驗証所管理單位的時間</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.UserProperty.validateManageUnitTimeSpan">
+            <summary>驗証所管理單位的時間間格設定</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.UserProperty.validateViewUnitTime">
+            <summary>上次所檢視單位的時間</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.UserProperty.validateViewUnitTimeSpan">
+            <summary>驗証所檢視單位的時間間格設定</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.UserProperty.validateAgentTime">
+            <summary>上次驗証Agent代理的時間</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.UserProperty.validateAgentTimeSpan">
+            <summary>驗証Agent代理的時間間格設定</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.UserProperty._useraccountid">
+            <summary>使用者帳號ID</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.UserProperty._operatoraccountid">
+            <summary>操作者帳號ID</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.UserProperty.SetFlowPermission(System.String,System.String,System.String[])">
+            <summary>設定Flow狀態下之使用權限</summary>
+            <param name="uniqueKey">屬同一Flow狀態的識別Key值</param>
+            <param name="entryParams">進入Flow的參數資訊</param>
+            <param name="permissionIDs">權限ID列</param>
+            <remarks>uniqueKey一般存tabUniqueId,非FlowId</remarks>
+        </member>
+        <member name="M:Microsoft.CUF.Service.UserProperty.ClearFlowPermission">
+            <summary>清除Flow狀態</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.UserProperty.IsInFlowStatus(System.String)">
+            <summary>是否在同一個Flow狀態</summary>
+            <param name="uniqueKey"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Microsoft.CUF.Service.UserProperty.LoginId">
+            <summary>登入帳號id)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.UserProperty.OperatorInfo">
+            <summary>Operator帳號資訊(代理人帳號)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.UserProperty.AccountInfo">
+            <summary>User帳號資訊(被代理人帳號)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.UserProperty.MemberInfo">
+            <summary>User人員資訊(已為最終的被代理人資訊)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.UserProperty.OperatorMemberInfo">
+            <summary>User人員資訊(已為最終的代理人資訊)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.UserProperty.UnitInfo">
+            <summary>所屬單位資訊(已為最終的被代理人資訊)</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.UserProperty.AssistantUnits(Microsoft.CUF.ConditionInsureType)">
+            <summary>可檢視的單位資訊</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.UserProperty.RoleList">
+            <summary>User的角色資訊(已為最終的被代理人資訊)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.UserProperty.PermissionList">
+            <summary>User的角色資訊(已為最終的被代理人資訊)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.UserProperty.IsInAgent">
+            <summary>是否在代理狀態(即Account!=Operator時且在於代理期間內)</summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Microsoft.CUF.Service.UserProperty.HasPermission(System.String)" -->
+        <member name="M:Microsoft.CUF.Service.UserProperty.GetPermission(System.String)">
+            <summary>滿足的權限列表(已為最終的被代理人資訊)</summary>
+            <param name="AllowExpression"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Microsoft.CUF.Service.UserProperty.permissionString">
+            <summary>當下User所具有的權限串</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.UserProperty.validatePermission(System.String,System.String,System.Action{System.Text.RegularExpressions.Match})">
+            <summary>驗証權限是否可以允許執行</summary>
+            <param name="allowExpression">允許可以執行的權限表示式</param>
+            <param name="UserPermissionString">使用者的權限資訊</param>
+            <param name="doMatchItem">針對所Match的權限，呼叫者想要額外處理的項目函式(預設:null)</param>
+            <returns>是否可以執行</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.UserProperty.GetFinalKeep(Microsoft.CUF.FinalKeepDicType)">
+            <summary>取得最終資料</summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.UserProperty.SetFinalKeep(Microsoft.CUF.FinalKeepDicType,System.Collections.Generic.IEnumerable{System.Object})">
+            <summary>設定最終資料</summary>
+            <param name="type"></param>
+            <param name="finalList"></param>
+        </member>
+        <member name="M:Microsoft.CUF.Service.UserProperty.ClearFinalKeep(Microsoft.CUF.FinalKeepDicType)">
+            <summary>清除FinalKeep的資訊</summary>
+            <param name="type"></param>
+        </member>
+        <member name="M:Microsoft.CUF.Service.UserProperty.GenUserAccount">
+            <summary>產生User帳號資訊</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.UserProperty.GenOperatorAccount">
+            <summary>產生操作帳號資訊</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.UserProperty.GenMember(Microsoft.CUF.Account)">
+            <summary>產生人員資料</summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.UserProperty.GenOperatorMember(Microsoft.CUF.Account)">
+            <summary>產生操作人員資料</summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.UserProperty.GenUnit(Microsoft.CUF.Member)">
+            <summary>取得人員的所屬單位</summary>
+            <param name="member"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.UserProperty.GenRoles(Microsoft.CUF.Account)">
+            <summary>依帳號產生最終所具有的角色 </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.UserProperty.GenPermissions(System.Collections.Generic.IEnumerable{Microsoft.CUF.Role})">
+            <summary>依角色產生最終所具有的權限 </summary>
+            <param name="roleList"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.UserProperty.GenManageUnits(Microsoft.CUF.Member)">
+            <summary>依人員產生最終所管理的單位</summary>
+            <remarks>資料 = 1.單位主管 2.外部管理人</remarks>
+            <param name="member"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.UserProperty.GenViewUnits(Microsoft.CUF.Member)">
+            <summary>依人員產生最終所檢視的單位</summary>
+            <remarks>資料 = 1.單位主管 2.外部管理人 3.外部檢視人員</remarks>
+            <param name="member"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.UserProperty.ValidateUserInAgent">
+            <summary>當是代理時，驗証代理的合法性</summary>
+            <remarks>1.代理是否過期? 2.代理期間代理設定是否有被異動?</remarks>
+        </member>
+        <member name="T:Microsoft.CUF.Service.AccountPermissionReportSearchModel">
+            <summary>帳號權限查詢</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.AccountPermissionReportSearchModel.AccountID">
+            <summary>帳號ID查詢</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.AccountPermissionReportSearchModel.ContainExpireAccount">
+            <summary>含已停用帳號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.AccountPermissionReportSearchModel.ContainExpireRole">
+            <summary>含已停用角色</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.AccountPermissionReportSearchModel.ContainExpireRoleRelation">
+            <summary>含已停用授權</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.AccountPermissionReportSearchModel.ContainRoleInfo">
+            <summary>含角色資訊</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.AccountPermissionReportSearchModel.ContainPermissionInfo">
+            <summary>含權限資訊</summary>
+        </member>
+        <member name="T:Microsoft.CUF.Service.Batch">
+            <summary>批次排程</summary>
+        </member>
+        <member name="T:Microsoft.CUF.Service.Batch.AssemblyInfo">
+            <summary>批次組件資訊</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.Batch.AssemblyInfo.#ctor">
+            <summary>
+            批次組件資訊-建構子
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.Batch.AssemblyInfo.#ctor(System.String,System.String,System.String)">
+            <summary>
+            批次組件資訊-建構子
+            </summary>
+            <param name="assemblyName">組件資訊名稱</param>
+            <param name="className">類別名稱</param>
+            <param name="invokeMethod">呼叫的方法</param>
+        </member>
+        <member name="P:Microsoft.CUF.Service.Batch.AssemblyInfo.ASSEMBLY_NAME">
+            <summary>
+            組件名稱
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.Batch.AssemblyInfo.CLASS_NAME">
+            <summary>
+            類別名稱
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.Batch.AssemblyInfo.INVOKE_METHOD">
+            <summary>
+            呼叫的方法
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.Batch.AssemblyInfo.ToJSON">
+            <summary>
+            轉成為Json資訊
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.Service.Batch.ReportInfo">
+            <summary>
+            設定報表資訊的物件
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.Batch.ReportInfo.#ctor">
+            <summary>
+            設定報表資訊的物件-建構子
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.Batch.ReportInfo.#ctor(Microsoft.CUF.Service.Batch.ReportType,System.String)">
+            <summary>
+            設定報表資訊的物件-建構子
+            </summary>
+            <param name="type">報表類型</param>
+            <param name="fileName">檔案名稱</param>
+        </member>
+        <member name="P:Microsoft.CUF.Service.Batch.ReportInfo.Type">
+            <summary>
+            報表類型
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.Batch.ReportInfo.ReportFileName">
+            <summary>
+            報表檔案名稱
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.Service.Batch.ReportType">
+            <summary>
+            報表類型
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.Batch.ReportType.Report">
+            <summary>批次執行屬報表結構，表示回傳stream</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.Batch.ReportType.OnlyExecute">
+            <summary>批次執行屬執行結構，表示回傳boolean</summary>
+        </member>
+        <member name="T:Microsoft.CUF.Service.BatchJobParameter">
+            <summary>批次所需用的參數</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.BatchJobParameter.jsonAssembly">
+            <summary>DLL及函數名稱(JSON 字串)</summary>
+            <example>"{'ASSEMBLY_NAME':'TMNewa.Mis.Finance.Service','CLASS_NAME':'TMNewa.Mis.Finance.Service.FinanceReportService','INVOKE_METHOD':'CommissionApplicationForBatch'}"</example>
+        </member>
+        <member name="P:Microsoft.CUF.Service.BatchJobParameter.jsonParamaters">
+            <summary>要呼叫的參數(JSON 字串)</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.BatchJobParameter.jsonReportInfo">
+            <summary>報表相關參數(JSON 字串)</summary>
+            <example>"{'reportFilename':'XXX.pdf', 'reportType':'Report'}"</example>
+        </member>
+        <member name="T:Microsoft.CUF.Service.MemberUpdateCheck">
+            <summary>檢驗人員更新時更新的對象為何</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.MemberUpdateCheck.None">
+            <summary>皆沒有做異動</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.MemberUpdateCheck.MemberAndAccount">
+            <summary>人員與帳號皆有更新</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.MemberUpdateCheck.Member">
+            <summary>人員</summary>
+        </member>
+        <member name="F:Microsoft.CUF.Service.MemberUpdateCheck.Account">
+            <summary>帳號</summary>
+        </member>
+        <member name="T:Microsoft.CUF.Service.PermissionRoleReportSearchModel">
+            <summary>權限授予角色查詢查詢條件</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.PermissionRoleReportSearchModel.IsAllPermission">
+            <summary>系統全部權限</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.PermissionRoleReportSearchModel.PermissionGuids">
+            <summary>各自選擇的權限</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.PermissionRoleReportSearchModel.ContainExpireRole">
+            <summary>含已停用角色</summary>
+        </member>
+        <member name="T:Microsoft.CUF.Service.PrepareAccountInfo">
+            <summary>處理(更新)帳號時所需要得資訊</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.PrepareAccountInfo.AccountInfo">
+            <summary>帳號基本資訊</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.PrepareAccountInfo.AccountProfiles">
+            <summary>帳號Profile資訊</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.PrepareAccountInfo.AccountRoleRelations">
+            <summary>帳號角色關聯的資訊</summary>
+            <remarks>只有在非公司人員才需要此資訊</remarks>
+        </member>
+        <member name="T:Microsoft.CUF.Service.PrepareMemberInfo">
+            <summary>處理(更新)人員時所需要得資訊</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.PrepareMemberInfo.MemberInfo">
+            <summary>人員資訊</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.PrepareMemberInfo.BusinessCondtions">
+            <summary>經辦通路條件</summary>
+        </member>
+        <member name="T:Microsoft.CUF.Service.ProfileAccessConfigKey">
+            <summary>使用者特殊權限設定-定義的key值</summary>
+            <remarks>將此profile使用的key值定義於mis Level</remarks>
+        </member>
+        <member name="F:Microsoft.CUF.Service.ProfileAccessConfigKey.ConfigTypePreKey">
+            <summary>設定個人Profile的PreKey值</summary>
+            <remarks>例如:SECRET_XXX</remarks>
+        </member>
+        <member name="F:Microsoft.CUF.Service.ProfileAccessConfigKey.LoginInvalidTypeKey">
+            <summary>記錄個人登入錯誤 Profile 的 key 值</summary>
+        </member>
+        <member name="T:Microsoft.CUF.Service.RoleAccountReportSearchModel">
+            <summary>角色授予帳號查詢的查詢條件</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.RoleAccountReportSearchModel.RoleId">
+            <summary>角色ID</summary>
+            <remarks>若傳入"ALL"，則表示全部</remarks>
+        </member>
+        <member name="P:Microsoft.CUF.Service.RoleAccountReportSearchModel.RoleIds">
+            <summary>角色ID(多筆)</summary>
+            <remarks>供多筆角色使用</remarks>
+        </member>
+        <member name="P:Microsoft.CUF.Service.RoleAccountReportSearchModel.ContainExpireRole">
+            <summary>含已停用角色</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.RoleAccountReportSearchModel.ContainExpireAccount">
+            <summary>含已停用帳號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.RoleAccountReportSearchModel.ContainExpireRoleRelation">
+            <summary>含已停用授權</summary>
+        </member>
+        <member name="T:Microsoft.CUF.Service.CloudQueryModel">
+            <summary>
+            雲端辦公室批次處理資料用
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.CloudQueryModel.ileader">
+            <summary>
+            管理人代號
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.CloudQueryModel.iins_type">
+            <summary>
+            險別
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.CloudQueryModel.msummary">
+            <summary>
+            合計數字(Decimal)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.CloudQueryModel.qsummary">
+            <summary>
+            合計數字(Integer)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.CloudQueryModel.startDate">
+            <summary>
+            查詢起日 (yyyy-mm-dd)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.CloudQueryModel.endDate">
+            <summary>
+            查詢迄日 (yyyy-mm-dd)
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.Service.MemberDetailModel">
+            <summary>
+            供人員Detail畫面使用的ViewModel
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.MemberDetailModel.MemberInfo">
+            <summary>
+            人員資訊
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.MemberDetailModel.AccountInfo">
+            <summary>
+            帳號資訊
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.MemberDetailModel.Profile">
+            <summary>
+            帳號Profile資訊
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.MemberDetailModel.MemberUnit">
+            <summary>
+            人員所屬單位
+            </summary>
+            <remarks>For Web Binding使用</remarks>
+        </member>
+        <member name="T:Microsoft.CUF.Service.BusinessConditionHelper">
+            <summary>
+            商務條件的Helper
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.BusinessConditionHelper.To_sc_business_conditions(System.String,System.Int32,System.String)">
+            <summary>
+            將 json_officerRoute 轉成 IEnumerable&lt;sc_business_condition&gt;
+            </summary>
+            <param name="json_officerRoute">
+            格式 :
+            {"root":{"fcondition":[{"Category":"M","CategoryItems":[{"dataOfficerType":"L","dataOfficer":"W","dataRoute":"E"},{"dataOfficerType":"O","dataOfficer":"H","dataRoute":"J"}]},{"Category":"B","CategoryItems":[{"dataOfficerType":"O","dataOfficer":"T","dataRoute":"Y"}]}]}}
+            </param>
+            <param name="ftype">[1]單位  [2]人員</param>
+            <param name="iobject">
+            ftype=1的話為sc_unit.uunit
+            ftype=2的話為sc_member.imember
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.BusinessConditionHelper.To_json_officerRoute(System.Collections.Generic.IEnumerable{Microsoft.CUF.sc_business_condition})">
+            <summary>
+            將 business_conditions 轉成 json 格式的 string
+            </summary>
+            <param name="business_conditions"></param>
+            <returns>{"root":{"fcondition":[{"Category":"M","CategoryItems":[{"dataOfficerType":"L","dataOfficer":"W","dataRoute":"E"},{"dataOfficerType":"O","dataOfficer":"H","dataRoute":"J"}]},{"Category":"B","CategoryItems":[{"dataOfficerType":"O","dataOfficer":"T","dataRoute":"Y"}]}]}}</returns>
+        </member>
+        <member name="T:Microsoft.CUF.Service.IOrganizationService">
+            <summary>
+            組織人員類的複合處理
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IOrganizationService.GetMemberDetail(System.String)">
+            <summary>
+            人員明細資料
+            </summary>
+            <param name="memberID">人員ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IOrganizationService.CreateMember(Microsoft.CUF.Service.MemberDetailModel)">
+            <summary>
+            新增人員
+            </summary>
+            <param name="model">人員明細資料</param>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IOrganizationService.UpdateMember(System.String,Microsoft.CUF.Service.MemberDetailModel)">
+            <summary>
+            更新人員
+            </summary>
+            <param name="memberID">人員ID</param>
+            <param name="model">人員明細資料</param>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IOrganizationService.DeleteMember(System.String,System.String)">
+            <summary>
+            刪除人員
+            </summary>
+            <param name="memberID">人員編號</param>
+            <param name="accountID">帳號</param>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IOrganizationService.CheckMemberUpdate(Microsoft.CUF.Service.PrepareMemberInfo,Microsoft.CUF.Service.PrepareAccountInfo)">
+            <summary>檢查人員帳號資訊更新對象</summary>
+            <param name="prepareMember">人員資訊</param>
+            <param name="prepareAccount">帳號資訊</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.Service.IUnitExternalMemberService">
+            <summary>單位的外部人員設定</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IUnitExternalMemberService.GetByPK(System.String,Microsoft.CUF.UnitExternalMemberType,System.String)">
+            <summary>
+            取得單筆sc_unit_external_member
+            </summary>
+            <param name="uunit">單位GUID</param>
+            <param name="unitMemberType">[1]管理人(只能維護單位與人員)  [2]檢視人(只能檢視資料)</param>
+            <param name="imember">人員編號</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IUnitExternalMemberService.Get(System.String,Microsoft.CUF.UnitExternalMemberType)">
+            <summary>
+            取得多筆sc_unit_external_member(filter: uunit,fexternal_type)
+            </summary>
+            <param name="uunit">單位GUID</param>
+            <param name="unitMemberType">[1]管理人(只能維護單位與人員)  [2]檢視人(只能檢視資料)</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IUnitExternalMemberService.GetByMember(System.String,Microsoft.CUF.UnitExternalMemberType)">
+            <summary>依人員取得單位的外部人員的設定資訊</summary>
+            <param name="memberId">人員ID</param>
+            <param name="unitMemberType">外部設定類別</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IUnitExternalMemberService.Create(System.Collections.Generic.IEnumerable{Microsoft.CUF.sc_unit_external_member})">
+            <summary>新增多筆sc_unit_external_member</summary>
+            <param name="models"></param>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IUnitExternalMemberService.UpdateByPK(Microsoft.CUF.sc_unit_external_member)">
+            <summary>更新sc_unit_external_member</summary>
+            <param name="model"></param>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IUnitExternalMemberService.Update(System.String,Microsoft.CUF.UnitExternalMemberType,System.Collections.Generic.IEnumerable{Microsoft.CUF.sc_unit_external_member})">
+            <summary>
+            更新sc_unit_external_member(filter: uunit,fexternal_type)
+            </summary>
+            <param name="uunit">單位GUID</param>
+            <param name="unitMemberType">[1]管理人(只能維護單位與人員)  [2]檢視人(只能檢視資料)</param>
+            <param name="models">新增多筆sc_unit_external_member</param>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IUnitExternalMemberService.DeleteByPK(Microsoft.CUF.sc_unit_external_member)">
+            <summary>刪除sc_unit_external_member</summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IUnitExternalMemberService.Delete(System.String,Microsoft.CUF.UnitExternalMemberType)">
+            <summary>刪除sc_unit_external_member(filter: uunit,fexternal_type)</summary>
+            <param name="uunit">單位GUID</param>
+            <param name="unitMemberType">[1]管理人(只能維護單位與人員)  [2]檢視人(只能檢視資料)</param>
+        </member>
+        <member name="T:Microsoft.CUF.Service.IBusinessConditionService">
+            <summary>
+            業務條件
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBusinessConditionService.GetByPK(System.Int32,System.String,System.String)">
+            <summary>
+            取得單筆sc_business_condition
+            </summary>
+            <param name="ftype">設定類型(單位/人員), [1]單位  [2]人員</param>
+            <param name="iobject">
+            設定對象(單位代號/人員編號)
+            ftype=1的話為sc_unit.uunit
+            ftype=2的話為sc_member.imember
+            </param>
+            <param name="iins_category">險別簡碼</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBusinessConditionService.Get(System.Int32,System.String)">
+            <summary>
+            取得多筆sc_business_condition(filter: ftype,iobject)
+            </summary>
+            <param name="ftype">設定類型(單位/人員), [1]單位  [2]人員</param>
+            <param name="iobject">
+            設定對象(單位代號/人員編號)
+            ftype=1的話為sc_unit.uunit
+            ftype=2的話為sc_member.imember
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBusinessConditionService.Create(System.Collections.Generic.IEnumerable{Microsoft.CUF.sc_business_condition})">
+            <summary>新增多筆sc_business_condition</summary>
+            <param name="models"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBusinessConditionService.UpdateByPK(Microsoft.CUF.sc_business_condition)">
+            <summary>更新sc_business_condition</summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBusinessConditionService.Update(System.Int32,System.String,System.Collections.Generic.IEnumerable{Microsoft.CUF.sc_business_condition})">
+            <summary>更新sc_business_condition(filter: ftype,iobject)</summary>
+            <param name="ftype">設定類型(單位/人員), [1]單位  [2]人員</param>
+            <param name="iobject">
+            設定對象(單位代號/人員編號)
+            ftype=1的話為sc_unit.uunit
+            ftype=2的話為sc_member.imember
+            </param>
+            <param name="models">新增多筆sc_business_condition</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBusinessConditionService.DeleteByPK(Microsoft.CUF.sc_business_condition)">
+            <summary>刪除sc_business_condition</summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBusinessConditionService.Delete(System.Int32,System.String)">
+            <summary>刪除sc_business_condition(filter: ftype,iobject)</summary>
+            <param name="ftype">設定類型(單位/人員), [1]單位  [2]人員</param>
+            <param name="iobject">
+            設定對象(單位代號/人員編號)
+            ftype=1的話為sc_unit.uunit
+            ftype=2的話為sc_member.imember
+            </param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.Service.IAgentService">
+            <summary>
+            程式功能
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IAgentService.Get(System.Guid)">
+            <summary>取得單筆Agent</summary>
+            <param name="ID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IAgentService.Create(Microsoft.CUF.sc_agent)">
+            <summary>新增Agent</summary>
+            <param name="model"></param>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IAgentService.Update(Microsoft.CUF.sc_agent)">
+            <summary>更新Agent</summary>
+            <param name="model"></param>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IAgentService.Delete(Microsoft.CUF.sc_agent)">
+            <summary>刪除Agent</summary>
+            <param name="model"></param>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IAgentService.UpdateBy_imember(System.String,System.Collections.Generic.IEnumerable{Microsoft.CUF.sc_agent})">
+            <summary>更新Agent</summary>
+            <param name="models">僅限一個被代理者編號(但代理者可有多個)</param>
+            <param name="imember"></param>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IAgentService.DeleteBy_imember(System.String)">
+            <summary>刪除Agent</summary>
+            <param name="imember"></param>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IAgentService.GetBy_imember(System.String)">
+            <summary>依被代理人ID取得Agents</summary>
+            <param name="imember">被代理人編號</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IAgentService.GetBy_grantimember(System.String)">
+            <summary>依代理人ID取得Agents</summary>
+            <param name="grantimember">代理人編號</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IAgentService.GetLogBy_imember(System.String,System.DateTime,System.DateTime)">
+            <summary>依被代理人ID取得Agents的執行LOG資訊</summary>
+            <param name="imember">被代理人編號</param>
+            <param name="startTime">異動起日</param>
+            <param name="endTime">異動迄日</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.Service.IBaseService">
+            <summary>
+            平台服務基礎介面
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBatchQueryService.BatchQuery(Microsoft.CUF.BatchQuerySearchModel)">
+            <summary>
+            批次查詢作業-取得查詢資料
+            </summary>
+            <param name="searchModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBatchQueryService.BatchQuery_Detail(System.String)">
+            <summary>
+            批次查詢作業-取得單筆資料
+            </summary>
+            <param name="modelkey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBatchQueryService.BatchQuery_Delete(System.String,System.String)">
+            <summary>
+            批次查詢作業-刪除資料
+            </summary>
+            <param name="modelkey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBatchQueryService.BatchQuery_Update(System.String,System.String,System.DateTime)">
+            <summary>
+            批次查詢作業-更新資料
+            </summary>
+            <param name="ibatch_no"></param>
+            <param name="fbatch_status"></param>
+            <param name="sdate"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.Service.IBatchService">
+            <summary>
+            平台相關的服務
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBatchService.SQLPrintService(System.String)">
+            <summary>
+            [SQL Agent] SQL Job 報表服務，以 JobId 取得報表參數，並產生報表
+            </summary>
+            <remarks>由SQL Agent回呼的進入窗口</remarks>
+            <param name="jobId">執行的批次編號</param>
+            <returns>傳回 string.Empty代表成功，否則為失敗內容</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBatchService.SQLRegularBatchService(System.String,System.String,System.String)">
+            <summary>
+            [SQL Agent] 週期性排程 SQL Job 報表服務，以 JobId 取得報表參數，並產生報表
+            </summary>
+            <remarks>由SQL Agent回呼的進入窗口</remarks>
+            <param name="regularJobName">週期性排程的 Job 名稱</param>
+            <param name="reportType">報表類別</param>
+            <param name="jsonArgument">要傳遞給報表的參數</param>
+            <returns>傳回 string.Empty代表成功，否則為失敗內容</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBatchService.RealtimeBatchService(System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+             即時批次作業
+            </summary>
+            <param name="programId">程式代號</param>
+            <param name="reportName">報表名稱</param>
+            <param name="reportFilename">報表檔案名稱(允許多筆：例：角色授予帳號查詢.xlsx$$角色授予帳號查詢_PART2.xlsx)</param>
+            <param name="imember">所屬人員</param>
+            <param name="icreate">建立人員</param>
+            <param name="reportType">報表類型(允許多筆：例：Report$$Report)</param>
+            <param name="queryCondition">批次參數(Assembly及Paramaters)(允許多筆：例：{Assembly:{~~},Paramaters:{~~}}$${Assembly:{~~},Paramaters:{~~}})</param>
+            <returns>執行成功或失敗</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBatchService.RealtimeBatchJobService(System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            即時批次作業(不同的參數格式)
+            </summary>
+            <param name="programId">程式代號</param>
+            <param name="reportName">報表名稱</param>
+            <param name="imember">所屬人員</param>
+            <param name="icreate">建立人員</param>
+            <param name="jsonAssembly">執行Assembly定義(允許多筆：例：{'ASSEMBLY_NAME':'XX',~~~}$${'ASSEMBLY_NAME':'XX',~~~}</param>
+            <param name="jsonParamaters">執行參數定義(允許多筆：例：{~參數JSON~}$${~參數JSON~}</param>
+            <param name="jsonReportInfo">執行批次類型(檔案+類型)(允許多筆：例：{'reportFilename':'XXX.xlsx', 'reportType':'Report'}$${'reportFilename':'XXX.xlsx', 'reportType':'Report'}</param>
+            <returns>執行成功或失敗</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBatchService.RealtimeToBatchCreate(System.String,System.String,System.String,System.String,System.DateTime,System.String,System.String,System.String,System.String)">
+            <summary>
+            即時轉批次相關功能-建立批次
+            </summary>
+            <param name="batchNo">批次編號</param>
+            <param name="programId">程式代號</param>
+            <param name="reportName">報表名稱</param>
+            <param name="reportFilename">報表檔案名稱</param>
+            <param name="startDate">開始時間</param>
+            <param name="imember">所屬人員</param>
+            <param name="icreate">建立人員</param>
+            <param name="reportType">報表類型(因為即時轉批次，所以為單筆)</param>
+            <param name="queryCondition">批次參數(Assembly及Paramaters)(因為即時轉批次，所以為單筆)</param>
+            <returns>建立成功或失敗</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBatchService.RealtimeToBatchFinish(System.String,System.String,System.Int64)">
+            <summary>
+             即時轉批次相關功能-執行結束
+            </summary>
+            <param name="batchNo">批次編號</param>
+            <param name="serverFileName">存在Server的檔案名稱</param>
+            <param name="streamLength">檔案大小</param>
+            <returns>更新成功或失敗</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBatchService.RealtimeToBatchError(System.String,System.String,System.String)">
+            <summary>
+            即時轉批次相關功能-發生錯誤時處理
+            </summary>
+            <param name="batchNo">批次編號</param>
+            <param name="message">錯誤訊息</param>
+            <param name="errorDescription">錯誤訊息-詳細資料</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBatchService.FurtureBatchService(System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            預約未來批次作業
+            </summary>
+            <param name="programId">程式代號</param>
+            <param name="reportName">報表名稱</param>
+            <param name="reportFilename">報表檔案名稱(允許多筆：例：角色授予帳號查詢.xlsx$$角色授予帳號查詢_PART2.xlsx)</param>
+            <param name="imember">所屬人員</param>
+            <param name="icreate">建立人員</param>
+            <param name="reportType">報表類型(允許多筆：例：Report$$Report)</param>
+            <param name="queryCondition">批次參數(Assembly及Paramaters)(允許多筆：例：{Assembly:{~~},Paramaters:{~~}}$${Assembly:{~~},Paramaters:{~~}})</param>
+            <returns>執行成功或失敗</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBatchService.FurtureBatchServiceWithDateTime(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.DateTime})">
+            <summary>
+            預約未來批次作業(傳入執行時間)
+            </summary>
+            <param name="programId">程式代號</param>
+            <param name="reportName">報表名稱</param>
+            <param name="reportFilename">報表檔案名稱(允許多筆：例：角色授予帳號查詢.xlsx$$角色授予帳號查詢_PART2.xlsx)</param>
+            <param name="imember">所屬人員</param>
+            <param name="icreate">建立人員</param>
+            <param name="reportType">報表類型(允許多筆：例：Report$$Report)</param>
+            <param name="queryCondition">批次參數(Assembly及Paramaters)(允許多筆：例：{Assembly:{~~},Paramaters:{~~}}$${Assembly:{~~},Paramaters:{~~}})</param>
+            <param name="executeTime">執行時間(若為null即是立即批次 或 必需大於現在的未來批次)</param>
+            <returns>執行成功或失敗</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBatchService.FurtureBatchService2(System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            預約未來批次作業(不同的參數格式)
+            </summary>
+            <param name="programId">程式代號</param>
+            <param name="reportName">報表名稱</param>
+            <param name="imember">所屬人員</param>
+            <param name="icreate">建立人員</param>
+            <param name="jsonAssembly">執行Assembly定義(允許多筆：例：{'ASSEMBLY_NAME':'XX',~~~}$${'ASSEMBLY_NAME':'XX',~~~}</param>
+            <param name="jsonParamaters">執行參數定義(允許多筆：例：{~參數JSON~}$${~參數JSON~}</param>
+            <param name="jsonReportInfo">執行批次類型(檔案+類型)(允許多筆：例：{'reportFilename':'XXX.xlsx', 'reportType':'Report'}$${'reportFilename':'XXX.xlsx', 'reportType':'Report'}</param>
+            <returns>執行時間</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IBatchService.FurtureBatchJobServiceWithDateTime(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.DateTime})">
+            <summary>
+            預約未來批次作業(傳入執行時間)(不同的參數格式)
+            </summary>
+            <param name="programId">程式代號</param>
+            <param name="reportName">報表名稱</param>
+            <param name="imember">所屬人員</param>
+            <param name="icreate">建立人員</param>
+            <param name="jsonAssembly">執行Assembly定義(允許多筆：例：{'ASSEMBLY_NAME':'XX',~~~}$${'ASSEMBLY_NAME':'XX',~~~}</param>
+            <param name="jsonParamaters">執行參數定義(允許多筆：例：{~參數JSON~}$${~參數JSON~}</param>
+            <param name="jsonReportInfo">執行批次類型(檔案+類型)(允許多筆：例：{'reportFilename':'XXX.xlsx', 'reportType':'Report'}$${'reportFilename':'XXX.xlsx', 'reportType':'Report'}</param>
+            <param name="executeTime">執行時間(若為null即是立即批次 或 必需大於現在的未來批次)</param>
+            <returns>執行時間</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ICodeProviderService.RemoteGet(System.String,System.String,System.String,System.String)">
+            <summary>呼叫 WCF 取得代碼資料</summary>
+            <param name="modelType">取得代碼資料的 Model 型別的字串, 請用 typeof(model).AssemblyQualifiedName 取得型別字串</param>
+            <param name="filterModel">底層用來篩選資料的 where 條件的 filterModel, 因為 WCF 不支援 anonymous object 所以要先序列化成字串</param>
+            <param name="filterModelType">filterModel 的型別字串, 請用 typeof(filterModel).AssemblyQualifiedName 取得型別字串</param>
+            <param name="dbConnectionName">DB連接字串名稱</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ICodeProviderService.ItemExpirationAndEviction(System.String,System.String[])">
+            <summary>
+            WCF 設定快取中的某一代碼到期與無效
+            </summary>
+            <param name="tableName">代碼表名稱</param>
+            <param name="keyArgs">代碼表鍵值</param>
+        </member>
+        <member name="M:Microsoft.CUF.Service.ICodeProviderService.AllExpirationAndEviction">
+            <summary>
+            WCF 設定快取中所有代碼到期與無效
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.Service.IMenuService">
+            <summary>選單服務</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IMenuService.Get(System.Guid)">
+             <summary>
+             取得單一選單
+             </summary>
+             <param name="MenuGuid">選單GUID</param>
+             <returns>選單資訊</returns>
+             <example>
+             <code>
+              public void GetTest()
+            {
+                var service = ServiceHelper.Create&lt;IMenuService&gt;();
+                var result = service.Get(Guid.Parse(&quot;f6da0db7-2d93-4315-a50a-3a7198f62639&quot;));
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IMenuService.GetRoot">
+             <summary>取得根節點選單</summary>
+             <returns>取得根節點選單</returns>
+             <example>
+             <code>
+               public void GetRootTest()
+            {
+                var service = ServiceHelper.Create&lt;IMenuService&gt;();
+                var result = service.GetRoot();
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IMenuService.GetByName(System.String)">
+             <summary>取得選單 By Name</summary>
+             <param name="name">選單名稱</param>
+             <returns>依條件選單資訊</returns>
+             <example>
+             <code>
+              public void GetByNameTest()
+            {
+                var service = ServiceHelper.Create&lt;IMenuService&gt;();
+                var name = &quot;選單&quot;;
+                var result = service.GetByName(name);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IMenuService.GetALL">
+             <summary>
+             取得全部選單
+             </summary>
+             <returns>全部選單</returns>
+             <example>
+             <code>
+             public void GetALLTest()
+            {
+                var service = ServiceHelper.Create&lt;IMenuService&gt;();
+                var result = service.GetALL();
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IMenuService.Create(Microsoft.CUF.Menu)">
+             <summary>
+             建立選單
+             </summary>
+             <param name="model">選單資訊</param>
+             <returns>成功/失敗 = true / false</returns>
+             <example>
+             <code>
+             public void CreateTest()
+            {
+                var service = ServiceHelper.Create&lt;IMenuService&gt;();
+                service.Create(new Menu { GUID = Guid.NewGuid(), Name = &quot;測試&quot;, Url = &quot;TTT/TTT&quot;, VerifyType = MenuVerifyType.ByExpression, AllowPermissionExpression = &quot;Mis.*&quot; });
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IMenuService.Update(Microsoft.CUF.Menu)">
+             <summary>
+             更新選單
+             </summary>
+             <param name="model">選單資訊</param>
+             <returns>成功/失敗 = true / false</returns>
+             <example>
+             <code>
+              public void UpdateTest()
+            {
+                var service = ServiceHelper.Create&lt;IMenuService&gt;();
+                service.Update(new Menu { GUID = Guid.NewGuid(), Name = &quot;測試&quot;, Url = &quot;TTT/TTT&quot;, VerifyType = MenuVerifyType.ByExpression, AllowPermissionExpression = &quot;Mis.*&quot; });
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IMenuService.Delete(Microsoft.CUF.Menu)">
+             <summary>
+             刪除選單
+             </summary>
+             <param name="model">選單資訊</param>
+             <returns>成功/失敗 = true / false</returns>
+             <example>
+             <code>
+              public void DeleteTest()
+            {
+                var service = ServiceHelper.Create&lt;IMenuService&gt;();
+                var model = service.Get(Guid.Parse(&quot;f6da0db7-2d93-4315-a50a-3a7198f62639&quot;));
+                service.Delete(model);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IMonitorService.PerformCodeNameInspect">
+            <summary>
+            執行代碼監控異動處理
+            </summary>
+            <returns>正常完成: 空字串, 有錯誤或警告: 訊息內容</returns>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IMonitorService.CodeNamePreload">
+            <summary>代碼表預先載入到 cache 中</summary>
+            <returns>正常完成: 空字串, 有錯誤或警告: 訊息內容</returns>
+        </member>
+        <member name="T:Microsoft.CUF.Service.IProgramService">
+            <summary>
+            程式功能
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IProgramService.Get(System.String)">
+             <summary>取得單筆程式</summary>
+             <param name="ID">程式ID</param>
+             <returns>單筆程式</returns>
+             <example>
+             <code>
+             public void GetTest()
+            {
+                var service = ServiceHelper.Create&lt;IProgramService&gt;();
+                var id = &quot;AAA001&quot;;
+                var result = service.Get(id);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IProgramService.GetAll">
+             <summary>取得所有程式</summary>
+             <returns>取得所有程式</returns>
+             <example>
+             <code>
+              public void GetAllTest()
+            {
+                var service = ServiceHelper.Create&lt;IProgramService&gt;();
+                var result = service.GetAll();
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IProgramService.Query(System.String)">
+             <summary>查詢程式</summary>
+             <param name="ID">查詢ID</param>
+             <returns>取得查詢程式</returns>
+             <example>
+             <code>
+             public void QueryTest()
+            {
+                var service = ServiceHelper.Create&lt;IProgramService&gt;();
+                var id = &quot;AAA001&quot;;
+                var result = service.Query(id);
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IProgramService.Create(Microsoft.CUF.Program)">
+             <summary>新增程式</summary>
+             <param name="model">程式資訊</param>
+             <returns>成功/失敗 = true / false</returns>
+             <example>
+             <code>
+             public void ProgramInsert()
+            {
+                var service = ServiceHelper.Create&lt;IProgramService&gt;();
+                var model = new Program { ID = &quot;AAA&quot;, Name = &quot;AAA&quot;, AllowPermissionExpression = &quot;AA&quot;, HelpText = &quot;AA測試&quot;, IsAllowInternet = false, dcreate = DateTime.Now, dupdate = DateTime.Now };
+                model.Profile = new sc_program_profile[] { 
+                    new sc_program_profile{ iprogram = model.ID , ikey=&quot;QQ&quot;,fvalue=&quot;QQ&quot;}, 
+                    new sc_program_profile{ iprogram = model.ID , ikey=&quot;QQ3&quot;,fvalue=&quot;QQ3_up&quot;}, 
+                    new sc_program_profile{ iprogram = model.ID , ikey=&quot;QQ4&quot;,fvalue=&quot;QQ4&quot;},
+                }.ToList();
+                //新增
+                service.Create(model);//測OK
+                //更新
+                service.Update(model);
+                //刪除
+                service.Delete(model);//測OK
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IProgramService.Update(Microsoft.CUF.Program)">
+             <summary>更新Program</summary>
+             <param name="model">程式資訊</param>
+             <returns>成功/失敗 = true / false</returns>
+             <example>
+             <code>
+             public void ProgramInsert()
+            {
+                var service = ServiceHelper.Create&lt;IProgramService&gt;();
+                var model = new Program { ID = &quot;AAA&quot;, Name = &quot;AAA&quot;, AllowPermissionExpression = &quot;AA&quot;, HelpText = &quot;AA測試&quot;, IsAllowInternet = false, dcreate = DateTime.Now, dupdate = DateTime.Now };
+                model.Profile = new sc_program_profile[] { 
+                    new sc_program_profile{ iprogram = model.ID , ikey=&quot;QQ&quot;,fvalue=&quot;QQ&quot;}, 
+                    new sc_program_profile{ iprogram = model.ID , ikey=&quot;QQ3&quot;,fvalue=&quot;QQ3_up&quot;}, 
+                    new sc_program_profile{ iprogram = model.ID , ikey=&quot;QQ4&quot;,fvalue=&quot;QQ4&quot;},
+                }.ToList();
+                //新增
+                service.Create(model);//測OK
+                //更新
+                service.Update(model);
+                //刪除
+                service.Delete(model);//測OK
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IProgramService.Delete(Microsoft.CUF.Program)">
+             <summary>刪除Program</summary>
+             <param name="model">程式資訊</param>
+             <returns>成功/失敗 = true / false</returns>
+             <example>
+             <code>
+             public void ProgramInsert()
+            {
+                var service = ServiceHelper.Create&lt;IProgramService&gt;();
+                var model = new Program { ID = &quot;AAA&quot;, Name = &quot;AAA&quot;, AllowPermissionExpression = &quot;AA&quot;, HelpText = &quot;AA測試&quot;, IsAllowInternet = false, dcreate = DateTime.Now, dupdate = DateTime.Now };
+                model.Profile = new sc_program_profile[] { 
+                    new sc_program_profile{ iprogram = model.ID , ikey=&quot;QQ&quot;,fvalue=&quot;QQ&quot;}, 
+                    new sc_program_profile{ iprogram = model.ID , ikey=&quot;QQ3&quot;,fvalue=&quot;QQ3_up&quot;}, 
+                    new sc_program_profile{ iprogram = model.ID , ikey=&quot;QQ4&quot;,fvalue=&quot;QQ4&quot;},
+                }.ToList();
+                //新增
+                service.Create(model);//測OK
+                //更新
+                service.Update(model);
+                //刪除
+                service.Delete(model);//測OK
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IProgramService.GetProfileValue(System.String,System.String)">
+             <summary>取得指定的Program Profile值</summary>
+             <param name="iprogram">Program ID</param>
+             <param name="key">指定Key</param>
+             <returns>取得指定的Program Profile值</returns>
+             <example>
+             <code>
+               public void ProgramProfileTest()
+            {
+                ProgramHelper.SetProfileValue(&quot;CA0101&quot;, &quot;AAA&quot;, &quot;這是測試呀&quot;);//測OK
+                var result = ProgramHelper.GetProfileValue(&quot;CA0101&quot;, &quot;AAA&quot;);//測OK
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IProgramService.SetProfileValue(System.String,System.String,System.String)">
+             <summary>設定Profile的值</summary>
+             <param name="iprogram">Program ID</param>
+             <param name="key">指定Key</param>
+             <param name="value">設定的值</param>
+             <example>
+             <code>
+               public void ProgramProfileTest()
+            {
+                ProgramHelper.SetProfileValue(&quot;CA0101&quot;, &quot;AAA&quot;, &quot;這是測試呀&quot;);//測OK
+                var result = ProgramHelper.GetProfileValue(&quot;CA0101&quot;, &quot;AAA&quot;);//測OK
+            }
+             </code>
+             </example>
+        </member>
+        <member name="T:Microsoft.CUF.Service.DateTimeUtility">
+            <summary>時間相關的處理函式</summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.DateTimeUtility.IsInTimeRegion(System.DateTime,System.Nullable{System.DateTime},System.Nullable{System.DateTime})">
+            <summary>目標時間是否在指定區間內</summary>
+            <param name="target">目標時間</param>
+            <param name="startTime">開始時間</param>
+            <param name="endTime">結束時間</param>
+            <returns>是否在指定區間內</returns>
+        </member>
+        <member name="T:Microsoft.CUF.Service.IPlatformService">
+            <summary>
+            平台相關的服務
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Service.IPlatformService.BatchQuery_GetAll">
+            <summary>
+            批次查詢-取得全部資料
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.Service.BoardQueryGridModel">
+            <summary>
+            編輯公佈欄的查詢結果的GridView呈現資料
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.BoardQueryGridModel.seq">
+            <summary>序號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.BoardQueryGridModel.org_unit">
+            <summary>
+            發佈單位
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.BoardQueryGridModel.deffect">
+            <summary>
+            生效起日
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.BoardQueryGridModel.dexpire">
+            <summary>
+            生效迄日
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.BoardQueryGridModel.sortseq">
+            <summary>資料排序</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.BoardQueryGridModel.content">
+            <summary>
+            公佈內容
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.Service.BoardSearchModel">
+            <summary>
+            公佈欄編輯的查詢條件項目
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.BoardSearchModel.OrgUnit">
+            <summary>發佈單位</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.BoardSearchModel.seq">
+            <summary>序號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.BoardSearchModel.isValidDate">
+            <summary>是否驗證日期</summary>
+        </member>
+        <member name="T:Microsoft.CUF.Service.FileDownloadQueryGridModel">
+            <summary>
+            編輯下載專區的查詢結果的GridView呈現資料
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.FileDownloadQueryGridModel.seq">
+            <summary>序號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.FileDownloadQueryGridModel.org_unit">
+            <summary>
+            發佈單位
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.FileDownloadQueryGridModel.deffect">
+            <summary>
+            生效起日
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.FileDownloadQueryGridModel.dexpire">
+            <summary>
+            生效迄日
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.FileDownloadQueryGridModel.sortseq">
+            <summary>資料排序</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.FileDownloadQueryGridModel.display">
+            <summary>
+            顯示名稱
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.FileDownloadQueryGridModel.file_size">
+            <summary>
+            檔案大小
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.FileDownloadQueryGridModel.file_id">
+            <summary>
+            檔案識別ID
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.Service.FileDownloadSearchModel">
+            <summary>
+            下載專區編輯的查詢條件項目
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.FileDownloadSearchModel.OrgUnit">
+            <summary>發佈單位</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.FileDownloadSearchModel.seq">
+            <summary>序號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.FileDownloadSearchModel.isValidDate">
+            <summary>是否驗證日期</summary>
+        </member>
+        <member name="T:Microsoft.CUF.Service.ServicePersonQueryGridModel">
+            <summary>
+            編輯服務窗口的查詢結果的GridView呈現資料
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.ServicePersonQueryGridModel.seq">
+            <summary>序號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.ServicePersonQueryGridModel.org_unit">
+            <summary>
+            發佈單位
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.ServicePersonQueryGridModel.deffect">
+            <summary>
+            生效起日
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.ServicePersonQueryGridModel.dexpire">
+            <summary>
+            生效迄日
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.ServicePersonQueryGridModel.sortseq">
+            <summary>資料排序</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.ServicePersonQueryGridModel.category">
+            <summary>
+            窗口分類
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.ServicePersonQueryGridModel.content">
+            <summary>
+            人員資訊
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.Service.ServicePersonSearchModel">
+            <summary>
+            服務窗口編輯的查詢條件項目
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.ServicePersonSearchModel.OrgUnit">
+            <summary>發佈單位</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.ServicePersonSearchModel.seq">
+            <summary>序號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.Service.ServicePersonSearchModel.isValidDate">
+            <summary>是否驗證日期</summary>
+        </member>
+        <member name="T:Microsoft.CUF.IAccountProfile">
+            <summary>定義它是屬於Account Profile</summary>
+        </member>
+        <member name="T:Microsoft.CUF.CodeName">
+            <summary>
+            此為平台網站Level之提供基層名稱資訊的Cache資料(由Cache資料取得) (TMNewa.Mis)
+            供Web/AP使用
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.CodeName._CodeProvider">
+            <summary>
+            資料提供者 (IoC) (當Cache沒資料時)
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.CodeName.prefixCacheKey">
+            <summary>
+            各個存Cache資料的Key值Prefix字串
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.CodeName.lockScProgram">
+            <summary>
+            代碼鎖定物件-for program使用
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.CodeName.lockScMenu">
+            <summary>
+            代碼鎖定物件-for menu使用
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.CodeName.lockZipCode">
+            <summary>
+            代碼鎖定物件-for zipcode使用
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.CodeName.lockScUnit">
+            <summary>
+            代碼鎖定物件-for unit使用
+            </summary>
+        </member>
+        <member name="F:Microsoft.CUF.CodeName.lockScMember">
+            <summary>
+            代碼鎖定物件-for member使用
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.CodeName.sc_program">
+            <summary>程式清單Cache</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.CodeName.sc_menu">
+            <summary>程式清單Cache</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.CodeName.ZipCode">
+            <summary>取得郵遞區號代碼檔</summary>
+        </member>
+        <member name="M:Microsoft.CUF.CodeName.MemberObj(System.String)">
+            <summary>取得 sc_member 人員資料檔</summary>
+            <param name="imember">人員編號</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.CodeName.GetAllProgram">
+            <summary>取得所有的Program清單</summary>
+            <returns>所有的Program清單</returns>
+        </member>
+        <member name="M:Microsoft.CUF.CodeName.GetProgram(System.String)">
+            <summary>取得Program</summary>
+            <param name="ID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.CodeName.GetMenuAll">
+            <summary>取得所有的Menu</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.CodeName.GetMainMenu(System.String)">
+            <summary>取得新安的選單</summary>
+            <param name="rootName">名稱</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.CodeName.GetRouteMenu">
+            <summary>取得外部通路用的選單</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.CodeName.GetMobileMenu(System.String)">
+            <summary>取得手機版設定的選單</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.CodeName.GetMenu(System.Guid)">
+            <summary>取得Menu</summary>
+            <param name="guid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.CodeName.getchilds(System.Collections.Generic.IEnumerable{Microsoft.CUF.Menu},System.Collections.Generic.IEnumerable{Microsoft.CUF.Menu},System.Collections.Generic.List{Microsoft.CUF.Menu})">
+            <summary>取得該Menu下的節點</summary>
+            <param name="target"></param>
+            <param name="full"></param>
+            <param name="final"></param>
+        </member>
+        <member name="M:Microsoft.CUF.CodeName.GetMemberName(System.String)">
+            <summary>取得人員名稱</summary>
+            <param name="memberid">人員ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.CodeName.GetZipCode">
+            <summary>
+            取得郵遞區號資訊
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.CodeName.GetUnitName(System.String)">
+            <summary>
+            取得單位名稱
+            </summary>
+            <param name="iunit"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.BatchQuerySearchModel">
+            <summary>
+            批次狀態查詢的查詢條件項目
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.BatchQuerySearchModel.#ctor">
+            <summary>
+            批次狀態查詢的查詢條件項目-建構子
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchQuerySearchModel.BatchNo">
+            <summary>
+            批次編號
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchQuerySearchModel.StartDate">
+            <summary>
+            起始時間
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchQuerySearchModel.EndDate">
+            <summary>
+            結束時間
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchQuerySearchModel.ExecuteMember">
+            <summary>
+            執行人員
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchQuerySearchModel.QueryStatus">
+            <summary>
+            批次查詢狀態
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchQuerySearchModel.Status">
+            <summary>
+            狀態資訊
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchQuerySearchModel.ProgramId">
+            <summary>
+            功能代號
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.EntityValidationResult">
+            <summary>
+            驗証Model物件的結果
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.EntityValidationResult.ValidationErrors">
+            <summary>
+            錯誤訊息列表
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.EntityValidationResult.HasError">
+            <summary>
+            是否有錯誤
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.EntityValidationResult.ToString">
+            <summary>
+            將錯誤訊息轉為字串
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.BatchScheduleSearchModel">
+            <summary>
+            批次排程狀態設定的查詢條件項目
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.BatchScheduleSearchModel.#ctor">
+            <summary>
+            批次排程狀態設定的查詢條件項目-建構子
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchScheduleSearchModel.ffunction_no">
+            <summary>
+            功能代號
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchScheduleSearchModel.nreport_name">
+            <summary>
+            報表名稱
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.Cryptography">
+            <summary>
+            密碼使用
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Cryptography.EqualsHash(System.String,System.String)">
+            <summary>
+            以 SHA256 演算法計算 s的 hash 值 是否 = 傳入參數[hash]
+            </summary>
+            <param name="s"></param>
+            <param name="hash"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.Cryptography.Hash(System.String)">
+            <summary>
+            傳回 : 以 SHA256 演算法計算 s的 hash 值
+            </summary>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.Web.ExportParameter">
+            <summary>
+            資料匯出時須要用到參數
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Web.ExportParameter.fileName">
+            <summary>
+            匯出時的檔案名稱, 沒有填時, 預設會以 model 的 class name 做為檔名
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Web.ExportParameter.dataColumns">
+            <summary>
+            匯出檔案資料的實體欄位名稱與匯出資料顯示欄位名稱
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Web.ExportParameter.dataModelType">
+            <summary>
+            資料實體類別
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.Web.ExportBuilder">
+            <summary>
+            Builder
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.Web.CSVBuilder">
+            <summary>
+            處理匯出CSV相關的類別
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Web.CSVBuilder.#ctor(System.Collections.Generic.IEnumerable{System.Object},Microsoft.CUF.Web.ExportParameter)">
+            <summary>
+            匯出CSV相關的類別-建構子
+            </summary>
+            <param name="expData">欲匯出的資料</param>
+            <param name="expParam">匯出的參數資訊</param>
+        </member>
+        <member name="M:Microsoft.CUF.Web.CSVBuilder.MakeFileName">
+            <summary>
+            製作檔案名稱
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Web.CSVBuilder.MakeFileType">
+            <summary>
+            製作檔案類型
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Web.CSVBuilder.DoExport">
+            <summary>
+            執行匯出動作
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.Web.ExportDirector">
+            <summary>
+            匯出指引的類別
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Web.ExportDirector.#ctor(Microsoft.CUF.Web.ExportBuilder)">
+            <summary>
+            匯出指引的類別-建構子
+            </summary>
+            <param name="builder"></param>
+        </member>
+        <member name="P:Microsoft.CUF.Web.ExportDirector.Builder">
+            <summary>
+            匯出建置類別的實體
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.Web.ExportDirector.MakeExport">
+            <summary>
+            執行匯出
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.ErrorHelper">
+            <summary>錯誤處理的相關Helper</summary>
+        </member>
+        <member name="M:Microsoft.CUF.ErrorHelper.FixThrow(System.Exception,System.Boolean)">
+            <summary>
+            處理網站系統發生的訊息資訊
+            判斷其錯誤訊息類別轉換為對應文字呈現
+            </summary>
+            <param name="ex">錯誤訊息物件</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.ErrorHelper.fixDBException(System.Data.Common.DbException)">
+            <summary>處理資料庫的錯誤型別</summary>
+            <param name="ex"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.ModelValidation.Validate``1(``0,System.Boolean)">
+            <summary>
+            針對Model上的屬性做驗証
+            </summary>
+            <typeparam name="T">Model物件</typeparam>
+            <param name="model">該Model</param>
+            <returns>驗証錯誤後直接Throw Business Exception</returns>
+        </member>
+        <member name="M:Microsoft.CUF.ModelValidation.Validate``1(System.Collections.Generic.IEnumerable{``0},System.Boolean)">
+            <summary>針對Model資料列上的屬性做驗証 </summary>
+            <typeparam name="T">Model物件</typeparam>
+            <param name="modellist">該ModelList</param>
+            <param name="throwError">是否拋錯誤訊息Exception</param>
+            <returns>驗証錯誤結果</returns>
+        </member>
+        <member name="T:Microsoft.CUF.ClientHelper">
+            <summary>
+            用戶端的相關Helper函式
+            </summary>
+        </member>
+        <member name="M:Microsoft.CUF.ClientHelper.GetRemoteIP">
+            <summary>取得來源IP</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.ClientHelper.IsInternal">
+            <summary>來源是否為內部</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.ClientHelper.GetUserSessions">
+            <summary>取得放在 Cache 中的 Session 有關 User Id 資訊</summary>
+            <returns>
+            回傳 KeyValuePair 的
+            第一個參數 String => session id,  
+            第二個參數 Tuple String => client ip
+            第三個參數 Tuple String => OperatorAccountId
+            </returns>
+        </member>
+        <member name="T:Microsoft.CUF.BatchQueryGridModel">
+            <summary>
+            批次查詢作業的查詢結果的GridView呈現資料
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchQueryGridModel.fbatch_status">
+            <summary>
+            狀態
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchQueryGridModel.fbatch_status_ch">
+            <summary>
+            中文狀態
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchQueryGridModel.ibatch_no">
+            <summary>
+            批次編號
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchQueryGridModel.ffunction_no">
+            <summary>
+            功能代號
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchQueryGridModel.imember">
+            <summary>
+            執行人員
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchQueryGridModel.icreate">
+            <summary>
+            操作人員
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchQueryGridModel.dstart">
+            <summary>
+            開始時間
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchQueryGridModel.dend">
+            <summary>
+            結束時間
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchQueryGridModel.nreport_name">
+            <summary>
+            報表名稱
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchQueryGridModel.nfile_name">
+            <summary>
+            執行結果
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:Microsoft.CUF.BatchQueryGridModel.dupdate" -->
+        <member name="P:Microsoft.CUF.BatchQueryGridModel.qfile_no">
+            <summary>
+            報表數
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchQueryGridModel.ffile_size">
+            <summary>
+            檔案大小
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchQueryGridModel.nreport_filename">
+            <summary>
+            自訂報表檔名
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.BatchQueryGridModel.is_deleteable">
+            <summary>
+            是否可刪除(自己的記錄，或具Maintain權限)
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.v_memberDetail">
+            <summary>
+            展示 [人員管理] UI 的 View
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_memberDetail.Member">
+            <summary>
+            人員
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_memberDetail.Account">
+            <summary>
+            帳號
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_memberDetail.business_conditions">
+            <summary>
+            經辦通路條件
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_memberDetail.account_profiles">
+            <summary>
+            帳號設定檔
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_memberDetail.UnitRoles">
+            <summary> 單位角色 : 以 "," join, ex : "TTT-001,TTT-002"</summary>
+        </member>
+        <member name="T:Microsoft.CUF.v_sc_unit_external_member">
+            <summary>
+            代理 view model
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_unit_external_member.uunit">
+            <summary>
+            單位GUID
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_unit_external_member.fexternal_type">
+            <summary>
+            類型
+            [1]管理人(只能維護單位與人員)  [2]檢視人(只能檢視資料)
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_unit_external_member.imember">
+            <summary>
+            人員編號
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_unit_external_member.fexternal_property">
+            <summary>
+            屬性資料
+            fexternal_type=2檢視人時, 為險別AHCFOM…, null表示全險別
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_unit_external_member.nmember">
+            <summary>
+            人員名稱
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.v_sc_agent">
+            <summary>
+            代理 view model
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_agent.GUID">
+            <summary>代理Guid</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_agent.imember">
+            <summary>被代理人編號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_agent.igrant_member">
+            <summary>代理人編號</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_agent.dbegin">
+            <summary>代理起始時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_agent.dend">
+            <summary>結束時間</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_agent.fgrant">
+            <summary>授權項目</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_agent.igrant_type">
+            <summary>
+            授權項目類型
+            [1] 全權代理
+            [2] 表單
+            [3] 角色
+            [4] 權限
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_agent.igrant_value">
+            <summary>授權項目值</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_agent.ndescription">
+            <summary>說明</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_agent.CreatorID">
+            <summary>建立人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_agent.UpdaterID">
+            <summary>更新人員</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_agent.CreatorName">
+            <summary>建立人員名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_agent.UpdaterName">
+            <summary>更新人員名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_agent.nmember">
+            <summary>被代理人名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_agent.ngrant_member">
+            <summary>代理人名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_agent.ngrant">
+            <summary>授權項目名稱</summary>
+        </member>
+        <member name="P:Microsoft.CUF.v_sc_agent.selItems">
+            <summary>match howard 的 Microsoft.CUF.SelectItem</summary>
+        </member>
+        <member name="T:Microsoft.CUF.v_sc_agent.SelectItem">
+            <summary>
+            match howard 的 Microsoft.CUF.SelectItem
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,4649 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.CUF.Resources</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.CUF.CodeResources">
+            <summary>代碼檔多語系資源處理</summary>
+        </member>
+        <member name="M:Microsoft.CUF.CodeResources.Get(System.String,System.Globalization.CultureInfo)">
+            <summary>取得代碼檔之多語系</summary>
+            <param name="codeId">代碼</param>
+            <param name="culture">語系</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.CodeResources.Get(System.String,System.String,System.Globalization.CultureInfo)">
+            <summary>取得代碼檔之多語系</summary>
+            <param name="category">類別</param>
+            <param name="codeId">代碼</param>
+            <param name="culture">語系</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.HtmlResources">
+            <summary>HTML樣版的多語系支援</summary>
+        </member>
+        <member name="M:Microsoft.CUF.HtmlResources.Get(System.String,System.Globalization.CultureInfo)">
+            <summary>找到正確語系的檔案資料</summary>
+            <param name="path">檔案位置(不包括副檔名);ex：Bank\HelloWorld</param>
+            <param name="myCulture">語系</param>
+            <returns>正確語系的檔案資料</returns>
+        </member>
+        <member name="M:Microsoft.CUF.HtmlResources.findCorrectFile(System.String,System.String,System.String)">
+            <summary>找到正確語系的檔案資料</summary>
+            <param name="rootFolder">存放的根目錄</param>
+            <param name="path">檔案位置(不包括副檔名)</param>
+            <param name="myCulture">語系</param>
+            <returns>滿足檔案位置</returns>
+        </member>
+        <member name="M:Microsoft.CUF.HtmlResources.myGetFiles(System.String,System.String,System.IO.SearchOption)">
+            <summary>
+            取得 Files的防護：先找指定目錄位置，再找網站位置
+            </summary>
+            <remarks>(先目前執行位置，再取網站所在位置)</remarks>
+            <param name="folderPath"></param>
+            <param name="searchPattern"></param>
+            <param name="searchOption"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.ICodeResourcesProvider">
+            <summary>定義代碼取得的介面</summary>
+        </member>
+        <member name="M:Microsoft.CUF.ICodeResourcesProvider.Get(System.String,System.Globalization.CultureInfo)">
+            <summary>取得代碼檔之多語系</summary>
+            <param name="codeId">代碼</param>
+            <param name="culture">語系</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.ICodeResourcesProvider.Get(System.String,System.String,System.Globalization.CultureInfo)">
+            <summary>取得代碼檔之多語系</summary>
+            <param name="category">類別</param>
+            <param name="codeId">代碼</param>
+            <param name="culture">語系</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.CUF.Resource.ZH_TW.SystemInfo">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String0">
+            <summary>
+              Looks up a localized string similar to 無資料庫.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String1">
+            <summary>
+              Looks up a localized string similar to 設定.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String10">
+            <summary>
+              Looks up a localized string similar to 單位名稱.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String100">
+            <summary>
+              Looks up a localized string similar to 執行人員編號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String101">
+            <summary>
+              Looks up a localized string similar to 建立時間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String102">
+            <summary>
+              Looks up a localized string similar to 更新時間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String103">
+            <summary>
+              Looks up a localized string similar to 錯誤代碼.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String104">
+            <summary>
+              Looks up a localized string similar to 錯誤描述.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String105">
+            <summary>
+              Looks up a localized string similar to 結果型態.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String106">
+            <summary>
+              Looks up a localized string similar to 自訂檔案名稱.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String107">
+            <summary>
+              Looks up a localized string similar to 報表類型.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String108">
+            <summary>
+              Looks up a localized string similar to 資料排序.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String109">
+            <summary>
+              Looks up a localized string similar to 公佈內容.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String11">
+            <summary>
+              Looks up a localized string similar to 身份別.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String110">
+            <summary>
+              Looks up a localized string similar to 建檔人員.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String111">
+            <summary>
+              Looks up a localized string similar to 建檔日期.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String112">
+            <summary>
+              Looks up a localized string similar to 說明.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String113">
+            <summary>
+              Looks up a localized string similar to 顯示名稱.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String114">
+            <summary>
+              Looks up a localized string similar to 異動時間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String115">
+            <summary>
+              Looks up a localized string similar to 異動原因.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String116">
+            <summary>
+              Looks up a localized string similar to 異動來源代碼表.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String117">
+            <summary>
+              Looks up a localized string similar to 異動來源代碼表鍵值.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String118">
+            <summary>
+              Looks up a localized string similar to 異動資料序號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String119">
+            <summary>
+              Looks up a localized string similar to 即時轉批次狀態.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String12">
+            <summary>
+              Looks up a localized string similar to 到職日期.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String120">
+            <summary>
+              Looks up a localized string similar to 即時回覆.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String121">
+            <summary>
+              Looks up a localized string similar to 手動轉批次.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String122">
+            <summary>
+              Looks up a localized string similar to 逾時.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String123">
+            <summary>
+              Looks up a localized string similar to 手動取消.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String124">
+            <summary>
+              Looks up a localized string similar to 異常.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String125">
+            <summary>
+              Looks up a localized string similar to 未知狀態.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String126">
+            <summary>
+              Looks up a localized string similar to 批次狀態.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String127">
+            <summary>
+              Looks up a localized string similar to 成功結束.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String128">
+            <summary>
+              Looks up a localized string similar to 執行失敗.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String129">
+            <summary>
+              Looks up a localized string similar to 處理中.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String13">
+            <summary>
+              Looks up a localized string similar to 離職日期.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String130">
+            <summary>
+              Looks up a localized string similar to 待處理.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String131">
+            <summary>
+              Looks up a localized string similar to 週期性.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String132">
+            <summary>
+              Looks up a localized string similar to 依程式.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String133">
+            <summary>
+              Looks up a localized string similar to 依權限表示式.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String134">
+            <summary>
+              Looks up a localized string similar to 上移.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String135">
+            <summary>
+              Looks up a localized string similar to 下移.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String136">
+            <summary>
+              Looks up a localized string similar to 顯示與否的檢查類型.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String137">
+            <summary>
+              Looks up a localized string similar to 允許權限.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String138">
+            <summary>
+              Looks up a localized string similar to 同一層節點排序.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String139">
+            <summary>
+              Looks up a localized string similar to 有效起始時間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String14">
+            <summary>
+              Looks up a localized string similar to 建立人員.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String140">
+            <summary>
+              Looks up a localized string similar to 有效終止時間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String141">
+            <summary>
+              Looks up a localized string similar to 特權類型.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String142">
+            <summary>
+              Looks up a localized string similar to 特權屬性值.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String143">
+            <summary>
+              Looks up a localized string similar to 增加權限。.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String144">
+            <summary>
+              Looks up a localized string similar to 增加角色。.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String145">
+            <summary>
+              Looks up a localized string similar to 單位.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String146">
+            <summary>
+              Looks up a localized string similar to 變更人員所屬單位。.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String147">
+            <summary>
+              Looks up a localized string similar to 職級.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String148">
+            <summary>
+              Looks up a localized string similar to 變更人員身份別。.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String149">
+            <summary>
+              Looks up a localized string similar to 管理單位.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String15">
+            <summary>
+              Looks up a localized string similar to 建立日期.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String150">
+            <summary>
+              Looks up a localized string similar to 增加可管理單位。.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String151">
+            <summary>
+              Looks up a localized string similar to 程式名稱.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String152">
+            <summary>
+              Looks up a localized string similar to 幫助說明.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String153">
+            <summary>
+              Looks up a localized string similar to 是否允許外網使用.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String154">
+            <summary>
+              Looks up a localized string similar to 帳號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String155">
+            <summary>
+              Looks up a localized string similar to 被代理人編號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String156">
+            <summary>
+              Looks up a localized string similar to 代理人編號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String157">
+            <summary>
+              Looks up a localized string similar to 代理起始時間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String158">
+            <summary>
+              Looks up a localized string similar to 代理終止時間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String159">
+            <summary>
+              Looks up a localized string similar to 授權項目類型.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String16">
+            <summary>
+              Looks up a localized string similar to 更新人員.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String160">
+            <summary>
+              Looks up a localized string similar to 授權項目值.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String161">
+            <summary>
+              Looks up a localized string similar to 險別簡碼.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String162">
+            <summary>
+              Looks up a localized string similar to 可用條件設定.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String163">
+            <summary>
+              Looks up a localized string similar to 類型.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String164">
+            <summary>
+              Looks up a localized string similar to 屬性資料.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String165">
+            <summary>
+              Looks up a localized string similar to 操作人員.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String166">
+            <summary>
+              Looks up a localized string similar to 登入人員.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String167">
+            <summary>
+              Looks up a localized string similar to 不可以執行.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String168">
+            <summary>
+              Looks up a localized string similar to 郵遞區號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String169">
+            <summary>
+              Looks up a localized string similar to 縣市.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String17">
+            <summary>
+              Looks up a localized string similar to 更新日期.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String170">
+            <summary>
+              Looks up a localized string similar to 鄉鎮市區.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String171">
+            <summary>
+              Looks up a localized string similar to 週期性排程.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String172">
+            <summary>
+              Looks up a localized string similar to 資料庫中，找不到這筆排程的記錄：.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String173">
+            <summary>
+              Looks up a localized string similar to 查無資料.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String174">
+            <summary>
+              Looks up a localized string similar to 批次執行成功.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String175">
+            <summary>
+              Looks up a localized string similar to 批次執行失敗.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String176">
+            <summary>
+              Looks up a localized string similar to 儲存檔案時，無法取得檔案大小資訊.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String177">
+            <summary>
+              Looks up a localized string similar to 復職.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String178">
+            <summary>
+              Looks up a localized string similar to 停用.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String179">
+            <summary>
+              Looks up a localized string similar to 單位異動.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String18">
+            <summary>
+              Looks up a localized string similar to 建立人員名稱.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String180">
+            <summary>
+              Looks up a localized string similar to 基本資料異動.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String181">
+            <summary>
+              Looks up a localized string similar to 不正確的異動原因.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String182">
+            <summary>
+              Looks up a localized string similar to 沒有異動.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String183">
+            <summary>
+              Looks up a localized string similar to 關閉本地快取.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String184">
+            <summary>
+              Looks up a localized string similar to 使用本地快取.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String185">
+            <summary>
+              Looks up a localized string similar to 公司人員.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String186">
+            <summary>
+              Looks up a localized string similar to 外部通路.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String187">
+            <summary>
+              Looks up a localized string similar to 起始時間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String188">
+            <summary>
+              Looks up a localized string similar to 執行人員.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String189">
+            <summary>
+              Looks up a localized string similar to 批次查詢狀態.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String19">
+            <summary>
+              Looks up a localized string similar to 更新人員名稱.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String190">
+            <summary>
+              Looks up a localized string similar to 是否驗證日期.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String191">
+            <summary>
+              Looks up a localized string similar to 被代理人名稱.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String192">
+            <summary>
+              Looks up a localized string similar to 代理人名稱.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String193">
+            <summary>
+              Looks up a localized string similar to 授權項目名稱.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String194">
+            <summary>
+              Looks up a localized string similar to 人員名稱.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String195">
+            <summary>
+              Looks up a localized string similar to 無.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String196">
+            <summary>
+              Looks up a localized string similar to 複製結果.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String197">
+            <summary>
+              Looks up a localized string similar to 表格英文名：.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String198">
+            <summary>
+              Looks up a localized string similar to 表格中文名：.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String199">
+            <summary>
+              Looks up a localized string similar to 執行後產生檔案.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String2">
+            <summary>
+              Looks up a localized string similar to 必須指定比對成員.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String20">
+            <summary>
+              Looks up a localized string similar to 驗證方式.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String200">
+            <summary>
+              Looks up a localized string similar to 執行後目錄：.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String201">
+            <summary>
+              Looks up a localized string similar to 未實作.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String202">
+            <summary>
+              Looks up a localized string similar to 用戶沒有登入成功！.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String203">
+            <summary>
+              Looks up a localized string similar to 更新.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String204">
+            <summary>
+              Looks up a localized string similar to 組織.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String205">
+            <summary>
+              Looks up a localized string similar to 人員角色.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String206">
+            <summary>
+              Looks up a localized string similar to 人員.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String207">
+            <summary>
+              Looks up a localized string similar to 權限樹.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String208">
+            <summary>
+              Looks up a localized string similar to 角色權限.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String209">
+            <summary>
+              Looks up a localized string similar to 程式管理.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String21">
+            <summary>
+              Looks up a localized string similar to 登入次數.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String210">
+            <summary>
+              Looks up a localized string similar to 選單管理.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String211">
+            <summary>
+              Looks up a localized string similar to 上層單位.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String212">
+            <summary>
+              Looks up a localized string similar to 主管代號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String213">
+            <summary>
+              Looks up a localized string similar to 組織層級.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String214">
+            <summary>
+              Looks up a localized string similar to 預設帳號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String215">
+            <summary>
+              Looks up a localized string similar to 所屬單位代號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String216">
+            <summary>
+              Looks up a localized string similar to 驗証方式.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String217">
+            <summary>
+              Looks up a localized string similar to 帳號停用時間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String218">
+            <summary>
+              Looks up a localized string similar to 權限描述.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String219">
+            <summary>
+              Looks up a localized string similar to 管理人員編.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String22">
+            <summary>
+              Looks up a localized string similar to 最後密碼變更時間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String220">
+            <summary>
+              Looks up a localized string similar to 管理人單位代號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String221">
+            <summary>
+              Looks up a localized string similar to 角色編號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String222">
+            <summary>
+              Looks up a localized string similar to 角色說明.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String223">
+            <summary>
+              Looks up a localized string similar to 角色管理人員編.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String224">
+            <summary>
+              Looks up a localized string similar to 角色管理單位代號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String225">
+            <summary>
+              Looks up a localized string similar to 程式代號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String226">
+            <summary>
+              Looks up a localized string similar to 權限條件.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String227">
+            <summary>
+              Looks up a localized string similar to 外網使用？.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String228">
+            <summary>
+              Looks up a localized string similar to 輔助說明.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String229">
+            <summary>
+              Looks up a localized string similar to 檢視條件.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String23">
+            <summary>
+              Looks up a localized string similar to 啟用時間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String230">
+            <summary>
+              Looks up a localized string similar to 項目.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String231">
+            <summary>
+              Looks up a localized string similar to 階層排序.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String232">
+            <summary>
+              Looks up a localized string similar to 檢視類型.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String233">
+            <summary>
+              Looks up a localized string similar to 請選擇檔案.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String234">
+            <summary>
+              Looks up a localized string similar to 選擇檔案.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String235">
+            <summary>
+              Looks up a localized string similar to 執行.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String236">
+            <summary>
+              Looks up a localized string similar to 複製.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String237">
+            <summary>
+              Looks up a localized string similar to 結果.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String238">
+            <summary>
+              Looks up a localized string similar to 傳入值不可為空.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String239">
+            <summary>
+              Looks up a localized string similar to 必須有資料.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String24">
+            <summary>
+              Looks up a localized string similar to 停用時間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String240">
+            <summary>
+              Looks up a localized string similar to 未傳入資料.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String241">
+            <summary>
+              Looks up a localized string similar to 必須指定傳真資料的副檔名.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String242">
+            <summary>
+              Looks up a localized string similar to 非允許的檔案類型.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String243">
+            <summary>
+              Looks up a localized string similar to 未指定任何收件人.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String244">
+            <summary>
+              Looks up a localized string similar to 傳真電話不可空白.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String245">
+            <summary>
+              Looks up a localized string similar to 必須指定傳真本文或是傳真資料.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String246">
+            <summary>
+              Looks up a localized string similar to 驗證碼錯誤.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String247">
+            <summary>
+              Looks up a localized string similar to 帳號或密碼不可為空值.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String248">
+            <summary>
+              Looks up a localized string similar to 原密碼錯誤.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String249">
+            <summary>
+              Looks up a localized string similar to 新密碼不可與原密碼相同.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String25">
+            <summary>
+              Looks up a localized string similar to 公司組織層級.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String250">
+            <summary>
+              Looks up a localized string similar to 更新成功.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String251">
+            <summary>
+              Looks up a localized string similar to 排定執行時間：.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String252">
+            <summary>
+              Looks up a localized string similar to 待處理事項.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String253">
+            <summary>
+              Looks up a localized string similar to 更新失敗，必須是尚未被執行的未來排程才能更新.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String254">
+            <summary>
+              Looks up a localized string similar to 進入批次查詢程式.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String255">
+            <summary>
+              Looks up a localized string similar to 刪除成功.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String256">
+            <summary>
+              Looks up a localized string similar to 刪除失敗.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String257">
+            <summary>
+              Looks up a localized string similar to 本網站是.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String258">
+            <summary>
+              Looks up a localized string similar to 已新增一筆至批次檔成功，狀態為執行中.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String259">
+            <summary>
+              Looks up a localized string similar to 取消下載成功。.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String26">
+            <summary>
+              Looks up a localized string similar to 公司.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String260">
+            <summary>
+              Looks up a localized string similar to 因為.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String261">
+            <summary>
+              Looks up a localized string similar to 已轉為批次，請至批次結果查詢畫面查詢.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String262">
+            <summary>
+              Looks up a localized string similar to 批次檔寫入資料庫失敗。.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String263">
+            <summary>
+              Looks up a localized string similar to 結果落地成功.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String264">
+            <summary>
+              Looks up a localized string similar to 更新批次檔成功.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String265">
+            <summary>
+              Looks up a localized string similar to 作業執行完成，但更新批次檔資料庫時失敗.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String266">
+            <summary>
+              Looks up a localized string similar to 新增成功.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String267">
+            <summary>
+              Looks up a localized string similar to 新增失敗.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String268">
+            <summary>
+              Looks up a localized string similar to 更新失敗.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String269">
+            <summary>
+              Looks up a localized string similar to 無效的角色所屬單位.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String27">
+            <summary>
+              Looks up a localized string similar to 總經理.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String270">
+            <summary>
+              Looks up a localized string similar to 無效的角色值.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String271">
+            <summary>
+              Looks up a localized string similar to 是.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String272">
+            <summary>
+              Looks up a localized string similar to 否.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String273">
+            <summary>
+              Looks up a localized string similar to 原密碼.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String274">
+            <summary>
+              Looks up a localized string similar to 新密碼.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String275">
+            <summary>
+              Looks up a localized string similar to 新密碼確認.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String276">
+            <summary>
+              Looks up a localized string similar to 輸入與新密碼不一致.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String277">
+            <summary>
+              Looks up a localized string similar to 類別.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String278">
+            <summary>
+              Looks up a localized string similar to 代號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String279">
+            <summary>
+              Looks up a localized string similar to 異動人員.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String28">
+            <summary>
+              Looks up a localized string similar to 體系.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String280">
+            <summary>
+              Looks up a localized string similar to 異動日期.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String281">
+            <summary>
+              Looks up a localized string similar to 王大明.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String282">
+            <summary>
+              Looks up a localized string similar to 帳號不可空白.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String283">
+            <summary>
+              Looks up a localized string similar to 密碼不可空白.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String284">
+            <summary>
+              Looks up a localized string similar to 帳號密碼錯誤.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String285">
+            <summary>
+              Looks up a localized string similar to 無此帳號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String286">
+            <summary>
+              Looks up a localized string similar to 帳號未啟用.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String287">
+            <summary>
+              Looks up a localized string similar to 帳號已經停用.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String288">
+            <summary>
+              Looks up a localized string similar to 密碼錯誤.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String289">
+            <summary>
+              Looks up a localized string similar to 資料已存在相同的鍵值.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String29">
+            <summary>
+              Looks up a localized string similar to 群.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String290">
+            <summary>
+              Looks up a localized string similar to 系統發生錯誤，請聯絡系統人員；訊息：.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String291">
+            <summary>
+              Looks up a localized string similar to 系統錯誤，請稍後再試。.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String292">
+            <summary>
+              Looks up a localized string similar to 資料超過所限制的筆數.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String293">
+            <summary>
+              Looks up a localized string similar to 所屬單位.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String294">
+            <summary>
+              Looks up a localized string similar to 密碼變更.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String295">
+            <summary>
+              Looks up a localized string similar to 確認.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String296">
+            <summary>
+              Looks up a localized string similar to 網頁檢測資訊.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String297">
+            <summary>
+              Looks up a localized string similar to 登　入.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String298">
+            <summary>
+              Looks up a localized string similar to 開發環境.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String299">
+            <summary>
+              Looks up a localized string similar to 測試環境.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String3">
+            <summary>
+              Looks up a localized string similar to 停止使用.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String30">
+            <summary>
+              Looks up a localized string similar to 部門.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String300">
+            <summary>
+              Looks up a localized string similar to 正式環境.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String301">
+            <summary>
+              Looks up a localized string similar to 代理環境.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String302">
+            <summary>
+              Looks up a localized string similar to 變更密碼.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String303">
+            <summary>
+              Looks up a localized string similar to 登出.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String304">
+            <summary>
+              Looks up a localized string similar to 確定.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String305">
+            <summary>
+              Looks up a localized string similar to 清除.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String306">
+            <summary>
+              Looks up a localized string similar to 結束.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String307">
+            <summary>
+              Looks up a localized string similar to 代理機制.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String308">
+            <summary>
+              Looks up a localized string similar to 編輯.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String309">
+            <summary>
+              Looks up a localized string similar to 儲存.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String31">
+            <summary>
+              Looks up a localized string similar to 科.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String310">
+            <summary>
+              Looks up a localized string similar to 取消.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String311">
+            <summary>
+              Looks up a localized string similar to 新增代理.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String312">
+            <summary>
+              Looks up a localized string similar to 刪除代理.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String313">
+            <summary>
+              Looks up a localized string similar to 選擇權限.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String314">
+            <summary>
+              Looks up a localized string similar to 選擇角色.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String315">
+            <summary>
+              Looks up a localized string similar to 產生新的驗証碼.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String316">
+            <summary>
+              Looks up a localized string similar to 批次作業範例.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String317">
+            <summary>
+              Looks up a localized string similar to 作業執行失敗，請查明原因後，重新執行.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String318">
+            <summary>
+              Looks up a localized string similar to 即時批次作業失敗.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String319">
+            <summary>
+              Looks up a localized string similar to 未來批次作業失敗，請查明原因後，重新執行.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String32">
+            <summary>
+              Looks up a localized string similar to 員工.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String320">
+            <summary>
+              Looks up a localized string similar to 批次狀態查詢明細.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String321">
+            <summary>
+              Looks up a localized string similar to 批次查詢作業.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String322">
+            <summary>
+              Looks up a localized string similar to 開始時間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String323">
+            <summary>
+              Looks up a localized string similar to 執行結果.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String324">
+            <summary>
+              Looks up a localized string similar to 檔案大小.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String325">
+            <summary>
+              Looks up a localized string similar to 非未來批次作業，無法修改。.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String326">
+            <summary>
+              Looks up a localized string similar to 非未來批次作業，無法刪除。.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String327">
+            <summary>
+              Looks up a localized string similar to 修改開始執行時間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String328">
+            <summary>
+              Looks up a localized string similar to 確定要刪除本筆資料？.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String329">
+            <summary>
+              Looks up a localized string similar to 批次排程設定作業.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String33">
+            <summary>
+              Looks up a localized string similar to 工讀生.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String330">
+            <summary>
+              Looks up a localized string similar to 排程時間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String331">
+            <summary>
+              Looks up a localized string similar to 上傳檔案.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String332">
+            <summary>
+              Looks up a localized string similar to 上傳附件資料.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String333">
+            <summary>
+              Looks up a localized string similar to 請上傳附件資料.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String334">
+            <summary>
+              Looks up a localized string similar to 大小.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String335">
+            <summary>
+              Looks up a localized string similar to 備註.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String336">
+            <summary>
+              Looks up a localized string similar to 上傳時間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String337">
+            <summary>
+              Looks up a localized string similar to 人員管理.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String338">
+            <summary>
+              Looks up a localized string similar to 隸屬單位.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String339">
+            <summary>
+              Looks up a localized string similar to 選擇帳號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String34">
+            <summary>
+              Looks up a localized string similar to 承攬.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String340">
+            <summary>
+              Looks up a localized string similar to 據點代號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String341">
+            <summary>
+              Looks up a localized string similar to 據點名稱.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String342">
+            <summary>
+              Looks up a localized string similar to 據點停用日期.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String343">
+            <summary>
+              Looks up a localized string similar to 新增資料檢視人員.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String344">
+            <summary>
+              Looks up a localized string similar to 刪除檢視人員.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String345">
+            <summary>
+              Looks up a localized string similar to 選擇人員.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String346">
+            <summary>
+              Looks up a localized string similar to 選擇程式.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String347">
+            <summary>
+              Looks up a localized string similar to 請選擇節點.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String348">
+            <summary>
+              Looks up a localized string similar to 確定刪除此節點：.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String349">
+            <summary>
+              Looks up a localized string similar to 請先刪除其下的子節點.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String35">
+            <summary>
+              Looks up a localized string similar to 銀行人員.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String350">
+            <summary>
+              Looks up a localized string similar to 組織樹管理.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String351">
+            <summary>
+              Looks up a localized string similar to 全部展開.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String352">
+            <summary>
+              Looks up a localized string similar to 全部縮合.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String353">
+            <summary>
+              Looks up a localized string similar to 新增組織.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String354">
+            <summary>
+              Looks up a localized string similar to 選擇單位.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String355">
+            <summary>
+              Looks up a localized string similar to 權限管理.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String356">
+            <summary>
+              Looks up a localized string similar to 選擇管理人員.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String357">
+            <summary>
+              Looks up a localized string similar to 新增根節點.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String358">
+            <summary>
+              Looks up a localized string similar to 不可代理.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String359">
+            <summary>
+              Looks up a localized string similar to 可代理.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String36">
+            <summary>
+              Looks up a localized string similar to 其他.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String360">
+            <summary>
+              Looks up a localized string similar to 權限代號不可為空值.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String361">
+            <summary>
+              Looks up a localized string similar to 描述說明不可為空值.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String362">
+            <summary>
+              Looks up a localized string similar to 角色權限管理.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String363">
+            <summary>
+              Looks up a localized string similar to 新增權限.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String364">
+            <summary>
+              Looks up a localized string similar to 刪除權限.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String365">
+            <summary>
+              Looks up a localized string similar to 是否刪除所選的權限.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String366">
+            <summary>
+              Looks up a localized string similar to 此角色下無任何權限.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String367">
+            <summary>
+              Looks up a localized string similar to 新增權限角色關聯.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String368">
+            <summary>
+              Looks up a localized string similar to 刪除權限角色關聯.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String369">
+            <summary>
+              Looks up a localized string similar to 請選擇欲新增的權限角色關聯組合.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String37">
+            <summary>
+              Looks up a localized string similar to 管理人.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String370">
+            <summary>
+              Looks up a localized string similar to 請選擇欲刪除的權限角色關聯組合.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String371">
+            <summary>
+              Looks up a localized string similar to 刪除角色關聯.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String372">
+            <summary>
+              Looks up a localized string similar to 請選擇欲刪除的權限角色關聯.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String373">
+            <summary>
+              Looks up a localized string similar to 更正.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String374">
+            <summary>
+              Looks up a localized string similar to 序號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String375">
+            <summary>
+              Looks up a localized string similar to 發佈單位.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String376">
+            <summary>
+              Looks up a localized string similar to 生效起日.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String377">
+            <summary>
+              Looks up a localized string similar to 生效迄日.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String378">
+            <summary>
+              Looks up a localized string similar to 排序.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String379">
+            <summary>
+              Looks up a localized string similar to 帳號特權.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String38">
+            <summary>
+              Looks up a localized string similar to 檢視人.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String380">
+            <summary>
+              Looks up a localized string similar to 生效範圍.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String381">
+            <summary>
+              Looks up a localized string similar to 生效期間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String382">
+            <summary>
+              Looks up a localized string similar to 屬性類型.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String383">
+            <summary>
+              Looks up a localized string similar to 外網使用.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String384">
+            <summary>
+              Looks up a localized string similar to 角色詳細資訊.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String385">
+            <summary>
+              Looks up a localized string similar to 設定互斥角色.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String386">
+            <summary>
+              Looks up a localized string similar to 適用身份別為必要項.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String387">
+            <summary>
+              Looks up a localized string similar to 管理人為必要項.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String388">
+            <summary>
+              Looks up a localized string similar to 查看具有的權限.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String389">
+            <summary>
+              Looks up a localized string similar to 此角色具有的權限.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String39">
+            <summary>
+              Looks up a localized string similar to 未定義.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String390">
+            <summary>
+              Looks up a localized string similar to 關閉.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String391">
+            <summary>
+              Looks up a localized string similar to 角色列表.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String392">
+            <summary>
+              Looks up a localized string similar to 請選擇.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String393">
+            <summary>
+              Looks up a localized string similar to 更名.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String394">
+            <summary>
+              Looks up a localized string similar to 新增互斥角色名稱.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String395">
+            <summary>
+              Looks up a localized string similar to 互斥角色更名.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String396">
+            <summary>
+              Looks up a localized string similar to 請選擇互斥角色名稱.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String397">
+            <summary>
+              Looks up a localized string similar to 名稱為必填欄位.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String398">
+            <summary>
+              Looks up a localized string similar to 帳號申請角色.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String399">
+            <summary>
+              Looks up a localized string similar to 申請人.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String4">
+            <summary>
+              Looks up a localized string similar to 不支援多個查詢條件.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String40">
+            <summary>
+              Looks up a localized string similar to 登入.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String400">
+            <summary>
+              Looks up a localized string similar to 簽核主管.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String401">
+            <summary>
+              Looks up a localized string similar to 簽核角色管理員.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String402">
+            <summary>
+              Looks up a localized string similar to 送出.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String403">
+            <summary>
+              Looks up a localized string similar to 新增角色.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String404">
+            <summary>
+              Looks up a localized string similar to 生效時間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String405">
+            <summary>
+              Looks up a localized string similar to 啟用時間為必要項.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String406">
+            <summary>
+              Looks up a localized string similar to 帳號角色管理.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String407">
+            <summary>
+              Looks up a localized string similar to 新增角色關聯.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String408">
+            <summary>
+              Looks up a localized string similar to 請選擇欲刪除的帳號角色關聯.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String409">
+            <summary>
+              Looks up a localized string similar to 新增帳號角色關聯.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String41">
+            <summary>
+              Looks up a localized string similar to 新增.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String410">
+            <summary>
+              Looks up a localized string similar to 刪除帳號角色關聯.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String411">
+            <summary>
+              Looks up a localized string similar to 選擇管理角色.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String412">
+            <summary>
+              Looks up a localized string similar to 請選擇欲新增的帳號角色關聯組合.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String413">
+            <summary>
+              Looks up a localized string similar to 請選擇欲刪除的帳號角色關聯組合.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String414">
+            <summary>
+              Looks up a localized string similar to 新增單位角色關聯.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String415">
+            <summary>
+              Looks up a localized string similar to 刪除單位角色關聯.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String416">
+            <summary>
+              Looks up a localized string similar to 請選擇欲新增的單位角色關聯組合.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String417">
+            <summary>
+              Looks up a localized string similar to 請選擇欲刪除的單位角色關聯組合.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String418">
+            <summary>
+              Looks up a localized string similar to 新增帳號關聯.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String419">
+            <summary>
+              Looks up a localized string similar to 刪除帳號關聯.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String42">
+            <summary>
+              Looks up a localized string similar to 刪除.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String420">
+            <summary>
+              Looks up a localized string similar to 篩選.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String421">
+            <summary>
+              Looks up a localized string similar to 操作說明.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String422">
+            <summary>
+              Looks up a localized string similar to 執行錯誤.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String423">
+            <summary>
+              Looks up a localized string similar to 回上一頁.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String424">
+            <summary>
+              Looks up a localized string similar to 不具有權限.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String425">
+            <summary>
+              Looks up a localized string similar to 查詢所管理的角色.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String426">
+            <summary>
+              Looks up a localized string similar to 查詢與登入者同部門的角色.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String427">
+            <summary>
+              Looks up a localized string similar to 查詢所管理的角色，並排除此帳號已具有的角色.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String428">
+            <summary>
+              Looks up a localized string similar to 查詢所管理的角色，並排除此單位已具有的角色.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String429">
+            <summary>
+              Looks up a localized string similar to 未觸發.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String43">
+            <summary>
+              Looks up a localized string similar to 修改.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String430">
+            <summary>
+              Looks up a localized string similar to 選擇元件之範例.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String431">
+            <summary>
+              Looks up a localized string similar to 取得結果.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String432">
+            <summary>
+              Looks up a localized string similar to 唯讀切換.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String433">
+            <summary>
+              Looks up a localized string similar to 取得.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String434">
+            <summary>
+              Looks up a localized string similar to 執行成功.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String435">
+            <summary>
+              Looks up a localized string similar to 此帳號具有的安控資訊.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String436">
+            <summary>
+              Looks up a localized string similar to 執行結束.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String437">
+            <summary>
+              Looks up a localized string similar to 選單.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String438">
+            <summary>
+              Looks up a localized string similar to 上層選單.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String439">
+            <summary>
+              Looks up a localized string similar to {0} 請勿輸入超過 {1}個字.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String44">
+            <summary>
+              Looks up a localized string similar to 查詢.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String440">
+            <summary>
+              Looks up a localized string similar to 上層權限.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String441">
+            <summary>
+              Looks up a localized string similar to 互斥.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String442">
+            <summary>
+              Looks up a localized string similar to 根節點單位.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String443">
+            <summary>
+              Looks up a localized string similar to 資料LOG.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String444">
+            <summary>
+              Looks up a localized string similar to 角色ID不可為空值.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String445">
+            <summary>
+              Looks up a localized string similar to 未指定帳號資訊.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String446">
+            <summary>
+              Looks up a localized string similar to 資料超過所限制的筆數{0}筆,請縮小查詢條件.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String447">
+            <summary>
+              Looks up a localized string similar to 需傳入cacheKey資料.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String448">
+            <summary>
+              Looks up a localized string similar to 依cacheKey取不到資料列.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String449">
+            <summary>
+              Looks up a localized string similar to 不具有權限.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String45">
+            <summary>
+              Looks up a localized string similar to 列印.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String450">
+            <summary>
+              Looks up a localized string similar to 程式只允許內網使用.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String451">
+            <summary>
+              Looks up a localized string similar to 系統未設定程式權限.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String46">
+            <summary>
+              Looks up a localized string similar to 全部組織.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String47">
+            <summary>
+              Looks up a localized string similar to 所有外部單位.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String48">
+            <summary>
+              Looks up a localized string similar to 特定節點為樹根的組織.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String49">
+            <summary>
+              Looks up a localized string similar to 資料表.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String5">
+            <summary>
+              Looks up a localized string similar to 不支援多筆異動.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String50">
+            <summary>
+              Looks up a localized string similar to 操作期間資料有異動，請重新查詢並操作。.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String51">
+            <summary>
+              Looks up a localized string similar to 密碼.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String52">
+            <summary>
+              Looks up a localized string similar to 生效起期.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String53">
+            <summary>
+              Looks up a localized string similar to 生效迄期.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String54">
+            <summary>
+              Looks up a localized string similar to 輸入人員.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String55">
+            <summary>
+              Looks up a localized string similar to 輸入日期.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String56">
+            <summary>
+              Looks up a localized string similar to 資料庫.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String57">
+            <summary>
+              Looks up a localized string similar to 角色名稱.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String58">
+            <summary>
+              Looks up a localized string similar to 業管單位.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String59">
+            <summary>
+              Looks up a localized string similar to 適用的人員身份別.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String6">
+            <summary>
+              Looks up a localized string similar to 傳入的條件參數不可為空白。.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String60">
+            <summary>
+              Looks up a localized string similar to 審核中.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String61">
+            <summary>
+              Looks up a localized string similar to 生效.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String62">
+            <summary>
+              Looks up a localized string similar to 拒絕.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String63">
+            <summary>
+              Looks up a localized string similar to 權限代號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String64">
+            <summary>
+              Looks up a localized string similar to 管理人員.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String65">
+            <summary>
+              Looks up a localized string similar to 描述說明.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String66">
+            <summary>
+              Looks up a localized string similar to 是否可代理.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String67">
+            <summary>
+              Looks up a localized string similar to 角色代號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String68">
+            <summary>
+              Looks up a localized string similar to 名稱.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String69">
+            <summary>
+              Looks up a localized string similar to 適用身份別.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String7">
+            <summary>
+              Looks up a localized string similar to 人員編號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String70">
+            <summary>
+              Looks up a localized string similar to 管理人員單位.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String71">
+            <summary>
+              Looks up a localized string similar to 互斥名稱.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String72">
+            <summary>
+              Looks up a localized string similar to 互斥角色.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String73">
+            <summary>
+              Looks up a localized string similar to 互斥的角色.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String74">
+            <summary>
+              Looks up a localized string similar to 帳號或密碼.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String75">
+            <summary>
+              Looks up a localized string similar to 角色必需選擇角色管理員.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String76">
+            <summary>
+              Looks up a localized string similar to 無管理單位資訊，無法查資料.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String77">
+            <summary>
+              Looks up a localized string similar to 傳入帳號不可為空值.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String78">
+            <summary>
+              Looks up a localized string similar to 資料已存在資料庫.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String79">
+            <summary>
+              Looks up a localized string similar to 資料已被更新.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String8">
+            <summary>
+              Looks up a localized string similar to 姓名.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String80">
+            <summary>
+              Looks up a localized string similar to 沒有傳入更新的鍵值.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String81">
+            <summary>
+              Looks up a localized string similar to 傳入帳號無人員資料.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String82">
+            <summary>
+              Looks up a localized string similar to 未指定角色管理人資訊.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String83">
+            <summary>
+              Looks up a localized string similar to 未指定單位資訊.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String84">
+            <summary>
+              Looks up a localized string similar to 需要至少一個收信人.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String85">
+            <summary>
+              Looks up a localized string similar to 長度不符.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String86">
+            <summary>
+              Looks up a localized string similar to 有效期間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String87">
+            <summary>
+              Looks up a localized string similar to 授權類型.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String88">
+            <summary>
+              Looks up a localized string similar to 角色.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String89">
+            <summary>
+              Looks up a localized string similar to 權限.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String9">
+            <summary>
+              Looks up a localized string similar to 單位代號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String90">
+            <summary>
+              Looks up a localized string similar to 批次編號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String91">
+            <summary>
+              Looks up a localized string similar to 狀態.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String92">
+            <summary>
+              Looks up a localized string similar to 功能代號.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String93">
+            <summary>
+              Looks up a localized string similar to 執行時間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String94">
+            <summary>
+              Looks up a localized string similar to 結束時間.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String95">
+            <summary>
+              Looks up a localized string similar to 報表名稱.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String96">
+            <summary>
+              Looks up a localized string similar to 報表型態.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String97">
+            <summary>
+              Looks up a localized string similar to 檔案名稱.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String98">
+            <summary>
+              Looks up a localized string similar to 報表數.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.ZH_TW.SystemInfo.String99">
+            <summary>
+              Looks up a localized string similar to 查詢條件.
+            </summary>
+        </member>
+        <member name="T:Microsoft.CUF.ResourcesConfiguration">
+            <summary>多語系的Config區段</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ResourcesConfiguration.DefaultCulture">
+            <summary>預設語系；ex:zh-TW</summary>
+        </member>
+        <member name="P:Microsoft.CUF.ResourcesConfiguration.Html">
+            <summary>多語系Html相關設定</summary>
+        </member>
+        <member name="T:Microsoft.CUF.HtmlElement">
+            <summary>多語系Html相關設定</summary>
+        </member>
+        <member name="P:Microsoft.CUF.HtmlElement.Folder">
+            <summary>多語系Html版存放目錄</summary>
+        </member>
+        <member name="P:Microsoft.CUF.HtmlElement.NotFoundTemplate">
+            <summary>找不到Html時的樣板</summary>
+        </member>
+        <member name="T:Microsoft.CUF.ResourcesHelper">
+            <summary>多語系處理的函式</summary>
+        </member>
+        <member name="M:Microsoft.CUF.ResourcesHelper.GetResourcesConfig(System.String)">
+            <summary>取得Resources的Config設定值</summary>
+            <param name="sectionName">定義的SectionName；Default=Resources</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.CUF.ResourcesHelper.Get(System.String)">
+            <summary>依ID取得字串</summary>
+            <param name="ID"></param>
+            <returns>string</returns>
+        </member>
+        <member name="T:Microsoft.CUF.Resource.EN_US.SystemInfo">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String0">
+            <summary>
+              Looks up a localized string similar to No databases.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String1">
+            <summary>
+              Looks up a localized string similar to Settings.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String10">
+            <summary>
+              Looks up a localized string similar to Unit name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String100">
+            <summary>
+              Looks up a localized string similar to Executive id.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String101">
+            <summary>
+              Looks up a localized string similar to Creation time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String102">
+            <summary>
+              Looks up a localized string similar to Update time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String103">
+            <summary>
+              Looks up a localized string similar to Error id.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String104">
+            <summary>
+              Looks up a localized string similar to Error description.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String105">
+            <summary>
+              Looks up a localized string similar to Result type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String106">
+            <summary>
+              Looks up a localized string similar to Customize file name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String107">
+            <summary>
+              Looks up a localized string similar to Report type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String108">
+            <summary>
+              Looks up a localized string similar to Data sort.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String109">
+            <summary>
+              Looks up a localized string similar to Publish content.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String11">
+            <summary>
+              Looks up a localized string similar to Identity.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String110">
+            <summary>
+              Looks up a localized string similar to Creator.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String111">
+            <summary>
+              Looks up a localized string similar to CreateTime.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String112">
+            <summary>
+              Looks up a localized string similar to Instructions.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String113">
+            <summary>
+              Looks up a localized string similar to Display name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String114">
+            <summary>
+              Looks up a localized string similar to Change time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String115">
+            <summary>
+              Looks up a localized string similar to Change reason.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String116">
+            <summary>
+              Looks up a localized string similar to Change Code.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String117">
+            <summary>
+              Looks up a localized string similar to Change Key.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String118">
+            <summary>
+              Looks up a localized string similar to Change Id.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String119">
+            <summary>
+              Looks up a localized string similar to Real-time to batch status.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String12">
+            <summary>
+              Looks up a localized string similar to Take office date.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String120">
+            <summary>
+              Looks up a localized string similar to Real-time reply.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String121">
+            <summary>
+              Looks up a localized string similar to Manual to batch.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String122">
+            <summary>
+              Looks up a localized string similar to Timeout.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String123">
+            <summary>
+              Looks up a localized string similar to Manual cancel.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String124">
+            <summary>
+              Looks up a localized string similar to Unusual.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String125">
+            <summary>
+              Looks up a localized string similar to Unknown status.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String126">
+            <summary>
+              Looks up a localized string similar to Batch status.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String127">
+            <summary>
+              Looks up a localized string similar to Successful finish.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String128">
+            <summary>
+              Looks up a localized string similar to Execution failed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String129">
+            <summary>
+              Looks up a localized string similar to Processing.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String13">
+            <summary>
+              Looks up a localized string similar to Leave office date.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String130">
+            <summary>
+              Looks up a localized string similar to Pending.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String131">
+            <summary>
+              Looks up a localized string similar to Periodicity.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String132">
+            <summary>
+              Looks up a localized string similar to Depend on program.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String133">
+            <summary>
+              Looks up a localized string similar to Depend on permission expression.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String134">
+            <summary>
+              Looks up a localized string similar to Move up.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String135">
+            <summary>
+              Looks up a localized string similar to Move down.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String136">
+            <summary>
+              Looks up a localized string similar to Display type-checked.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String137">
+            <summary>
+              Looks up a localized string similar to Allow permissions.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String138">
+            <summary>
+              Looks up a localized string similar to Same level node ordering.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String139">
+            <summary>
+              Looks up a localized string similar to Effective start date.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String14">
+            <summary>
+              Looks up a localized string similar to Creator.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String140">
+            <summary>
+              Looks up a localized string similar to Effective end date.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String141">
+            <summary>
+              Looks up a localized string similar to Privilege type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String142">
+            <summary>
+              Looks up a localized string similar to Privilege Attribute value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String143">
+            <summary>
+              Looks up a localized string similar to Add permission.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String144">
+            <summary>
+              Looks up a localized string similar to Add role.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String145">
+            <summary>
+              Looks up a localized string similar to Units.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String146">
+            <summary>
+              Looks up a localized string similar to Change unit of member.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String147">
+            <summary>
+              Looks up a localized string similar to level.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String148">
+            <summary>
+              Looks up a localized string similar to Change Identity of member.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String149">
+            <summary>
+              Looks up a localized string similar to Management Units.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String15">
+            <summary>
+              Looks up a localized string similar to Creation date.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String150">
+            <summary>
+              Looks up a localized string similar to Add manageable units.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String151">
+            <summary>
+              Looks up a localized string similar to Program name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String152">
+            <summary>
+              Looks up a localized string similar to Help.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String153">
+            <summary>
+              Looks up a localized string similar to Allow extranet using.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String154">
+            <summary>
+              Looks up a localized string similar to Account.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String155">
+            <summary>
+              Looks up a localized string similar to Principal id.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String156">
+            <summary>
+              Looks up a localized string similar to Agent id.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String157">
+            <summary>
+              Looks up a localized string similar to Deputy start time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String158">
+            <summary>
+              Looks up a localized string similar to Deputy end time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String159">
+            <summary>
+              Looks up a localized string similar to Unauthorized item types.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String16">
+            <summary>
+              Looks up a localized string similar to Updating personnel.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String160">
+            <summary>
+              Looks up a localized string similar to Unauthorized item values.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String161">
+            <summary>
+              Looks up a localized string similar to Insurance type code.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String162">
+            <summary>
+              Looks up a localized string similar to Available conditions settings.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String163">
+            <summary>
+              Looks up a localized string similar to Type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String164">
+            <summary>
+              Looks up a localized string similar to Attribute data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String165">
+            <summary>
+              Looks up a localized string similar to Operator.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String166">
+            <summary>
+              Looks up a localized string similar to Login member.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String167">
+            <summary>
+              Looks up a localized string similar to Can not execute.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String168">
+            <summary>
+              Looks up a localized string similar to Zipcode.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String169">
+            <summary>
+              Looks up a localized string similar to cities and counties.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String17">
+            <summary>
+              Looks up a localized string similar to Update date.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String170">
+            <summary>
+              Looks up a localized string similar to District.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String171">
+            <summary>
+              Looks up a localized string similar to Periodicity schedule.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String172">
+            <summary>
+              Looks up a localized string similar to In the database, this scheduling records cannot be found.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String173">
+            <summary>
+              Looks up a localized string similar to Found no data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String174">
+            <summary>
+              Looks up a localized string similar to Batch execution successed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String175">
+            <summary>
+              Looks up a localized string similar to Batch execution failed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String176">
+            <summary>
+              Looks up a localized string similar to Storage disk case, unable to get file size information.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String177">
+            <summary>
+              Looks up a localized string similar to Reinstatement.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String178">
+            <summary>
+              Looks up a localized string similar to Disable.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String179">
+            <summary>
+              Looks up a localized string similar to Units changes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String18">
+            <summary>
+              Looks up a localized string similar to Creator name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String180">
+            <summary>
+              Looks up a localized string similar to Data change.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String181">
+            <summary>
+              Looks up a localized string similar to Incorrect change reason.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String182">
+            <summary>
+              Looks up a localized string similar to No change.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String183">
+            <summary>
+              Looks up a localized string similar to Disable local cache.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String184">
+            <summary>
+              Looks up a localized string similar to Enable local cache.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String185">
+            <summary>
+              Looks up a localized string similar to Corporate member.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String186">
+            <summary>
+              Looks up a localized string similar to External channel.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String187">
+            <summary>
+              Looks up a localized string similar to Start time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String188">
+            <summary>
+              Looks up a localized string similar to Executive.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String189">
+            <summary>
+              Looks up a localized string similar to Batch query status.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String19">
+            <summary>
+              Looks up a localized string similar to Updating personnel name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String190">
+            <summary>
+              Looks up a localized string similar to Is validation date.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String191">
+            <summary>
+              Looks up a localized string similar to principal name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String192">
+            <summary>
+              Looks up a localized string similar to Agent name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String193">
+            <summary>
+              Looks up a localized string similar to Authorization item name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String194">
+            <summary>
+              Looks up a localized string similar to Member name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String195">
+            <summary>
+              Looks up a localized string similar to None.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String196">
+            <summary>
+              Looks up a localized string similar to Copy result.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String197">
+            <summary>
+              Looks up a localized string similar to The English name of the table.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String198">
+            <summary>
+              Looks up a localized string similar to The Chinese name of the table.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String199">
+            <summary>
+              Looks up a localized string similar to Generate files after execution.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String2">
+            <summary>
+              Looks up a localized string similar to Must specify a compared member.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String20">
+            <summary>
+              Looks up a localized string similar to Authentication methods.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String200">
+            <summary>
+              Looks up a localized string similar to The execution directory.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String201">
+            <summary>
+              Looks up a localized string similar to Not implemented.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String202">
+            <summary>
+              Looks up a localized string similar to User does not successfully login.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String203">
+            <summary>
+              Looks up a localized string similar to Update.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String204">
+            <summary>
+              Looks up a localized string similar to Organization.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String205">
+            <summary>
+              Looks up a localized string similar to Role.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String206">
+            <summary>
+              Looks up a localized string similar to Member.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String207">
+            <summary>
+              Looks up a localized string similar to Permissions tree.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String208">
+            <summary>
+              Looks up a localized string similar to Role permissions.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String209">
+            <summary>
+              Looks up a localized string similar to Program management.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String21">
+            <summary>
+              Looks up a localized string similar to Login times.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String210">
+            <summary>
+              Looks up a localized string similar to Menu management.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String211">
+            <summary>
+              Looks up a localized string similar to Upper Unit.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String212">
+            <summary>
+              Looks up a localized string similar to Competent id.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String213">
+            <summary>
+              Looks up a localized string similar to Organization level.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String214">
+            <summary>
+              Looks up a localized string similar to Default account.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String215">
+            <summary>
+              Looks up a localized string similar to Affiliation Code.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String216">
+            <summary>
+              Looks up a localized string similar to Authentication methods.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String217">
+            <summary>
+              Looks up a localized string similar to Account disabled time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String218">
+            <summary>
+              Looks up a localized string similar to Permission description.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String219">
+            <summary>
+              Looks up a localized string similar to Administrator id.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String22">
+            <summary>
+              Looks up a localized string similar to Last password change time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String220">
+            <summary>
+              Looks up a localized string similar to Administrator unit id.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String221">
+            <summary>
+              Looks up a localized string similar to Role id.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String222">
+            <summary>
+              Looks up a localized string similar to Role description.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String223">
+            <summary>
+              Looks up a localized string similar to Role management id.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String224">
+            <summary>
+              Looks up a localized string similar to Role management unit id.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String225">
+            <summary>
+              Looks up a localized string similar to Program id.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String226">
+            <summary>
+              Looks up a localized string similar to Permission conditions.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String227">
+            <summary>
+              Looks up a localized string similar to Extranet use?.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String228">
+            <summary>
+              Looks up a localized string similar to The help.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String229">
+            <summary>
+              Looks up a localized string similar to Review criteria.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String23">
+            <summary>
+              Looks up a localized string similar to Enable time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String230">
+            <summary>
+              Looks up a localized string similar to Item.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String231">
+            <summary>
+              Looks up a localized string similar to Hierarchy sorting.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String232">
+            <summary>
+              Looks up a localized string similar to View type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String233">
+            <summary>
+              Looks up a localized string similar to Please select files.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String234">
+            <summary>
+              Looks up a localized string similar to Select files.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String235">
+            <summary>
+              Looks up a localized string similar to Execute.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String236">
+            <summary>
+              Looks up a localized string similar to Copy.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String237">
+            <summary>
+              Looks up a localized string similar to Result.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String238">
+            <summary>
+              Looks up a localized string similar to The incoming value must not be empty.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String239">
+            <summary>
+              Looks up a localized string similar to There must be a data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String24">
+            <summary>
+              Looks up a localized string similar to Disable time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String240">
+            <summary>
+              Looks up a localized string similar to No incoming data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String241">
+            <summary>
+              Looks up a localized string similar to Must be specified the fax data extension.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String242">
+            <summary>
+              Looks up a localized string similar to Non-allowable file types.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String243">
+            <summary>
+              Looks up a localized string similar to No recipient is specified.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String244">
+            <summary>
+              Looks up a localized string similar to The fax number cannot be empty.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String245">
+            <summary>
+              Looks up a localized string similar to Must specify the fax text or fax data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String246">
+            <summary>
+              Looks up a localized string similar to Captcha error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String247">
+            <summary>
+              Looks up a localized string similar to The account or password must not be empty.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String248">
+            <summary>
+              Looks up a localized string similar to The original password is error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String249">
+            <summary>
+              Looks up a localized string similar to New password cannot same as original password.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String25">
+            <summary>
+              Looks up a localized string similar to Hierarchy of company organization.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String250">
+            <summary>
+              Looks up a localized string similar to Update sucessfully.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String251">
+            <summary>
+              Looks up a localized string similar to Scheduled run time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String252">
+            <summary>
+              Looks up a localized string similar to Pending matters.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String253">
+            <summary>
+              Looks up a localized string similar to Update fails, the future must be to update the schedule has not yet been executed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String254">
+            <summary>
+              Looks up a localized string similar to Into a batch search program.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String255">
+            <summary>
+              Looks up a localized string similar to Delete sucessfully.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String256">
+            <summary>
+              Looks up a localized string similar to Delete failed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String257">
+            <summary>
+              Looks up a localized string similar to This Web site is.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String258">
+            <summary>
+              Looks up a localized string similar to Has been successfully created to a batch file, and state is running.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String259">
+            <summary>
+              Looks up a localized string similar to Cancel the download success.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String26">
+            <summary>
+              Looks up a localized string similar to Company.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String260">
+            <summary>
+              Looks up a localized string similar to Because.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String261">
+            <summary>
+              Looks up a localized string similar to Transformed into batches, please go to the batch results search sceeen.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String262">
+            <summary>
+              Looks up a localized string similar to A batch file is written to the database failed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String263">
+            <summary>
+              Looks up a localized string similar to File results saved successfully.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String264">
+            <summary>
+              Looks up a localized string similar to Update batch files sucessfully.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String265">
+            <summary>
+              Looks up a localized string similar to Job completed, but failed to update the batch file database.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String266">
+            <summary>
+              Looks up a localized string similar to Create sucessfully.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String267">
+            <summary>
+              Looks up a localized string similar to Create failed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String268">
+            <summary>
+              Looks up a localized string similar to Update failed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String269">
+            <summary>
+              Looks up a localized string similar to Invalid role affiliations.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String27">
+            <summary>
+              Looks up a localized string similar to General Manager.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String270">
+            <summary>
+              Looks up a localized string similar to Invalid role value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String271">
+            <summary>
+              Looks up a localized string similar to Yes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String272">
+            <summary>
+              Looks up a localized string similar to No.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String273">
+            <summary>
+              Looks up a localized string similar to Original password.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String274">
+            <summary>
+              Looks up a localized string similar to New password.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String275">
+            <summary>
+              Looks up a localized string similar to New password confirmation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String276">
+            <summary>
+              Looks up a localized string similar to Do not match between entered password  and new password.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String277">
+            <summary>
+              Looks up a localized string similar to Type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String278">
+            <summary>
+              Looks up a localized string similar to Unique ID.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String279">
+            <summary>
+              Looks up a localized string similar to Change personnel.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String28">
+            <summary>
+              Looks up a localized string similar to System.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String280">
+            <summary>
+              Looks up a localized string similar to Change date.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String281">
+            <summary>
+              Looks up a localized string similar to Wang Daming.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String282">
+            <summary>
+              Looks up a localized string similar to Account cannot be empty.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String283">
+            <summary>
+              Looks up a localized string similar to Passwords cannot be empty.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String284">
+            <summary>
+              Looks up a localized string similar to Account or password error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String285">
+            <summary>
+              Looks up a localized string similar to No account.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String286">
+            <summary>
+              Looks up a localized string similar to This account is not enabled.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String287">
+            <summary>
+              Looks up a localized string similar to This account has been disabled.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String288">
+            <summary>
+              Looks up a localized string similar to Password error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String289">
+            <summary>
+              Looks up a localized string similar to The data already exists the same key.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String29">
+            <summary>
+              Looks up a localized string similar to Group.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String290">
+            <summary>
+              Looks up a localized string similar to A system occurs error, please contact system personnel; information:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String291">
+            <summary>
+              Looks up a localized string similar to System error, please try again later.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String292">
+            <summary>
+              Looks up a localized string similar to The number of data exceeds the limits.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String293">
+            <summary>
+              Looks up a localized string similar to Affiliations.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String294">
+            <summary>
+              Looks up a localized string similar to Change Password.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String295">
+            <summary>
+              Looks up a localized string similar to Confirm.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String296">
+            <summary>
+              Looks up a localized string similar to Detection of web page information.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String297">
+            <summary>
+              Looks up a localized string similar to Login.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String298">
+            <summary>
+              Looks up a localized string similar to Development environment.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String299">
+            <summary>
+              Looks up a localized string similar to Testing environment.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String3">
+            <summary>
+              Looks up a localized string similar to Stop using.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String30">
+            <summary>
+              Looks up a localized string similar to Departments.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String300">
+            <summary>
+              Looks up a localized string similar to Formal environment.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String301">
+            <summary>
+              Looks up a localized string similar to Agent environment.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String302">
+            <summary>
+              Looks up a localized string similar to Change Password.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String303">
+            <summary>
+              Looks up a localized string similar to Log out.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String304">
+            <summary>
+              Looks up a localized string similar to OK.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String305">
+            <summary>
+              Looks up a localized string similar to Clear.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String306">
+            <summary>
+              Looks up a localized string similar to Finish.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String307">
+            <summary>
+              Looks up a localized string similar to Agent mechanism.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String308">
+            <summary>
+              Looks up a localized string similar to Edit.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String309">
+            <summary>
+              Looks up a localized string similar to Save.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String31">
+            <summary>
+              Looks up a localized string similar to Section.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String310">
+            <summary>
+              Looks up a localized string similar to Cancel.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String311">
+            <summary>
+              Looks up a localized string similar to Create agent.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String312">
+            <summary>
+              Looks up a localized string similar to Delete agent.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String313">
+            <summary>
+              Looks up a localized string similar to Choice permission.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String314">
+            <summary>
+              Looks up a localized string similar to Select roles.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String315">
+            <summary>
+              Looks up a localized string similar to Generaye the new captcha.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String316">
+            <summary>
+              Looks up a localized string similar to Batch job examples.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String317">
+            <summary>
+              Looks up a localized string similar to Job fails, please find out the reasons, and try again.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String318">
+            <summary>
+              Looks up a localized string similar to Real-time batch job failed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String319">
+            <summary>
+              Looks up a localized string similar to The next batch job fails, please find out  the reasons and try again.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String32">
+            <summary>
+              Looks up a localized string similar to Employee.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String320">
+            <summary>
+              Looks up a localized string similar to The status of the batch search detail.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String321">
+            <summary>
+              Looks up a localized string similar to Job of batch search.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String322">
+            <summary>
+              Looks up a localized string similar to Start time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String323">
+            <summary>
+              Looks up a localized string similar to Executive result.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String324">
+            <summary>
+              Looks up a localized string similar to File size.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String325">
+            <summary>
+              Looks up a localized string similar to Non-future batch job and cannot be modified.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String326">
+            <summary>
+              Looks up a localized string similar to Non-future batch job and cannot be deleted..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String327">
+            <summary>
+              Looks up a localized string similar to Edit start running time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String328">
+            <summary>
+              Looks up a localized string similar to Are You sure to delete this data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String329">
+            <summary>
+              Looks up a localized string similar to Batch scheduling setting job.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String33">
+            <summary>
+              Looks up a localized string similar to Part-Time Staff.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String330">
+            <summary>
+              Looks up a localized string similar to Scheduled time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String331">
+            <summary>
+              Looks up a localized string similar to Upload files.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String332">
+            <summary>
+              Looks up a localized string similar to Upload attachment data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String333">
+            <summary>
+              Looks up a localized string similar to Please upload the attachment data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String334">
+            <summary>
+              Looks up a localized string similar to size.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String335">
+            <summary>
+              Looks up a localized string similar to Remark.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String336">
+            <summary>
+              Looks up a localized string similar to Upload time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String337">
+            <summary>
+              Looks up a localized string similar to Personnel management.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String338">
+            <summary>
+              Looks up a localized string similar to Affiliation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String339">
+            <summary>
+              Looks up a localized string similar to Choice account.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String34">
+            <summary>
+              Looks up a localized string similar to Contract.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String340">
+            <summary>
+              Looks up a localized string similar to Unit id.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String341">
+            <summary>
+              Looks up a localized string similar to Unit name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String342">
+            <summary>
+              Looks up a localized string similar to disable date of unit.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String343">
+            <summary>
+              Looks up a localized string similar to Create data of review officer.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String344">
+            <summary>
+              Looks up a localized string similar to Delete review officer.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String345">
+            <summary>
+              Looks up a localized string similar to Choice person.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String346">
+            <summary>
+              Looks up a localized string similar to Choice program.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String347">
+            <summary>
+              Looks up a localized string similar to Please choice a node.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String348">
+            <summary>
+              Looks up a localized string similar to Sure you want to delete this node.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String349">
+            <summary>
+              Looks up a localized string similar to Please delete the child nodes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String35">
+            <summary>
+              Looks up a localized string similar to Banker.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String350">
+            <summary>
+              Looks up a localized string similar to Organizational tree management.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String351">
+            <summary>
+              Looks up a localized string similar to Expand all.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String352">
+            <summary>
+              Looks up a localized string similar to All the condensation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String353">
+            <summary>
+              Looks up a localized string similar to Create organization.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String354">
+            <summary>
+              Looks up a localized string similar to Choice units.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String355">
+            <summary>
+              Looks up a localized string similar to Permission management.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String356">
+            <summary>
+              Looks up a localized string similar to Choice managers.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String357">
+            <summary>
+              Looks up a localized string similar to Create the root node.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String358">
+            <summary>
+              Looks up a localized string similar to Cannot agent.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String359">
+            <summary>
+              Looks up a localized string similar to Can agent.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String36">
+            <summary>
+              Looks up a localized string similar to Other.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String360">
+            <summary>
+              Looks up a localized string similar to Permission id cannot be empty.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String361">
+            <summary>
+              Looks up a localized string similar to Description cannot be empty.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String362">
+            <summary>
+              Looks up a localized string similar to Permission of role management.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String363">
+            <summary>
+              Looks up a localized string similar to Create permissions.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String364">
+            <summary>
+              Looks up a localized string similar to Delete permissions.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String365">
+            <summary>
+              Looks up a localized string similar to Do you want to delete the selected permissions.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String366">
+            <summary>
+              Looks up a localized string similar to Under this role without any permission.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String367">
+            <summary>
+              Looks up a localized string similar to Create permission roles relation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String368">
+            <summary>
+              Looks up a localized string similar to Delete permission roles relation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String369">
+            <summary>
+              Looks up a localized string similar to Please choice that you want to create permission roles relation combinations.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String37">
+            <summary>
+              Looks up a localized string similar to Administrator.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String370">
+            <summary>
+              Looks up a localized string similar to Please choice that you want to delete permission roles relation combinations.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String371">
+            <summary>
+              Looks up a localized string similar to Delete role relations.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String372">
+            <summary>
+              Looks up a localized string similar to Please choice that you want to delete permission roles relation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String373">
+            <summary>
+              Looks up a localized string similar to Correct.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String374">
+            <summary>
+              Looks up a localized string similar to Serial number.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String375">
+            <summary>
+              Looks up a localized string similar to Publish unit.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String376">
+            <summary>
+              Looks up a localized string similar to Effective start data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String377">
+            <summary>
+              Looks up a localized string similar to Effective end data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String378">
+            <summary>
+              Looks up a localized string similar to Sort.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String379">
+            <summary>
+              Looks up a localized string similar to Account privileges.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String38">
+            <summary>
+              Looks up a localized string similar to Review officer.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String380">
+            <summary>
+              Looks up a localized string similar to Effective range.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String381">
+            <summary>
+              Looks up a localized string similar to Effective period.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String382">
+            <summary>
+              Looks up a localized string similar to Attribute types.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String383">
+            <summary>
+              Looks up a localized string similar to Extranet using.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String384">
+            <summary>
+              Looks up a localized string similar to Detail information of role.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String385">
+            <summary>
+              Looks up a localized string similar to Set the mutually exclusive roles.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String386">
+            <summary>
+              Looks up a localized string similar to Suitable identity is a required item.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String387">
+            <summary>
+              Looks up a localized string similar to Manager is a required item.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String388">
+            <summary>
+              Looks up a localized string similar to View permissions.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String389">
+            <summary>
+              Looks up a localized string similar to This role own permissions.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String39">
+            <summary>
+              Looks up a localized string similar to Undefined.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String390">
+            <summary>
+              Looks up a localized string similar to Close.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String391">
+            <summary>
+              Looks up a localized string similar to Role list.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String392">
+            <summary>
+              Looks up a localized string similar to Please choice.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String393">
+            <summary>
+              Looks up a localized string similar to Renamed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String394">
+            <summary>
+              Looks up a localized string similar to Create name of mutually exclusive role.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String395">
+            <summary>
+              Looks up a localized string similar to Change the name of mutually exclusive roles.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String396">
+            <summary>
+              Looks up a localized string similar to Please choice the name of mutually exclusive roles.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String397">
+            <summary>
+              Looks up a localized string similar to The name is a required field.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String398">
+            <summary>
+              Looks up a localized string similar to Account application role.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String399">
+            <summary>
+              Looks up a localized string similar to Applicant.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String4">
+            <summary>
+              Looks up a localized string similar to Do not support multiple query conditions.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String40">
+            <summary>
+              Looks up a localized string similar to Login.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String400">
+            <summary>
+              Looks up a localized string similar to Approved manafer.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String401">
+            <summary>
+              Looks up a localized string similar to Approved role administrator&quot;.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String402">
+            <summary>
+              Looks up a localized string similar to Sent.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String403">
+            <summary>
+              Looks up a localized string similar to Create role.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String404">
+            <summary>
+              Looks up a localized string similar to Effective time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String405">
+            <summary>
+              Looks up a localized string similar to Activation time is the required item.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String406">
+            <summary>
+              Looks up a localized string similar to Account role management.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String407">
+            <summary>
+              Looks up a localized string similar to Creata role relation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String408">
+            <summary>
+              Looks up a localized string similar to Please choice that you want to delete account roles relation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String409">
+            <summary>
+              Looks up a localized string similar to Create account roles relation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String41">
+            <summary>
+              Looks up a localized string similar to Create.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String410">
+            <summary>
+              Looks up a localized string similar to Delete account roles relation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String411">
+            <summary>
+              Looks up a localized string similar to Choice management roles.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String412">
+            <summary>
+              Looks up a localized string similar to Please choice that you want to create account roles relation combinations.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String413">
+            <summary>
+              Looks up a localized string similar to Please choice that you want to delete account roles relation combinations.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String414">
+            <summary>
+              Looks up a localized string similar to Create unit of role relation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String415">
+            <summary>
+              Looks up a localized string similar to Delete unit of role relation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String416">
+            <summary>
+              Looks up a localized string similar to Please choice that you want to create unit of role relation combinations.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String417">
+            <summary>
+              Looks up a localized string similar to Please choice that you want to delete unit of role relation combinations.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String418">
+            <summary>
+              Looks up a localized string similar to Create account relation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String419">
+            <summary>
+              Looks up a localized string similar to Delete account relation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String42">
+            <summary>
+              Looks up a localized string similar to Delete.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String420">
+            <summary>
+              Looks up a localized string similar to Filter.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String421">
+            <summary>
+              Looks up a localized string similar to Operating instructions.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String422">
+            <summary>
+              Looks up a localized string similar to Execution error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String423">
+            <summary>
+              Looks up a localized string similar to Previous page.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String424">
+            <summary>
+              Looks up a localized string similar to Do not have permission.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String425">
+            <summary>
+              Looks up a localized string similar to Search the management role.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String426">
+            <summary>
+              Looks up a localized string similar to search and login with the sector&apos;s role.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String427">
+            <summary>
+              Looks up a localized string similar to Search the management role , and exclude this account already exist role.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String428">
+            <summary>
+              Looks up a localized string similar to Search the management role , and exclude this unit already exist role.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String429">
+            <summary>
+              Looks up a localized string similar to Not triggered.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String43">
+            <summary>
+              Looks up a localized string similar to Edit.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String430">
+            <summary>
+              Looks up a localized string similar to Choice examples of components.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String431">
+            <summary>
+              Looks up a localized string similar to Obtain results.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String432">
+            <summary>
+              Looks up a localized string similar to Switch read-only.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String433">
+            <summary>
+              Looks up a localized string similar to Obtain.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String434">
+            <summary>
+              Looks up a localized string similar to Execution successfully.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String435">
+            <summary>
+              Looks up a localized string similar to This account has securiry information.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String436">
+            <summary>
+              Looks up a localized string similar to Execution finished.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String437">
+            <summary>
+              Looks up a localized string similar to Menu.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String438">
+            <summary>
+              Looks up a localized string similar to Upper Menu.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String439">
+            <summary>
+              Looks up a localized string similar to &quot;{0}&quot; please do not enter more than {1} characters.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String44">
+            <summary>
+              Looks up a localized string similar to Search.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String440">
+            <summary>
+              Looks up a localized string similar to Upper Permission.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String441">
+            <summary>
+              Looks up a localized string similar to Mutually exclusive.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String442">
+            <summary>
+              Looks up a localized string similar to root unit.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String443">
+            <summary>
+              Looks up a localized string similar to Data Log.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String444">
+            <summary>
+              Looks up a localized string similar to Role Id  not allow null.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String445">
+            <summary>
+              Looks up a localized string similar to Unspecified account information.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String446">
+            <summary>
+              Looks up a localized string similar to Data is limited to maximum of {0} records..
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String447">
+            <summary>
+              Looks up a localized string similar to Need cachekey.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String448">
+            <summary>
+              Looks up a localized string similar to The cacheKey has no data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String449">
+            <summary>
+              Looks up a localized string similar to You don&apos;t have permission.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String45">
+            <summary>
+              Looks up a localized string similar to Print.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String450">
+            <summary>
+              Looks up a localized string similar to The program is only for intranet use.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String451">
+            <summary>
+              Looks up a localized string similar to The program didn&apos;t  create permission.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String46">
+            <summary>
+              Looks up a localized string similar to All organizations.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String47">
+            <summary>
+              Looks up a localized string similar to All the external units.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String48">
+            <summary>
+              Looks up a localized string similar to The specific node to the root of the Organization.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String49">
+            <summary>
+              Looks up a localized string similar to DataTable.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String5">
+            <summary>
+              Looks up a localized string similar to Do not support multiple changes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String50">
+            <summary>
+              Looks up a localized string similar to Data changes during the operation,re-search and manipulate.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String51">
+            <summary>
+              Looks up a localized string similar to Password.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String52">
+            <summary>
+              Looks up a localized string similar to Effective start date.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String53">
+            <summary>
+              Looks up a localized string similar to Effective end date.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String54">
+            <summary>
+              Looks up a localized string similar to Input operator.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String55">
+            <summary>
+              Looks up a localized string similar to input date.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String56">
+            <summary>
+              Looks up a localized string similar to Database.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String57">
+            <summary>
+              Looks up a localized string similar to Role name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String58">
+            <summary>
+              Looks up a localized string similar to Business Unit.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String59">
+            <summary>
+              Looks up a localized string similar to Application of member identity.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String6">
+            <summary>
+              Looks up a localized string similar to The condition of incoming parameter cannot be empty.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String60">
+            <summary>
+              Looks up a localized string similar to Audit.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String61">
+            <summary>
+              Looks up a localized string similar to Effective.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String62">
+            <summary>
+              Looks up a localized string similar to Deny.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String63">
+            <summary>
+              Looks up a localized string similar to Permissions id.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String64">
+            <summary>
+              Looks up a localized string similar to Managers.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String65">
+            <summary>
+              Looks up a localized string similar to Description.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String66">
+            <summary>
+              Looks up a localized string similar to Is agent.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String67">
+            <summary>
+              Looks up a localized string similar to Role id.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String68">
+            <summary>
+              Looks up a localized string similar to Name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String69">
+            <summary>
+              Looks up a localized string similar to Application of identity.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String7">
+            <summary>
+              Looks up a localized string similar to Member id.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String70">
+            <summary>
+              Looks up a localized string similar to Management units.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String71">
+            <summary>
+              Looks up a localized string similar to Mutually exclusive name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String72">
+            <summary>
+              Looks up a localized string similar to Mutually exclusive role.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String73">
+            <summary>
+              Looks up a localized string similar to Mutually exclusive role.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String74">
+            <summary>
+              Looks up a localized string similar to Account or password.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String75">
+            <summary>
+              Looks up a localized string similar to Role must select the role administrator.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String76">
+            <summary>
+              Looks up a localized string similar to No management units information unable to search.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String77">
+            <summary>
+              Looks up a localized string similar to Incoming account can not be empty.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String78">
+            <summary>
+              Looks up a localized string similar to The data that database already exists.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String79">
+            <summary>
+              Looks up a localized string similar to The data has been updated.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String8">
+            <summary>
+              Looks up a localized string similar to Name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String80">
+            <summary>
+              Looks up a localized string similar to There is no incoming updates of key values.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String81">
+            <summary>
+              Looks up a localized string similar to The incoming accounts no staff data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String82">
+            <summary>
+              Looks up a localized string similar to Do not specify role management information.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String83">
+            <summary>
+              Looks up a localized string similar to Unspecified unit information.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String84">
+            <summary>
+              Looks up a localized string similar to Requires at least one addressee.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String85">
+            <summary>
+              Looks up a localized string similar to Does not match the length.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String86">
+            <summary>
+              Looks up a localized string similar to Efficient period.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String87">
+            <summary>
+              Looks up a localized string similar to unauthorized types.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String88">
+            <summary>
+              Looks up a localized string similar to Roles.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String89">
+            <summary>
+              Looks up a localized string similar to Permissions.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String9">
+            <summary>
+              Looks up a localized string similar to Unit id.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String90">
+            <summary>
+              Looks up a localized string similar to Batch id.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String91">
+            <summary>
+              Looks up a localized string similar to Status.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String92">
+            <summary>
+              Looks up a localized string similar to Function id.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String93">
+            <summary>
+              Looks up a localized string similar to Execution time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String94">
+            <summary>
+              Looks up a localized string similar to End time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String95">
+            <summary>
+              Looks up a localized string similar to Report name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String96">
+            <summary>
+              Looks up a localized string similar to Report type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String97">
+            <summary>
+              Looks up a localized string similar to File name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String98">
+            <summary>
+              Looks up a localized string similar to Number of report.
+            </summary>
+        </member>
+        <member name="P:Microsoft.CUF.Resource.EN_US.SystemInfo.String99">
+            <summary>
+              Looks up a localized string similar to Query conditions.
+            </summary>
+        </member>
+    </members>
+</doc>

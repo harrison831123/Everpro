@@ -1,0 +1,1163 @@
+﻿@model List<MaintainInfo>
+@{
+    ViewBag.Title = ViewBag.Title ?? "CUSCRMTX003-維護";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+
+@Html.AntiForgeryToken()
+
+@{
+    SelectListItem defaulttem = new SelectListItem();
+    defaulttem.Text = "-請選擇-";
+    defaulttem.Value = "";
+    defaulttem.Selected = true;
+
+    List<SelectListItem> categoryList = new List<SelectListItem>();
+    categoryList.Add(defaulttem);
+    foreach (SelectListItem item in CUSCRMHelper.GetCategoryList())
+    {
+        categoryList.Add(item);
+    }
+
+    List<SelectListItem> defaultCaseTypeList = new List<SelectListItem>();
+    defaultCaseTypeList.Add(defaulttem);
+
+    //2024.01.18 客訴系統優化新增。 by peggy
+    List<SelectListItem> statusList = new List<SelectListItem>();
+    statusList.Add(defaulttem);
+    foreach (SelectListItem item in CUSCRMHelper.GetStatusCategoryList())
+    {
+        statusList.Add(item);
+    }
+}
+
+@*報表主體*@
+@section GridActions{
+    @using (Ajax.BeginForm("Index", "CUSCRMTX003", FormMethod.Post, new AjaxOptions { OnSuccess = "bindResult" }, new { id = "CUSCRMTX003Query", area = "CUSCRM" }))
+    {
+        <div id="divQueryBlock">
+            <div class="wall-title">
+                <img class="index-title-icon" src="~/Content/img/search.png" />(搜尋條件)
+            </div>
+            <div class="row wall">
+                <div class="col-md-12 form-group">
+                    <div class="col-md-3">
+                        @*類別 客服or申訴*@
+                        @Html.Label("類別", new { @class = "control-label" })
+                        @Html.DropDownList("Type", categoryList, new { @class = "form-select" })
+                    </div>
+                    <div class="col-md-3">
+                        @*類型 客服:CS/SS; 申訴:CC/SC*@
+                        @Html.Label("類型", new { @class = "control-label" })
+                        @Html.DropDownList("Kind", defaultCaseTypeList, new { @class = "form-select" })
+                    </div>
+                    <div class="col-md-3">
+                        @*照會單號*@
+                        @Html.Label("照會單號", new { @class = "control-label" })
+                        @Html.Editor("No", new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    <div class="col-md-3">
+                        @*受理區間*@
+                        @Html.Label("受理區間", new { @class = "control-label" })
+                        <p>
+                            @Html.TextBox("DateS", null, new { @class = "normal-input datepicker", @maxlength = "10", @minlength = "10" })
+                            －
+                            @Html.TextBox("DateE", null, new { @class = "normal-input datepicker", @maxlength = "10", @minlength = "10" })
+                        </p>
+                        <input type="checkbox" id="thisYear" name="thisYear" />
+                        <label for="thisYear">今年</label>
+                    </div>
+                </div>
+                <div class="col-md-12 form-group">
+                    <div class="col-md-3">
+                        @*保單號碼*@
+                        @Html.Label("保單號碼", new { @class = "control-label" })
+                        @Html.Editor("PolicyNo", new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    <div class="col-md-3">
+                        @*要保人姓名*@
+                        @Html.Label("要保人姓名", new { @class = "control-label" })
+                        @Html.Editor("Owner", new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    <div class="col-md-3">
+                        @*承辦人員*@
+                        @Html.Label("承辦人員", new { @class = "control-label" })
+                        @Html.Editor("Creator", new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    <div class="col-md-3">
+                        @*案件狀態*@
+                        @Html.Label("狀態", new { @class = "control-label" })
+                        @Html.DropDownList("Status", statusList, new { @class = "form-select" })
+                    </div>
+                </div>
+                <div class="col-md-12 form-group">
+                    <div class="col-md-3">
+                        @*是否結案*@
+                        @Html.Label("是否結案", new { @class = "control-label" })<br />
+                        <label>@Html.RadioButton("IsClose", true, false, new { @clasee = "form-control" })是</label>
+                        <label>@Html.RadioButton("IsClose", false, true, new { @clasee = "form-control" })否</label>
+                    </div>
+                </div>
+                </div>
+            </div>
+        <input type="button" id="btnQuery" class="btn btn-default" value="@EP.PlatformResources.查詢" />
+        <br /><br />
+        <table id="mtnDataTabel" class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th>序號</th>
+                    <th>類別</th>
+                    <th>類型</th>
+                    <th>照會單號</th>
+                    <th>受理日</th>
+                    <th>受理天數</th>
+                    <th>要保人</th>
+                    <th>業務員</th>
+                    <th>維護紀錄</th>
+                    <th>催辦</th>
+                    <th>稽催</th>
+                    <th>處理單</th>
+                    <th>狀態</th>
+                </tr>
+                @if (Model != null)
+                {
+                    List<SelectListItem> item1 = CUSCRMHelper.GetCaseTypeList(Category.Service);
+                    List<SelectListItem> item2 = CUSCRMHelper.GetCategoryList();
+                    foreach (EP.SD.SalesSupport.CUSCRM.Service.MaintainInfo m in Model)
+                    {
+                        string targetModel = "";
+                        if (m.Type.Contains("CC"))
+                        {
+                            targetModel = "#ccModal";
+                        }
+                        else if (m.Type.Contains("SC"))
+                        {
+                            targetModel = "#scModal";
+                        }
+                        else if (m.Type.Contains("SS"))
+                        {
+                            targetModel = "#ssModal";
+                        }
+                        else if (m.Type.Contains("CS"))
+                        {
+                            targetModel = "#csModal";
+                        }
+                        string createMtnBtn = @"<button type='button' id='matnBtn" + m.Serial + "' class='btn btn-default' data-toggle='modal' data-target='" + targetModel + "' onclick = MtnShowModalClick('" + m.No + "')>維護</button>";
+                        string createDoSBtn = @"<button type='button' id='dosBtn" + m.Serial + "' class='btn btn-default dos-btn' data-toggle='modal' data-target='#dosModal' data-whatever='" + m.No + "'>催辦</button>";
+                        string createAuditBtn = @"<input type='button' id='auditBtn" + m.Serial + "' class='btn btn-default aud-btn' value='稽催' onclick=AuditClick('" + m.No + "')>";
+                        string createProcessBtn = @"<input type='button' id='processBtn" + m.Serial + "' class='btn btn-default' value='處理單' onclick=ProcessFormClick('" + m.No + "')>";
+                        string lblDoId = "lblDo" + m.Serial.ToString();
+                        string lblAuId = "lblAu" + m.Serial.ToString();
+                        TimeSpan timeSpan = DateTime.Now - Convert.ToDateTime(m.CreateTime);
+                        int receptDays = timeSpan.Days;
+                        <text>
+                            <tr>
+                                <td>@m.Serial</td>
+                                <td>@m.Type</td>
+                                <td>@m.Kind</td>
+                                <td>@m.No</td>
+                                <td>@Convert.ToDateTime(m.CreateTime).ToString("yyyy/MM/dd")</td>
+                                <td>@receptDays</td>
+                                <td>@m.Owner</td>
+                                <td>@m.AgentName</td>
+                                <td>@Html.Raw(createMtnBtn)</td>
+                                <td>@Html.Raw(createDoSBtn) 催辦次數:<label id="@lblDoId">@m.DoSCount</label></td>
+                                <td>@Html.Raw(createAuditBtn) 稽催次數:<label id="@lblAuId">@m.AuditCount</label></td>
+                                <td>@Html.Raw(createProcessBtn)</td>
+                                <td>@m.Status</td>
+                            </tr>
+                        </text>
+                    }
+                }
+            </tbody>
+        </table>
+    }
+}
+
+@*CS(客戶服務件)*@
+<div class="modal fade" id="csModal" tabindex="-1" role="dialog" aria-labelledby="csModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">CS(客戶服務件)</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("CSMtn", "CUSCRMTX003", null, FormMethod.Post, new { id = "CSModalSubmit" }))
+                {
+                    <input type="text" name="csSpanNo" id="csSpanNo" style="display:none;" />
+                    <input type="text" name="type" style="display:none;" />
+                    <table id="cs-table" class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="cs-panel-title">歷次聯絡紀錄</td>
+                                <td>
+                                    <div id="CS-CRMDate"></div>
+                                    <div id="CS-SDODate"></div>
+                                    <div id="CS-AuditDate"></div>
+                                    <div id="CS-DoContent"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cs-panel-title">本次紀錄</td>
+                                <td>
+                                    <textarea class="form-control" name="csContent" id="csContent"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cs-panel-title">處理結果</td>
+                                <td>
+                                    <div id="CS-ProcessResult"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cs-panel-title">上傳檔案</td>
+                                <td>
+                                    <div id="CS-Files"></div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-9 ">
+                                                <input type="file" name="csFileInput" id="csFileInput" class="filestyle" multiple />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="button" id="csDelBtn" class="btn btn-danger" value="@EP.PlatformResources.刪除" onclick="DelFile($('#csSpanNo').val())" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                    <button type="button" id="csCloseBtn" class="btn btn-warning" onclick="MtnClose(this)">結案</button>
+                    <button type="button" id="csMtnBtn" class="btn btn-default" style="float: right;" onclick="CSMtnUptRecord()">維護聯絡紀錄</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@*SS(業務員服務件)*@
+<div class="modal fade" id="ssModal" tabindex="-1" role="dialog" aria-labelledby="ssModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">SS(業務員服務件)</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("SSMtn", "CUSCRMTX003", null, FormMethod.Post, new { id = "SSModalSubmit" }))
+                {
+                    <input type="text" name="ssSpanNo" id="ssSpanNo" style="display:none;" />
+                    <input type="text" name="type" style="display:none;" />
+                    <table id="ss-table" class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="ss-panel-title">歷次聯絡紀錄</td>
+                                <td>
+                                    <div id="SS-CRMDate"></div>
+                                    <div id="SS-SDODate"></div>
+                                    <div id="SS-AuditDate"></div>
+                                    <div id="SS-BUSContactCompanyDate"></div>
+                                    <div id="SS-ReplyCompanyDate"></div>
+                                    <div id="SS-ReplyYallowBillDate"></div>
+                                    <div id="SS-HistoryCompanyResult"></div>
+                                    <div id="SS-DoContent"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ss-panel-title">本次紀錄</td>
+                                <td>
+                                    <textarea class="form-control" name="ssContent" id="ssContent"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ss-panel-title">業連保險公司日期</td>
+                                <td>@Html.TextBox("busContactCompanyDate", null, new { @class = "normal-input datepicker", @maxlength = "10", @minlength = "10" })</td>
+                            </tr>
+                            <tr>
+                                <td class="ss-panel-title">保險公司回覆日</td>
+                                <td>@Html.TextBox("replyCompanyDate", null, new { @class = "normal-input datepicker", @maxlength = "10", @minlength = "10" })</td>
+                            </tr>
+                            <tr>
+                                <td class="ss-panel-title">回覆單位黃聯日</td>
+                                <td>@Html.TextBox("replyYallowBillDate", null, new { @class = "normal-input datepicker", @maxlength = "10", @minlength = "10" })</td>
+                            </tr>
+                            <tr>
+                                <td class="ss-panel-title">保公決議</td>
+                                <td><div id="SS-CompanyResult"></div></td>
+                            </tr>
+                            <tr>
+                                <td class="ss-panel-title">處理結果</td>
+                                <td><div id="SS-ProcessResult"></div></td>
+                            </tr>
+                            <tr>
+                                <td class="cs-panel-title">上傳檔案</td>
+                                <td>
+                                    <div id="SS-Files"> </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-9 ">
+                                                <input type="file" name="ssFileInput" id="ssFileInput" class="filestyle" multiple />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="button" id="ssDelBtn" class="btn btn-danger" value="@EP.PlatformResources.刪除" onclick="DelFile($('#ssSpanNo').val())" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                    <button type="button" id="ssCloseBtn" class="btn btn-warning" onclick="MtnClose(this)">結案</button>
+                    <button type="button" id="ssMtnBtn" class="btn btn-default" style="float: right;" onclick="SSMtnUptRecord()">維護聯絡紀錄</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@*CC(客戶申訴件)*@
+<div class="modal fade" id="ccModal" tabindex="-1" role="dialog" aria-labelledby="ccModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">CC(客戶申訴件)</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("CCMtn", "CUSCRMTX003", null, FormMethod.Post, new { id = "CCModalSubmit" }))
+                {
+                    <input type="text" name="ccSpanNo" id="ccSpanNo" style="display:none;" />
+                    <input type="text" name="type" style="display:none;" />
+                    <table id="cc-table" class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="cc-panel-title">歷次聯絡紀錄</td>
+                                <td>
+                                    <div id="CC-CRMDate"></div>
+                                    <div id="CC-SDODate"></div>
+                                    <div id="CC-AuditDate"></div>
+                                    <div id="CC-CCReplyDate"></div>
+                                    <div id="CC-DoContent"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cc-panel-title">本次紀錄</td>
+                                <td>
+                                    <textarea class="form-control" name="ccContent" id="ccContent"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cc-panel-title">回文日</td>
+                                <td>@Html.TextBox("ccReplyDate", null, new { @class = "normal-input datepicker", @maxlength = "10", @minlength = "10" })</td>
+                            </tr>
+                            <tr>
+                                <td class="cc-panel-title">處理結果</td>
+                                <td><div id="CC-ProcessResult"></div></td>
+                            </tr>
+                            <tr>
+                                <td class="cc-panel-title">上傳檔案</td>
+                                <td>
+                                    <div id="CC-Files"> </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-9 ">
+                                                <input type="file" name="ccFileInput" id="ccFileInput" class="filestyle" multiple />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="button" id="ccDelBtn" class="btn btn-danger" value="@EP.PlatformResources.刪除" onclick="DelFile($('#ccSpanNo').val())" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                    <button type="button" id="ccCloseBtn" class="btn btn-warning" onclick="MtnClose(this)">結案</button>
+                    <button type="button" id="ccMtnBtn" class="btn btn-default" style="float: right;" onclick="CCMtnUptRecord()">維護聯絡紀錄</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@*SC(業務員申訴件)*@
+<div class="modal fade" id="scModal" tabindex="-1" role="dialog" aria-labelledby="scModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">SC(業務員申訴件)</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("SCMtn", "CUSCRMTX003", null, FormMethod.Post, new { id = "SCModalSubmit" }))
+                {
+                    <input type="text" name="scSpanNo" id="scSpanNo" style="display:none;" />
+                    <input type="text" name="type" style="display:none;" />
+                    <table id="sc-table" class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="sc-panel-title">歷次聯絡紀錄</td>
+                                <td>
+                                    <div id="SC-CRMDate"></div>
+                                    <div id="SC-SDODate"></div>
+                                    <div id="SC-AuditDate"></div>
+                                    <div id="SC-DoContent"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="sc-panel-title">本次紀錄</td>
+                                <td>
+                                    <textarea class="form-control" name="scContent" id="scContent"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="sc-panel-title">處理結果</td>
+                                <td><div id="SC-ProcessResult"></div></td>
+                            </tr>
+                            <tr>
+                                <td class="sc-panel-title">上傳檔案</td>
+                                <td>
+                                    <div id="SC-Files"> </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-9 ">
+                                                <input type="file" name="scFileInput" id="scFileInput" class="filestyle" multiple />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="button" id="scDelBtn" class="btn btn-danger" value="@EP.PlatformResources.刪除" onclick="DelFile($('#scSpanNo').val())" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                    <button type="button" id="scCloseBtn" class="btn btn-warning" onclick="MtnClose(this)">結案</button>
+                    <button type="button" id="scMtnBtn" class="btn btn-default" onclick="SCMtnUptRecord()">維護聯絡紀錄</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@*催辦畫面*@
+<div class="modal fade" id="dosModal" tabindex="-1" role="dialog" aria-labelledby="dosModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dosModal">發送催辦</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="dosNo" class="col-form-label">受理編號:</label>
+                        <input type="text" class="form-control" id="dosNo">
+                    </div>
+                    <div class="form-group">
+                        <label for="dosContent" class="col-form-label">催辦內容:</label>
+                        <textarea class="form-control" id="dosContent"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="addDos">送出</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*處理單*@
+<div class="modal" id="livestream_scanner" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body" id="modal-body">
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style type="text/css">
+    .normal-input {
+        background-color: #0000;
+        color: #0e0e0e;
+        -webkit-text-fill-color: #837f7f;
+        outline: none;
+        vertical-align: top;
+        height: 36px !important;
+        line-height: 36px !important;
+        padding-left: 5px !important;
+        border-radius: 4px;
+        box-shadow: 0 2px 2px 0 #dbdbdb;
+        border: 1px solid #dbdbdb;
+        background-color: #fff;
+        vertical-align: top;
+        padding: 0 10px;
+        margin-right: 5px;
+        color: #9b9b9b;
+        max-width: 100px;
+    }
+
+    textarea {
+        width: 100%;
+        height: 170px !important;
+        max-width: 100%;
+    }
+
+    table#mtnDataTabel {
+        color: #333;
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 40px;
+        border-collapse: separate;
+        border-spacing: 0;
+        border: 2px solid #019846;
+        width: 100%;
+        margin: 0 auto;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,.16);
+        border-radius: 2px;
+    }
+
+    #mtnDataTabel tbody {
+        text-align: center;
+    }
+
+    #mtnDataTabel th {
+        background: #019846;
+        color: #fff;
+        border: none;
+    }
+
+    #mtnDataTabel tr:hover:not(th) {
+        background-color: #DEDEDE;
+    }
+
+    .pg-btn {
+        transition: all .3s;
+        border: 1px solid #ddd;
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 15px;
+    }
+
+        .pg-btn:not(.active) {
+            background-color: transparent;
+        }
+
+    .active {
+        transition: all .3s;
+        border: 1px solid #ddd;
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 15px;
+        background-color: #019846;
+        color: #fff;
+    }
+
+    .pg-btn:hover:not(.active) {
+        background-color: #ddd;
+    }
+
+    #pg-buttons {
+        margin: 15px 0 15px 0;
+    }
+
+    #cs-table, #cc-table, #ss-table, #sc-table {
+        word-break: break-all;
+    }
+
+    .modal-dialog {
+        max-width: 80% !important;
+    }
+
+    #dosContent{
+        height: 170px;
+    }
+</style>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "__AjaxAntiForgeryForm" }))
+{
+    @Html.AntiForgeryToken()
+}
+@section Scripts {
+    <script>
+        var tmpSourceId;
+        var tmpSourceSerial;
+        var category = document.getElementById("Type");
+        var caseType = document.getElementById("Kind");
+        const redirectUrl = '/Account/Login';
+        var token = document.getElementById('__AjaxAntiForgeryForm').elements['__RequestVerificationToken'].value;
+
+        Type.addEventListener('change', function () {
+            DDLInit(this);
+        });
+
+        $(document).ready(function () {
+            clearMessage();
+            DDLInit();
+            $("#dosContent").css({ "max-width": '100%' });
+            Microsoft.UI.Init.DatePicker();
+            $(".datepicker").datepicker({ dateFormat: 'yy/mm/dd' });
+        });
+
+        $(document).on("click", "#thisYear", function () {
+            const cbYear = document.querySelector("#thisYear");
+            if (cbYear.checked) {
+                var d = new Date();
+                var yyyy = d.getFullYear();
+                $("#DateS").val(yyyy + '/01/01');
+                $("#DateE").val(yyyy + '/12/31');
+            } else {
+                $("#DateS").val('');
+                $("#DateE").val('');
+            }
+        });
+
+        $(document).on("click", ".dos-btn", function () {
+            clearMessage();
+            var para = $(this).data('whatever');
+            $("#dosNo").val(para);
+            tmpSourceId = this.id;
+            tmpSourceSerial = this.id.replaceAll('dosBtn', '');
+        });
+
+        $(document).on("click", ".aud-btn", function () {
+            clearMessage();
+            tmpSourceId = this.id;
+            tmpSourceSerial = this.id.replaceAll('auditBtn', '');
+        });
+
+        $(document).on("click", "#btnQuery", function () {
+            clearMessage();
+            document.getElementById('CUSCRMTX003Query').submit();
+        });
+
+        function DDLInit(d) {
+            if (d === undefined) {
+                d = $("#Type")[0];
+                d.value = $("#Type").val();
+            }
+            postData('/CUSCRM/CUSCRMCommon/GetCaseType', { category: d.value }, (myJson) => {
+                caseType.innerText = "";
+                for (let i = 0; i < myJson.length; i++) {
+                    var item = myJson[i];
+                    var opt = document.createElement('option');
+                    opt.value = item.Value;
+                    opt.text = item.Text;
+                    caseType.appendChild(opt);
+                }
+            });
+        }
+
+        /* 維護 */
+        function MtnShowModalClick(data)
+        {
+            clearMessage();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetMaintainData")',
+                data: '{"no": "' + data + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                complete: function (response) {
+                    if (response.status == 200)
+                    {
+                        var code = "";
+                        if (data.indexOf("CS") >= 0) {
+                            code = "CS";
+                        } else if (data.indexOf("SS") >= 0) {
+                            code = "SS";
+                        } else if (data.indexOf("CC") >= 0) {
+                            code = "CC";
+                        } else if (data.indexOf("SC") >= 0) {
+                            code = "SC";
+                        }
+                        var eleNo = "#" + code.toLowerCase() + "SpanNo";
+                        $(eleNo).val(data);
+                        $('#' + code + '-CRMDate').html("受理日期: " + response.responseJSON.CreateDate);
+                        $('#' + code + '-SDODate').html("催辦日期: " + response.responseJSON.HistoryDoSDate);
+                        $('#' + code + '-AuditDate').html("稽催日期: " + response.responseJSON.HistoryAuditDate);
+
+                        if (code == "SS") {
+                            if (!(response.responseJSON.HistoryBUSContactCompanyDate === null)) {
+                                $('#' + code + '-BUSContactCompanyDate').html("業連保險公司日期: " + response.responseJSON.HistoryBUSContactCompanyDate);
+                            }
+                            if (!(response.responseJSON.HistoryReplyCompanyDate === null)) {
+                                $('#' + code + '-ReplyCompanyDate').html("保險公司回覆日: " + response.responseJSON.HistoryReplyCompanyDate);
+                            }
+                            if (!(response.responseJSON.HistoryReplyYallowBillDate === null)) {
+                                $('#' + code + '-ReplyYallowBillDate').html("回覆單位黃聯日: " + response.responseJSON.HistoryReplyYallowBillDate);
+                            }
+                            if (!(response.responseJSON.HistoryCompanyResult === null)) {
+                                $('#' + code + '-HistoryCompanyResult').html("保公決議選項: " + response.responseJSON.HistoryCompanyResult);
+                            }
+
+                            @* 客訴系統優化第一階段 *@
+                            var companyRadio = "";
+                            $.each(response.responseJSON.CompanyDiscipType, function (i, item) {
+                                companyRadio += '<input class="form-check-input" type="radio" name="companyDiscipType" value="' + item.ID + '"  id="' + code + 'DiscipType' + item.ID + '"/><label class="form-check-label" for="companyDiscipType">' + item.Name + '</label>'
+                            });
+                            $('#' + code + '-CompanyResult').html(companyRadio);
+                        }
+                        if (code == "CC") {
+                            if (!(response.responseJSON.HistoryCCReplyDate === null)) {
+                                $('#' + code + '-CCReplyDate').html("回文日: " + response.responseJSON.HistoryCCReplyDate);
+                            }
+                        }
+
+                        $('#' + code + '-DoContent').html("歷史維護紀錄: <br />" + response.responseJSON.HistoryContent + "<br />歷史處理結果紀錄: <br />" + response.responseJSON.HistoryCloseLog);
+
+                        var radio = "";
+                        $.each(response.responseJSON.ResultDiscipType, function (i, item) {
+                            if (item.Kind == 7) {
+                                radio += '<input class="form-check-input" type="radio" name="resultDiscipType" value="' + item.ID + '"  id="' + code + 'DiscipType' + item.ID + '"/><label class="form-check-label" for="resultDiscipType">' + item.Name + '</label>'
+                            }
+                            if (item.Kind == 8) {
+                                radio += '<br/><input class="form-check-input" type="checkbox" name="resultDiscipType2" value="' + item.ID + '"  id="' + code + 'DiscipType' + item.ID + '"/><label class="form-check-label" for="resultDiscipType">' + item.Name + '</label>'
+                            }
+                        });
+                        $('#' + code + '-ProcessResult').html(radio);
+
+                        var fileList = "";
+                        $.each(response.responseJSON.Files, function (i, item) {
+                            var format = "@Url.Action("FileDownload", "CUSCRMTX003", new { area = "CUSCRM" })" + "?" + "id=" + item.ID;
+                            fileList += '<div class= "form-check">';
+                            fileList += '<input class="form-check-input" type="checkbox" value="' + item.ID + '" name="' + item.FolderNo + 'File" id="File' + item.ID + '" />';
+                            fileList += '<a href="' + format + '"  target="_blank">'
+                            fileList += '<label class="form-check-label"  id="lblFile' + item.ID + '">';
+                            fileList += item.FileName;
+                            fileList += '</a></label></div>';
+                        });
+                        $('#' + code + '-Files').html(fileList);
+                        $("textarea").val('');
+                    }
+                },
+                error: function (xhr, status) {
+                    console.log(xhr);
+                }
+            });
+        }
+
+        /* 催辦button */
+        $(document).on("click", "#addDos", function () {
+            clearMessage();
+
+            //檢查業務員是否在職
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("CheckMemberIsLeave")',
+                data: '{"dosNo": "' + $("#dosNo").val() + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                complete: function (response)
+                {
+                    if (response.responseText == 'True') {
+                        alert("業務員已終止，無法催辦。");
+                    } else if (response.responseText == 'False') {
+
+                        //檢查是否單位裁撤
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("CheckWCCenterCodeIsLife")',
+                            data: '{"dosNo": "' + $("#dosNo").val() + '" }',
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            complete: function (response)
+                            {
+                                if (response.responseText == 'True') {
+                                    alert("已無該單位，無法催辦。");
+                                }
+
+                                //催辦
+                                $.ajax({
+                                    type: "POST",
+                                    url: '@Url.Action("DoSData")',
+                                    data: '{"no": "' + $("#dosNo").val() + '", "content": "' + $("#dosContent").val() + '" }',
+                                    contentType: "application/json; charset=utf-8",
+                                    dataType: "json",
+                                    complete: function (response) {
+                                        if (response.status == 200)
+                                        {
+                                            $("#dosModal").modal('hide');
+                                            $("#dosContent").val('');
+                                            var idStr = "#lblDo" + tmpSourceSerial;
+                                            var lblCount = parseInt($(idStr).text()) + 1;
+                                            $(idStr).text(lblCount);
+                                        }
+                                        $('#' + tmpSourceId).setfocus();
+                                    },
+                                    error: function (xhr, status) {
+                                        console.log(xhr);
+                                    }
+                                });
+                                $('#' + tmpSourceId).setfocus();
+                            },
+                            error: function (xhr, status) {
+                                console.log(xhr);
+                            }
+                        });
+                    }
+                },
+                error: function (xhr, status) {
+                    console.log(xhr);
+                }
+            });
+        });
+
+        /* 稽催button */
+        function AuditClick(data) {
+            clearMessage();
+
+            //檢查業務員是否在職
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("CheckMemberIsLeave")',
+                data: '{"dosNo": "' + data + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                complete: function (response)
+                {
+                    if (response.responseText == 'True') {
+                        alert("業務員已終止，無法稽催。");
+                    } else if (response.responseText = 'False') {
+
+                        //檢查是否單位裁撤
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("CheckWCCenterCodeIsLife")',
+                            data: '{"dosNo": "' + data + '" }',
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            complete: function (response)
+                            {
+                                if (response.responseText == 'True') {
+                                    alert("已無該單位，無法稽催。");
+                                }
+
+                                //稽催
+                                var re = confirm('確定新增稽催？');
+                                if (re) {
+                                    clearMessage();
+                                    $.ajax({
+                                        type: "POST",
+                                        url: '@Url.Action("DoAudit")',
+                                        data: '{"no": "' + data + '" }',
+                                        contentType: "application/json; charset=utf-8",
+                                        dataType: "json",
+                                        complete: function (response) {
+                                            if (response.status == 200) {
+                                                var idStr = "#lblAu" + tmpSourceSerial;
+                                                var lblCount = parseInt($(idStr).text()) + 1;
+                                                $(idStr).text(lblCount);
+                                            }
+                                            $('#' + tmpSourceId).setfocus();
+                                        },
+                                        error: function (xhr, status) {
+                                            console.log(xhr);
+                                        }
+                                    });
+                                }
+                            },
+                            error: function (xhr, status) {
+                                console.log(xhr);
+                            }
+                        });
+                    }
+                },
+                error: function (xhr, status) {
+                    console.log(xhr);
+                }
+            });
+        }
+
+        /* 處理單button */
+        function ProcessFormClick(data) {
+            clearMessage();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("RenderProcessForm")',
+                data: '{"no": "' + data + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                complete: function (response) {
+                    var w = window.open();
+                    $(w.document.body).html(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+
+        /* CS維護聯絡紀錄button */
+        function CSMtnUptRecord() {
+            clearMessage();
+            $("input[name='type']").val("CS");
+            var form = $('#CSModalSubmit')[0];
+            var data = new FormData(form);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("MtnRecord")',
+                data: data,
+                contentType: false,
+                processData: false,
+                cache: false,
+                complete: function (response) {
+                    if (response.status == 200) {
+                        $("input:file").val('');
+                        appendMessage("維護記錄成功。");
+                        $("#csModal").modal('hide');
+                    }
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+
+        /* SS維護聯絡紀錄button */
+        function SSMtnUptRecord() {
+            clearMessage();
+            $("input[name='type']").val("SS");
+            var form = $('#SSModalSubmit')[0];
+            var data = new FormData(form);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("MtnRecord")',
+                data: data,
+                contentType: false,
+                processData: false,
+                cache: false,
+                complete: function (response) {
+                    $("#SSModalSubmit input[type=text]").val('');
+                    $("input:file").val('');
+                    appendMessage("維護記錄成功。");
+                    $("#ssModal").modal('hide');
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+
+        /* CC維護聯絡紀錄button */
+        function CCMtnUptRecord() {
+            clearMessage();
+            $("input[name='type']").val("CC");
+            var form = $('#CCModalSubmit')[0];
+            var data = new FormData(form);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("MtnRecord")',
+                data: data,
+                contentType: false,
+                processData: false,
+                cache: false,
+                complete: function (response) {
+                    $("input:file").val('');
+                    appendMessage("維護記錄成功。");
+                    $("#ccModal").modal('hide');
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+
+        /* SC維護聯絡紀錄button */
+        function SCMtnUptRecord() {
+            clearMessage();
+            $("input[name='type']").val("SC");
+            var form = $('#SCModalSubmit')[0];
+            var data = new FormData(form);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("MtnRecord")',
+                data: data,
+                contentType: false,
+                processData: false,
+                cache: false,
+                complete: function (response) {
+                    $("input:file").val('');
+                    appendMessage("維護記錄成功。");
+                    $("#scModal").modal('hide');
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+
+        /* 刪除檔案 */
+        function DelFile(folderNo)
+        {
+            clearMessage();
+            var values = GetCheckedValue(folderNo + 'File');
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("DelFile")',
+                data: '{"values": "' + values + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                complete: function (response) {
+                    if (response.status == 200) {
+                        $('input:checkbox[name=' + folderNo + 'File' + ']:checked').each(function () {
+                            $(this).parent().hide();
+                        });
+                    }
+                    $('#' + tmpSourceId).setfocus();
+                },
+                error: function (xhr, status) {
+                    console.log(xhr);
+                }
+            });
+        }
+
+        /* checkbox function */
+        function GetCheckedValue(checkBoxName) {
+            return $('input:checkbox[name=' + checkBoxName+']:checked').map(function () {
+                return $(this).val();
+            }).get().join(',');
+        }
+
+        /* 結案 */
+        function MtnClose(e)
+        {
+            $("input[name='type']").val(e.id.substring(0, 2).toUpperCase());
+            var form = $(e).parents('form')[0];
+            var data = new FormData(form);
+             $.ajax({
+                type: "POST",
+                url: '@Url.Action("MtnClose")',
+                data: data,
+                contentType: false,
+                processData: false,
+                cache: false,
+                complete: function (response) {
+                    if (response.status == 200) {
+                        appendMessage("結案成功。");
+                        $("#" + $("input[name='type']").val().toLowerCase() + "Modal").modal('hide');
+                    }
+                    $('#' + tmpSourceId).setfocus();
+                },
+                error: function (xhr, status) {
+                    console.log(xhr);
+                }
+            });
+        }
+
+        /* table */
+        var _table = document.getElementById("mtnDataTabel"),
+            _n = 15,
+            _rowCount = _table.rows.length,
+            _firstRow = _table.rows[0].firstElementChild.tagName,
+            _hasHead = (_firstRow === "TH"),
+            _tr = [],
+            _i, _ii, _j = (_hasHead) ? 1 : 0,
+            _th = (_hasHead ? _table.rows[(0)].outerHTML : "");
+        var _pageCount = Math.ceil(_rowCount / _n);
+        if (_pageCount > 1) {
+            for (_i = _j, _ii = 0; _i < _rowCount; _i++, _ii++)
+                _tr[_ii] = _table.rows[_i].outerHTML;
+            _table.insertAdjacentHTML("afterend", "<div id='pg-buttons'></div");
+            sort(1);
+        }
+        function sort(_p) {
+            var _rows = _th, _s = ((_n * _p) - _n);
+            for (_i = _s; _i < (_s + _n) && _i < _tr.length; _i++)
+                _rows += _tr[_i];
+            _table.innerHTML = _rows;
+            document.getElementById("pg-buttons").innerHTML = pageButtons(_pageCount, _p);
+            document.getElementById("id" + _p).setAttribute("class", "active");
+        }
+        function pageButtons(_pCount, _cur) {
+            var _prevDis = (_cur == 1) ? "disabled" : "",
+                _nextDis = (_cur == _pCount) ? "disabled" : "",
+                _buttons = "<input type='button' class='pg-btn' value='<< 前一筆' onclick='sort(" + (_cur - 1) + ")' " + _prevDis + ">";
+            for (_i = 1; _i <= _pCount; _i++)
+                _buttons += "<input type='button' class='pg-btn' id='id" + _i + "'value='" + _i + "' onclick='sort(" + _i + ")'>";
+            _buttons += "<input type='button' class='pg-btn' value='後一筆 >>' onclick='sort(" + (_cur + 1) + ")' " + _nextDis + ">";
+            return _buttons;
+        }
+
+        /* postData */
+        function postData(url, json, callbackFuncs, callbackFunse, callbackFuncf) {
+            let formData = new FormData();
+            if (json != null) {
+                Object.keys(json).forEach((key) => {
+                    formData.append(key, json[key]);
+                });
+            }
+            if (token != null && token != undefined) {
+                formData.append("__RequestVerificationToken", token);
+            }
+
+            useBlockUI();
+            fetch(url, {
+                method: "POST",
+                body: formData
+            })
+            .then(function (response) {
+                if (response.url.match(redirectUrl) == redirectUrl) {
+                    appendMessage('連線逾時，自動轉回登入頁面中，請等待!');
+                    window.location.href = GetRedirectUrl(response.url, redirectUrl);
+                }
+                else {
+                    return response.json();
+                }
+            })
+            .then(function (myJson) {
+                callbackFuncs(myJson);
+            })
+            .catch(error => {
+                if (callbackFunse != null) {
+                    callbackFunse(error);
+                }
+                else {
+                    appendMessage(error);
+                }
+            })
+            .finally(() => {
+                if (callbackFuncf != null) {
+                    callbackFuncf();
+                }
+                $.unblockUI();
+            });
+        }
+        /* setfocus */
+        (function ($) {
+            jQuery.fn.setfocus = function () {
+                return this.each(function () {
+                    var dom = this;
+                    setTimeout(function () {
+                        try { dom.focus(); } catch (e) { }
+                    }, 0);
+                });
+            };
+        })(jQuery);
+    </script>
+}

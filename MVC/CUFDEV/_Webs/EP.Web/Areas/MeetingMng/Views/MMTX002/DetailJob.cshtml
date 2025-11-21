@@ -1,0 +1,115 @@
+﻿@model EP.PSL.WorkResources.MeetingMng.Web.Areas.MeetingMng.Model.JobDetailModel
+@{  
+    ViewBag.Title = "決議事項詳細資料";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    string imember = User.MemberInfo.ID;
+}
+@section LeftActions{
+    <div id="BtnArea">
+        @*<input id="btnEdit" type="button" class="btn btn-default" value="編輯" data-bind="click: EditClick" />*@
+        @if (Model.JBCreater == imember)
+        {
+            <input id="btnDelete" type="button" class="btn btn-default" value="@EP.PlatformResources.刪除" data-bind="click: DeleteClick" />
+        }
+        @Html.ActionLink("返回", "Detail", new { id = Model.MTID }, new {  Class = "btn btn-default" })
+        <input id="btnExit" type="button" class="btn btn-default" value="@EP.PlatformResources.結束" data-bind="click: CloseClick" />
+    </div>
+}
+@using (Html.BeginForm("Delete", "MMTX002", null, FormMethod.Post, new { id = "DetailJobSubmit", area = "IB" }))
+{
+    <div class="hidden">
+        <input name="MTID" value="@Model.MTID" type="text" />
+        <input name="JPID" value="@Model.JPID" type="text" />
+        <input name="JBID" value="@Model.JBID" type="text" />
+    </div>
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/megaphone_g.png" />
+        @Html.LabelFor(m => m.JBSubject, new { @class = "detail-msg" })
+        <span class="detail-cell">
+            @Html.DisplayFor(model => model.JBSubject)
+        </span>
+    </div>
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/megaphone_g.png" />
+        @Html.LabelFor(m => m.JBUnitName, new { @class = "detail-msg" })
+        <span class="detail-cell">
+            @Html.DisplayFor(model => model.JBUnitName)
+        </span>
+    </div>
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/calendar_g.png" />
+        @Html.LabelFor(m => m.JBStartDate, new { @class = "detail-msg" })
+        <span class="detail-cell">
+            @Html.DisplayFor(model => model.JBStartDate)
+        </span>
+    </div>
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/calendar_g.png" />
+        @Html.LabelFor(m => m.JBEndDate, new { @class = "detail-msg" })
+        <span class="detail-cell">
+            @Html.DisplayFor(model => model.JBEndDate)
+        </span>
+    </div>
+    @*<div class="detail-col">
+        <img class="index-title-icon" src="~/Content/img/book_g.png" />
+        @Html.LabelFor(m => m.JPPercentage, new { @class = "detail-msg" })
+        <span class="detail-cell">
+            @Html.DisplayFor(model => model.JPPercentage)%
+        </span>
+    </div>*@
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />
+        @Html.LabelFor(m => m.Creater, new { @class = "detail-msg" })
+        <span class="detail-cell">
+            @Html.DisplayFor(model => model.CreaterNunit)-@Html.DisplayFor(model => model.Creater)
+        </span>
+    </div>
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />
+        @Html.LabelFor(m => m.JBCreateIP, new { @class = "detail-msg" })
+        <span class="detail-cell">
+            @Html.DisplayFor(model => model.JBCreateIP)
+        </span>
+    </div>
+    <div class="detail-col form-group form-inline">
+        <img class="index-title-icon" src="~/Content/img/surgeon_g.png" />
+        @Html.LabelFor(m => m.JBCreateDate, new { @class = "detail-msg" })
+        <span class="detail-cell">
+            @Html.DisplayFor(model => model.JBCreateDate)
+        </span>
+    </div>
+
+    <div class="detail-col">
+        <img class="index-title-icon" src="~/Content/img/book_g.png" />
+        @Html.LabelFor(m => m.JBDesc, new { @class = "detail-msg" })
+        <div class="detail-cell-content">
+            @Html.Raw(Model.JBDesc)
+        </div>
+    </div>
+}
+<script>
+    @*定義此頁面所用的KO*@
+    var ViewModel = {
+        CloseClick: function () {
+            window.close();
+
+        },
+        DeleteClick: function () {
+            if (confirm("(@EP.PlatformResources.確定要刪除本筆資料)")) {
+                clearMessage();@*清除訊息*@
+                $("#DetailJobSubmit").attr('action', '@Url.Action("DeleteJob", "MMTX002", new { area="MeetingMng"})');
+                $("#DetailJobSubmit").submit();
+                if (window.opener)
+                    $(window.opener.document.getElementById('btnQuery')).trigger('click');
+            }
+
+        }
+
+    }
+
+    $(document).ready(function () {
+        //debugger;
+        ko.applyBindings(ViewModel, document.getElementById('BtnArea'));
+        Microsoft.UI.Init.DatePicker();
+    })
+</script>

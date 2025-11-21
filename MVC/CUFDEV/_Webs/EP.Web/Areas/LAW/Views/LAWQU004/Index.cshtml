@@ -1,0 +1,234 @@
+﻿@model  EP.SD.SalesSupport.LAW.Models.LawSearchDetail
+
+@{
+    ViewBag.Title = LAWResource.法追明細;
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    WebChannel<EP.SD.SalesSupport.LAW.Service.ILAWService> Service = new WebChannel<EP.SD.SalesSupport.LAW.Service.ILAWService>();
+    List<EP.H2OModels.LawDoUnit> lawDoUnits = new List<EP.H2OModels.LawDoUnit>();
+    Service.Use(s => lawDoUnits = s.GetLawDoUnitByEnable().ToList());
+    List<EP.H2OModels.LawCloseType> lawCloseTypes = new List<EP.H2OModels.LawCloseType>();
+    Service.Use(s => lawCloseTypes = s.GetLawCloseTypeByEnable());
+
+}
+@*查詢執行結果*@
+@using (Ajax.BeginForm("Query", "LAWQU004", null, new AjaxOptions { OnSuccess = "BindGrid" }, new { id = "LawQuery", area = "LAWQU004" }))
+{
+    <div class="wall-title">
+        <img class="index-title-icon" src="~/Content/img/search.png" />(@LAWResource.搜尋條件)
+    </div>
+    <div class="row wall">
+        <div class="col-md-12 form-group detail-col">
+            <div class="col-md-6">
+                <label class="control-label">@LAWResource.選擇類別</label>
+                <br />
+                <select id="LawSearchType" class="form-control" name="LawSearchType">
+                    <option value="1">@LAWResource.未結案件列表</option>
+                    <option value="2">@LAWResource.已結案件列表</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="control-label">@LAWResource.姓名</label>
+                <input id="LawDueName" class="form-control" type="text" placeholder="@LAWResource.姓名" name="LawDueName" />
+            </div>
+        </div>
+        <div class="col-md-12 form-group detail-col">
+            <div class="col-md-6">
+                <label class="control-label">@LAWResource.身分證ID</label>
+                <input id="LawDueAgentId" class="form-control" type="text" placeholder="@LAWResource.身分證ID" name="LawDueAgentId" />
+            </div>
+            <div class="col-md-6">
+                <label class="control-label">@LAWResource.金額</label>
+                <input id="LawDueMoney" class="form-control" type="text" placeholder="@LAWResource.金額" name="LawDueMoney" />
+            </div>
+        </div>
+        <div class="col-md-12 form-group detail-col">
+            <div class="col-md-6">
+                <label class="control-label">@LAWResource.照會單號</label>
+                <input id="LawNoteNo" class="form-control" type="text" placeholder="@LAWResource.照會單號" name="LawNoteNo" />
+            </div>
+        </div>
+    </div>
+    <input type="button" id="btnQuery" class="btn btn-default" value="@EP.PlatformResources.查詢" data-bind="hotkeydown: { 'alt+q': QueryClick }, click: QueryClick" />
+}
+@section GridActions {
+    <div class="jqGrid">
+        <table id="Result"></table>
+    </div>
+    <div id="ResultPagger"></div>
+}
+<!-- Modal -->
+<div class="modal fade" id="JobModalLong" tabindex="-1" role="dialog" aria-labelledby="JobModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script>
+        var ViewModel = {
+            QueryClick: function () {
+                clearMessage();
+                $("form#LawQuery").trigger("submit");
+            }
+        };
+        $(function () {
+            ko.applyBindings(ViewModel);
+            $("#btnQuery").click();
+        });
+        $('#LawSearchType').on('change', function () {
+            $("#btnQuery").click();
+        });
+        function BindGrid() {
+            //照會單號 團隊 協理系 處別 單位 業務員 ID 結欠月 結欠金額 追回金額 存證信函 訴訟程序
+            if ($("#LawSearchType").val() == 1) {
+                $("#Result").GridUnload();
+                $("#Result").jqGrid({
+                    url: '@Url.Action("BindGrid", "LAWQU004", new { area = "LAW" })',
+                    datatype: "json",
+                    mtype: "POST",
+                    shrinkToFit: false,
+                    colNames: ["", "@LAWResource.照會單號", "@LAWResource.團隊", "@LAWResource.協理系", "@LAWResource.處別", "@LAWResource.單位", "@LAWResource.業務員", "ID", "@LAWResource.結欠月", "@LAWResource.結欠金額", "@LAWResource.追回金額", "@LAWResource.存證信函", "@LAWResource.追索程序"],
+                    colModel: [
+                        { name: "LawId", index: "LawId", hidden: true },
+                        { name: "LawNoteNo", index: "LawNoteNo", width: "100" },
+                        { name: "VmName", index: "VmName", formatter: SetVmName, width: "100" },
+                        { name: "SmName", index: "SmName", formatter: SetSmName, width: "100" },
+                        { name: "CenterNameCG", index: "CenterNameCG", width: "100" },
+                        { name: "WcCenterNameCG", index: "WcCenterNameCG", formatter: SetWcCenterNameCG, width: "100" },
+                        { name: "LawDueName", index: "LawDueName", width: "100" },
+                        { name: "LawDueAgentId", index: "LawDueAgentId", formatter: SetLawDueAgentId, width: "130" },
+                        { name: "ProductionYm", index: "ProductionYm", width: "100" },
+                        { name: "LawDueMoney", index: "LawDueMoney", width: "100" },
+                        { name: "LawRepaymentMoney", index: "LawRepaymentMoney", width: "100" },
+                        { name: "LawEvidencedesc", index: "LawEvidencedesc", width: "300" },
+                        { name: "LawLitigationprogress", index: "LawLitigationprogress", formatter: SetLawLitigationProgress, width: "80" },
+                    ],
+                    jsonReader: {
+                        repeatitems: false,
+                        id: "0"
+                    },
+                    loadComplete: function () {
+                        $('#Result').jqGrid("setGridWidth", $('#resultDIV').width());
+                    },
+                    pager: "ResultPagger"
+                });
+                $("#Result").trigger("reloadGrid");
+            } else if ($("#LawSearchType").val() == 2) {
+                $("#Result").GridUnload();
+                $("#Result").jqGrid({
+                    url: '@Url.Action("BindGrid", "LAWQU004", new { area = "LAW" })',
+                    datatype: "json",
+                    mtype: "POST",
+                    shrinkToFit: false,
+                    colNames: ["", "@LAWResource.照會單號", "@LAWResource.團隊", "@LAWResource.協理系", "@LAWResource.處別", "@LAWResource.單位", "@LAWResource.業務員", "ID", "@LAWResource.結欠月", "@LAWResource.結欠金額", "@LAWResource.追回金額", "@LAWResource.存證信函", "@LAWResource.追索程序"],
+                    colModel: [
+                        { name: "LawId", index: "LawId", hidden: true },
+                        { name: "LawNoteNo", index: "LawNoteNo", width: "100" },
+                        { name: "VmName", index: "VmName", formatter: SetVmNameClose, width: "100" },
+                        { name: "SmName", index: "SmName", formatter: SetSmNameClose, width: "100" },
+                        { name: "CenterNameCG", index: "CenterNameCG", width: "100" },
+                        { name: "WcCenterNameCG", index: "WcCenterNameCG", formatter: SetWcCenterNameCGClose, width: "100" },
+                        { name: "LawDueName", index: "LawDueName", width: "100" },
+                        { name: "LawDueAgentId", index: "LawDueAgentId", formatter: SetLawDueAgentId, width: "130" },
+                        { name: "ProductionYm", index: "ProductionYm", width: "100" },
+                        { name: "LawDueMoney", index: "LawDueMoney", width: "100" },
+                        { name: "LawRepaymentMoney", index: "LawRepaymentMoney", width: "100" },
+                        { name: "LawEvidencedesc", index: "LawEvidencedesc", width: "300" },
+                        { name: "LawLitigationprogress", index: "LawLitigationprogress", formatter: SetLawLitigationProgress, width: "80" },
+                    ],
+                    jsonReader: {
+                        repeatitems: false,
+                        id: "0"
+                    },
+                    loadComplete: function () {
+                        $('#Result').jqGrid("setGridWidth", $('#resultDIV').width());
+                    },
+                    pager: "ResultPagger"
+                });
+                $("#Result").trigger("reloadGrid");
+            }
+        }
+        function displayButtonsFn(cellValue, options, rdata, action) {
+            var BPMURL = rdata.BPMURL;
+            var result = "<a href='" + BPMURL + "'target='FrmContent'>" + "<img src='../Content/img/book_g.png'></a>";
+            return result;
+        }
+        function displayLawNotCloseTypeName(cellValue, options, rdata, action){
+            var LawStatusType = rdata.LawStatusType;
+            var LawNotCloseTypeName = rdata.LawNotCloseTypeName;
+            if (LawStatusType == 2) {
+                LawNotCloseTypeName = "@LAWResource.結案";
+            } else {
+                if (LawNotCloseTypeName != "" || LawNotCloseTypeName != null) {
+
+                } else {
+                    LawNotCloseTypeName = "@LAWResource.未結案";
+                }
+            }
+            return LawNotCloseTypeName;
+        }
+        function SetLawLitigationProgress(cellValue, options, rdata, action) {
+            let LawId = rdata.LawId;
+            let NoteNo = rdata.LawNoteNo;
+            let result = '<button type="button" class="btn btn-primary " onclick="GetLawLitigationProgress(\'' + LawId + '\',\'' + NoteNo + '\')" data-toggle="modal" data-target="#JobModalLong">@LAWResource.明細</button>'
+            return result;
+        }
+        function SetVmName(cellValue, options, rdata, action) {
+            let VmName = rdata.VmName;
+            let result = "**" + VmName
+            return result;
+        }
+        function SetSmName(cellValue, options, rdata, action) {
+            let SmName = rdata.SmName;
+            let result = "**" + SmName
+            return result;
+        }
+        function SetWcCenterNameCG(cellValue, options, rdata, action) {
+            let WcCenterNameCG = rdata.WcCenterNameCG;
+            let result = "**" + WcCenterNameCG
+            return result;
+        }
+        function SetVmNameClose(cellValue, options, rdata, action) {
+            let result = "**"
+            return result;
+        }
+        function SetSmNameClose(cellValue, options, rdata, action) {
+            let result = "**"
+            return result;
+        }
+        function SetWcCenterNameCGClose(cellValue, options, rdata, action) {
+            let result = "**"
+            return result;
+        }
+        function SetLawDueAgentId(cellValue, options, rdata, action) {
+            let LawDueAgentId = rdata.LawDueAgentId;
+            let result = LawDueAgentId.substring(0, 3) + "****" + LawDueAgentId.substring(7, 3)
+            return result;
+        }
+        function GetLawLitigationProgress(LawId, NoteNo) {
+            $.ajax({
+                method: "POST",
+                cache: false,
+                url: '@Url.Action("GetLawLitigationProgressByLawIdNotoNo", "LAWQU004", new { area = "LAW" })',
+                data: { LawId: LawId, LawNoteNo: NoteNo},
+                success: function (data) {
+                    $(".rsm").remove();
+                    var d = "<p class='rsm'>" + data + "</p>"
+                    $(".modal-body").append(d);
+                },
+                error: function () {
+                    appendMessage("@LAWResource.系統發生錯誤");
+                }
+            });
+        }
+
+
+    </script>
+}
+
+
+
