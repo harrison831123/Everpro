@@ -115,25 +115,10 @@
             //        });
             //    });
             //});
+
             // ----------------------------------------------------
             // 1. SignalR 連線設定
             // ----------------------------------------------------
-
-            // 取得當前模擬的用戶ID，用於連線時附加到 QueryString (如果必要)
-            // 注意：我們假設您的伺服器已經配置了 Forms 或 Windows 驗證來設置 Context.User.Identity.Name
-            // 如果您的驗證是透過 QueryString 傳遞，請調整 Hub URL：
-            //var targetUserId = $("#targetUserId").val();
-
-            //console.log(targetUserId)
-            //var connection = $.hubConnection("/signalr", {
-            //    qs: "userid=" + targetUserId
-            //});
-
-            //var hub = connection.createHubProxy('SignalRHub'); // 確保 'signalRHub' 與您的 Hub 類別名稱一致
-
-            //// ----------------------------------------------------
-            //// 2. 啟動連線
-            //// ----------------------------------------------------
 
             var targetUserId = $("#targetUserId").val();
             var connection = $.hubConnection("/signalr", {
@@ -141,10 +126,6 @@
             });
 
             var hub = connection.createHubProxy('SignalRHub'); // 確保 'signalRHub' 與您的 Hub 類別名稱一致
-
-            // ----------------------------------------------------
-            // 2. 客戶端接收方法 (重點：處理 FormUrl 參數)
-            // ----------------------------------------------------
 
             hub.on('receiveNotice', function () {
 
@@ -161,7 +142,7 @@
             });
 
             // ----------------------------------------------------
-            // 3. API 觸發表單處理
+            // 2. API 觸發表單處理
             // ----------------------------------------------------
             $("#apiTriggerForm").submit(function (e) {
                 e.preventDefault();
