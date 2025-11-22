@@ -20,5 +20,7 @@ namespace SignalRAPI.Models
         public string SystemType { get; set; }
 
         public string BrowserType { get; set; }
+
+        public string formUrl { get; set; }
     }
 }

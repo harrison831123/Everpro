@@ -1,0 +1,122 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\github\\Everpro\\Web API\\SignalRAPI\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{EBB9FFBA-034F-471D-BEAF-F7634B12B1FA}|SignalRAPI\\SignalRAPI.csproj|d:\\github\\everpro\\web api\\signalrapi\\signalrapi\\htmlpage1.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{EBB9FFBA-034F-471D-BEAF-F7634B12B1FA}|SignalRAPI\\SignalRAPI.csproj|solutionrelative:signalrapi\\htmlpage1.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EBB9FFBA-034F-471D-BEAF-F7634B12B1FA}|SignalRAPI\\SignalRAPI.csproj|d:\\github\\everpro\\web api\\signalrapi\\signalrapi\\notificationpage.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{EBB9FFBA-034F-471D-BEAF-F7634B12B1FA}|SignalRAPI\\SignalRAPI.csproj|solutionrelative:signalrapi\\notificationpage.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EBB9FFBA-034F-471D-BEAF-F7634B12B1FA}|SignalRAPI\\SignalRAPI.csproj|d:\\github\\everpro\\web api\\signalrapi\\signalrapi\\controllers\\toapicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBB9FFBA-034F-471D-BEAF-F7634B12B1FA}|SignalRAPI\\SignalRAPI.csproj|solutionrelative:signalrapi\\controllers\\toapicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EBB9FFBA-034F-471D-BEAF-F7634B12B1FA}|SignalRAPI\\SignalRAPI.csproj|d:\\github\\everpro\\web api\\signalrapi\\signalrapi\\signalrhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBB9FFBA-034F-471D-BEAF-F7634B12B1FA}|SignalRAPI\\SignalRAPI.csproj|solutionrelative:signalrapi\\signalrhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EBB9FFBA-034F-471D-BEAF-F7634B12B1FA}|SignalRAPI\\SignalRAPI.csproj|d:\\github\\everpro\\web api\\signalrapi\\signalrapi\\models\\signalrcode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBB9FFBA-034F-471D-BEAF-F7634B12B1FA}|SignalRAPI\\SignalRAPI.csproj|solutionrelative:signalrapi\\models\\signalrcode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EBB9FFBA-034F-471D-BEAF-F7634B12B1FA}|SignalRAPI\\SignalRAPI.csproj|d:\\github\\everpro\\web api\\signalrapi\\signalrapi\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBB9FFBA-034F-471D-BEAF-F7634B12B1FA}|SignalRAPI\\SignalRAPI.csproj|solutionrelative:signalrapi\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "SignalRCode.cs",
+              "DocumentMoniker": "D:\\github\\Everpro\\Web API\\SignalRAPI\\SignalRAPI\\Models\\SignalRCode.cs",
+              "RelativeDocumentMoniker": "SignalRAPI\\Models\\SignalRCode.cs",
+              "ToolTip": "D:\\github\\Everpro\\Web API\\SignalRAPI\\SignalRAPI\\Models\\SignalRCode.cs",
+              "RelativeToolTip": "SignalRAPI\\Models\\SignalRCode.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-22T06:52:08.273Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "NotificationPage.html",
+              "DocumentMoniker": "D:\\github\\Everpro\\Web API\\SignalRAPI\\SignalRAPI\\NotificationPage.html",
+              "RelativeDocumentMoniker": "SignalRAPI\\NotificationPage.html",
+              "ToolTip": "D:\\github\\Everpro\\Web API\\SignalRAPI\\SignalRAPI\\NotificationPage.html",
+              "RelativeToolTip": "SignalRAPI\\NotificationPage.html",
+              "ViewState": "AgIAAF8AAAAAAAAAAAAAAHAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-11-22T05:21:54.217Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "HtmlPage1.html",
+              "DocumentMoniker": "D:\\github\\Everpro\\Web API\\SignalRAPI\\SignalRAPI\\HtmlPage1.html",
+              "RelativeDocumentMoniker": "SignalRAPI\\HtmlPage1.html",
+              "ToolTip": "D:\\github\\Everpro\\Web API\\SignalRAPI\\SignalRAPI\\HtmlPage1.html",
+              "RelativeToolTip": "SignalRAPI\\HtmlPage1.html",
+              "ViewState": "AgIAAHoAAAAAAAAAAAAwwJoAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-11-22T05:08:10.711Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "SignalRHub.cs",
+              "DocumentMoniker": "D:\\github\\Everpro\\Web API\\SignalRAPI\\SignalRAPI\\SignalRHub.cs",
+              "RelativeDocumentMoniker": "SignalRAPI\\SignalRHub.cs",
+              "ToolTip": "D:\\github\\Everpro\\Web API\\SignalRAPI\\SignalRAPI\\SignalRHub.cs",
+              "RelativeToolTip": "SignalRAPI\\SignalRHub.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAiwBwAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-22T04:40:41.156Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Startup.cs",
+              "DocumentMoniker": "D:\\github\\Everpro\\Web API\\SignalRAPI\\SignalRAPI\\Startup.cs",
+              "RelativeDocumentMoniker": "SignalRAPI\\Startup.cs",
+              "ToolTip": "D:\\github\\Everpro\\Web API\\SignalRAPI\\SignalRAPI\\Startup.cs",
+              "RelativeToolTip": "SignalRAPI\\Startup.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAABLAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-22T04:56:24.337Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ToApiController.cs",
+              "DocumentMoniker": "D:\\github\\Everpro\\Web API\\SignalRAPI\\SignalRAPI\\Controllers\\ToApiController.cs",
+              "RelativeDocumentMoniker": "SignalRAPI\\Controllers\\ToApiController.cs",
+              "ToolTip": "D:\\github\\Everpro\\Web API\\SignalRAPI\\SignalRAPI\\Controllers\\ToApiController.cs",
+              "RelativeToolTip": "SignalRAPI\\Controllers\\ToApiController.cs",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAkwFgAAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-22T04:38:45.288Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

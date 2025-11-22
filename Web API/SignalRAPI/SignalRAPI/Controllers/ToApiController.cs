@@ -1,4 +1,5 @@
 ﻿using EPBKS.Db;
+using Microsoft.AspNet.SignalR;
 using SignalRAPI.Models;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
+using System.Web.Http;
+//using System.Web.Mvc;
 #region 歷程
 //調整EIP實作後踢前，更改DB規則後，查詢語句做調整
 #endregion
@@ -15,68 +17,103 @@ namespace SignalRAPI.Controllers
 {
     public class ToApiController : BaseApiController<SignalRHub>
     {
+        //[AcceptVerbs("Post")]
+        //public async Task PersonalNotice(SignalRCode SignalRCode)
+        //{
+        //    try
+        //    {
+        //        SignalRUser rUser = new SignalRUser();
+        //        //DbHelperSql tsSql = new DbHelperSql("CUF");
+
+        //        //tsSql.sqlParaColl.Clear();
+        //        //tsSql.sqlParaColl.AddWithValue("@userID", SignalRCode.userID);
+        //        //rUser.connectionId = tsSql.SQL_Query(@"select * from SignalRUser where userID = @userID order by Createtime desc").Rows[0]["ConnectionId"].ToString();
+        //        //tsSql.SQL_Close();
+
+        //        string connectStr = ConfigurationManager.ConnectionStrings["CUF"].ConnectionString;
+        //        string sql = $@"select TOP 1 * from SignalRUser where userID = @userID order by Createtime desc";
+        //        SqlConnection connection = new SqlConnection(connectStr);
+        //        connection.Open();
+
+        //        SqlCommand sqlCmd = new SqlCommand();
+        //        sqlCmd.Parameters.AddWithValue("@userID", SignalRCode.userID);
+        //        sqlCmd.Connection = connection;
+        //        sqlCmd.CommandText = sql;
+        //        sqlCmd.ExecuteNonQuery();
+
+        //        SqlDataReader readList = sqlCmd.ExecuteReader();
+
+        //        if (readList.HasRows)
+        //        {
+        //            while (readList.Read())
+        //            {
+        //                rUser.connectionId = readList["ConnectionID"].ToString();
+        //            };
+        //        }
+        //        connection.Close();
+
+        //        DateTime datenow = DateTime.Now;
+        //        string date = datenow.ToString("yyyy-MM-dd HH:mm");
+        //        int id = savemessage(SignalRCode.message, SignalRCode.userID, SignalRCode.name, datenow, SignalRCode.SystemType);
+
+        //        if (rUser.connectionId == null)
+        //        {
+        //            return;
+        //        }                
+
+        //        await Clients.Client(rUser.connectionId).SendAsync(SignalRCode.message, SignalRCode.name, id, date, SignalRCode.SystemType);
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        DbHelperSql tsSql = new DbHelperSql("CUF");
+
+        //        tsSql.sqlParaColl.Clear();
+        //        tsSql.sqlParaColl.AddWithValue("@error", "Toapi錯誤");
+        //        tsSql.sqlParaColl.AddWithValue("@createtime", DateTime.Now);
+        //        tsSql.sqlParaColl.AddWithValue("@log", "ID:" + SignalRCode.userID + " EX:" +ex.Message);
+        //        int id = tsSql.SQL_ExecuteAdd_OLTP(@"insert into signalrlog (error,createtime,log)  VALUES(@error,@createtime,@log)");
+
+        //        tsSql.SQL_Close();
+        //    }
+
+        //}
+
         [AcceptVerbs("Post")]
-        public async Task PersonalNotice(SignalRCode SignalRCode)
+        public async Task<IHttpActionResult> PersonalNotice(SignalRCode SignalRCode)
         {
             try
             {
-                SignalRUser rUser = new SignalRUser();
-                //DbHelperSql tsSql = new DbHelperSql("CUF");
-
-                //tsSql.sqlParaColl.Clear();
-                //tsSql.sqlParaColl.AddWithValue("@userID", SignalRCode.userID);
-                //rUser.connectionId = tsSql.SQL_Query(@"select * from SignalRUser where userID = @userID order by Createtime desc").Rows[0]["ConnectionId"].ToString();
-                //tsSql.SQL_Close();
-
-                string connectStr = ConfigurationManager.ConnectionStrings["CUF"].ConnectionString;
-                string sql = $@"select TOP 1 * from SignalRUser where userID = @userID order by Createtime desc";
-                SqlConnection connection = new SqlConnection(connectStr);
-                connection.Open();
-
-                SqlCommand sqlCmd = new SqlCommand();
-                sqlCmd.Parameters.AddWithValue("@userID", SignalRCode.userID);
-                sqlCmd.Connection = connection;
-                sqlCmd.CommandText = sql;
-                sqlCmd.ExecuteNonQuery();
-
-                SqlDataReader readList = sqlCmd.ExecuteReader();
-
-                if (readList.HasRows)
+                // 1. 檢查目標用戶 ID
+                if (string.IsNullOrEmpty(SignalRCode.userID))
                 {
-                    while (readList.Read())
-                    {
-                        rUser.connectionId = readList["ConnectionID"].ToString();
-                    };
+                    return BadRequest("UserID is required.");
                 }
-                connection.Close();
 
+                // 2. 儲存訊息到資料庫 
                 DateTime datenow = DateTime.Now;
                 string date = datenow.ToString("yyyy-MM-dd HH:mm");
-                int id = savemessage(SignalRCode.message, SignalRCode.userID, SignalRCode.name, datenow, SignalRCode.SystemType);
+                //int messageId = savemessage(SignalRCode.message, SignalRCode.userID, SignalRCode.name, datenow, SignalRCode.SystemType);
 
-                if (rUser.connectionId == null)
-                {
-                    return;
-                }                
-               
-                await Clients.Client(rUser.connectionId).SendAsync(SignalRCode.message, SignalRCode.name, id, date, SignalRCode.SystemType);
+                var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalRHub>();
+
+                hubContext.Clients.Group(SignalRCode.userID).receiveNotice(
+                    SignalRCode.message,
+                    SignalRCode.name,
+                    0,
+                    date,
+                    SignalRCode.formUrl
+                );
+
+                return Ok("Notification sent successfully.");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                DbHelperSql tsSql = new DbHelperSql("CUF");
-
-                tsSql.sqlParaColl.Clear();
-                tsSql.sqlParaColl.AddWithValue("@error", "Toapi錯誤");
-                tsSql.sqlParaColl.AddWithValue("@createtime", DateTime.Now);
-                tsSql.sqlParaColl.AddWithValue("@log", "ID:" + SignalRCode.userID + " EX:" +ex.Message);
-                int id = tsSql.SQL_ExecuteAdd_OLTP(@"insert into signalrlog (error,createtime,log)  VALUES(@error,@createtime,@log)");
-
-                tsSql.SQL_Close();
+                //YourLoggingService.LogError($"BPM Notification Error. UserID:{SignalRCode.UserID}", ex);
+                return InternalServerError(ex);
             }
-          
         }
 
-
+   
 
         [NonAction]
         public int savemessage(string message, string userID,string name, DateTime date,string SystemType)

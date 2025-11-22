@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>即時通知中心 - EIP 模擬</title>
+    <!--Reference the jQuery library. -->
+    <script src="/Scripts/jquery-1.6.4.js"></script>
+    <!--Reference the SignalR library. -->
+    <script src="/Scripts/jquery.signalR-2.2.2.js"></script>
+
+    <script src="/signalr/hubs"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f7f6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #0056b3;
+            border-bottom: 3px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .log-box {
+            border: 1px solid #ddd;
+            padding: 10px;
+            height: 150px;
+            overflow-y: scroll;
+            background: #fff;
+            margin-bottom: 20px;
+            font-size: 0.8em;
+        }
+
+        .notice-item {
+            border-left: 5px solid #007bff;
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: #f8faff;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+            .notice-item:hover {
+                background-color: #e6f0ff;
+            }
+
+        .notice-meta {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-top: 5px;
+            display: block;
+        }
+
+        #notification-count {
+            background: red;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 50%;
+            font-size: 1.2em;
+            margin-left: 10px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            通知中心
+            <span id="notification-count">0</span>
+        </h1>
+
+        <p>
+            **連線目標 UserID (Context.User.Identity.Name):** <strong id="currentUserId" style="color: darkgreen;">TESTER_A001</strong>
+        </p>
+
+        <div id="notification-list">
+            <p style="color: gray; text-align: center;">尚未收到任何通知</p>
+        </div>
+
+        <hr>
+        <h3>💬 SignalR 連線日誌</h3>
+        <div id="log" class="log-box"></div>
+    </div>
+
+    <script>
+        $(function () {
+            // 設定要測試的目標 UserID
+            const CURRENT_USER_ID = $("#currentUserId").text().trim();
+            const $log = $("#log");
+            const $list = $("#notification-list");
+            const $count = $("#notification-count");
+            let unreadCount = 0;
+
+            // ----------------------------------------------------
+            // 1. SignalR 連線設定
+            // ----------------------------------------------------
+
+            //var connection = $.hubConnection();
+            //var hub = connection.createHubProxy('signalRHub');
+
+            //var currentUserId = $("#currentUserId").val(); // 獲取當前模擬的用戶 ID
+
+            // 修正：將 currentUserId 作為 Query String 參數 "userId" 傳遞給 Hub
+            var connection = $.hubConnection("/signalr", {
+                qs: "userid=" + CURRENT_USER_ID
+            });
+
+            var hub = connection.createHubProxy('SignalRHub'); // 確保 'signalRHub' 與您的 Hub 類別名稱一致
+
+            // ----------------------------------------------------
+            // 2. 客戶端接收方法 (重點：處理 FormUrl 參數)
+            // ----------------------------------------------------
+
+            hub.on('receiveNotice', function (message, name, id, date, systemType, formUrl) { // <--- 這裡接收 FormUrl
+
+                unreadCount++;
+                $count.text(unreadCount);
+
+                var newItemHtml = `
+                        <div class="notice-item">
+                            <strong>[${systemType}] ${name}</strong>: ${message}
+                            <span class="notice-meta">
+                                ID: ${id} | 時間: ${date}
+                                ${formUrl ? `<a href="${formUrl}" target="_blank" style="margin-left: 10px;">(前往處理)</a>` : ''}
+                            </span>
+                        </div>
+                    `;
+
+                $list.prepend(newItemHtml);
+                $list.find("p:contains('尚未收到任何通知')").remove();
+
+                console.log(`[Notification] 收到新通知: ID=${id}, From=${name}`);
+                $log.prepend(`<p style="color: blue;">[${date}] 收到推送 - ${message}</p>`);
+            });
+
+            // ----------------------------------------------------
+            // 3. 啟動連線
+            // ----------------------------------------------------
+
+            connection.start().done(function () {
+                $log.prepend(`<p style="color: green;">✔ 連線成功! 正在監聽 UserID: ${CURRENT_USER_ID}</p>`);
+                console.log('SignalR connected, Connection ID=' + connection.id);
+            }).fail(function (error) {
+                $log.prepend(`<p style="color: red;">❌ 連線失敗: ${error.message}</p>`);
+                console.error('Could not connect: ' + error);
+            });
+        });
+    </script>
+</body>
+</html>
