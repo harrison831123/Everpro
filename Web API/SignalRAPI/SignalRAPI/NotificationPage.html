@@ -105,24 +105,16 @@
             // ----------------------------------------------------
             // 1. SignalR 連線設定
             // ----------------------------------------------------
-
-            //var connection = $.hubConnection();
-            //var hub = connection.createHubProxy('signalRHub');
-
-            //var currentUserId = $("#currentUserId").val(); // 獲取當前模擬的用戶 ID
-
-            // 修正：將 currentUserId 作為 Query String 參數 "userId" 傳遞給 Hub
             var connection = $.hubConnection("/signalr", {
                 qs: "userid=" + CURRENT_USER_ID
             });
 
-            var hub = connection.createHubProxy('SignalRHub'); // 確保 'signalRHub' 與您的 Hub 類別名稱一致
+            var hub = connection.createHubProxy('SignalRHub'); 
 
             // ----------------------------------------------------
             // 2. 客戶端接收方法 (重點：處理 FormUrl 參數)
             // ----------------------------------------------------
-
-            hub.on('receiveNotice', function (message, name, id, date, systemType, formUrl) { // <--- 這裡接收 FormUrl
+            hub.on('receiveNotice', function (message, name, id, date, systemType, formUrl) { 
 
                 unreadCount++;
                 $count.text(unreadCount);
@@ -147,7 +139,6 @@
             // ----------------------------------------------------
             // 3. 啟動連線
             // ----------------------------------------------------
-
             connection.start().done(function () {
                 $log.prepend(`<p style="color: green;">✔ 連線成功! 正在監聽 UserID: ${CURRENT_USER_ID}</p>`);
                 console.log('SignalR connected, Connection ID=' + connection.id);
